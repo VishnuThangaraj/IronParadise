@@ -47,10 +47,10 @@ export const AuthProvider = ({ children }) => {
   }, [fetchUser]);
 
   // Login
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     try {
       const response = await axios.post("auth/login", {
-        email,
+        username,
         password,
       });
 
@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", token);
         setToken(token);
         await fetchUser();
+        toast.success("Login Successful");
       } else {
         toast.error("Invalid Credentials Provided");
       }
@@ -73,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setToken("");
     setUser(null);
-    navigate("/login"); // Redirect to login page
+    navigate("/login");
   };
 
   // Error Handling Function

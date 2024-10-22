@@ -1,0 +1,9 @@
+#sidebar {
+  display: sticky;
+  left: 0;
+  width: $sidebar-width;
+  height: 100%;
+  text-align: center;
+  z-index: 3;
+  border-radius: 0 25px 25px 0;
+}

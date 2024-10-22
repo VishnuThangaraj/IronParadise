@@ -1,8 +1,9 @@
-@use "tailwindcss/base";
-@use "tailwindcss/components";
-@use "tailwindcss/utilities";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-@use "./colors";
+@import "./colors";
+@import "./variables";
 
 * {
   font-family: "Nunito Sans", sans-serif;
@@ -12,5 +13,5 @@
 }
 
 body {
-  background-color: whitesmoke;
+  background-color: $primary-background;
 }

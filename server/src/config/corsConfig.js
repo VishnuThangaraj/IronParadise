@@ -1,7 +1,7 @@
 const cors = require("cors");
 require("dotenv").config();
 
-const allowedOrigins = [process.env.ADMIN_ORIGIN];
+const allowedOrigins = [process.env.ADMIN_ORIGIN, process.env.CLIENT_ORIGIN];
 
 const corsOptions = {
   origin: function (origin, callback) {
