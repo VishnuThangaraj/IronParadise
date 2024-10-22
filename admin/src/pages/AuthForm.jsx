@@ -13,16 +13,16 @@ import { AuthContext } from "../context/AuthContext";
 const AuthForm = () => {
   const { login } = useContext(AuthContext);
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Validate and Login
   const validateAndLogin = async () => {
-    if (username === "" || password === "")
+    if (email === "" || password === "")
       return toast.info("All fields are required!");
     setLoading(true);
-    await login(username, password);
+    await login(email, password);
     setLoading(false);
   };
 
@@ -50,8 +50,8 @@ const AuthForm = () => {
             <Input
               size="md"
               sx={{ py: 1 }}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="example@gmail.com"
               variant="soft"
             />

@@ -47,10 +47,10 @@ export const AuthProvider = ({ children }) => {
   }, [fetchUser]);
 
   // Login
-  const login = async (username, password) => {
+  const login = async (email, password) => {
     try {
       const response = await axios.post("auth/login", {
-        username,
+        email,
         password,
       });
 

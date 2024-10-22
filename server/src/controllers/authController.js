@@ -5,10 +5,10 @@ const Admin = require("../models/Admin");
 
 // Admin Login
 const adminLogin = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ email });
     if (!admin) return res.status(401).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, admin.password);
@@ -21,7 +21,7 @@ const adminLogin = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
-    res.json({ token, admin: { username: admin.username } });
+    res.json({ token, admin: { email: admin.email } });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
