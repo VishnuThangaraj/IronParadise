@@ -1,7 +1,6 @@
 export const Loader = () => {
   const spinnerStyle = {
     fontSize: "28px",
-    position: "relative",
     display: "inline-block",
     width: "1em",
     height: "1em",

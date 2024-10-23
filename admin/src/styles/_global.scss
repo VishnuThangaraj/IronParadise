@@ -12,6 +12,7 @@
   box-sizing: border-box;
 }
 
-body {
+body,
+.primary-bg {
   background-color: $primary-background;
 }

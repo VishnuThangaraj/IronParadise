@@ -1,9 +1,10 @@
 const Trainer = require("../models/Trainer");
 
-// Register Admin
+// Register Trainer
 const registerTrainer = async (req, res) => {
   const {
     name,
+    username,
     email,
     phone,
     dob,
@@ -23,6 +24,7 @@ const registerTrainer = async (req, res) => {
     }
     const newTrainer = new Trainer({
       name,
+      username,
       email,
       phone,
       dob,

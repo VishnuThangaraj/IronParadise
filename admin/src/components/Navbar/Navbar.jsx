@@ -20,7 +20,7 @@ export const Navbar = () => {
   return (
     <div
       id="navbar"
-      className="flex justify-between border-b-2 border-gray-200"
+      className="flex justify-between border-b-2 border-gray-200 primary-bg"
     >
       <div className="flex flex-col">
         <div className="font-bold text-lg">Welcome {user?.name} 🖐🏼</div>

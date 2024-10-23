@@ -98,8 +98,8 @@ export const Sidebar = () => {
                 key={`side-general-${index}`}
                 className={`p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
                   location.slice(1) === list.location
-                    ? "text-white bg-stone-800"
-                    : "text-gray-300 hover:text-white hover:ps-3 hover:bg-stone-800"
+                    ? "text-white bg-gray-800"
+                    : "text-gray-300 hover:text-white hover:ps-3 hover:bg-gray-800"
                 }`}
                 onClick={() =>
                   location.slice(1) !== list.location &&
@@ -119,8 +119,8 @@ export const Sidebar = () => {
               <div key={`side-applications-${index}`} className="relative">
                 <div
                   className={`flex items-center p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
-                    location.slice(1) === list.location
-                      ? "text-white bg-slate-800"
+                    location.slice(1).startsWith(list.location)
+                      ? "text-white bg-gray-800"
                       : "text-gray-300 hover:text-white hover:ps-2"
                   }`}
                   onClick={() => toggleExpand(index)}
@@ -135,14 +135,14 @@ export const Sidebar = () => {
                 </div>
                 {expanded === index && (
                   <div className="pl-6 relative">
-                    <div className="absolute left-[-1.5rem] top-0 h-full w-[2px] bg-gray-600"></div>
+                    <div className="absolute left-[-1.5rem] top-0 h-full w-[2px] bg-gray-800"></div>
                     {list.childrens.map((child, childIndex) => (
                       <div
                         key={`side-children-${childIndex}`}
                         className={`p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
                           location.slice(1) === child.location
-                            ? "text-white bg-stone-800"
-                            : "text-gray-300 hover:text-white hover:ps-3 hover:bg-stone-800"
+                            ? "text-white"
+                            : "text-gray-300 hover:text-white hover:ps-3"
                         }`}
                         onClick={() => navigate(`/${child.location}`)}
                       >
