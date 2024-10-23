@@ -1,14 +1,8 @@
 #navbar {
-  box-sizing: border-box;
   position: sticky;
   top: 0;
   width: 100%;
   height: $navbar-height;
   align-items: center;
   z-index: 2;
-  box-shadow: 0 2px 16px -2px rgba(0, 0, 0, 0.05),
-    0 1px 3px -1px rgba(0, 0, 0, 0.03);
-  background-color: rgba($primary-background, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }

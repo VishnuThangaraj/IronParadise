@@ -12,6 +12,8 @@ import "./App.scss";
 // Lazy-loaded pages
 const AuthForm = lazy(() => import("./pages/AuthForm"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const AddTrainer = lazy(() => import("./pages/AddTrainer"));
+const TrainersList = lazy(() => import("./pages/TrainersList"));
 
 export const App = () => {
   const { user } = useContext(AuthContext);
@@ -33,12 +35,17 @@ export const App = () => {
       {!isLoginPage ? (
         <div className="flex h-full">
           <Sidebar />
-          <div id="main-content-holder">
+          <div id="main-content-holder" className="px-7">
             <Navbar />
-            <div style={{ flex: 1, padding: "1.5%" }}>
+            <div className="py-3">
               <Suspense fallback={<Loader />}>
                 <Routes>
+                  {/* General */}
                   <Route path="/home" element={<Dashboard />} />
+
+                  {/* Trainer */}
+                  <Route path="/trainer/list" element={<TrainersList />} />
+                  <Route path="/trainer/add" element={<AddTrainer />} />
                   <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>
               </Suspense>
