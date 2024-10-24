@@ -5,6 +5,7 @@ const corsOptions = require("./config/corsConfig");
 const errorHandler = require("./middleware/errorHandler");
 
 const authRoutes = require("./routes/authRoutes");
+const generalRoutes = require("./routes/generalRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
 
 require("dotenv").config();
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/general", generalRoutes);
 app.use("/trainer", trainerRoutes);
 
 // Error handling middleware

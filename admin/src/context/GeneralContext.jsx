@@ -11,7 +11,25 @@ export const GeneralProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
 
   //Send Mail
-  const sendMail = async (mailData) => {};
+  const sendMail = async (mailData) => {
+    try {
+      const response = await axios.post(
+        `/general/sendmail`,
+        { mailData },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Mail Sent Successfully 📨✔️");
+      } else {
+        toast.warning("Failed to Send Mail 📨");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
 
   return (
     <GeneralContext.Provider value={{ sendMail }}>
