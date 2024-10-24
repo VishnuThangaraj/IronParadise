@@ -3,7 +3,7 @@ const authenticateJWT = require("../middleware/authMiddleware");
 const trainerController = require("../controllers/trainerController");
 
 // Trainer Registration
-router.post("/register", trainerController.registerTrainer);
+router.post("/add", trainerController.registerTrainer);
 
 // Fetch all Trainers
 router.get("/", authenticateJWT(["admin"]), trainerController.fetchTrainers);

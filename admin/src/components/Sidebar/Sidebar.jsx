@@ -26,7 +26,7 @@ const sidebarGeneral = [
     location: "attendance",
     icon: "fa-light fa-calendar-circle-user",
   },
-  { name: "Events", location: "event", icon: "fa-light fa-house" },
+  { name: "Events", location: "event", icon: "fa-thin fa-calendars" },
 ];
 
 const sidebarApplications = [
@@ -69,10 +69,10 @@ export const Sidebar = () => {
   const location = useLocation().pathname;
 
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(null); // State to track which item is expanded
+  const [expanded, setExpanded] = useState(null);
 
   const toggleExpand = (index) => {
-    setExpanded(expanded === index ? null : index); // Toggle expand/collapse
+    setExpanded(expanded === index ? null : index);
   };
 
   const logoutAdmin = async () => {

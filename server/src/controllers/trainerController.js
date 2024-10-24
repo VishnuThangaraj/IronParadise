@@ -14,7 +14,7 @@ const registerTrainer = async (req, res) => {
     weight,
     bmi,
     address,
-  } = req.body;
+  } = req.body.trainer;
   try {
     const existingEmail = await Trainer.findOne({ email });
     const existingPhone = await Trainer.findOne({ phone });
@@ -24,10 +24,10 @@ const registerTrainer = async (req, res) => {
     }
     const newTrainer = new Trainer({
       name,
-      username,
+      username: `TR${username}`,
       email,
       phone,
-      dob,
+      dob: new Date(dob),
       gender,
       specialization,
       height,
@@ -51,7 +51,7 @@ const fetchTrainers = async (req, res) => {
   try {
     const trainers = await Trainer.find();
 
-    res.status(200).json({ trainers: trainers });
+    res.status(200).json({ message: "Trainers Fetched", trainers: trainers });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -84,11 +84,14 @@ const updateTrainerById = async (req, res) => {
       new: true,
       runValidators: true,
     });
+
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });
     }
 
-    res.status(200).json({ message: "Trainer Updated successfully!" });
+    res
+      .status(200)
+      .json({ message: "Trainer Updated successfully!", trainer: trainer });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -100,6 +103,7 @@ const deleteTrainerById = async (req, res) => {
 
   try {
     const trainer = await Trainer.findByIdAndDelete(trainerId);
+    console.log(trainer);
 
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });

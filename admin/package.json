@@ -22,13 +22,16 @@
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "gsap": "^3.12.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-big-calendar": "^1.15.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
     "scss": "^0.2.4",
-    "sonner": "^1.5.0"
+    "sonner": "^1.5.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
