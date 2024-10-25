@@ -5,13 +5,16 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { TrainerProvider } from "./context/TrainerContext.jsx";
 import { GeneralProvider } from "./context/GeneralContext.jsx";
+import { SubscriptionProvider } from "./context/SubscriptionContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Router>
     <AuthProvider>
       <GeneralProvider>
         <TrainerProvider>
-          <App />
+          <SubscriptionProvider>
+            <App />
+          </SubscriptionProvider>
         </TrainerProvider>
       </GeneralProvider>
     </AuthProvider>

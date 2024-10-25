@@ -60,6 +60,50 @@ const sidebarApplications = [
       },
     ],
   },
+  {
+    name: "Fitness Plans",
+    icon: "fa-light fa-card-heart",
+    location: "plans",
+    childrens: [
+      {
+        name: "Diet Plans List",
+        location: "plans/diet/list",
+      },
+      {
+        name: "Add Diet Plans",
+        location: "plans/diet/add",
+      },
+      {
+        name: "Workout Plans List",
+        location: "plans/workout/list",
+      },
+      {
+        name: "Add Workout Plans",
+        location: "plans/workout/add",
+      },
+    ],
+  },
+  {
+    name: "Subscription Plans",
+    icon: "fa-light fa-crown",
+    location: "subscription",
+    childrens: [
+      {
+        name: "Plans List",
+        location: "subscription/list",
+      },
+      {
+        name: "Add New Plan",
+        location: "subscription/add",
+      },
+    ],
+  },
+  {
+    name: "Subscription Paylist",
+    icon: "fa-light fa-money-check",
+    location: "payment",
+    childrens: [],
+  },
 ];
 
 export const Sidebar = () => {
@@ -101,12 +145,17 @@ export const Sidebar = () => {
                     ? "text-white bg-gray-800"
                     : "text-gray-300 hover:text-white hover:ps-3 hover:bg-gray-800"
                 }`}
-                onClick={() =>
-                  location.slice(1) !== list.location &&
-                  navigate(`/${list.location}`)
-                }
+                onClick={() => {
+                  if (location.slice(1) !== list.location) {
+                    setExpanded(null);
+                    navigate(`/${list.location}`);
+                  }
+                }}
               >
-                <i className={`pe-4 text-lg ${list.icon}`}></i>
+                <i
+                  className={`pe-4 text-lg ${list.icon}`}
+                  style={{ fontSize: "15px" }}
+                ></i>
                 {list.name}
               </div>
             ))}
@@ -121,16 +170,35 @@ export const Sidebar = () => {
                   className={`flex items-center p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
                     location.slice(1).startsWith(list.location)
                       ? "text-white bg-gray-800"
-                      : "text-gray-300 hover:text-white hover:ps-2"
+                      : list.childrens.length === 0
+                      ? "text-gray-300 hover:text-white hover:ps-3"
+                      : "text-gray-300 hover:text-white"
                   }`}
-                  onClick={() => toggleExpand(index)}
+                  onClick={() =>
+                    list.childrens.length > 0
+                      ? toggleExpand(index)
+                      : (() => {
+                          console.log(location.slice(1) !== list.location);
+                          if (location.slice(1) !== list.location) {
+                            setExpanded(null);
+                            navigate(`/${list.location}`);
+                          }
+                        })()
+                  }
                 >
-                  <i className={`pe-4 text-lg ${list.icon}`}></i>
+                  <i
+                    className={`pe-4 text-lg ${list.icon}`}
+                    style={{ fontSize: "15px" }}
+                  ></i>
                   {list.name}
-                  {expanded === index ? (
-                    <IconChevronDown className="ml-auto" />
+                  {list.childrens.length > 0 ? (
+                    expanded === index ? (
+                      <IconChevronDown className="ml-auto" size={18} />
+                    ) : (
+                      <IconChevronRight className="ml-auto" size={18} />
+                    )
                   ) : (
-                    <IconChevronRight className="ml-auto" />
+                    ""
                   )}
                 </div>
                 {expanded === index && (

@@ -6,6 +6,12 @@ const MembershipPlanSchema = new Schema(
       type: String,
       required: true,
     },
+    planId: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
     duration: {
       type: Number,
       required: true,
@@ -19,6 +25,8 @@ const MembershipPlanSchema = new Schema(
     timestamps: true,
   }
 );
+
+MembershipPlanSchema.index({ planId: 1 });
 
 const MembershipPlan = model("MembershipPlan", MembershipPlanSchema);
 module.exports = MembershipPlan;

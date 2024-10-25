@@ -108,7 +108,7 @@ const AddTrainer = () => {
     setLoading(true);
     await addTrainer(trainer);
     setTrainer({
-      username: trainers.length + 1,
+      username: trainers.length + 2,
       name: "",
       email: "",
       phone: "",

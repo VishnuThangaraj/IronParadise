@@ -103,7 +103,6 @@ const deleteTrainerById = async (req, res) => {
 
   try {
     const trainer = await Trainer.findByIdAndDelete(trainerId);
-    console.log(trainer);
 
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });

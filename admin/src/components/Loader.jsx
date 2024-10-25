@@ -4,15 +4,15 @@ export const Loader = () => {
     display: "inline-block",
     width: "1em",
     height: "1em",
+    position: "relative",
   };
 
-  const centerStyle = {
-    position: "absolute",
-    left: "0",
-    right: "0",
-    top: "0",
-    bottom: "0",
-    margin: "auto",
+  const parentStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    minHeight: "80vh",
   };
 
   const bladeStyle = {
@@ -44,20 +44,22 @@ export const Loader = () => {
   });
 
   return (
-    <div style={{ ...spinnerStyle, ...centerStyle }}>
-      {blades}
-      <style>
-        {`
-          @keyframes spinner-fade9234 {
-            0% {
-              background-color: #69717d;
+    <div style={parentStyle}>
+      <div style={spinnerStyle}>
+        {blades}
+        <style>
+          {`
+            @keyframes spinner-fade9234 {
+              0% {
+                background-color: #69717d;
+              }
+              100% {
+                background-color: transparent;
+              }
             }
-            100% {
-              background-color: transparent;
-            }
-          }
-        `}
-      </style>
+          `}
+        </style>
+      </div>
     </div>
   );
 };

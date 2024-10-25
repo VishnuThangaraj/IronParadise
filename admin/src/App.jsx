@@ -15,6 +15,9 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AddTrainer = lazy(() => import("./pages/AddTrainer"));
 const EditTrainer = lazy(() => import("./pages/EditTrainer"));
 const TrainersList = lazy(() => import("./pages/TrainersList"));
+const AddSubscription = lazy(() => import("./pages/AddSubscription"));
+const EditSubscription = lazy(() => import("./pages/EditSubscription"));
+const SubscriptionList = lazy(() => import("./pages/SubscriptionList"));
 
 export const App = () => {
   const { user } = useContext(AuthContext);
@@ -48,6 +51,22 @@ export const App = () => {
                   <Route path="/trainer/list" element={<TrainersList />} />
                   <Route path="/trainer/add" element={<AddTrainer />} />
                   <Route path="/trainer/edit" element={<EditTrainer />} />
+
+                  {/* Plans */}
+
+                  {/* Subscription */}
+                  <Route
+                    path="/subscription/add"
+                    element={<AddSubscription />}
+                  />
+                  <Route
+                    path="/subscription/list"
+                    element={<SubscriptionList />}
+                  />
+                  <Route
+                    path="/subscription/edit"
+                    element={<EditSubscription />}
+                  />
 
                   <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>
