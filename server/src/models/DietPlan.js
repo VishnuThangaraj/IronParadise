@@ -2,6 +2,12 @@ const { Schema, model } = require("mongoose");
 
 const dietPlanSchema = new Schema(
   {
+    planId: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
     dietPlanName: { type: String, required: true },
     mondayBreakfast: { type: String, required: true },
     mondayLunch: { type: String, required: true },

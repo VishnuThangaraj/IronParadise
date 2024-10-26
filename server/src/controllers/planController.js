@@ -76,7 +76,7 @@ const deleteDietplanById = async (req, res) => {
 const addWorkoutPlan = async (req, res) => {
   const workoutPlan = req.body.workoutPlan;
   try {
-    const newWorkoutplan = new WorkoutPlan({ workoutPlan });
+    const newWorkoutplan = new WorkoutPlan({ ...workoutPlan });
 
     await newWorkoutplan.save();
 

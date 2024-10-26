@@ -29,10 +29,9 @@ export const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        {" "}
         <Input
           placeholder="Search"
-          size="lg"
+          size="md"
           startDecorator={
             <div className="pe-3 border-e-2 border-gray-200">
               <IconSearch stroke={1.5} size={22} />

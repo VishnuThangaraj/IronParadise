@@ -24,11 +24,11 @@ import {
 
 import { IconMail, IconTrash, IconPencil } from "@tabler/icons-react";
 
-import { AuthContext } from "../context/AuthContext";
-import { GeneralContext } from "../context/GeneralContext";
-import { TrainerContext } from "../context/TrainerContext";
+import { AuthContext } from "../../context/AuthContext";
+import { GeneralContext } from "../../context/GeneralContext";
+import { TrainerContext } from "../../context/TrainerContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const TrainersList = () => {
   const navigate = useNavigate();
@@ -361,6 +361,7 @@ const TrainersList = () => {
                 size="md"
                 sx={{
                   px: 4,
+                  borderRadius: 20,
                   backgroundColor: "black",
                   "&:hover": {
                     backgroundColor: "#222222",

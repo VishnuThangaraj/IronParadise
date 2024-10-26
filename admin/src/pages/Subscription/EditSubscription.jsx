@@ -11,9 +11,9 @@ import {
   FormControl,
 } from "@mui/joy";
 
-import { SubscriptionContext } from "../context/SubscriptionContext";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const EditSubscription = () => {
   const location = useLocation();

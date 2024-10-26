@@ -22,9 +22,9 @@ import {
 
 import { IconTrash, IconPencil } from "@tabler/icons-react";
 
-import { SubscriptionContext } from "../context/SubscriptionContext";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const SubscriptionList = () => {
   const navigate = useNavigate();
@@ -281,6 +281,7 @@ const SubscriptionList = () => {
                 size="md"
                 sx={{
                   px: 4,
+                  borderRadius: 20,
                   backgroundColor: "black",
                   "&:hover": {
                     backgroundColor: "#222222",

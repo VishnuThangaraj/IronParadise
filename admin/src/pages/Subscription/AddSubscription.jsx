@@ -10,9 +10,9 @@ import {
   FormControl,
 } from "@mui/joy";
 
-import { SubscriptionContext } from "../context/SubscriptionContext";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const AddSubscription = () => {
   const { subscriptions, addSubscription } = useContext(SubscriptionContext);
@@ -83,6 +83,7 @@ const AddSubscription = () => {
                 <FormControl sx={{ width: "48%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>Plan Name</FormLabel>
                   <Input
+                    placeholder="Subscription Plan Name"
                     onChange={handleChange}
                     value={subscription.name}
                     variant="outlined"
@@ -102,6 +103,7 @@ const AddSubscription = () => {
                     Plan Duration (in Months)
                   </FormLabel>
                   <Input
+                    placeholder="Months"
                     onChange={handleChange}
                     value={subscription.duration}
                     variant="outlined"
@@ -119,6 +121,7 @@ const AddSubscription = () => {
                     Plan Cost ( &#8377; )
                   </FormLabel>
                   <Input
+                    placeholder="₹ 00.00"
                     onChange={handleChange}
                     value={subscription.price}
                     variant="outlined"

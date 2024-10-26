@@ -63,23 +63,23 @@ const sidebarApplications = [
   {
     name: "Fitness Plans",
     icon: "fa-light fa-card-heart",
-    location: "plans",
+    location: "plan",
     childrens: [
       {
         name: "Diet Plans List",
-        location: "plans/diet/list",
+        location: "plan/diet/list",
       },
       {
         name: "Add Diet Plans",
-        location: "plans/diet/add",
+        location: "plan/diet/add",
       },
       {
         name: "Workout Plans List",
-        location: "plans/workout/list",
+        location: "plan/workout/list",
       },
       {
         name: "Add Workout Plans",
-        location: "plans/workout/add",
+        location: "plan/workout/add",
       },
     ],
   },

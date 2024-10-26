@@ -2,7 +2,8 @@ import dayjs from "dayjs";
 import { DatePicker } from "antd";
 import Button from "@mui/joy/Button";
 import { CircularProgress } from "@mui/material";
-import { Fragment, useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Fragment, useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -15,9 +16,9 @@ import {
   FormControl,
 } from "@mui/joy";
 
-import { TrainerContext } from "../context/TrainerContext";
+import { TrainerContext } from "../../context/TrainerContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const specializationOptions = [
   "Personal Trainer",
@@ -47,12 +48,17 @@ const specializationOptions = [
   "Core Training Specialist",
 ];
 
-const AddTrainer = () => {
-  const { trainers, addTrainer } = useContext(TrainerContext);
+const EditTrainer = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { findTrainerByID, updateTrainer } = useContext(TrainerContext);
+
+  const trainerId = location.state || null;
 
   const [loading, setLoading] = useState(false);
   const [trainer, setTrainer] = useState({
-    username: trainers.length + 1,
+    username: 0,
     name: "",
     email: "",
     phone: "",
@@ -64,6 +70,15 @@ const AddTrainer = () => {
     bmi: 0,
     address: "",
   });
+
+  useEffect(() => {
+    if (trainerId === null) return navigate(-1);
+    const fetchTrainerData = async () => {
+      const trainerData = await findTrainerByID(trainerId);
+      setTrainer(trainerData);
+    };
+    fetchTrainerData();
+  }, [navigate, trainerId, findTrainerByID]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,9 +121,9 @@ const AddTrainer = () => {
   const validateAndAddTrainer = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await addTrainer(trainer);
+    await updateTrainer(trainerId, trainer);
     setTrainer({
-      username: trainers.length + 2,
+      username: 0,
       name: "",
       email: "",
       phone: "",
@@ -121,27 +136,28 @@ const AddTrainer = () => {
       address: "",
     });
     setLoading(false);
+    navigate("/trainer/list");
   };
 
   return (
-    <div id="addtrainer">
+    <div id="edittrainer">
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Trainers"
-        currentPath="Add New Trainer"
+        currentPath="Edit Trainer"
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }}>
         <CardContent>
           <Box component="form" sx={{ p: 0 }} onSubmit={validateAndAddTrainer}>
             <div className="text-xl font-bold border-b-2 p-5 ">
-              Add New Trainer
+              Edit Existing Trainer
             </div>
             <div className="flex flex-col gap-3 px-6 py-3">
               <div className="flex justify-between">
                 <FormControl sx={{ width: "48%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>Auto Generated Id</FormLabel>
                   <Input
-                    value={`TR${trainers.length + 1}`}
+                    value={trainer.username && trainer.username.toUpperCase()}
                     variant="solid"
                     size="md"
                     sx={{ py: 1 }}
@@ -335,7 +351,7 @@ const AddTrainer = () => {
                   type="submit"
                   size="md"
                   sx={{
-                    px: 5,
+                    px: 4,
                     backgroundColor: "black",
                     "&:hover": {
                       backgroundColor: "#222222",
@@ -350,10 +366,10 @@ const AddTrainer = () => {
                           color: "white",
                         }}
                       />{" "}
-                      <span className="ms-5 text-base">Adding ...</span>
+                      <span className="ms-5 text-base">Updating ...</span>
                     </Fragment>
                   ) : (
-                    "Add Trainer"
+                    "Update Trainer"
                   )}
                 </Button>
               </div>
@@ -365,4 +381,4 @@ const AddTrainer = () => {
   );
 };
 
-export default AddTrainer;
+export default EditTrainer;

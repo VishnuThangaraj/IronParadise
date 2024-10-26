@@ -2,6 +2,12 @@ const { Schema, model } = require("mongoose");
 
 const workoutPlanSchema = new Schema(
   {
+    planId: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
     workoutPlanName: { type: String, required: true },
     mondayWorkout: { type: String, required: true },
     tuesdayWorkout: { type: String, required: true },
