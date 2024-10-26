@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import axios from "../service/api";
 import PropTypes from "prop-types";
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useContext } from "react";
 
 import { AuthContext } from "./AuthContext";
 

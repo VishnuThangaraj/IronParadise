@@ -56,7 +56,7 @@ export const PlanProvider = ({ children }) => {
       );
 
       if (response.status === 201) {
-        const newDietplan = response.data.dietPlan;
+        const newDietplan = response.data.dietplan;
         setDietplans([...dietplans, newDietplan]);
         toast.success("Dietplan Added Successfully ✔️");
       } else {

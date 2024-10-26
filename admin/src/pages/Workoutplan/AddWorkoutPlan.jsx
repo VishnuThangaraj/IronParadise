@@ -258,7 +258,7 @@ const AddWorkoutPlan = () => {
                       <span className="ms-5 text-base">Adding ...</span>
                     </Fragment>
                   ) : (
-                    "Add Diet Plan"
+                    "Add Workout Plan"
                   )}
                 </Button>
               </div>

@@ -22,8 +22,6 @@ import {
   Textarea,
 } from "@mui/joy";
 
-import { IconMail, IconTrash, IconPencil } from "@tabler/icons-react";
-
 import { AuthContext } from "../../context/AuthContext";
 import { GeneralContext } from "../../context/GeneralContext";
 import { TrainerContext } from "../../context/TrainerContext";
@@ -165,7 +163,10 @@ const TrainersList = () => {
                 setOpenMail(true);
               }}
             >
-              <IconMail stroke={1.5} color="black" size={26} />
+              <i
+                className="fa-duotone fa-solid fa-envelopes"
+                style={{ fontSize: "20px" }}
+              ></i>
             </IconButton>
           </Tooltip>
           <Tooltip title="Edit" placement="top" arrow>
@@ -175,7 +176,10 @@ const TrainersList = () => {
                 navigate("/trainer/edit", { state: params.row.full_id });
               }}
             >
-              <IconPencil stroke={1.5} color="black" />
+              <i
+                className="fa-duotone fa-solid fa-pencil"
+                style={{ fontSize: "20px" }}
+              ></i>
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete" placement="top" arrow>
@@ -187,7 +191,10 @@ const TrainersList = () => {
                 setOpen(true);
               }}
             >
-              <IconTrash stroke={1.5} color="black" />
+              <i
+                className="fa-duotone fa-solid fa-trash-can"
+                style={{ fontSize: "20px" }}
+              ></i>
             </IconButton>
           </Tooltip>
         </div>

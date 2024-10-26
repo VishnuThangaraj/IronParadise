@@ -1,7 +1,5 @@
-import Button from "@mui/joy/Button";
-import { CircularProgress } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Fragment, useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -16,15 +14,14 @@ import { PlanContext } from "../../context/PlanContext";
 
 import { PageLocation } from "../../components/PageLocation";
 
-const EditWorkoutPlan = () => {
+const ViewWorkoutplan = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { findWorkoutplanByID, updateWorkoutplan } = useContext(PlanContext);
+  const { findWorkoutplanByID } = useContext(PlanContext);
 
   const workoutplanId = location.state || null;
 
-  const [loading, setLoading] = useState(false);
   const [workoutplan, setWorkoutplan] = useState({
     planId: `WP0`,
     workoutPlanName: "",
@@ -46,47 +43,18 @@ const EditWorkoutPlan = () => {
     fetchWorkoutplanData();
   }, [navigate, workoutplanId, findWorkoutplanByID]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedWorkoutplan = { ...workoutplan, [name]: value };
-    setWorkoutplan(updatedWorkoutplan);
-  };
-
-  const validateAndEditWorkoutplan = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await updateWorkoutplan(workoutplanId, workoutplan);
-    setWorkoutplan({
-      planId: `WP0`,
-      workoutPlanName: "",
-      mondayWorkout: "",
-      tuesdayWorkout: "",
-      wednesdayWorkout: "",
-      thursdayWorkout: "",
-      fridayWorkout: "",
-      saturdayWorkout: "",
-      sundayWorkout: "",
-    });
-    setLoading(false);
-    navigate("/plan/workout/list");
-  };
-
   return (
-    <div id="editworkoutplan">
+    <div id="viewworkoutplan">
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Fitness Plans"
-        currentPath="Edit Workout Plan"
+        currentPath="View Workout Plan"
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }}>
         <CardContent>
-          <Box
-            component="form"
-            sx={{ p: 0 }}
-            onSubmit={validateAndEditWorkoutplan}
-          >
+          <Box component="form" sx={{ p: 0 }}>
             <div className="text-xl font-bold border-b-2 p-5 ">
-              Edit Workout Plan
+              View Workout Plan
             </div>
             <div className="flex flex-col gap-3 px-6 py-3">
               <div className="flex justify-between">
@@ -107,7 +75,6 @@ const EditWorkoutPlan = () => {
                   <Input
                     placeholder="Enter the Workout Plan Name"
                     value={workoutplan.workoutPlanName}
-                    onChange={handleChange}
                     name="workoutPlanName"
                     variant="outlined"
                     size="md"
@@ -116,6 +83,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
               </div>
@@ -125,7 +93,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Monday's Workout Plan    "
                     value={workoutplan.mondayWorkout}
-                    onChange={handleChange}
                     name="mondayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -136,6 +103,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -143,7 +111,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Tuesday's Workout Plan    "
                     value={workoutplan.tuesdayWorkout}
-                    onChange={handleChange}
                     name="tuesdayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -154,6 +121,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
               </div>
@@ -163,7 +131,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Wednesday's Workout Plan"
                     value={workoutplan.wednesdayWorkout}
-                    onChange={handleChange}
                     name="wednesdayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -174,6 +141,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -181,7 +149,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Thursday's Workout Plan    "
                     value={workoutplan.thursdayWorkout}
-                    onChange={handleChange}
                     name="thursdayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -192,6 +159,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
               </div>
@@ -201,7 +169,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Friday's Workout Plan"
                     value={workoutplan.fridayWorkout}
-                    onChange={handleChange}
                     name="fridayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -212,6 +179,7 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -219,7 +187,6 @@ const EditWorkoutPlan = () => {
                   <Textarea
                     placeholder="Enter Saturday's Workout Plan    "
                     value={workoutplan.saturdayWorkout}
-                    onChange={handleChange}
                     name="saturdayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -230,16 +197,16 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between mb-5">
                 <FormControl sx={{ width: "48%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>Sunday Plan</FormLabel>
                   <Textarea
                     placeholder="Enter Sunday's Workout Plan"
                     value={workoutplan.sundayWorkout}
-                    onChange={handleChange}
                     name="sundayWorkout"
                     variant="outlined"
                     minRows={2}
@@ -250,37 +217,9 @@ const EditWorkoutPlan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
-              </div>
-              <div className="my-3 flex flex-row-reverse">
-                <Button
-                  className="transition-all duration-300"
-                  variant="solid"
-                  type="submit"
-                  size="md"
-                  sx={{
-                    px: 5,
-                    backgroundColor: "black",
-                    "&:hover": {
-                      backgroundColor: "#222222",
-                    },
-                  }}
-                >
-                  {loading ? (
-                    <Fragment>
-                      <CircularProgress
-                        size={20}
-                        sx={{
-                          color: "white",
-                        }}
-                      />{" "}
-                      <span className="ms-5 text-base">Updating ...</span>
-                    </Fragment>
-                  ) : (
-                    "Update Workout Plan"
-                  )}
-                </Button>
               </div>
             </div>
           </Box>
@@ -290,4 +229,4 @@ const EditWorkoutPlan = () => {
   );
 };
 
-export default EditWorkoutPlan;
+export default ViewWorkoutplan;

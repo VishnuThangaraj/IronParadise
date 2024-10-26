@@ -16,8 +16,6 @@ import {
   DialogContent,
 } from "@mui/joy";
 
-import { IconTrash, IconPencil } from "@tabler/icons-react";
-
 import { PlanContext } from "../../context/PlanContext";
 
 import { PageLocation } from "../../components/PageLocation";
@@ -69,6 +67,19 @@ const WorkoutPlanList = () => {
       align: "center",
       renderCell: (params) => (
         <div className="flex justify-center space-x-2 mt-2">
+          <Tooltip title="View" placement="top" arrow>
+            <IconButton
+              aria-label="view"
+              onClick={() => {
+                navigate("/plan/workout/view", { state: params.row.full_id });
+              }}
+            >
+              <i
+                className="fa-duotone fa-solid fa-eye "
+                style={{ fontSize: "22px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton
               aria-label="edit"
@@ -76,7 +87,10 @@ const WorkoutPlanList = () => {
                 navigate("/plan/workout/edit", { state: params.row.full_id });
               }}
             >
-              <IconPencil stroke={1.5} color="black" />
+              <i
+                className="fa-duotone fa-solid fa-pencil"
+                style={{ fontSize: "20px" }}
+              ></i>
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete" placement="top" arrow>
@@ -88,7 +102,10 @@ const WorkoutPlanList = () => {
                 setOpen(true);
               }}
             >
-              <IconTrash stroke={1.5} color="black" />
+              <i
+                className="fa-duotone fa-solid fa-trash-can"
+                style={{ fontSize: "20px" }}
+              ></i>
             </IconButton>
           </Tooltip>
         </div>

@@ -5,7 +5,7 @@ const WorkoutPlan = require("../models/WorkoutPlan");
 const addDietPlan = async (req, res) => {
   const dietPlan = req.body.dietPlan;
   try {
-    const newDietPlan = new DietPlan({ dietPlan });
+    const newDietPlan = new DietPlan({ ...dietPlan });
 
     await newDietPlan.save();
 
@@ -25,7 +25,7 @@ const fetchDietplans = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Diet Plans Fetched", dietPlans: dietPlans });
+      .json({ message: "Diet Plans Fetched", dietplans: dietPlans });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -96,7 +96,7 @@ const fetchWorkoutplans = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Workout Plans Fetched", workoutPlans: workoutPlans });
+      .json({ message: "Workout Plans Fetched", workoutplans: workoutPlans });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

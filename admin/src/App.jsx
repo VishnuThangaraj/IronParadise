@@ -23,8 +23,12 @@ const AddDietplan = lazy(() => import("./pages/Dietplan/AddDietplan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const DietplanList = lazy(() => import("./pages/Dietplan/DietplanList"));
 const EditDietplan = lazy(() => import("./pages/Dietplan/EditDietplan"));
+const ViewDietplan = lazy(() => import("./pages/Dietplan/ViewDietplan"));
 const SubscriptionPaylist = lazy(() => import("./pages/SubscriptionPaylist"));
 const AddWorkoutPlan = lazy(() => import("./pages/Workoutplan/AddWorkoutPlan"));
+const ViewWorkoutplan = lazy(() =>
+  import("./pages/Workoutplan/ViewWorkoutplan")
+);
 const EditWorkoutPlan = lazy(() =>
   import("./pages/Workoutplan/EditWorkoutPlan")
 );
@@ -81,6 +85,7 @@ export const App = () => {
                   <Route path="/plan/diet/add" element={<AddDietplan />} />
                   <Route path="/plan/diet/list" element={<DietplanList />} />
                   <Route path="/plan/diet/edit" element={<EditDietplan />} />
+                  <Route path="/plan/diet/view" element={<ViewDietplan />} />
                   <Route
                     path="/plan/workout/add"
                     element={<AddWorkoutPlan />}
@@ -92,6 +97,10 @@ export const App = () => {
                   <Route
                     path="/plan/workout/list"
                     element={<WorkoutPlanList />}
+                  />
+                  <Route
+                    path="/plan/workout/view"
+                    element={<ViewWorkoutplan />}
                   />
 
                   {/* Members */}

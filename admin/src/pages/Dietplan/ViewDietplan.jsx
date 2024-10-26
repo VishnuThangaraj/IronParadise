@@ -1,7 +1,5 @@
-import Button from "@mui/joy/Button";
-import { CircularProgress } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Fragment, useContext, useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -26,15 +24,14 @@ const weekDays = [
   "sunday",
 ];
 
-const EditDietplan = () => {
+const ViewDietplan = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { findDietplanByID, updateDietplan } = useContext(PlanContext);
+  const { findDietplanByID } = useContext(PlanContext);
 
   const dietplanId = location.state || null;
 
-  const [loading, setLoading] = useState(false);
   const [dietplan, setDietplan] = useState({
     planId: `DP0`,
     dietPlanName: "",
@@ -70,59 +67,16 @@ const EditDietplan = () => {
     fetchWorkoutplanData();
   }, [navigate, dietplanId, findDietplanByID]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    const updatedDietplan = { ...dietplan, [name]: value };
-    setDietplan(updatedDietplan);
-  };
-
-  const validateAndEditDietplan = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await updateDietplan(dietplanId, dietplan);
-    setDietplan({
-      planId: `DP0`,
-      dietPlanName: "",
-      mondayBreakfast: "",
-      mondayLunch: "",
-      mondayDinner: "",
-      tuesdayBreakfast: "",
-      tuesdayLunch: "",
-      tuesdayDinner: "",
-      wednesdayBreakfast: "",
-      wednesdayLunch: "",
-      wednesdayDinner: "",
-      thursdayBreakfast: "",
-      thursdayLunch: "",
-      thursdayDinner: "",
-      fridayBreakfast: "",
-      fridayLunch: "",
-      fridayDinner: "",
-      saturdayBreakfast: "",
-      saturdayLunch: "",
-      saturdayDinner: "",
-      sundayBreakfast: "",
-      sundayLunch: "",
-      sundayDinner: "",
-    });
-    setLoading(false);
-    navigate("/plan/diet/list");
-  };
-
   return (
-    <div id="editdietplan">
+    <div id="viewdietplan">
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Fitness Plans"
-        currentPath="Edit Diet Plan"
+        currentPath="View Diet Plan"
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }}>
         <CardContent>
-          <Box
-            component="form"
-            sx={{ p: 0 }}
-            onSubmit={validateAndEditDietplan}
-          >
+          <Box component="form" sx={{ p: 0, pb: 3 }}>
             <div className="text-xl font-bold border-b-2 p-5 ">
               Add New Diet Plan
             </div>
@@ -145,7 +99,6 @@ const EditDietplan = () => {
                   <Input
                     placeholder="Enter the Diet Plan Name"
                     value={dietplan.dietPlanName}
-                    onChange={handleChange}
                     name="dietPlanName"
                     variant="outlined"
                     size="md"
@@ -154,6 +107,7 @@ const EditDietplan = () => {
                       backgroundColor: "white",
                     }}
                     required
+                    disabled
                   />
                 </FormControl>
               </div>
@@ -174,7 +128,6 @@ const EditDietplan = () => {
                         placeholder="Enter Breakfast Plan"
                         value={dietplan[`${days}Breakfast`]}
                         name={`${days}Breakfast`}
-                        onChange={handleChange}
                         variant="outlined"
                         minRows={2}
                         maxRows={4}
@@ -184,6 +137,7 @@ const EditDietplan = () => {
                           backgroundColor: "white",
                         }}
                         required
+                        disabled
                       />
                     </FormControl>
                     <FormControl sx={{ width: "31%" }}>
@@ -191,7 +145,6 @@ const EditDietplan = () => {
                       <Textarea
                         placeholder="Enter Lunch Plan"
                         value={dietplan[`${days}Lunch`]}
-                        onChange={handleChange}
                         name={`${days}Lunch`}
                         variant="outlined"
                         minRows={2}
@@ -202,6 +155,7 @@ const EditDietplan = () => {
                           backgroundColor: "white",
                         }}
                         required
+                        disabled
                       />
                     </FormControl>
                     <FormControl sx={{ width: "31%" }}>
@@ -209,7 +163,6 @@ const EditDietplan = () => {
                       <Textarea
                         placeholder="Enter Dinner Plan"
                         value={dietplan[`${days}Dinner`]}
-                        onChange={handleChange}
                         name={`${days}Dinner`}
                         variant="outlined"
                         minRows={2}
@@ -220,41 +173,12 @@ const EditDietplan = () => {
                           backgroundColor: "white",
                         }}
                         required
+                        disabled
                       />
                     </FormControl>
                   </div>
                 </div>
               ))}
-
-              <div className="my-3 flex flex-row-reverse">
-                <Button
-                  className="transition-all duration-300"
-                  variant="solid"
-                  type="submit"
-                  size="md"
-                  sx={{
-                    px: 5,
-                    backgroundColor: "black",
-                    "&:hover": {
-                      backgroundColor: "#222222",
-                    },
-                  }}
-                >
-                  {loading ? (
-                    <Fragment>
-                      <CircularProgress
-                        size={20}
-                        sx={{
-                          color: "white",
-                        }}
-                      />{" "}
-                      <span className="ms-5 text-base">Updating ...</span>
-                    </Fragment>
-                  ) : (
-                    "Update Diet Plan"
-                  )}
-                </Button>
-              </div>
             </div>
           </Box>
         </CardContent>
@@ -263,4 +187,4 @@ const EditDietplan = () => {
   );
 };
 
-export default EditDietplan;
+export default ViewDietplan;

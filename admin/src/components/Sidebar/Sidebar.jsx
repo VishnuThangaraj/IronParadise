@@ -62,7 +62,7 @@ const sidebarApplications = [
   },
   {
     name: "Fitness Plans",
-    icon: "fa-light fa-card-heart",
+    icon: "fa-thin fa-folder-heart",
     location: "plan",
     childrens: [
       {
@@ -153,10 +153,10 @@ export const Sidebar = () => {
                 }}
               >
                 <i
-                  className={`pe-4 text-lg ${list.icon}`}
+                  className={`pe-4 text-sm ${list.icon}`}
                   style={{ fontSize: "15px" }}
                 ></i>
-                {list.name}
+                <span style={{ fontSize: "15px" }}>{list.name}</span>
               </div>
             ))}
           </div>
@@ -187,10 +187,10 @@ export const Sidebar = () => {
                   }
                 >
                   <i
-                    className={`pe-4 text-lg ${list.icon}`}
+                    className={`pe-4 text-sm ${list.icon}`}
                     style={{ fontSize: "15px" }}
                   ></i>
-                  {list.name}
+                  <span style={{ fontSize: "15px" }}>{list.name}</span>
                   {list.childrens.length > 0 ? (
                     expanded === index ? (
                       <IconChevronDown className="ml-auto" size={18} />
@@ -214,7 +214,8 @@ export const Sidebar = () => {
                         }`}
                         onClick={() => navigate(`/${child.location}`)}
                       >
-                        {child.name}
+                        <i className="fa-solid fa-caret-right me-2"></i>
+                        <span style={{ fontSize: "15px" }}>{child.name}</span>
                       </div>
                     ))}
                   </div>
