@@ -19,6 +19,20 @@ router.put(
   memberController.updateMember
 );
 
+// Update Member Plan
+router.put(
+  "/plan/update/:id",
+  authenticateJWT(["admin"]),
+  memberController.updatePlan
+);
+
+// Update Subscription
+router.put(
+  "/update/plan/:id",
+  authenticateJWT(["admin"]),
+  memberController.updateSubPlan
+);
+
 // Deleta Member
 router.delete(
   "/delete/:id",

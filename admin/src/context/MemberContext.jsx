@@ -60,7 +60,57 @@ export const MemberProvider = ({ children }) => {
   };
 
   // Update fitness Plan
-  const updateFitnessPlan = async (memberId, planData) => {};
+  const updateFitnessPlan = async (memberId, planData) => {
+    try {
+      const response = await axios.put(
+        `/member/plan/update/${memberId}`,
+        { planData },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedMember = response.data.member;
+        setMembers((prevMembers) =>
+          prevMembers.map((member) =>
+            member._id === memberId ? updatedMember || member : member
+          )
+        );
+        toast.success("Fitness Plan Updated Successfully ✔️");
+      } else {
+        toast.warning("Failed to Update Fitness Plan 😓");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
+  // Update Subscription Plan
+  const updateSubscription = async (memberId, subscription) => {
+    try {
+      const response = await axios.put(
+        `/member/update/plan/${memberId}`,
+        { subscription },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        const updatedMember = response.data.member;
+        setMembers((prevMembers) =>
+          prevMembers.map((member) =>
+            member._id === memberId ? updatedMember || member : member
+          )
+        );
+        toast.success("Subscription Plan Updated Successfully ✔️");
+      } else {
+        toast.warning("Failed to Update Subscription Plan  😓");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
 
   // Update Member by ID
   const updateMember = async (memberId, rawData) => {
@@ -123,6 +173,7 @@ export const MemberProvider = ({ children }) => {
         updateMember,
         deleteMember,
         updateFitnessPlan,
+        updateSubscription,
       }}
     >
       {children}

@@ -16,6 +16,20 @@ router.get(
   subscriptionController.fetchSubscriptions
 );
 
+// Get all Subscription Plan History
+router.get(
+  "/history",
+  authenticateJWT(["admin"]),
+  subscriptionController.subscriptionHistory
+);
+
+// Get all Subscription Payment History
+router.get(
+  "/payment",
+  authenticateJWT(["admin"]),
+  subscriptionController.paymentHistory
+);
+
 // Update Subscription by ID
 router.put(
   "/update/:id",

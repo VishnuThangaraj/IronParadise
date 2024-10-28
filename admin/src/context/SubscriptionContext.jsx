@@ -11,18 +11,43 @@ export const SubscriptionProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
 
   const [subscriptions, setSubscriptions] = useState([]);
+  const [subscriptionHistory, setSubscriptionHistory] = useState([]);
+  const [paymentHistory, setPaymentHistory] = useState([]);
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
-        const response = await axios.get("/subscription", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.status === 200) {
-          const subscriptionlist = response.data.subscriptions;
+        const [subscription, history, payment] = await Promise.all([
+          axios.get("/subscription", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("/subscription/history", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("/subscription/payment", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        if (subscription.status === 200) {
+          const subscriptionlist = subscription.data.subscriptions;
           setSubscriptions(subscriptionlist || []);
         } else {
           console.log("Error Fetching Subscription List");
+        }
+
+        if (history.status === 200) {
+          const subHistoryList = history.data.history;
+          setSubscriptionHistory(subHistoryList || []);
+        } else {
+          console.log("Error Fetching Subscription History");
+        }
+
+        if (payment.status === 200) {
+          const paymentList = payment.data.history;
+          setPaymentHistory(paymentList || []);
+        } else {
+          console.log("Error Fetching Payment History");
         }
       } catch (err) {
         console.log("Error Connecting to Server | ", err);
@@ -115,11 +140,20 @@ export const SubscriptionProvider = ({ children }) => {
     }
   };
 
+  const subscriptionName = async (subscriptionId) => {
+    return `${
+      subscriptions.filter(
+        (subscription) => subscription._id === subscriptionId
+      )[0].name
+    }`;
+  };
+
   return (
     <SubscriptionContext.Provider
       value={{
         subscriptions,
         addSubscription,
+        subscriptionName,
         deleteSubscription,
         updateSubscription,
         findSubscriptionByID,

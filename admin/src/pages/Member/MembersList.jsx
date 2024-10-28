@@ -57,7 +57,7 @@ const MembersList = () => {
       dietplan: member.dietPlan.dietPlanName,
       workoutplan: member.workoutPlan.workoutPlanName,
       trainer: member.trainerId.name,
-      status: member.subscription.membershipPlan,
+      status: member.subscription.pending < member.subscription.planCost,
       index: index++,
       full_id: member._id,
     }));
@@ -129,7 +129,11 @@ const MembersList = () => {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <Chip color={params.row.status ? "success" : "danger"} variant="soft">
+        <Chip
+          className="shadow-md"
+          color={params.row.status ? "success" : "danger"}
+          variant="soft"
+        >
           {params.row.status ? "ACTIVE" : "INACTIVE"}
         </Chip>
       ),

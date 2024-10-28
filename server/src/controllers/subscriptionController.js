@@ -1,4 +1,6 @@
 const MembershipPlan = require("../models/MembershipPlan");
+const PaymentHistory = require("../models/PaymentHistory");
+const SubscriptionHistory = require("../models/SubscriptionHistory");
 
 // Add new Subscription
 const addSubscription = async (req, res) => {
@@ -30,6 +32,36 @@ const fetchSubscriptions = async (req, res) => {
     res
       .status(200)
       .json({ message: "Subscriptions Fetched", subscriptions: subscriptions });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Payment History
+const paymentHistory = async (req, res) => {
+  try {
+    const paymentHistory = await PaymentHistory.find().populate("subscription");
+
+    res.status(200).json({
+      message: "Payment History Fetched",
+      history: paymentHistory,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Subscription History
+const subscriptionHistory = async (req, res) => {
+  try {
+    const subscriptionHistory = await SubscriptionHistory.find().populate(
+      "subscription"
+    );
+
+    res.status(200).json({
+      message: "Subscription History Fetched",
+      history: subscriptionHistory,
+    });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -83,8 +115,10 @@ const deleteSubscriptionById = async (req, res) => {
 };
 
 module.exports = {
+  paymentHistory,
   addSubscription,
   fetchSubscriptions,
+  subscriptionHistory,
   updateSubscriptionById,
   deleteSubscriptionById,
 };

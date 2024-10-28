@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const PaymentHistorySchema = new mongoose.Schema(
+const PaymentHistorySchema = new Schema(
   {
     member: {
       type: Schema.Types.ObjectId,
@@ -11,7 +11,7 @@ const PaymentHistorySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    membershipPlan: {
+    subscription: {
       type: Schema.Types.ObjectId,
       ref: "MembershipPlan",
     },
@@ -26,5 +26,6 @@ const PaymentHistorySchema = new mongoose.Schema(
   }
 );
 
-const PaymentHistory = mongoose.model("PaymentHistory", PaymentHistorySchema);
+const PaymentHistory = model("PaymentHistory", PaymentHistorySchema);
+
 module.exports = PaymentHistory;

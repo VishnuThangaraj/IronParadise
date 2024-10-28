@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Member = require("../models/Member");
 
 // Add New Member
@@ -129,6 +128,37 @@ const updateMember = async (req, res) => {
   }
 };
 
+// Update Subscription Plan for the member
+const updateSubPlan = async (req, res) => {
+  const memberId = req.params.id;
+  const { subscription } = req.body;
+
+  try {
+    const member = await Member.findById(memberId);
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    member.subscription = subscription;
+
+    await member.save();
+
+    const updatedMember = await Member.findById(memberId)
+      .populate("workoutPlan")
+      .populate("trainerId")
+      .populate("dietPlan");
+
+    res.status(200).json({
+      message: "Subscription Updated successfully!",
+      member: updatedMember,
+    });
+    await member.save();
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 // Delete a Member
 const deleteMember = async (req, res) => {
   const memberId = req.params.id;
@@ -146,4 +176,42 @@ const deleteMember = async (req, res) => {
   }
 };
 
-module.exports = { registerMember, fetchMembers, updateMember, deleteMember };
+// Update Member Plan
+const updatePlan = async (req, res) => {
+  const memberId = req.params.id;
+  const { planData } = req.body;
+
+  try {
+    const member = await Member.findById(memberId);
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    member.dietPlan = planData.dietplan;
+    member.workoutPlan = planData.workoutplan;
+
+    await member.save();
+
+    const updatedMember = await Member.findById(memberId)
+      .populate("workoutPlan")
+      .populate("trainerId")
+      .populate("dietPlan");
+
+    res.status(200).json({
+      message: "Fitness Plan Updated successfully!",
+      member: updatedMember,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  updatePlan,
+  fetchMembers,
+  updateMember,
+  deleteMember,
+  updateSubPlan,
+  registerMember,
+};

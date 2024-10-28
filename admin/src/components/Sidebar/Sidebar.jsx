@@ -18,7 +18,7 @@ import {
 } from "@tabler/icons-react";
 
 import "./Sidebar.scss";
-
+7;
 const sidebarGeneral = [
   { name: "Dashboard", location: "home", icon: "fa-light fa-house" },
   // {
@@ -98,12 +98,12 @@ const sidebarApplications = [
       },
     ],
   },
-  // {
-  //   name: "Subscription Paylist",
-  //   icon: "fa-light fa-money-check",
-  //   location: "payment",
-  //   childrens: [],
-  // },
+  {
+    name: "Subscription Paylist",
+    icon: "fa-light fa-money-check",
+    location: "payment",
+    childrens: [],
+  },
 ];
 
 export const Sidebar = () => {
@@ -178,7 +178,6 @@ export const Sidebar = () => {
                     list.childrens.length > 0
                       ? toggleExpand(index)
                       : (() => {
-                          console.log(location.slice(1) !== list.location);
                           if (location.slice(1) !== list.location) {
                             setExpanded(null);
                             navigate(`/${list.location}`);
