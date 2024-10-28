@@ -26,6 +26,7 @@ import {
   FormLabel,
   FormControl,
   Input,
+  FormHelperText,
 } from "@mui/joy";
 
 import { AuthContext } from "../context/AuthContext";
@@ -46,6 +47,11 @@ const SubscriptionPaylist = () => {
   const [openpay, setOpenpay] = useState(false);
   const [openedit, setOpenedit] = useState(false);
   const [memberRows, setMemberRows] = useState([]);
+  const [payment, setPayment] = useState({
+    amount: "",
+    paymentMethod: "cash",
+    dueAmount: 0,
+  });
   const [subscription, setSubscription] = useState({
     membershipPlan: null,
     startDate: currentDate,
@@ -89,7 +95,36 @@ const SubscriptionPaylist = () => {
     setEditid(memberId);
     const member = await findMember(memberId);
     setSubscription({ ...member.subscription });
-    edit ? setOpenedit(true) : setOpenpay(true);
+    if (edit) {
+      setOpenedit(true);
+    } else {
+      setOpenpay(true);
+      setPayment({
+        member: memberId,
+        subscription: member.subscription.membershipPlan,
+        amount: "",
+        dueAmount: member.subscription.pending || 0,
+        paymentMethod: "cash",
+      });
+    }
+  };
+
+  const handlePaymentChange = (event, newValue) => {
+    setPayment({ ...payment, ["paymentMethod"]: newValue });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (isNaN(Number(value)) || subscription.pending - value < 0) {
+      return;
+    }
+
+    setPayment({
+      ...payment,
+      dueAmount: subscription.pending - value,
+      [name]: value,
+    });
   };
 
   const columns = [
@@ -501,6 +536,190 @@ const SubscriptionPaylist = () => {
               variant="plain"
               color="neutral"
               onClick={() => setOpenedit(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </ModalDialog>
+      </Modal>
+
+      {/* Make Payment */}
+      <Modal open={openpay} onClose={() => setOpenpay(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "900px" }}
+        >
+          <DialogTitle>
+            <i className="fa-duotone fa-solid fa-credit-card mt-1 me-1"></i>
+            Make Payment
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between my-4">
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Plan Name</FormLabel>
+                <Select
+                  placeholder="Select Subscription Plan"
+                  value={subscription.membershipPlan}
+                  onChange={handleSubscriptionChange}
+                  name="subscription"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "white",
+                    height: "42px",
+                  }}
+                  disabled
+                  required
+                >
+                  {subscriptions.map((subscription, index) => (
+                    <Option
+                      key={`subscription-${index}`}
+                      value={subscription._id}
+                    >
+                      {subscription.name}
+                    </Option>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>
+                  Plan Duration (in Months)
+                </FormLabel>
+                <Input
+                  placeholder="Months"
+                  value={subscription.planDuration}
+                  name="planDuration"
+                  variant="outlined"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>
+                  Plan Cost ( &#8377; )
+                </FormLabel>
+                <Input
+                  placeholder="₹ 00.00"
+                  value={subscription.planCost}
+                  variant="outlined"
+                  name="planCost"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+            </div>
+            <div className="flex justify-between">
+              <FormControl sx={{ width: "48%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Plan Start Date</FormLabel>
+                <DatePicker
+                  value={
+                    subscription.startDate
+                      ? dayjs(subscription.startDate, "YYYY-MM-DD")
+                      : null
+                  }
+                  format="YYYY-MM-DD"
+                  style={{
+                    height: "42px",
+                  }}
+                  onChange={null}
+                />
+              </FormControl>
+              <FormControl sx={{ width: "48%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Plan End Date</FormLabel>
+                <DatePicker
+                  value={
+                    subscription.endDate
+                      ? dayjs(subscription.endDate, "YYYY-MM-DD")
+                      : null
+                  }
+                  format="YYYY-MM-DD"
+                  style={{
+                    height: "42px",
+                  }}
+                  onChange={null}
+                />
+              </FormControl>
+            </div>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Mode of Payment</FormLabel>
+                <Select
+                  onChange={handlePaymentChange}
+                  placeholder="Payment Method"
+                  value={payment.paymentMethod}
+                  name="paymentMethod"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "white",
+                    height: "42px",
+                  }}
+                  required
+                >
+                  <Option value="cash">Cash</Option>
+                  <Option value="upi">UPI</Option>
+                  <Option value="creditcard">Credit Card</Option>
+                  <Option value="debitcard">Debit Card</Option>
+                  <Option value="banktransfer">Bank Transfer</Option>
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Due Amount</FormLabel>
+                <Input
+                  placeholder="₹ 00.00"
+                  value={payment.dueAmount}
+                  variant="outlined"
+                  name="amount"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Payment Amount</FormLabel>
+                <Input
+                  placeholder="₹ 00.00"
+                  onChange={handleChange}
+                  value={payment.amount}
+                  variant="outlined"
+                  name="amount"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  required
+                />
+              </FormControl>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="rounded-full py-1"
+              variant="solid"
+              color="success"
+              // onClick={updateSubPlan}
+            >
+              Make Payment
+            </Button>
+            <Button
+              variant="plain"
+              color="neutral"
+              onClick={() => setOpenpay(false)}
             >
               Cancel
             </Button>
