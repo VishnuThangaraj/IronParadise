@@ -21,12 +21,12 @@ import "./Sidebar.scss";
 
 const sidebarGeneral = [
   { name: "Dashboard", location: "home", icon: "fa-light fa-house" },
-  {
-    name: "Attendance",
-    location: "attendance",
-    icon: "fa-light fa-calendar-circle-user",
-  },
-  { name: "Events", location: "event", icon: "fa-thin fa-calendars" },
+  // {
+  //   name: "Attendance",
+  //   location: "attendance",
+  //   icon: "fa-light fa-calendar-circle-user",
+  // },
+  // { name: "Events", location: "event", icon: "fa-thin fa-calendars" },
 ];
 
 const sidebarApplications = [
@@ -98,12 +98,12 @@ const sidebarApplications = [
       },
     ],
   },
-  {
-    name: "Subscription Paylist",
-    icon: "fa-light fa-money-check",
-    location: "payment",
-    childrens: [],
-  },
+  // {
+  //   name: "Subscription Paylist",
+  //   icon: "fa-light fa-money-check",
+  //   location: "payment",
+  //   childrens: [],
+  // },
 ];
 
 export const Sidebar = () => {

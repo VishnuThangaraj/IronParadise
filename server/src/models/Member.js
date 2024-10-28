@@ -15,6 +15,14 @@ const subscriptionSchema = new Schema(
       type: Date,
       required: true,
     },
+    planDuration: {
+      type: Number,
+      required: true,
+    },
+    planCost: {
+      type: Number,
+      required: true,
+    },
     pending: {
       type: Number,
       default: 0,
@@ -28,6 +36,12 @@ const memberSchema = new Schema(
     name: {
       type: String,
       required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
     },
     email: {
       type: String,
@@ -44,7 +58,7 @@ const memberSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["Male", "Female", "Other"],
+      enum: ["male", "female", "other"],
     },
     height: {
       type: Number,

@@ -88,7 +88,7 @@ const EditWorkoutPlan = () => {
             <div className="text-xl font-bold border-b-2 p-5 ">
               Edit Workout Plan
             </div>
-            <div className="flex flex-col gap-3 px-6 py-3">
+            <div className="flex flex-col gap-4 px-6 py-3">
               <div className="flex justify-between">
                 <FormControl sx={{ width: "48%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>
