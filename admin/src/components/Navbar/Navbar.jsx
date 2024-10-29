@@ -3,6 +3,7 @@ import { useContext } from "react";
 import Input from "@mui/joy/Input";
 import Stack from "@mui/material/Stack";
 import Badge from "@mui/material/Badge";
+import { useNavigate } from "react-router-dom";
 
 import {
   IconSearch,
@@ -16,7 +17,10 @@ import { AuthContext } from "../../context/AuthContext";
 import "./Navbar.scss";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
+
   const { user } = useContext(AuthContext);
+
   return (
     <div
       id="navbar"
@@ -49,7 +53,10 @@ export const Navbar = () => {
           direction="row"
           className="border-e-2 ms-4 border-gray-200 pe-3 me-2"
         >
-          <div className="rounded-full bg-white p-2 shadow-md cursor-pointer">
+          <div
+            className="rounded-full bg-white p-2 shadow-md cursor-pointer"
+            onClick={() => navigate("/attendance-user")}
+          >
             <IconMoon className="text-gray-400" stroke={2} size={25} />
           </div>
           <div className="rounded-full bg-white p-2 shadow-md cursor-pointer">

@@ -161,7 +161,9 @@ export const SubscriptionProvider = ({ children }) => {
   };
 
   const memberSubscriptionHistory = async (memberId) => {
-    return paymentHistory.filter((payment) => payment.member === memberId);
+    return subscriptionHistory.filter(
+      (subscription) => subscription.member === memberId
+    );
   };
 
   return (

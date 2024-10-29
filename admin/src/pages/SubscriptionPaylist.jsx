@@ -8,8 +8,8 @@ import Table from "@mui/joy/Table";
 import html2canvas from "html2canvas";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import {
   Card,
   Modal,
@@ -59,12 +59,14 @@ const SubscriptionPaylist = () => {
   const {
     subscriptions,
     subscriptionName,
-    findSubscriptionByID,
     memberPaymentHistory,
+    findSubscriptionByID,
+    memberSubscriptionHistory,
   } = useContext(SubscriptionContext);
 
   const [editId, setEditid] = useState(null);
   const [openpay, setOpenpay] = useState(false);
+  const [opensub, setOpensub] = useState(false);
   const [openedit, setOpenedit] = useState(false);
   const [memberRows, setMemberRows] = useState([]);
   const [openpayhis, setOpenpayhis] = useState(false);
@@ -82,6 +84,7 @@ const SubscriptionPaylist = () => {
     pending: 0,
   });
   const [paymentHistory, setPaymentHistory] = useState([]);
+  const [subscriptionHistory, setSubscriptionHistory] = useState([]);
 
   useEffect(() => {
     const convertToRowFormat = async (data) => {
@@ -153,6 +156,13 @@ const SubscriptionPaylist = () => {
     const history = await memberPaymentHistory(memberId);
     setPaymentHistory(history.reverse());
     setOpenpayhis(true);
+  };
+
+  const getSubscriptionHistory = async (memberId) => {
+    const history = await memberSubscriptionHistory(memberId);
+    setSubscriptionHistory(history);
+    console.log(history);
+    setOpensub(true);
   };
 
   const columns = [
@@ -262,7 +272,18 @@ const SubscriptionPaylist = () => {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <div className="flex justify-center space-x-2 mt-2">
+        <div className="flex justify-center space-x-1 mt-2">
+          <Tooltip title="Subscription History" placement="top" arrow>
+            <IconButton
+              aria-label="subscription history"
+              onClick={() => getSubscriptionHistory(params.row.full_id)}
+            >
+              <i
+                className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600"
+                style={{ fontSize: "20px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Payment" placement="top" arrow>
             <IconButton
               aria-label="payment"
@@ -838,6 +859,61 @@ const SubscriptionPaylist = () => {
                       </td>
                       <td style={{ textAlign: "Center" }}>
                         {convertToIST(row.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </DialogContent>
+        </ModalDialog>
+      </Modal>
+
+      {/* Subscription History */}
+      <Modal open={opensub} onClose={() => setOpensub(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "650px" }}
+        >
+          <DialogTitle>
+            <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
+            Subscription History
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between my-4">
+              <Table
+                sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ width: "12%" }}>Plan ID</th>
+                    <th style={{ textAlign: "Center" }}>Plan Name</th>
+                    <th style={{ textAlign: "Center" }}>Duration</th>
+                    <th style={{ textAlign: "Center" }}>Start Date</th>
+                    <th style={{ textAlign: "Center" }}>End Date</th>
+                    <th style={{ textAlign: "Center" }}>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subscriptionHistory.map((row, index) => (
+                    <tr key={`pay-${index}`}>
+                      <td>{row.subscription.planId.toUpperCase()}</td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.subscription.name}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.subscription.duration} Months
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.startDate.slice(0, 10)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.endDate.slice(0, 10)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        &#8377; {row.subscription.price}
                       </td>
                     </tr>
                   ))}
