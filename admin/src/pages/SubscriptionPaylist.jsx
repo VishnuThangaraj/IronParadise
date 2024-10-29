@@ -171,7 +171,6 @@ const SubscriptionPaylist = () => {
       headerName: "ID - Name",
       flex: 2,
       headerAlign: "center",
-      align: "center",
     },
     {
       field: "plan",

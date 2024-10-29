@@ -225,14 +225,18 @@ const makePayment = async (req, res) => {
       existingMember.subscription.planCost ===
       existingMember.subscription.pending
     ) {
-      newSubscription = new SubscriptionHistory({
+      const newSubscription1 = new SubscriptionHistory({
         member: member,
         subscription: subscription,
         startDate: existingMember.subscription.startDate,
         endDate: existingMember.subscription.endDate,
       });
 
-      await newSubscription.save();
+      const tempSubscription = await newSubscription1.save();
+
+      newSubscription = await SubscriptionHistory.findById(
+        tempSubscription._id
+      ).populate("subscription");
     }
 
     existingMember.subscription.pending = dueAmount;
@@ -248,12 +252,16 @@ const makePayment = async (req, res) => {
       startDate: updatedMember.subscription.startDate,
       endDate: updatedMember.subscription.endDate,
     });
-    await paymentHis.save();
+    const tempHis = await paymentHis.save();
+
+    const paymentHistClear = await PaymentHistory.findById(
+      tempHis._id
+    ).populate("subscription");
 
     res.status(200).json({
       message: "Payment made successfully!",
       member: updatedMember,
-      payment: paymentHis,
+      payment: paymentHistClear,
       subscription: newSubscription,
     });
   } catch (err) {
