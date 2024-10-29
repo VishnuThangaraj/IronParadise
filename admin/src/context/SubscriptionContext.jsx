@@ -148,15 +148,36 @@ export const SubscriptionProvider = ({ children }) => {
     }`;
   };
 
+  const addHistory = async (paymentData) => {
+    setPaymentHistory([...paymentHistory, paymentData]);
+  };
+
+  const addSubscriptionHistory = async (subscriptionData) => {
+    setSubscriptionHistory([...subscriptionHistory, subscriptionData]);
+  };
+
+  const memberPaymentHistory = async (memberId) => {
+    return paymentHistory.filter((payment) => payment.member === memberId);
+  };
+
+  const memberSubscriptionHistory = async (memberId) => {
+    return paymentHistory.filter((payment) => payment.member === memberId);
+  };
+
   return (
     <SubscriptionContext.Provider
       value={{
+        addHistory,
         subscriptions,
+        paymentHistory,
         addSubscription,
         subscriptionName,
         deleteSubscription,
         updateSubscription,
         findSubscriptionByID,
+        memberPaymentHistory,
+        addSubscriptionHistory,
+        memberSubscriptionHistory,
       }}
     >
       {children}

@@ -4,11 +4,14 @@ import PropTypes from "prop-types";
 import { createContext, useState, useEffect, useContext } from "react";
 
 import { AuthContext } from "./AuthContext";
+import { SubscriptionContext } from "./SubscriptionContext";
 
 export const MemberContext = createContext();
 
 export const MemberProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
+  const { addHistory, addSubscriptionHistory } =
+    useContext(SubscriptionContext);
 
   const [members, setMembers] = useState([]);
 
@@ -46,6 +49,8 @@ export const MemberProvider = ({ children }) => {
         const newMember = response.data.member;
         setMembers([...members, newMember]);
         toast.success("Member Added Successfully ✔️");
+      } else if (response.status === 409) {
+        toast.warning("Email or Phone Already Exists ✉️");
       } else {
         toast.warning("Failed to Add Member 😓");
       }
@@ -164,12 +169,48 @@ export const MemberProvider = ({ children }) => {
     }
   };
 
+  // Make Payment
+  const makePayment = async (payment) => {
+    try {
+      const response = await axios.post(
+        "/member/payment",
+        { payment },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedMember = response.data.member;
+        setMembers((prevMembers) =>
+          prevMembers.map((member) =>
+            member._id === payment.member ? updatedMember || member : member
+          )
+        );
+
+        const paymentHis = response.data.payment;
+        await addHistory(paymentHis);
+
+        const subscriptionHis = response.data.subscription;
+        if (subscriptionHis !== null)
+          await addSubscriptionHistory(subscriptionHis);
+
+        toast.success("Payment Done Successfully ✔️");
+      } else {
+        toast.warning("Failed to make Payment 😓");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
   return (
     <MemberContext.Provider
       value={{
         members,
         addMember,
         findMember,
+        makePayment,
         updateMember,
         deleteMember,
         updateFitnessPlan,

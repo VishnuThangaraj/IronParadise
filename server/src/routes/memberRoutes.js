@@ -33,6 +33,13 @@ router.put(
   memberController.updateSubPlan
 );
 
+// Make Payment
+router.post(
+  "/payment",
+  authenticateJWT(["admin"]),
+  memberController.makePayment
+);
+
 // Deleta Member
 router.delete(
   "/delete/:id",

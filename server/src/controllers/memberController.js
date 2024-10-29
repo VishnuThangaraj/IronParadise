@@ -1,4 +1,6 @@
 const Member = require("../models/Member");
+const PaymentHistory = require("../models/PaymentHistory");
+const SubscriptionHistory = require("../models/SubscriptionHistory");
 
 // Add New Member
 const registerMember = async (req, res) => {
@@ -207,8 +209,61 @@ const updatePlan = async (req, res) => {
   }
 };
 
+// Make Payment
+const makePayment = async (req, res) => {
+  const { member, dueAmount, subscription } = req.body.payment;
+  const payment = req.body.payment;
+  try {
+    const existingMember = await Member.findById(member);
+
+    if (!existingMember) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    let newSubscription = null;
+    if (
+      existingMember.subscription.planCost ===
+      existingMember.subscription.pending
+    ) {
+      newSubscription = new SubscriptionHistory({
+        member: member,
+        subscription: subscription,
+        startDate: existingMember.subscription.startDate,
+        endDate: existingMember.subscription.endDate,
+      });
+
+      await newSubscription.save();
+    }
+
+    existingMember.subscription.pending = dueAmount;
+    await existingMember.save();
+
+    const updatedMember = await Member.findById(member)
+      .populate("workoutPlan")
+      .populate("trainerId")
+      .populate("dietPlan");
+
+    const paymentHis = new PaymentHistory({
+      ...payment,
+      startDate: updatedMember.subscription.startDate,
+      endDate: updatedMember.subscription.endDate,
+    });
+    await paymentHis.save();
+
+    res.status(200).json({
+      message: "Payment made successfully!",
+      member: updatedMember,
+      payment: paymentHis,
+      subscription: newSubscription,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 module.exports = {
   updatePlan,
+  makePayment,
   fetchMembers,
   updateMember,
   deleteMember,

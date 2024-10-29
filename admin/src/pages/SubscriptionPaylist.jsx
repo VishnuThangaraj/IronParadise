@@ -4,8 +4,9 @@ import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import Chip from "@mui/joy/Chip";
 import { DatePicker } from "antd";
-import { Paper } from "@mui/material";
+import Table from "@mui/joy/Table";
 import html2canvas from "html2canvas";
+import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +27,6 @@ import {
   FormLabel,
   FormControl,
   Input,
-  FormHelperText,
 } from "@mui/joy";
 
 import { AuthContext } from "../context/AuthContext";
@@ -35,18 +35,39 @@ import { SubscriptionContext } from "../context/SubscriptionContext";
 
 import { PageLocation } from "../components/PageLocation";
 
+function convertToIST(timestamp) {
+  const date = new Date(timestamp);
+
+  date.setHours(date.getUTCHours() + 5);
+  date.setMinutes(date.getUTCMinutes() + 30);
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12 || 12;
+
+  return `${hours}:${minutes} ${ampm}`;
+}
+
 const SubscriptionPaylist = () => {
   const navigate = useNavigate();
 
   const { currentDate } = useContext(AuthContext);
-  const { members, findMember, updateSubscription } = useContext(MemberContext);
-  const { subscriptions, subscriptionName, findSubscriptionByID } =
-    useContext(SubscriptionContext);
+  const { members, findMember, makePayment, updateSubscription } =
+    useContext(MemberContext);
+  const {
+    subscriptions,
+    subscriptionName,
+    findSubscriptionByID,
+    memberPaymentHistory,
+  } = useContext(SubscriptionContext);
 
   const [editId, setEditid] = useState(null);
   const [openpay, setOpenpay] = useState(false);
   const [openedit, setOpenedit] = useState(false);
   const [memberRows, setMemberRows] = useState([]);
+  const [openpayhis, setOpenpayhis] = useState(false);
   const [payment, setPayment] = useState({
     amount: "",
     paymentMethod: "cash",
@@ -60,6 +81,7 @@ const SubscriptionPaylist = () => {
     endDate: "",
     pending: 0,
   });
+  const [paymentHistory, setPaymentHistory] = useState([]);
 
   useEffect(() => {
     const convertToRowFormat = async (data) => {
@@ -68,7 +90,7 @@ const SubscriptionPaylist = () => {
         data.map(async (member) => ({
           id: `${member.username.toUpperCase()} - ${member.name}`,
           plan: await subscriptionName(member.subscription.membershipPlan),
-          price: member.subscription.planCost.toFixed(1),
+          price: member.subscription.planCost,
           status: member.subscription.planCost,
           duration: member.subscription.planDuration,
           enddate: member.subscription.endDate.slice(0, 10),
@@ -127,10 +149,16 @@ const SubscriptionPaylist = () => {
     });
   };
 
+  const getPaymentHistory = async (memberId) => {
+    const history = await memberPaymentHistory(memberId);
+    setPaymentHistory(history.reverse());
+    setOpenpayhis(true);
+  };
+
   const columns = [
     {
       field: "id",
-      headerName: "Id - Name",
+      headerName: "ID - Name",
       flex: 2,
       headerAlign: "center",
       align: "center",
@@ -182,7 +210,7 @@ const SubscriptionPaylist = () => {
     },
     {
       field: "price",
-      headerName: "price",
+      headerName: "Price",
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -192,7 +220,7 @@ const SubscriptionPaylist = () => {
     },
     {
       field: "received",
-      headerName: "received",
+      headerName: "Received",
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -203,7 +231,7 @@ const SubscriptionPaylist = () => {
     {
       field: "status",
       headerName: "Status",
-      width: 110,
+      width: 135,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
@@ -223,14 +251,14 @@ const SubscriptionPaylist = () => {
             ? "Fully Paid"
             : params.row.received === 0
             ? "Unpaid"
-            : "Partially"}
+            : "Partially Paid"}
         </Chip>
       ),
     },
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: 2,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
@@ -246,6 +274,17 @@ const SubscriptionPaylist = () => {
             >
               <i
                 className="fa-duotone fa-solid fa-credit-card text-green-600"
+                style={{ fontSize: "20px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Payment History" placement="top" arrow>
+            <IconButton
+              aria-label="payment history"
+              onClick={() => getPaymentHistory(params.row.full_id)}
+            >
+              <i
+                className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -289,8 +328,30 @@ const SubscriptionPaylist = () => {
 
   const updateSubPlan = async () => {
     await updateSubscription(editId, subscription);
+    setSubscription({
+      membershipPlan: null,
+      startDate: currentDate,
+      planDuration: "",
+      planCost: "",
+      endDate: "",
+      pending: 0,
+    });
     setEditid(null);
     setOpenedit(false);
+  };
+
+  const updatePayment = async () => {
+    if (payment.amount === "" || payment.amount === 0) {
+      return toast.info("Payment Amount should not be empty or 0");
+    }
+    await makePayment(payment);
+    setEditid(null);
+    setPayment({
+      amount: "",
+      paymentMethod: "cash",
+      dueAmount: 0,
+    });
+    setOpenpay(false);
   };
 
   return (
@@ -712,7 +773,7 @@ const SubscriptionPaylist = () => {
               className="rounded-full py-1"
               variant="solid"
               color="success"
-              // onClick={updateSubPlan}
+              onClick={updatePayment}
             >
               Make Payment
             </Button>
@@ -724,6 +785,66 @@ const SubscriptionPaylist = () => {
               Cancel
             </Button>
           </DialogActions>
+        </ModalDialog>
+      </Modal>
+
+      {/* Payment History */}
+      <Modal open={openpayhis} onClose={() => setOpenpayhis(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "800px" }}
+        >
+          <DialogTitle>
+            <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
+            Payment History
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between my-4">
+              <Table
+                sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ width: "15%" }}>Payment ID</th>
+                    <th style={{ textAlign: "Center" }}>Plan Name</th>
+                    <th style={{ textAlign: "Center" }}>Paid</th>
+                    <th style={{ textAlign: "Center" }}>Due</th>
+                    <th style={{ textAlign: "Center" }}>Method</th>
+                    <th style={{ textAlign: "Center" }}>Date</th>
+                    <th style={{ textAlign: "Center" }}>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentHistory.map((row, index) => (
+                    <tr key={`pay-${index}`}>
+                      <td>{row._id.slice(17).toUpperCase()}</td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.subscription.name}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        &#8377;{row.amount.toFixed(1)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        &#8377;{row.dueAmount.toFixed(1)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.paymentMethod.slice(0, 1).toUpperCase() +
+                          row.paymentMethod.slice(1)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {row.createdAt.slice(0, 10)}
+                      </td>
+                      <td style={{ textAlign: "Center" }}>
+                        {convertToIST(row.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </DialogContent>
         </ModalDialog>
       </Modal>
     </div>

@@ -11,6 +11,10 @@ const PaymentHistorySchema = new Schema(
       type: Number,
       required: true,
     },
+    dueAmount: {
+      type: Number,
+      required: true,
+    },
     subscription: {
       type: Schema.Types.ObjectId,
       ref: "MembershipPlan",
@@ -18,6 +22,14 @@ const PaymentHistorySchema = new Schema(
     paymentMethod: {
       type: String,
       enum: ["cash", "upi", "creditcard", "debitcard", "banktransfer"],
+      required: true,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
       required: true,
     },
   },
