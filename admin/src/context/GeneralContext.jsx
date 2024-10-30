@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import axios from "../service/api";
 import PropTypes from "prop-types";
-import { createContext, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
 import { AuthContext } from "./AuthContext";
 
@@ -9,6 +9,24 @@ export const GeneralContext = createContext();
 
 export const GeneralProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
+
+  const [attendances, setAttendances] = useState([]);
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const response = await axios.get("/general/attendance", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.status === 200) {
+          setAttendances(response.data.attendances);
+        }
+      } catch (err) {
+        console.log("Failed to fetch Attendance", err);
+      }
+    };
+    fetchAttendance();
+  }, [token]);
 
   //Send Mail
   const sendMail = async (mailData) => {
@@ -32,7 +50,7 @@ export const GeneralProvider = ({ children }) => {
   };
 
   return (
-    <GeneralContext.Provider value={{ sendMail }}>
+    <GeneralContext.Provider value={{ sendMail, attendances }}>
       {children}
     </GeneralContext.Provider>
   );

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import { MemberContext } from "../context/MemberContext";
+import { TrainerContext } from "../context/TrainerContext";
+import { SubscriptionContext } from "../context/SubscriptionContext";
 
 import { PageLocation } from "../components/PageLocation";
 
@@ -10,13 +12,32 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { members } = useContext(MemberContext);
+  const { trainers } = useContext(TrainerContext);
+  const { paymentHistory } = useContext(SubscriptionContext);
 
   const [totalMembers, setTotalMembers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [activeMembers, setActiveMembers] = useState(2);
   const [totalTrainers, setTotalTrainers] = useState(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setTotalMembers(members.length || 0);
+    setTotalTrainers(trainers.length || 0);
+
+    const total = paymentHistory.reduce(
+      (acc, data) => acc + (data.amount || 0),
+      0
+    );
+    setTotalRevenue(`₹ ${total}`);
+
+    const active = members.reduce(
+      (acc, data) =>
+        acc +
+        (data.subscription.planCost !== data.subscription.pending ? 1 : 0),
+      0
+    );
+    setActiveMembers(active);
+  }, [members, trainers, paymentHistory]);
 
   const dashWidget = [
     {

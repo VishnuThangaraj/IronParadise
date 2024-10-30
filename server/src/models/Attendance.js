@@ -2,8 +2,16 @@ const { Schema, model } = require("mongoose");
 
 const attendanceSchema = new Schema(
   {
-    personId: {
+    id: {
       type: Schema.Types.ObjectId,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    username: {
+      type: String,
       required: true,
     },
     role: {

@@ -33,6 +33,8 @@
     "react-router-dom": "^6.27.0",
     "scss": "^0.2.4",
     "sonner": "^1.5.0",
+    "sweetalert2": "^11.14.4",
+    "sweetalert2-react-content": "^5.0.7",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

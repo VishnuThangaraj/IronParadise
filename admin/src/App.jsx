@@ -1,10 +1,10 @@
 import { Toaster } from "sonner";
 import { Loader } from "./components/Loader";
 import { Footer } from "./components/Footer";
+import { Suspense, lazy, useContext } from "react";
 import { Navbar } from "./components/Navbar/Navbar";
 import { AuthContext } from "./context/AuthContext";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import { Fragment, Suspense, lazy, useContext } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 
 import "./App.scss";
@@ -17,7 +17,6 @@ const Attendance = lazy(() => import("./pages/Attendance"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const EditMember = lazy(() => import("./pages/Member/EditMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
-const UserAttendance = lazy(() => import("./pages/UserAttendance"));
 const MembersList = lazy(() => import("./pages/Member/MembersList"));
 const EditTrainer = lazy(() => import("./pages/Trainer/EditTrainer"));
 const AddDietplan = lazy(() => import("./pages/Dietplan/AddDietplan"));
@@ -51,7 +50,6 @@ export const App = () => {
 
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
-  const isUserAttendancePage = location.pathname === "/attendance-user";
 
   return (
     <div style={{ height: "100vh" }}>
@@ -62,115 +60,85 @@ export const App = () => {
         }}
         richColors
       />
+      {!user && !isLoginPage && <Navigate to="/login" replace />}
+      {user && isLoginPage && <Navigate to="/home" replace />}
 
-      {isUserAttendancePage ? (
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route path="/attendance-user" element={<UserAttendance />} />
-          </Routes>
-        </Suspense>
-      ) : (
-        <Fragment>
-          {!user && !isLoginPage && <Navigate to="/login" replace />}
-          {user && isLoginPage && <Navigate to="/home" replace />}
-
-          {!isLoginPage ? (
-            <div className="flex h-full">
-              <Sidebar />
-              <div id="main-content-holder" className="px-7">
-                <Navbar />
-                <div className="py-3">
-                  <Suspense fallback={<Loader />}>
-                    <Routes>
-                      {/* General */}
-                      <Route path="/event" element={<Events />} />
-                      <Route path="/home" element={<Dashboard />} />
-                      <Route path="/attendance" element={<Attendance />} />
-                      <Route
-                        path="/payment"
-                        element={<SubscriptionPaylist />}
-                      />
-                      <Route
-                        path="/attendance-user"
-                        element={<UserAttendance />}
-                      />
-
-                      {/* Trainer */}
-                      <Route path="/trainer/add" element={<AddTrainer />} />
-                      <Route path="/trainer/edit" element={<EditTrainer />} />
-                      <Route path="/trainer/list" element={<TrainersList />} />
-
-                      {/* Plans */}
-                      <Route path="/plan/diet/add" element={<AddDietplan />} />
-                      <Route
-                        path="/plan/diet/list"
-                        element={<DietplanList />}
-                      />
-                      <Route
-                        path="/plan/diet/edit"
-                        element={<EditDietplan />}
-                      />
-                      <Route
-                        path="/plan/diet/view"
-                        element={<ViewDietplan />}
-                      />
-                      <Route
-                        path="/plan/workout/add"
-                        element={<AddWorkoutPlan />}
-                      />
-                      <Route
-                        path="/plan/workout/edit"
-                        element={<EditWorkoutPlan />}
-                      />
-                      <Route
-                        path="/plan/workout/list"
-                        element={<WorkoutPlanList />}
-                      />
-                      <Route
-                        path="/plan/workout/view"
-                        element={<ViewWorkoutplan />}
-                      />
-
-                      {/* Members */}
-                      <Route path="/member/add" element={<AddMember />} />
-                      <Route path="/member/edit" element={<EditMember />} />
-                      <Route path="/member/list" element={<MembersList />} />
-
-                      {/* Subscription */}
-                      <Route
-                        path="/subscription/add"
-                        element={<AddSubscription />}
-                      />
-                      <Route
-                        path="/subscription/list"
-                        element={<SubscriptionList />}
-                      />
-                      <Route
-                        path="/subscription/edit"
-                        element={<EditSubscription />}
-                      />
-
-                      <Route
-                        path="*"
-                        element={<Navigate to="/home" replace />}
-                      />
-                    </Routes>
-                  </Suspense>
-                  <Footer />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div style={{ width: "100%" }}>
+      {!isLoginPage ? (
+        <div className="flex h-full">
+          <Sidebar />
+          <div id="main-content-holder" className="px-7">
+            <Navbar />
+            <div className="py-3">
               <Suspense fallback={<Loader />}>
                 <Routes>
-                  <Route path="/login" element={<AuthForm />} />
-                  <Route path="*" element={<Navigate to="/login" replace />} />
+                  {/* General */}
+                  <Route path="/event" element={<Events />} />
+                  <Route path="/home" element={<Dashboard />} />
+                  <Route path="/attendance" element={<Loader />} />
+                  <Route path="/payment" element={<SubscriptionPaylist />} />
+
+                  {/* Trainer */}
+                  <Route path="/trainer/add" element={<AddTrainer />} />
+                  <Route path="/trainer/edit" element={<EditTrainer />} />
+                  <Route path="/trainer/list" element={<TrainersList />} />
+
+                  {/* Plans */}
+                  <Route path="/plan/diet/add" element={<AddDietplan />} />
+                  <Route path="/plan/diet/list" element={<DietplanList />} />
+                  <Route path="/plan/diet/edit" element={<EditDietplan />} />
+                  <Route path="/plan/diet/view" element={<ViewDietplan />} />
+                  <Route
+                    path="/plan/workout/add"
+                    element={<AddWorkoutPlan />}
+                  />
+                  <Route
+                    path="/plan/workout/edit"
+                    element={<EditWorkoutPlan />}
+                  />
+                  <Route
+                    path="/plan/workout/list"
+                    element={<WorkoutPlanList />}
+                  />
+                  <Route
+                    path="/plan/workout/view"
+                    element={<ViewWorkoutplan />}
+                  />
+
+                  {/* Members */}
+                  <Route path="/member/add" element={<AddMember />} />
+                  <Route path="/member/edit" element={<EditMember />} />
+                  <Route path="/member/list" element={<MembersList />} />
+
+                  {/* Subscription */}
+                  <Route
+                    path="/subscription/add"
+                    element={<AddSubscription />}
+                  />
+                  <Route
+                    path="/subscription/list"
+                    element={<SubscriptionList />}
+                  />
+                  <Route
+                    path="/subscription/edit"
+                    element={<EditSubscription />}
+                  />
+
+                  <Route path="*" element={<Navigate to="/home" replace />} />
                 </Routes>
               </Suspense>
+              <Footer />
             </div>
-          )}
-        </Fragment>
+          </div>
+        </div>
+      ) : (
+        <div style={{ width: "100%" }}>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              <Route path="/login" element={<AuthForm />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </Suspense>
+        </div>
       )}
     </div>
   );

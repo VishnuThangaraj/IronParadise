@@ -1,5 +1,34 @@
+const moment = require("moment");
+const Member = require("../models/Member");
+const Trainer = require("../models/Trainer");
+const Attendance = require("../models/Attendance");
 const { sendMail } = require("../service/emailService");
 
+// Get Trainers and Members
+const getUsers = async (req, res) => {
+  try {
+    const members = await Member.find();
+    const trainers = await Trainer.find();
+
+    const combined = [...members, ...trainers].map(
+      ({ _id, name, username, role }) => ({
+        id: _id,
+        name,
+        username: username.toUpperCase(),
+        role,
+      })
+    );
+
+    res.status(200).json({
+      message: "Members and Trainers Fetched Successfully",
+      attendance: combined,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Send Mail
 const sendMailFromAdmin = async (req, res) => {
   const { name, to, subject, message } = req.body.mailData;
 
@@ -163,4 +192,70 @@ const sendMailFromAdmin = async (req, res) => {
   }
 };
 
-module.exports = { sendMailFromAdmin };
+// Mark Attendance
+const markAttendance = async (req, res) => {
+  const { id, name, username, role } = req.body.user;
+
+  if (!id || !role) {
+    return res.status(400).json({ message: "ID and role are required" });
+  }
+
+  try {
+    const startOfDay = moment().startOf("day").toDate();
+    const endOfDay = moment().endOf("day").toDate();
+
+    const lastAction = await Attendance.findOne({
+      id,
+      role,
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    }).sort({ createdAt: -1 });
+
+    if (lastAction && lastAction.action === "login") {
+      lastAction.action = "logout";
+      await lastAction.save();
+
+      return res.status(200).json({
+        message: "Attendance updated to logout for the existing login entry",
+        attendance: lastAction,
+      });
+    } else {
+      const newAttendance = new Attendance({
+        id,
+        name,
+        role,
+        username,
+        action: "login",
+      });
+
+      await newAttendance.save();
+
+      return res.status(200).json({
+        message: "Attendance marked as login",
+        attendance: newAttendance,
+      });
+    }
+  } catch (err) {
+    console.error("Error marking attendance:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Fetch All Attendance
+const fetchAttendance = async (req, res) => {
+  try {
+    const attendances = await Attendance.find();
+
+    res
+      .status(200)
+      .json({ message: "Attendance Fetched", attendances: attendances });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  getUsers,
+  markAttendance,
+  fetchAttendance,
+  sendMailFromAdmin,
+};
