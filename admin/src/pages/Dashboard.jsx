@@ -1,24 +1,40 @@
+import moment from "moment";
 import Table from "@mui/joy/Table";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import { MemberContext } from "../context/MemberContext";
+import { GeneralContext } from "../context/GeneralContext";
 import { TrainerContext } from "../context/TrainerContext";
 import { SubscriptionContext } from "../context/SubscriptionContext";
 
 import { PageLocation } from "../components/PageLocation";
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+} from "recharts";
+import { Button } from "@mui/joy";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const { members } = useContext(MemberContext);
   const { trainers } = useContext(TrainerContext);
+  const { attendances } = useContext(GeneralContext);
   const { paymentHistory } = useContext(SubscriptionContext);
 
   const [totalMembers, setTotalMembers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [activeMembers, setActiveMembers] = useState(2);
   const [totalTrainers, setTotalTrainers] = useState(0);
+  const [expiringMembers, setExpiringMembers] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]);
 
   useEffect(() => {
     setTotalMembers(members.length || 0);
@@ -37,7 +53,54 @@ const Dashboard = () => {
       0
     );
     setActiveMembers(active);
-  }, [members, trainers, paymentHistory]);
+
+    ///// Subscription //////
+
+    const getMembersWithExpiringSubscriptions = (members) => {
+      const today = moment();
+
+      return members
+        .map((member) => {
+          const endDate = moment(member.subscription.endDate);
+          const daysLeft = endDate.diff(today, "days");
+
+          return {
+            id: member.username,
+            name: member.name,
+            endDate: endDate.format("YYYY-MM-DD"),
+            daysLeft: daysLeft,
+          };
+        })
+        .filter((member) => member.daysLeft >= 0)
+        .sort((a, b) => a.daysLeft - b.daysLeft)
+        .slice(0, 5);
+    };
+
+    const expiringMembersList = getMembersWithExpiringSubscriptions(members);
+    setExpiringMembers(expiringMembersList);
+
+    const calculateWeeklyAttendance = () => {
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const attendanceCount = daysOfWeek.map((day) => ({
+        day,
+        members: 0,
+        trainers: 0,
+      }));
+
+      attendances.forEach(({ role, createdAt }) => {
+        const dayIndex = moment(createdAt).day();
+        if (role === "member") {
+          attendanceCount[dayIndex].members += 1;
+        } else if (role === "trainer") {
+          attendanceCount[dayIndex].trainers += 1;
+        }
+      });
+
+      setAttendanceData(attendanceCount);
+    };
+
+    calculateWeeklyAttendance();
+  }, [members, trainers, paymentHistory, attendances]);
 
   const dashWidget = [
     {
@@ -77,7 +140,7 @@ const Dashboard = () => {
         parentPath="Dashboard"
         currentPath="Gym-Management"
       />
-      <div className="flex justify-between gap-10 w-full py-4">
+      <div className="flex justify-between gap-5 w-full py-4">
         {/* Left Side */}
         <div className="w-9/12">
           <div className="flex justify-evenly gap-5">
@@ -101,20 +164,57 @@ const Dashboard = () => {
             ))}
           </div>
           <div className="flex justify-between gap-5 my-7">
-            <div className="bg-white shadow-md w-1/2 rounded-lg">s</div>
+            <div className="bg-white shadow-md w-1/2 rounded-lg">
+              <div className="flex justify-between items-center  p-4">
+                <div className="font-semibold text-lg">
+                  Attendance This Week
+                </div>
+                <div>
+                  <Button size="md" variant="outlined" color="neutral">
+                    This Week
+                  </Button>
+                </div>
+              </div>
+              <BarChart width={400} height={380} data={attendanceData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="members" fill="#8884d8" />
+                <Bar dataKey="trainers" fill="#82ca9d" />
+              </BarChart>
+            </div>
             <div className="bg-white shadow-md w-1/2 rounded-lg">
               <div className="font-semibold p-4 text-lg">
                 Subscription Expiring Soon
               </div>
               <Table
-                sx={{ "& tr > *:not(:first-child)": { textAlign: "center" } }}
+                sx={{
+                  "& td": { padding: "14px" },
+                  "& tr > *:not(:first-child)": { textAlign: "center" },
+                }}
               >
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "Center" }}>Member Name</th>
-                    <th style={{ textAlign: "Center" }}>End Date</th>
+                    <th style={{ textAlign: "center" }}>Member Name</th>
+                    <th style={{ textAlign: "center" }}>End Date</th>
                   </tr>
                 </thead>
+                <tbody>
+                  {expiringMembers.map((member, index) => (
+                    <tr key={`Expiry-mem-${index}`}>
+                      <td style={{ textAlign: "center" }}>
+                        {member.name}
+                        <div>{member.id.toString().toUpperCase()}</div>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        {member.endDate}
+                        <div>{member.daysLeft} days left</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </Table>
             </div>
           </div>

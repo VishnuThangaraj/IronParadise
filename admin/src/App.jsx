@@ -74,7 +74,7 @@ export const App = () => {
                   {/* General */}
                   <Route path="/event" element={<Events />} />
                   <Route path="/home" element={<Dashboard />} />
-                  <Route path="/attendance" element={<Loader />} />
+                  <Route path="/attendance" element={<Attendance />} />
                   <Route path="/payment" element={<SubscriptionPaylist />} />
 
                   {/* Trainer */}
