@@ -146,19 +146,6 @@ const MembersList = () => {
       align: "center",
       renderCell: (params) => (
         <div className="flex justify-center space-x-2 mt-2">
-          <Tooltip title="Edit" placement="top" arrow>
-            <IconButton
-              aria-label="edit"
-              onClick={() => {
-                navigate("/member/edit", { state: params.row.full_id });
-              }}
-            >
-              <i
-                className="fa-duotone fa-solid fa-pencil"
-                style={{ fontSize: "20px" }}
-              ></i>
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Change Plan" placement="top" arrow>
             <IconButton
               aria-label="change plan"
@@ -168,11 +155,25 @@ const MembersList = () => {
               }}
             >
               <i
-                className="fa-sharp-duotone fa-solid fa-arrows-rotate-reverse"
+                className="fa-sharp-duotone fa-solid fa-arrows-rotate-reverse text-blue-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
           </Tooltip>
+          <Tooltip title="Edit" placement="top" arrow>
+            <IconButton
+              aria-label="edit"
+              onClick={() => {
+                navigate("/member/edit", { state: params.row.full_id });
+              }}
+            >
+              <i
+                className="fa-duotone fa-solid fa-pencil text-green-600"
+                style={{ fontSize: "20px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
+
           <Tooltip title="Delete" placement="top" arrow>
             <IconButton
               aria-label="delete"
@@ -183,7 +184,7 @@ const MembersList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-trash-can"
+                className="fa-duotone fa-solid fa-trash-can text-red-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -303,7 +304,7 @@ const MembersList = () => {
                   className="transition-all duration-300"
                   onClick={copyToClipboard}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -320,7 +321,7 @@ const MembersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToExcel}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -337,7 +338,7 @@ const MembersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToCSV}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -354,7 +355,7 @@ const MembersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToPDF}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                 >
                   <i

@@ -6,6 +6,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 const authRoutes = require("./routes/authRoutes");
 const planRoutes = require("./routes/planRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const generalRoutes = require("./routes/generalRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/plan", planRoutes);
+app.use("/event", eventRoutes);
 app.use("/member", memberRoutes);
 app.use("/general", generalRoutes);
 app.use("/trainer", trainerRoutes);

@@ -164,7 +164,7 @@ const TrainersList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-envelopes"
+                className="fa-duotone fa-solid fa-envelopes text-blue-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -177,7 +177,7 @@ const TrainersList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-pencil"
+                className="fa-duotone fa-solid fa-pencil text-green-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -192,7 +192,7 @@ const TrainersList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-trash-can"
+                className="fa-duotone fa-solid fa-trash-can text-red-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -299,7 +299,7 @@ const TrainersList = () => {
                   className="transition-all duration-300"
                   onClick={copyToClipboard}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -316,7 +316,7 @@ const TrainersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToExcel}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -333,7 +333,7 @@ const TrainersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToCSV}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,
@@ -350,7 +350,7 @@ const TrainersList = () => {
                   className="transition-all duration-300"
                   onClick={exportToPDF}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                 >
                   <i

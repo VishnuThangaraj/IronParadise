@@ -10,10 +10,11 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.scss";
 
 // Lazy-loaded pages
-const Events = lazy(() => import("./pages/Events"));
 const AuthForm = lazy(() => import("./pages/AuthForm"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Events = lazy(() => import("./pages/Event/Events"));
 const Attendance = lazy(() => import("./pages/Attendance"));
+const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const EditMember = lazy(() => import("./pages/Member/EditMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
@@ -72,10 +73,13 @@ export const App = () => {
               <Suspense fallback={<Loader />}>
                 <Routes>
                   {/* General */}
-                  <Route path="/event" element={<Events />} />
                   <Route path="/home" element={<Dashboard />} />
                   <Route path="/attendance" element={<Attendance />} />
                   <Route path="/payment" element={<SubscriptionPaylist />} />
+
+                  {/* Events */}
+                  <Route path="/event" element={<Events />} />
+                  <Route path="/event/add" element={<AddEvent />} />
 
                   {/* Trainer */}
                   <Route path="/trainer/add" element={<AddTrainer />} />

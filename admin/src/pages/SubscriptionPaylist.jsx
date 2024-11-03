@@ -374,6 +374,23 @@ const SubscriptionPaylist = () => {
     setOpenpay(false);
   };
 
+  const copyToClipboard = () => {
+    const tableData = subscription
+      .map((trainer) => {
+        return `${trainer.id}\t${trainer.name}\t${trainer.phone}\t${trainer.gender}\t${trainer.dob}\t${trainer.specialization}\t${trainer.bmi}`;
+      })
+      .join("\n");
+
+    navigator.clipboard
+      .writeText(tableData)
+      .then(() => {
+        toast.success("Table copied to clipboard 📃");
+      })
+      .catch((err) => {
+        console.error("Error copying to clipboard: ", err);
+      });
+  };
+
   return (
     <div id="subscriptionpaylist">
       <PageLocation
@@ -386,12 +403,12 @@ const SubscriptionPaylist = () => {
         <CardContent>
           <div className="flex justify-between">
             <div className="flex gap-3">
-              {/* <Tooltip title="Copy" placement="top" arrow>
+              {/*  <Tooltip title="Copy" placement="top" arrow>
                 <Button
                   className="transition-all duration-300"
                   onClick={copyToClipboard}
                   variant="outlined"
-                  color="neutral"
+                  color="warning"
                   size="md"
                   sx={{
                     px: 2,

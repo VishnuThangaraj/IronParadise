@@ -75,7 +75,7 @@ const DietplanList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-eye "
+                className="fa-duotone fa-solid fa-eye text-blue-600"
                 style={{ fontSize: "22px" }}
               ></i>
             </IconButton>
@@ -88,7 +88,7 @@ const DietplanList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-pencil"
+                className="fa-duotone fa-solid fa-pencil text-green-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -103,7 +103,7 @@ const DietplanList = () => {
               }}
             >
               <i
-                className="fa-duotone fa-solid fa-trash-can"
+                className="fa-duotone fa-solid fa-trash-can text-red-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>

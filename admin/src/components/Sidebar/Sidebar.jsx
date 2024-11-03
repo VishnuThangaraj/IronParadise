@@ -142,7 +142,7 @@ export const Sidebar = () => {
                 <div
                   key={`side-general-${index}`}
                   className={`p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
-                    location.slice(1) === list.location
+                    location.slice(1).startsWith(list.location)
                       ? "text-white bg-gray-800"
                       : "text-gray-300 hover:text-white hover:ps-3 hover:bg-gray-800"
                   }`}

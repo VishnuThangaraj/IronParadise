@@ -1,23 +1,29 @@
 import moment from "moment";
 import { useContext } from "react";
-import { Card, CardContent } from "@mui/joy";
+import { useNavigate } from "react-router-dom";
+import { Card, Button, CardContent } from "@mui/joy";
 
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { MemberContext } from "../context/MemberContext";
+import { MemberContext } from "../../context/MemberContext";
+import { GeneralContext } from "../../context/GeneralContext";
 
-import { PageLocation } from "../components/PageLocation";
+import { PageLocation } from "../../components/PageLocation";
 
 const localizer = momentLocalizer(moment);
 
 const Events = () => {
+  const navigate = useNavigate();
+
   const { members } = useContext(MemberContext);
+  const { eventsList } = useContext(GeneralContext);
 
   const startYear = moment().year() - 5;
   const endYear = moment().year() + 5;
 
-  const events = members.flatMap((member) => {
+  // Map member events (birthdays and subscription end dates)
+  const memberEvents = members.flatMap((member) => {
     const dob = moment(member.dob);
     const month = dob.month();
     const date = dob.date();
@@ -69,6 +75,18 @@ const Events = () => {
     return birthdayEvents;
   });
 
+  // Map general events from eventsList
+  const generalEvents = eventsList.map((event) => ({
+    title: event.name,
+    description: event.description,
+    allDay: true,
+    start: new Date(event.startDate),
+    end: new Date(event.endDate),
+  }));
+
+  // Combine member events and general events
+  const events = [...memberEvents, ...generalEvents];
+
   return (
     <div id="events">
       <PageLocation
@@ -77,6 +95,24 @@ const Events = () => {
         currentPath="Events"
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 4 }}>
+        <div className="flex flex-row-reverse">
+          <Button
+            className="transition-all duration-300"
+            variant="solid"
+            size="md"
+            onClick={() => navigate("/event/add")}
+            sx={{
+              px: 3,
+              backgroundColor: "black",
+              "&:hover": {
+                backgroundColor: "#222222",
+              },
+            }}
+          >
+            <i className="fa-solid fa-calendar-circle-plus me-4 text-white"></i>
+            Add Event
+          </Button>
+        </div>
         <CardContent>
           <Calendar
             localizer={localizer}
@@ -88,7 +124,9 @@ const Events = () => {
               style: {
                 backgroundColor: event.title.includes("Birthday")
                   ? "#ffcc00"
-                  : "#32CD32",
+                  : event.title.includes("Subscription")
+                  ? "#32CD32"
+                  : "#007BFF",
                 color: "white",
                 borderRadius: "5px",
               },
