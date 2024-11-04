@@ -702,7 +702,6 @@ cron.schedule("0 6 * * *", async () => {
     const today = moment().startOf("day");
 
     const events = await Event.find();
-
     const members = await Member.find();
 
     events.forEach((event) => {
@@ -711,20 +710,20 @@ cron.schedule("0 6 * * *", async () => {
 
       if (today.isBetween(startDate, endDate, null, "[]")) {
         sendEmail(event);
+      }
+    });
 
-        members.forEach((member) => {
-          const subscriptionEndDate = moment(
-            member.subscription.endDate
-          ).startOf("day");
+    members.forEach((member) => {
+      const subscriptionEndDate = moment(member.subscription.endDate).startOf(
+        "day"
+      );
 
-          if (subscriptionEndDate.isBefore(today)) {
-            MailPast(member);
-          } else if (
-            subscriptionEndDate.isSameOrBefore(today.clone().add(7, "days"))
-          ) {
-            mailGoingToExpire(member);
-          }
-        });
+      if (subscriptionEndDate.isBefore(today)) {
+        MailPast(member);
+      } else if (
+        subscriptionEndDate.isSameOrBefore(today.clone().add(7, "days"))
+      ) {
+        mailGoingToExpire(member);
       }
     });
 

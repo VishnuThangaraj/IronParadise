@@ -1,7 +1,6 @@
 import jsPDF from "jspdf";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
-import Chip from "@mui/joy/Chip";
 import { Paper } from "@mui/material";
 import html2canvas from "html2canvas";
 import { DataGrid } from "@mui/x-data-grid";
@@ -9,6 +8,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
+  Chip,
   Modal,
   Button,
   Divider,

@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { DataGrid } from "@mui/x-data-grid";
 import { Fragment, useContext, useEffect, useState } from "react";
 import {
@@ -19,7 +20,6 @@ import { GeneralContext } from "../context/GeneralContext";
 import { TrainerContext } from "../context/TrainerContext";
 
 import { PageLocation } from "../components/PageLocation";
-import { toast } from "sonner";
 
 const Messages = () => {
   const { members } = useContext(MemberContext);

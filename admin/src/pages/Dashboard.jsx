@@ -1,14 +1,7 @@
 import moment from "moment";
-import Table from "@mui/joy/Table";
+import { Button, Table } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-
-import { MemberContext } from "../context/MemberContext";
-import { GeneralContext } from "../context/GeneralContext";
-import { TrainerContext } from "../context/TrainerContext";
-import { SubscriptionContext } from "../context/SubscriptionContext";
-
-import { PageLocation } from "../components/PageLocation";
 
 import {
   BarChart,
@@ -19,7 +12,13 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import { Button } from "@mui/joy";
+
+import { MemberContext } from "../context/MemberContext";
+import { GeneralContext } from "../context/GeneralContext";
+import { TrainerContext } from "../context/TrainerContext";
+import { SubscriptionContext } from "../context/SubscriptionContext";
+
+import { PageLocation } from "../components/PageLocation";
 
 const Dashboard = () => {
   const navigate = useNavigate();

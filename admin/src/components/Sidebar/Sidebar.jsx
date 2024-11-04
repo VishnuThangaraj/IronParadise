@@ -1,14 +1,15 @@
 import { Button } from "antd";
 import { toast } from "sonner";
-import Modal from "@mui/joy/Modal";
-import Divider from "@mui/joy/Divider";
 import { useContext, useState } from "react";
-import DialogTitle from "@mui/joy/DialogTitle";
-import ModalDialog from "@mui/joy/ModalDialog";
-import DialogActions from "@mui/joy/DialogActions";
-import DialogContent from "@mui/joy/DialogContent";
-import { AuthContext } from "../../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Modal,
+  Divider,
+  DialogTitle,
+  ModalDialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/joy";
 
 import { WarningOutlined } from "@ant-design/icons";
 import {
@@ -17,8 +18,10 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react";
 
+import { AuthContext } from "../../context/AuthContext";
+
 import "./Sidebar.scss";
-7;
+
 const sidebarGeneral = [
   { name: "Dashboard", location: "home", icon: "fa-light fa-house" },
   {

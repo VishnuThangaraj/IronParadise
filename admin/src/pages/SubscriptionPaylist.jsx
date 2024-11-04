@@ -2,9 +2,7 @@ import jsPDF from "jspdf";
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
-import Chip from "@mui/joy/Chip";
 import { DatePicker } from "antd";
-import Table from "@mui/joy/Table";
 import html2canvas from "html2canvas";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -12,21 +10,23 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import {
   Card,
+  Chip,
   Modal,
+  Input,
+  Table,
   Button,
+  Option,
+  Select,
   Divider,
   Tooltip,
+  FormLabel,
   IconButton,
+  FormControl,
   CardContent,
   DialogTitle,
   ModalDialog,
   DialogActions,
   DialogContent,
-  Option,
-  Select,
-  FormLabel,
-  FormControl,
-  Input,
 } from "@mui/joy";
 
 import { AuthContext } from "../context/AuthContext";
@@ -374,22 +374,22 @@ const SubscriptionPaylist = () => {
     setOpenpay(false);
   };
 
-  const copyToClipboard = () => {
-    const tableData = subscription
-      .map((trainer) => {
-        return `${trainer.id}\t${trainer.name}\t${trainer.phone}\t${trainer.gender}\t${trainer.dob}\t${trainer.specialization}\t${trainer.bmi}`;
-      })
-      .join("\n");
+  // const copyToClipboard = () => {
+  //   const tableData = subscription
+  //     .map((trainer) => {
+  //       return `${trainer.id}\t${trainer.name}\t${trainer.phone}\t${trainer.gender}\t${trainer.dob}\t${trainer.specialization}\t${trainer.bmi}`;
+  //     })
+  //     .join("\n");
 
-    navigator.clipboard
-      .writeText(tableData)
-      .then(() => {
-        toast.success("Table copied to clipboard 📃");
-      })
-      .catch((err) => {
-        console.error("Error copying to clipboard: ", err);
-      });
-  };
+  //   navigator.clipboard
+  //     .writeText(tableData)
+  //     .then(() => {
+  //       toast.success("Table copied to clipboard 📃");
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error copying to clipboard: ", err);
+  //     });
+  // };
 
   return (
     <div id="subscriptionpaylist">
