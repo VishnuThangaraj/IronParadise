@@ -29,8 +29,10 @@ const Dashboard = () => {
   const { attendances } = useContext(GeneralContext);
   const { paymentHistory } = useContext(SubscriptionContext);
 
+  const subsRef = useRef(null);
   const widgetRef = useRef([]);
   const graphRefL = useRef(null);
+  const memberRef = useRef(null);
 
   const [totalMembers, setTotalMembers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -124,6 +126,18 @@ const Dashboard = () => {
       { x: "-80%", opacity: 0 },
       { x: "0%", opacity: 1, duration: 0.7, ease: "power2.out" }
     );
+
+    gsap.fromTo(
+      subsRef.current,
+      { y: "80%", opacity: 0 },
+      { y: "0%", opacity: 1, duration: 0.7, ease: "power2.out" }
+    );
+
+    gsap.fromTo(
+      memberRef.current,
+      { x: "80%", opacity: 0 },
+      { x: "0%", opacity: 1, duration: 0.7, ease: "power2.out" }
+    );
   }, [members, trainers, paymentHistory, attendances]);
 
   const dashWidget = [
@@ -213,7 +227,7 @@ const Dashboard = () => {
                 <Bar dataKey="trainers" fill="#82ca9d" />
               </BarChart>
             </div>
-            <div className="bg-white shadow-md w-1/2 rounded-lg">
+            <div className="bg-white shadow-md w-1/2 rounded-lg" ref={subsRef}>
               <div className="font-semibold p-4 text-lg">
                 Subscription Expiring Soon
               </div>
@@ -314,7 +328,10 @@ const Dashboard = () => {
               <img src="images/dashWomen.png" width={75} />
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-md my-7 py-4 px-5">
+          <div
+            className="bg-white rounded-lg shadow-md my-7 py-4 px-5"
+            ref={memberRef}
+          >
             <div className="font-semibold text-xl">New Members</div>
             {members
               .slice(-5)
