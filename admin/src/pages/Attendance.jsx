@@ -1,4 +1,5 @@
 import moment from "moment";
+import * as XLSX from "xlsx";
 import { useContext, useMemo, useState } from "react";
 import {
   Card,
@@ -129,6 +130,24 @@ const Attendance = () => {
       });
   };
 
+  const exportIndividualAttendance = () => {
+    if (!selectedPerson) return;
+
+    const attendanceLogs = getAttendanceLogs(selectedPerson.id);
+
+    const data = attendanceLogs.map((log) => ({
+      "Login Time": log.loginTime,
+      "Logout Time": log.status === "Active" ? "---" : log.logoutTime,
+      Duration: log.status,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, `${selectedPerson.name} Attendance`);
+
+    XLSX.writeFile(wb, `${selectedPerson.name}_Attendance_Log.xlsx`);
+  };
+
   return (
     <div id="attendance">
       <PageLocation
@@ -247,6 +266,24 @@ const Attendance = () => {
             <div className="flex items-center gap-4">
               <i className="fa-duotone fa-solid fa-user-clock text-green-600 me-1 text-2xl"></i>
               {selectedPerson ? selectedPerson.name : ""}&apos;s Attendance Log
+              <div className="ms-10">
+                <Button
+                  className="transition-all duration-300"
+                  onClick={exportIndividualAttendance}
+                  variant="solid"
+                  type="submit"
+                  size="sm"
+                  sx={{
+                    px: 2,
+                    backgroundColor: "black",
+                    "&:hover": {
+                      backgroundColor: "#222222",
+                    },
+                  }}
+                >
+                  Export
+                </Button>
+              </div>
             </div>
           </DialogTitle>
           <Divider />

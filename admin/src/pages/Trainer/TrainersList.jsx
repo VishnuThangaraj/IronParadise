@@ -9,17 +9,17 @@ import { Fragment, useContext, useState } from "react";
 import {
   Card,
   Modal,
+  Input,
   Button,
   Divider,
-  Input,
   Tooltip,
+  Textarea,
   IconButton,
   CardContent,
   DialogTitle,
   ModalDialog,
   DialogActions,
   DialogContent,
-  Textarea,
 } from "@mui/joy";
 
 import { AuthContext } from "../../context/AuthContext";
@@ -39,6 +39,7 @@ const TrainersList = () => {
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [openMail, setOpenMail] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [mailData, setMailData] = useState({
     to: "",
     name: "",
@@ -60,6 +61,21 @@ const TrainersList = () => {
       index: index++,
       full_id: trainer._id,
     }));
+  };
+
+  const filteredRows = convertToRowFormat(trainers).filter(
+    (row) =>
+      row.id.toLowerCase().includes(searchTerm) ||
+      row.name.toLowerCase().includes(searchTerm) ||
+      row.phone.toLowerCase().includes(searchTerm) ||
+      row.email.toLowerCase().includes(searchTerm) ||
+      row.workoutplan.toLowerCase().includes(searchTerm) ||
+      row.specialization.toLowerCase().includes(searchTerm) ||
+      row.bmi.toLowerCase().includes(searchTerm)
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
   };
 
   const deleteTrainerWithId = async () => {
@@ -360,6 +376,12 @@ const TrainersList = () => {
                 </Button>
               </Tooltip>
             </div>
+            <Input
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              sx={{ width: "350px" }}
+            />
             <div>
               <Button
                 className="transition-all duration-300"
@@ -389,7 +411,7 @@ const TrainersList = () => {
             }}
           >
             <DataGrid
-              rows={trainerRows}
+              rows={filteredRows}
               columns={columns}
               initialState={{ pagination: { page: 0, pageSize: 5 } }}
               sx={{

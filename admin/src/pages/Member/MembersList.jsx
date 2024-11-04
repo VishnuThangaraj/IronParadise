@@ -11,18 +11,19 @@ import {
   Chip,
   Modal,
   Button,
+  Option,
+  Input,
+  Select,
+  FormLabel,
   Divider,
   Tooltip,
   IconButton,
   CardContent,
+  FormControl,
   DialogTitle,
   ModalDialog,
   DialogActions,
   DialogContent,
-  Option,
-  Select,
-  FormLabel,
-  FormControl,
 } from "@mui/joy";
 
 import { PlanContext } from "../../context/PlanContext";
@@ -41,6 +42,7 @@ const MembersList = () => {
   const [editId, setEditId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [openplan, setOpenplan] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [plandata, setPlandata] = useState({
     dietplan: null,
     workoutplan: null,
@@ -61,6 +63,19 @@ const MembersList = () => {
       index: index++,
       full_id: member._id,
     }));
+  };
+
+  const filteredRows = convertToRowFormat(members).filter(
+    (row) =>
+      row.name.toLowerCase().includes(searchTerm) ||
+      row.phone.toLowerCase().includes(searchTerm) ||
+      row.id.toLowerCase().includes(searchTerm) ||
+      row.workoutplan.toLowerCase().includes(searchTerm) ||
+      row.dietplan.toLowerCase().includes(searchTerm)
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
   };
 
   const deleteMemberWithId = async () => {
@@ -365,6 +380,12 @@ const MembersList = () => {
                 </Button>
               </Tooltip>
             </div>
+            <Input
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              sx={{ width: "350px" }}
+            />
             <div>
               <Button
                 className="transition-all duration-300"
@@ -394,7 +415,7 @@ const MembersList = () => {
             }}
           >
             <DataGrid
-              rows={memberRows}
+              rows={filteredRows}
               columns={columns}
               initialState={{ pagination: { page: 0, pageSize: 5 } }}
               sx={{
