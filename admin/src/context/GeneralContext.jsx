@@ -16,14 +16,11 @@ export const GeneralProvider = ({ children }) => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const [attendance, event, schedule] = await Promise.all([
+        const [attendance, event] = await Promise.all([
           axios.get("/general/attendance", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           axios.get("/event", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get("/event/schedule", {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -38,10 +35,6 @@ export const GeneralProvider = ({ children }) => {
           setEvents(event.data.events);
         } else {
           console.log("Error Fetching Events List");
-        }
-
-        if (schedule.status === 200) {
-          console.log("All Events Checks Done");
         }
       } catch (err) {
         console.log("Failed to fetch Attendance", err);
@@ -95,9 +88,30 @@ export const GeneralProvider = ({ children }) => {
     }
   };
 
+  // Schedule Bulk Mail
+  const bulkMail = async (selectedUsers, mailData) => {
+    try {
+      const response = await axios.post(
+        "/general/bulkmail",
+        { selectedUsers, mailData },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Mail Sent Successfully 📨✔️");
+      } else {
+        toast.warning("Failed to Send Mail 📨");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
   return (
     <GeneralContext.Provider
-      value={{ eventsList, addEvent, sendMail, attendances }}
+      value={{ eventsList, addEvent, bulkMail, sendMail, attendances }}
     >
       {children}
     </GeneralContext.Provider>

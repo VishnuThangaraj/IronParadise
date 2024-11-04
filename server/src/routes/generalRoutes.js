@@ -22,4 +22,11 @@ router.post(
   generalController.sendMailFromAdmin
 );
 
+// Send Bulk Mail
+router.post(
+  "/bulkmail",
+  authenticateJWT(["admin"]),
+  generalController.sendBulkMail
+);
+
 module.exports = router;

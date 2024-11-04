@@ -104,6 +104,12 @@ const sidebarApplications = [
     location: "payment",
     childrens: [],
   },
+  {
+    name: "Messages",
+    icon: "fa-regular fa-envelopes",
+    location: "message",
+    childrens: [],
+  },
 ];
 
 export const Sidebar = () => {

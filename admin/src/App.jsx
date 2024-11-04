@@ -11,6 +11,7 @@ import "./App.scss";
 
 // Lazy-loaded pages
 const AuthForm = lazy(() => import("./pages/AuthForm"));
+const Messages = lazy(() => import("./pages/Messages"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Events = lazy(() => import("./pages/Event/Events"));
 const Attendance = lazy(() => import("./pages/Attendance"));
@@ -74,6 +75,7 @@ export const App = () => {
                 <Routes>
                   {/* General */}
                   <Route path="/home" element={<Dashboard />} />
+                  <Route path="/message" element={<Messages />} />
                   <Route path="/attendance" element={<Attendance />} />
                   <Route path="/payment" element={<SubscriptionPaylist />} />
 
