@@ -1,7 +1,8 @@
+import { gsap } from "gsap";
 import moment from "moment";
-import { Button, Table } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Card, CardContent, Button, Table, Divider, Box } from "@mui/joy";
 
 import {
   BarChart,
@@ -27,6 +28,9 @@ const Dashboard = () => {
   const { trainers } = useContext(TrainerContext);
   const { attendances } = useContext(GeneralContext);
   const { paymentHistory } = useContext(SubscriptionContext);
+
+  const widgetRef = useRef([]);
+  const graphRefL = useRef(null);
 
   const [totalMembers, setTotalMembers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -99,6 +103,27 @@ const Dashboard = () => {
     };
 
     calculateWeeklyAttendance();
+
+    // Animation
+    const tl = gsap.timeline();
+
+    tl.fromTo(
+      widgetRef.current,
+      { y: "-50%", opacity: 0 },
+      {
+        y: "0%",
+        opacity: 1,
+        duration: 0.8,
+        ease: "expo.in",
+        stagger: 0.1,
+      }
+    );
+
+    gsap.fromTo(
+      graphRefL.current,
+      { x: "-80%", opacity: 0 },
+      { x: "0%", opacity: 1, duration: 0.7, ease: "power2.out" }
+    );
   }, [members, trainers, paymentHistory, attendances]);
 
   const dashWidget = [
@@ -146,6 +171,7 @@ const Dashboard = () => {
             {dashWidget.map((dash, index) => (
               <div
                 key={`dash-w-${index}`}
+                ref={(el) => (widgetRef.current[index] = el)}
                 className={`bg-white shadow-md p-4 w-full rounded-lg border-b-4 ${dash.border}`}
               >
                 <div className="w-full text-sm font-semibold text-gray-500">
@@ -163,7 +189,10 @@ const Dashboard = () => {
             ))}
           </div>
           <div className="flex justify-between gap-5 my-7">
-            <div className="bg-white shadow-md w-1/2 rounded-lg">
+            <div
+              className="bg-white shadow-md w-1/2 rounded-lg"
+              ref={graphRefL}
+            >
               <div className="flex justify-between items-center  p-4">
                 <div className="font-semibold text-lg">
                   Attendance This Week
@@ -217,6 +246,56 @@ const Dashboard = () => {
               </Table>
             </div>
           </div>
+
+          <Card className="shadow-md" sx={{ my: 2, p: 3 }}>
+            <CardContent>
+              <div className="font-semibold text-lg">
+                Recently Added Trainers List
+              </div>
+              <Divider />
+              <Box
+                sx={{
+                  maxHeight: "310px",
+                  overflowY: "auto",
+                  mt: 2,
+                }}
+              >
+                <Table
+                  sx={{
+                    "& td": { padding: "5px" },
+                    "& tr > *:not(:first-child)": { textAlign: "center" },
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "center" }}>ID</th>
+                      <th style={{ textAlign: "center" }}>Name</th>
+                      <th style={{ textAlign: "center" }}>Contact</th>
+                      <th style={{ textAlign: "center" }}>Gender</th>
+                      <th style={{ textAlign: "center" }}>Specialization</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {trainers.slice(-5).map((trainer, index) => (
+                      <tr key={`trainer-dash-${index}`}>
+                        <td style={{ textAlign: "center" }}>
+                          {trainer.username.toUpperCase()}
+                        </td>
+                        <td style={{ textAlign: "center" }}>{trainer.name}</td>
+                        <td style={{ textAlign: "center" }}>{trainer.phone}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {trainer.gender.toUpperCase()}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          {trainer.specialization}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Box>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Side */}
@@ -257,6 +336,24 @@ const Dashboard = () => {
                 </div>
               ))}
           </div>
+          <Card className="shadow-md" sx={{ my: 2, p: 3, height: "385px" }}>
+            <CardContent>
+              <div className="flex justify-between items-center">
+                <div className="font-semibold text-lg">Events Today</div>
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  onClick={() => navigate("/event")}
+                >
+                  View
+                </Button>
+              </div>
+              <img src="images/eventDash.png" />
+              <div className="text-center mt-3 bg-green-200 rounded-full py-1">
+                2 Events Scheduled Today
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

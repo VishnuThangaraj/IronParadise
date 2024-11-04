@@ -123,10 +123,10 @@ const Events = () => {
             eventPropGetter={(event) => ({
               style: {
                 backgroundColor: event.title.includes("Birthday")
-                  ? "#ffcc00"
+                  ? "rgba(255, 204, 0, 0.83)"
                   : event.title.includes("Subscription")
-                  ? "#32CD32"
-                  : "#007BFF",
+                  ? "rgba(44, 185, 103, 0.75)"
+                  : "rgba(0, 123, 255, 0.57)",
                 color: "white",
                 borderRadius: "5px",
               },

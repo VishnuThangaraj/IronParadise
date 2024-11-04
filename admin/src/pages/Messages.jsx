@@ -103,7 +103,7 @@ const Messages = () => {
 
   const validateAndSendMail = async () => {
     if (!email || !email.subject || !email.message) {
-      toast.info("All fields are Required !");
+      return toast.info("All fields are Required !");
     }
     setLoading(true);
     await bulkMail(selectedUser, email);

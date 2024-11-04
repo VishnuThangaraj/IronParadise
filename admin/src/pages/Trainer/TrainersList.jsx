@@ -69,9 +69,7 @@ const TrainersList = () => {
       row.name.toLowerCase().includes(searchTerm) ||
       row.phone.toLowerCase().includes(searchTerm) ||
       row.email.toLowerCase().includes(searchTerm) ||
-      row.workoutplan.toLowerCase().includes(searchTerm) ||
-      row.specialization.toLowerCase().includes(searchTerm) ||
-      row.bmi.toLowerCase().includes(searchTerm)
+      row.specialization.toLowerCase().includes(searchTerm)
   );
 
   const handleSearchChange = (e) => {

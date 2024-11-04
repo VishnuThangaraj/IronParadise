@@ -1,6 +1,7 @@
+import { gsap } from "gsap";
 import Button from "@mui/joy/Button";
 import { CircularProgress } from "@mui/material";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -55,6 +56,8 @@ const AddDietplan = () => {
     sundayDinner: "",
   });
 
+  const tableRef = useRef(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedDietplan = { ...dietplan, [name]: value };
@@ -93,6 +96,14 @@ const AddDietplan = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    gsap.fromTo(
+      tableRef.current,
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.7, ease: "power2.out" }
+    );
+  }, []);
+
   return (
     <div id="adddietplan">
       <PageLocation
@@ -100,7 +111,7 @@ const AddDietplan = () => {
         parentPath="Fitness Plans"
         currentPath="Add New Diet Plan"
       />
-      <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }}>
+      <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }} ref={tableRef}>
         <CardContent>
           <Box component="form" sx={{ p: 0 }} onSubmit={validateAndAddDietplan}>
             <div className="text-xl font-bold border-b-2 p-5 ">

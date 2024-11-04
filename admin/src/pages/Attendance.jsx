@@ -6,11 +6,11 @@ import {
   Table,
   Modal,
   Button,
-  CardContent,
-  DialogContent,
-  ModalDialog,
-  DialogTitle,
   Divider,
+  CardContent,
+  DialogTitle,
+  ModalDialog,
+  DialogContent,
 } from "@mui/joy";
 
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -65,7 +65,7 @@ const Attendance = () => {
 
         if (uniqueTrainers.length > 0) {
           events.push({
-            title: `${uniqueTrainers.length} | Trainers Present`,
+            title: `${uniqueTrainers.length} | Trainers`,
             allDay: true,
             start: new Date(date),
             end: new Date(date),
@@ -74,7 +74,7 @@ const Attendance = () => {
         }
         if (uniqueMembers.length > 0) {
           events.push({
-            title: `${uniqueMembers.length} | Members Present`,
+            title: `${uniqueMembers.length} | Members`,
             allDay: true,
             start: new Date(date),
             end: new Date(date),
