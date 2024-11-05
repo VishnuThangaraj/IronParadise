@@ -92,7 +92,15 @@ const Dashboard = () => {
         trainers: 0,
       }));
 
-      attendances.forEach(({ role, createdAt }) => {
+      const startOfWeek = moment().startOf("week"); // Start of the current week (Sunday)
+      const endOfWeek = moment().endOf("week"); // End of the current week (Saturday)
+
+      const currentWeekAttendances = attendances.filter(({ createdAt }) => {
+        const attendanceDate = moment(createdAt);
+        return attendanceDate.isBetween(startOfWeek, endOfWeek, null, "[]"); // Inclusive of start and end dates
+      });
+
+      currentWeekAttendances.forEach(({ role, createdAt }) => {
         const dayIndex = moment(createdAt).day();
         if (role === "member") {
           attendanceCount[dayIndex].members += 1;
@@ -272,7 +280,10 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <Card className="shadow-md" sx={{ my: 2, p: 3 }}>
+          <Card
+            className="shadow-md"
+            sx={{ my: 2, p: 3, backgroundColor: "white" }}
+          >
             <CardContent>
               <div className="font-semibold text-lg">
                 Recently Added Trainers List
@@ -364,7 +375,10 @@ const Dashboard = () => {
                 </div>
               ))}
           </div>
-          <Card className="shadow-md" sx={{ my: 2, p: 3, height: "385px" }}>
+          <Card
+            className="shadow-md"
+            sx={{ my: 2, p: 3, height: "385px", backgroundColor: "white" }}
+          >
             <CardContent>
               <div className="flex justify-between items-center">
                 <div className="font-semibold text-lg">Events Today</div>

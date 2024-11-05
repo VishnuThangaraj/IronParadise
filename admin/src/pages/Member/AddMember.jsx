@@ -62,12 +62,9 @@ const AddMember = () => {
     ) {
       return;
     }
-
-    // Update the member state
     const updatedMember = { ...member, [name]: value };
     setMember(updatedMember);
 
-    // Calculate BMI if height and weight are present
     if (name === "height" || name === "weight") {
       const height = Number(updatedMember.height) / 100;
       const weight = Number(updatedMember.weight);

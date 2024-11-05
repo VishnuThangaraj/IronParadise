@@ -120,12 +120,12 @@ const UserAttendance = () => {
           <FormControl sx={{ mt: 4 }}>
             <FormLabel sx={{ fontSize: 16 }}>Enter Your ID</FormLabel>
             <Input
-              size="md"
-              sx={{ py: 1 }}
-              value={userId}
               onChange={handleChange}
               placeholder="MBXX"
+              value={userId}
               variant="soft"
+              size="md"
+              sx={{ py: 1 }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSubmit(e);
               }}
