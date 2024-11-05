@@ -17,8 +17,8 @@ import {
 import { MemberContext } from "../../context/MemberContext";
 import { GeneralContext } from "../../context/GeneralContext";
 import { TrainerContext } from "../../context/TrainerContext";
-
 import { PageLocation } from "../../components/PageLocation";
+import axios from "axios";
 
 const AttendanceReport = () => {
   const { members } = useContext(MemberContext);
@@ -32,6 +32,7 @@ const AttendanceReport = () => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [showInvalidId, setShowInvalidId] = useState(false);
+  const [dateError, setDateError] = useState("");
 
   useEffect(() => {
     const combined = [...members, ...trainers].map(
@@ -42,7 +43,6 @@ const AttendanceReport = () => {
         role,
       })
     );
-
     setUsers(combined);
   }, [trainers, members]);
 
@@ -70,14 +70,93 @@ const AttendanceReport = () => {
     }
   };
 
-  // Start Date
   const handleStartDateChange = (date, dateString) => {
     setStartDate(dateString);
+    validateDateRange(dateString, endDate);
   };
 
-  // End Date
   const handleEndDateChange = (date, dateString) => {
     setEndDate(dateString);
+    validateDateRange(startDate, dateString);
+  };
+
+  const validateDateRange = (start, end) => {
+    const today = dayjs();
+
+    if (start && dayjs(start).isAfter(today)) {
+      setDateError("Start date must be before today's date.");
+    } else if (end && dayjs(end).isAfter(today)) {
+      setDateError("End date must be before today's date.");
+    } else if (start && end) {
+      if (dayjs(end).isBefore(start)) {
+        setDateError("End date must be after start date.");
+      } else {
+        setDateError("");
+      }
+    } else {
+      setDateError("");
+    }
+  };
+
+  // Generate Attendance Report
+  const generateReport = () => {
+    if (!userId || !startDate || !endDate || dateError) return;
+
+    setLoading(true);
+
+    // Filter attendance data based on selected user and date range
+    const filteredData = attendances.filter(
+      (attendance) =>
+        attendance.username.toLowerCase() === userId.toLowerCase() &&
+        dayjs(attendance.createdAt).isAfter(startDate) &&
+        dayjs(attendance.createdAt).isBefore(endDate)
+    );
+
+    if (filteredData.length === 0) {
+      alert("No attendance data found for the specified date range.");
+      setLoading(false);
+      return;
+    }
+
+    // Prepare data for export
+    const reportData = filteredData.map((record) => {
+      const loginTime = dayjs(record.createdAt);
+      let logoutTime;
+
+      if (record.action === "logout") {
+        logoutTime = dayjs(record.updatedAt);
+      } else if (record.action === "login") {
+        // Default to 6 PM for logout time if action is login
+        logoutTime = loginTime
+          .clone()
+          .set("hour", 18)
+          .set("minute", 0)
+          .set("second", 0);
+      }
+
+      // Calculate duration
+      const duration = logoutTime.diff(loginTime, "minutes");
+      const formattedDuration = `${Math.floor(duration / 60)}h ${
+        duration % 60
+      }m`;
+
+      return {
+        Name: record.name,
+        Username: record.username,
+        Role: record.role,
+        LoginTime: loginTime.format("YYYY-MM-DD HH:mm:ss"),
+        LogoutTime: logoutTime.format("YYYY-MM-DD HH:mm:ss"),
+        Duration: formattedDuration,
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(reportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance Report");
+
+    XLSX.writeFile(workbook, `${userId}_Attendance_Report.xlsx`);
+
+    setLoading(false);
   };
 
   return (
@@ -89,11 +168,7 @@ const AttendanceReport = () => {
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 0 }}>
         <CardContent>
-          <Box
-            component="form"
-            sx={{ p: 0 }}
-            //   onSubmit={validateAndGenerate}
-          >
+          <Box component="form" sx={{ p: 0 }}>
             <div className="text-xl font-bold border-b-2 p-5 ">
               Generate New Attendance Report
             </div>
@@ -119,7 +194,6 @@ const AttendanceReport = () => {
                   <FormLabel sx={{ fontSize: 16 }}>Full Name</FormLabel>
                   <Input
                     variant="solid"
-                    placeholder=""
                     value={name}
                     size="md"
                     sx={{ py: 1 }}
@@ -151,12 +225,18 @@ const AttendanceReport = () => {
                   />
                 </FormControl>
               </div>
+              {dateError && (
+                <FormHelperText sx={{ color: "red", mt: 1 }}>
+                  {dateError}
+                </FormHelperText>
+              )}
               <div className="my-3 flex flex-row-reverse">
                 <Button
                   className="transition-all duration-300"
                   variant="solid"
-                  type="submit"
+                  type="button"
                   size="md"
+                  onClick={generateReport}
                   sx={{
                     px: 3,
                     backgroundColor: "black",
