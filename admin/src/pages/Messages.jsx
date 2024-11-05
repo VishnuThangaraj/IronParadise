@@ -135,7 +135,7 @@ const Messages = () => {
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}
-              sx={{ width: "350px" }}
+              sx={{ width: "350px", backgroundColor: "white" }}
             />
             <Button
               className="transition-all duration-300"

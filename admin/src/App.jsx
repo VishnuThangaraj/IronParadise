@@ -14,13 +14,13 @@ const AuthForm = lazy(() => import("./pages/AuthForm"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Events = lazy(() => import("./pages/Event/Events"));
-const Attendance = lazy(() => import("./pages/Attendance"));
 const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const EditMember = lazy(() => import("./pages/Member/EditMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
 const MembersList = lazy(() => import("./pages/Member/MembersList"));
 const EditTrainer = lazy(() => import("./pages/Trainer/EditTrainer"));
+const Attendance = lazy(() => import("./pages/Attendance/Attendance"));
 const AddDietplan = lazy(() => import("./pages/Dietplan/AddDietplan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const DietplanList = lazy(() => import("./pages/Dietplan/DietplanList"));
@@ -28,6 +28,9 @@ const EditDietplan = lazy(() => import("./pages/Dietplan/EditDietplan"));
 const ViewDietplan = lazy(() => import("./pages/Dietplan/ViewDietplan"));
 const SubscriptionPaylist = lazy(() => import("./pages/SubscriptionPaylist"));
 const AddWorkoutPlan = lazy(() => import("./pages/Workoutplan/AddWorkoutPlan"));
+const AttendanceReport = lazy(() =>
+  import("./pages/Attendance/AttendanceReport")
+);
 const ViewWorkoutplan = lazy(() =>
   import("./pages/Workoutplan/ViewWorkoutplan")
 );
@@ -76,8 +79,14 @@ export const App = () => {
                   {/* General */}
                   <Route path="/home" element={<Dashboard />} />
                   <Route path="/message" element={<Messages />} />
-                  <Route path="/attendance" element={<Attendance />} />
                   <Route path="/payment" element={<SubscriptionPaylist />} />
+
+                  {/* Attendance */}
+                  <Route path="/attendance" element={<Attendance />} />
+                  <Route
+                    path="/attendance/report"
+                    element={<AttendanceReport />}
+                  />
 
                   {/* Events */}
                   <Route path="/event" element={<Events />} />
