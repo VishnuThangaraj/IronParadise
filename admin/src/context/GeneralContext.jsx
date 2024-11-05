@@ -89,13 +89,21 @@ export const GeneralProvider = ({ children }) => {
   };
 
   // Schedule Bulk Mail
-  const bulkMail = async (selectedUsers, mailData) => {
+  const bulkMail = async (selectedUser, formData) => {
     try {
+      const form = new FormData();
+      form.append("subject", formData.subject || "");
+      form.append("message", formData.message || "");
+      form.append("recipients", JSON.stringify(selectedUser));
+      form.append("file", formData.file || "");
+
       const response = await axios.post(
         "/general/bulkmail",
-        { selectedUsers, mailData },
+        { ...formData, recipients: selectedUser },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
@@ -104,8 +112,8 @@ export const GeneralProvider = ({ children }) => {
       } else {
         toast.warning("Failed to Send Mail 📨");
       }
-    } catch (err) {
-      console.log("Error Connecting to Server | ", err);
+    } catch (error) {
+      console.error("Error sending bulk mail:", error);
     }
   };
 

@@ -1,18 +1,19 @@
 import { toast } from "sonner";
 import { DataGrid } from "@mui/x-data-grid";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { IconPaperclip as AttachFileIcon } from "@tabler/icons-react";
 import {
   Box,
   Card,
   Modal,
+  Input,
   Button,
   Divider,
-  Input,
+  Textarea,
   CardContent,
   DialogTitle,
   ModalDialog,
   DialogContent,
-  Textarea,
 } from "@mui/joy";
 
 import { MemberContext } from "../context/MemberContext";
@@ -23,15 +24,16 @@ import { PageLocation } from "../components/PageLocation";
 
 const Messages = () => {
   const { members } = useContext(MemberContext);
-  const { bulkMail } = useContext(GeneralContext);
   const { trainers } = useContext(TrainerContext);
+  const { bulkMail } = useContext(GeneralContext);
 
+  const [file, setFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [combined, setCombined] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState([]);
-  const [email, setEmail] = useState({
+  const [formData, setFormData] = useState({
     subject: "",
     message: "",
   });
@@ -43,7 +45,13 @@ const Messages = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmail({ ...email, [name]: value });
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (event) => {
+    const filed = event.target.files[0];
+    setFile(filed);
+    setFormData({ ...formData, file: filed });
   };
 
   const handleSearchChange = (e) => {
@@ -95,24 +103,22 @@ const Messages = () => {
 
   const clearMail = () => {
     setOpen(false);
-    setEmail({
+    setFormData({
       subject: "",
       message: "",
     });
+    setFile(null);
   };
 
-  const validateAndSendMail = async () => {
-    if (!email || !email.subject || !email.message) {
+  const validateAndSendMail = async (e) => {
+    e.preventDefault();
+    if (!formData || !formData.subject || !formData.message) {
       return toast.info("All fields are Required !");
     }
     setLoading(true);
-    await bulkMail(selectedUser, email);
-    setEmail({
-      subject: "",
-      message: "",
-    });
+    await bulkMail(selectedUser, formData);
+    clearMail();
     setLoading(false);
-    setOpen(false);
   };
 
   return (
@@ -185,80 +191,98 @@ const Messages = () => {
             <span className="font-bold text-gray-500">Send Mail To</span>{" "}
             <span className="font-bold">{`${
               selectedUser && selectedUser.length
-            }  ${selectedUser.length == 1 ? "Person" : "Persons"}`}</span>
+            }  ${selectedUser.length === 1 ? "Person" : "Persons"}`}</span>
           </DialogTitle>
           <Divider />
           <DialogContent>
-            <div className="pb-2"></div>
-            <Input
-              value={email.subject}
-              onChange={handleChange}
-              placeholder="Subject"
-              variant="outlined"
-              name="subject"
-              sx={{
-                mt: 1,
-                backgroundColor: "white",
-              }}
-            />
-            <Textarea
-              value={email.message}
-              onChange={handleChange}
-              placeholder="Message"
-              variant="outlined"
-              name="message"
-              minRows={6}
-              maxRows={10}
-              sx={{
-                py: 1,
-                my: 2,
-                backgroundColor: "white",
-              }}
-              size="md"
-              required
-            />
-            <div className="text-right flex gap-4 flex-row-reverse">
-              <Button
-                className="transition-all duration-300"
-                onClick={validateAndSendMail}
-                variant="solid"
-                type="submit"
-                size="md"
+            <form onSubmit={validateAndSendMail}>
+              <Input
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="Subject"
+                variant="outlined"
+                name="subject"
                 sx={{
-                  px: 2,
-                  borderRadius: 25,
-                  backgroundColor: "black",
-                  "&:hover": {
-                    backgroundColor: "#222222",
-                  },
+                  mt: 1,
+                  backgroundColor: "white",
                 }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <Fragment>
-                    <span className="text-base">Sending ...</span>
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    Send &nbsp;
-                    <i className="fa-regular fa-paper-plane-top"></i>
-                  </Fragment>
-                )}
-              </Button>
-              <Button
-                className="transition-all duration-300"
-                onClick={clearMail}
-                variant="text"
-                type="submit"
-                size="md"
+              />
+              <Textarea
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Message"
+                variant="outlined"
+                name="message"
+                minRows={6}
+                maxRows={10}
                 sx={{
-                  px: 2,
+                  py: 1,
+                  my: 2,
+                  backgroundColor: "white",
                 }}
-                disabled={loading}
+                required
+              />
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                style={{
+                  color: file ? "#fff" : "#000",
+                  backgroundColor: file ? "green" : "#fff",
+                  borderColor: file ? "green" : "#ccc",
+                }}
               >
-                Cancel
+                <AttachFileIcon className="me-2" />
+                {file ? `File: ${file.name}` : "Upload Image"}
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  hidden
+                  onChange={handleFileChange}
+                />
               </Button>
-            </div>
+
+              <div className="text-right flex gap-4 flex-row-reverse mt-4">
+                <Button
+                  className="transition-all duration-300"
+                  variant="solid"
+                  type="submit"
+                  size="md"
+                  sx={{
+                    px: 2,
+                    borderRadius: 25,
+                    backgroundColor: "black",
+                    "&:hover": {
+                      backgroundColor: "#222222",
+                    },
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <Fragment>
+                      <span className="text-base">Sending ...</span>
+                    </Fragment>
+                  ) : (
+                    <Fragment>
+                      Send &nbsp;
+                      <i className="fa-regular fa-paper-plane-top"></i>
+                    </Fragment>
+                  )}
+                </Button>
+                <Button
+                  className="transition-all duration-300"
+                  onClick={clearMail}
+                  variant="text"
+                  size="md"
+                  sx={{
+                    px: 2,
+                  }}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
           </DialogContent>
         </ModalDialog>
       </Modal>

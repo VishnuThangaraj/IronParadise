@@ -109,9 +109,15 @@ const Attendance = () => {
     setSelectedPerson(null);
   };
 
-  const getAttendanceLogs = (id) => {
+  const getTodayAttendanceLogs = (id) => {
+    const today = moment().startOf("day");
     return attendances
-      .filter((attendance) => attendance.id === id)
+      .filter((attendance) => {
+        return (
+          attendance.id === id &&
+          moment(attendance.createdAt).isSame(today, "day")
+        );
+      })
       .map((log) => {
         const loginTime = moment(log.createdAt);
         const logoutTime = moment(log.updatedAt || log.createdAt);
@@ -133,7 +139,7 @@ const Attendance = () => {
   const exportIndividualAttendance = () => {
     if (!selectedPerson) return;
 
-    const attendanceLogs = getAttendanceLogs(selectedPerson.id);
+    const attendanceLogs = getTodayAttendanceLogs(selectedPerson.id);
 
     const data = attendanceLogs.map((log) => ({
       "Login Time": log.loginTime,
@@ -145,7 +151,12 @@ const Attendance = () => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `${selectedPerson.name} Attendance`);
 
-    XLSX.writeFile(wb, `${selectedPerson.name}_Attendance_Log.xlsx`);
+    XLSX.writeFile(
+      wb,
+      `${selectedPerson.name}_Attendance_Log_${moment().format(
+        "YYYY-MM-DD"
+      )}.xlsx`
+    );
   };
 
   return (
@@ -300,19 +311,31 @@ const Attendance = () => {
               </thead>
               <tbody>
                 {selectedPerson &&
-                  getAttendanceLogs(selectedPerson.id).map((log, index) => (
-                    <tr key={`log-${index}`}>
-                      <td style={{ textAlign: "center" }}>{log.loginTime}</td>
-                      <td style={{ textAlign: "center" }}>
-                        {log.status === "Active" ? "---" : log.logoutTime}
-                      </td>
-                      <td style={{ textAlign: "center" }}>{log.status}</td>
-                    </tr>
-                  ))}
+                  getTodayAttendanceLogs(selectedPerson.id).map(
+                    (log, index) => (
+                      <tr key={`log-${index}`}>
+                        <td style={{ textAlign: "center" }}>{log.loginTime}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {log.status === "Active" ? "---" : log.logoutTime}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <span
+                            className={
+                              log.status === "Active"
+                                ? "text-green-700 font-semibold"
+                                : ""
+                            }
+                          >
+                            {log.status}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  )}
               </tbody>
             </Table>
             {!selectedPerson ||
-            getAttendanceLogs(selectedPerson.id).length === 0 ? (
+            getTodayAttendanceLogs(selectedPerson.id).length === 0 ? (
               <p>No attendance records found.</p>
             ) : null}
           </DialogContent>

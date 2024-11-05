@@ -26,14 +26,15 @@ const Dashboard = () => {
 
   const { members } = useContext(MemberContext);
   const { trainers } = useContext(TrainerContext);
-  const { attendances } = useContext(GeneralContext);
   const { paymentHistory } = useContext(SubscriptionContext);
+  const { attendances, eventsList } = useContext(GeneralContext);
 
   const subsRef = useRef(null);
   const widgetRef = useRef([]);
   const graphRefL = useRef(null);
   const memberRef = useRef(null);
 
+  const [eventCount, setEventCount] = useState(0);
   const [totalMembers, setTotalMembers] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [activeMembers, setActiveMembers] = useState(2);
@@ -42,6 +43,7 @@ const Dashboard = () => {
   const [attendanceData, setAttendanceData] = useState([]);
 
   useEffect(() => {
+    const today = moment();
     setTotalMembers(members.length || 0);
     setTotalTrainers(trainers.length || 0);
 
@@ -62,8 +64,6 @@ const Dashboard = () => {
     ///// Subscription //////
 
     const getMembersWithExpiringSubscriptions = (members) => {
-      const today = moment();
-
       return members
         .map((member) => {
           const endDate = moment(member.subscription.endDate);
@@ -106,6 +106,17 @@ const Dashboard = () => {
 
     calculateWeeklyAttendance();
 
+    const eventsToday = eventsList.filter((event) => {
+      const startDate = moment(event.startDate, "YYYY-MM-DD");
+      const endDate = moment(event.endDate, "YYYY-MM-DD");
+      console.log(today.isBetween(startDate, endDate));
+      return today.isBetween(startDate, endDate, null, "[]");
+    });
+
+    console.log(eventsToday);
+
+    setEventCount(eventsToday.length);
+
     // Animation
     const tl = gsap.timeline();
 
@@ -138,7 +149,7 @@ const Dashboard = () => {
       { x: "80%", opacity: 0 },
       { x: "0%", opacity: 1, duration: 0.7, ease: "power2.out" }
     );
-  }, [members, trainers, paymentHistory, attendances]);
+  }, [members, trainers, paymentHistory, attendances, eventsList]);
 
   const dashWidget = [
     {
@@ -367,7 +378,8 @@ const Dashboard = () => {
               </div>
               <img src="images/eventDash.png" />
               <div className="text-center mt-3 bg-green-200 rounded-full py-1">
-                2 Events Scheduled Today
+                {eventCount} {eventCount <= 1 ? "Event" : "Events"} Scheduled
+                Today
               </div>
             </CardContent>
           </Card>

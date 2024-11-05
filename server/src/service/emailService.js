@@ -25,4 +25,30 @@ const sendMail = async (to, subject, html) => {
   }
 };
 
-module.exports = { sendMail };
+// Send email function
+const sendMailWithFile = async (to, subject, html, file) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    html,
+  };
+
+  if (file) {
+    mailOptions.attachments = [
+      {
+        filename: file.originalname,
+        content: file.buffer,
+      },
+    ];
+  }
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Message sent: %s", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+
+module.exports = { sendMail, sendMailWithFile };

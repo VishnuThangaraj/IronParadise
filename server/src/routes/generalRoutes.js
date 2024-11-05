@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const fileUpload = require("../middleware/fileUpload");
 const authenticateJWT = require("../middleware/authMiddleware");
 const generalController = require("../controllers/generalController");
 
@@ -25,7 +26,7 @@ router.post(
 // Send Bulk Mail
 router.post(
   "/bulkmail",
-  authenticateJWT(["admin"]),
+  fileUpload.single("file"),
   generalController.sendBulkMail
 );
 

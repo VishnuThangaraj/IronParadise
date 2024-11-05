@@ -2,7 +2,7 @@ const moment = require("moment");
 const Member = require("../models/Member");
 const Trainer = require("../models/Trainer");
 const Attendance = require("../models/Attendance");
-const { sendMail } = require("../service/emailService");
+const { sendMail, sendMailWithFile } = require("../service/emailService");
 
 // Get Trainers and Members
 const getUsers = async (req, res) => {
@@ -194,12 +194,11 @@ const sendMailFromAdmin = async (req, res) => {
 
 // Send Bulk Mail
 const sendBulkMail = async (req, res) => {
-  const selectedUsers = req.body.selectedUsers;
-  const mailData = req.body.mailData;
-
+  const { subject, message, recipients } = req.body;
+  const file = req.file;
   try {
-    selectedUsers.forEach((email) => {
-      const html = `<!DOCTYPE html>
+    const emailPromises = recipients.map((email) => {
+      const html = ` <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -319,7 +318,7 @@ const sendBulkMail = async (req, res) => {
             </div>
             <div class="content">
                 <h2>Hey!</h2>
-                <p>${mailData.message}</p>
+                <p>${message}</p>
                 <p>Sincerely,<br />Iron Paradise Admin</p>
             </div>
             <div class="footer">
@@ -350,10 +349,13 @@ const sendBulkMail = async (req, res) => {
         </div>
     </body>
     </html>`;
-      sendMail(email, mailData.subject, html);
+
+      return sendMailWithFile(email, subject, html, file);
     });
 
-    res.status(200).json({ message: "Bulk Mail Scheduled" });
+    Promise.all(emailPromises);
+
+    res.status(200).json({ message: "Bulk Mail Sent Successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
