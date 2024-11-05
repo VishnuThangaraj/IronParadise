@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
+import { toast } from "sonner";
 import { DatePicker } from "antd";
 import { CircularProgress } from "@mui/material";
 import { Fragment, useContext, useEffect, useState } from "react";
@@ -17,8 +18,8 @@ import {
 import { MemberContext } from "../../context/MemberContext";
 import { GeneralContext } from "../../context/GeneralContext";
 import { TrainerContext } from "../../context/TrainerContext";
+
 import { PageLocation } from "../../components/PageLocation";
-import axios from "axios";
 
 const AttendanceReport = () => {
   const { members } = useContext(MemberContext);
@@ -30,9 +31,9 @@ const AttendanceReport = () => {
   const [userId, setUserId] = useState("");
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dateError, setDateError] = useState("");
   const [startDate, setStartDate] = useState("");
   const [showInvalidId, setShowInvalidId] = useState(false);
-  const [dateError, setDateError] = useState("");
 
   useEffect(() => {
     const combined = [...members, ...trainers].map(
@@ -104,7 +105,6 @@ const AttendanceReport = () => {
 
     setLoading(true);
 
-    // Filter attendance data based on selected user and date range
     const filteredData = attendances.filter(
       (attendance) =>
         attendance.username.toLowerCase() === userId.toLowerCase() &&
@@ -113,7 +113,7 @@ const AttendanceReport = () => {
     );
 
     if (filteredData.length === 0) {
-      alert("No attendance data found for the specified date range.");
+      toast.info("No attendance data found for the specified date range.");
       setLoading(false);
       return;
     }
@@ -126,7 +126,6 @@ const AttendanceReport = () => {
       if (record.action === "logout") {
         logoutTime = dayjs(record.updatedAt);
       } else if (record.action === "login") {
-        // Default to 6 PM for logout time if action is login
         logoutTime = loginTime
           .clone()
           .set("hour", 18)
@@ -134,7 +133,6 @@ const AttendanceReport = () => {
           .set("second", 0);
       }
 
-      // Calculate duration
       const duration = logoutTime.diff(loginTime, "minutes");
       const formattedDuration = `${Math.floor(duration / 60)}h ${
         duration % 60
