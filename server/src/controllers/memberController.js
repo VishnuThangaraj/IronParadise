@@ -346,6 +346,7 @@ const registerMember = async (req, res) => {
       workoutPlanPDF,
     ]);
 
+    // Delete PDF Data
     fs.unlinkSync(dietPlanPDF);
     fs.unlinkSync(workoutPlanPDF);
 

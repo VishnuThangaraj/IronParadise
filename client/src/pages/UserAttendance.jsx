@@ -99,6 +99,7 @@ const UserAttendance = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Check for valid user
       if (showInvalidId) {
         toast.error("Please enter a valid ID.");
       } else if (userId && name) {

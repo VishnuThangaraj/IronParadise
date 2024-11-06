@@ -519,7 +519,7 @@ const MailPast = async (member) => {
   }
 };
 
-// Subscription Expired
+// Subscription Going Expired
 const mailGoingToExpire = async (member) => {
   const plan = await MembershipPlan.findById(
     member.subscription.membershipPlan

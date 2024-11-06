@@ -118,7 +118,6 @@ const AttendanceReport = () => {
       return;
     }
 
-    // Prepare data for export
     const reportData = filteredData.map((record) => {
       const loginTime = dayjs(record.createdAt);
       let logoutTime;
