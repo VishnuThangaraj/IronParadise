@@ -16,6 +16,9 @@ router.get(
 // Mark Attendancee
 router.post("/attendance", generalController.markAttendance);
 
+// Check Attendancee
+router.post("/check", generalController.checkAttendance);
+
 // Send Mail
 router.post(
   "/sendmail",

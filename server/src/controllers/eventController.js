@@ -4,6 +4,7 @@ const Event = require("../models/Event");
 const Member = require("../models/Member");
 const Trainer = require("../models/Trainer");
 const { sendMail } = require("../service/emailService");
+const MembershipPlan = require("../models/MembershipPlan");
 
 // Fetch all events
 const getEvents = async (req, res) => {
@@ -340,6 +341,10 @@ const sendEmail = async (eventData) => {
 
 // Subscription Expired
 const MailPast = async (member) => {
+  const plan = await MembershipPlan.findById(
+    member.subscription.membershipPlan
+  );
+
   try {
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -462,7 +467,14 @@ const MailPast = async (member) => {
         <div class="content">
             <h2>Hello, ${member.name}!</h2>
             <p>We hope you're enjoying your journey with Iron Paradise!</p>
-            <p>Your subscription plan of <strong>₹${member.subscription.planCost}</strong> has ended on <strong>${member.subscription.endDate}</strong>.</p>
+            <p>Your subscription plan of <strong>₹${
+              member.subscription.planCost
+            }</strong> has ended on <strong>${`${member.subscription.endDate}`.slice(
+      0,
+      16
+    )}</strong>.</p><br/>
+    <p>Plan Name : ${plan.name}</p><br/>
+    <p>Plan Duration : ${plan.duration} Months</p><br/>
             <p>To continue accessing all the benefits, please renew your subscription at your earliest convenience.</p>
             <p>If you have any questions or need assistance with renewing, feel free to contact us!</p>
             <p>Sincerely,<br />Iron Paradise Admin</p>
@@ -501,14 +513,18 @@ const MailPast = async (member) => {
       html
     );
 
-    res.status(200).json({ message: "Mail Sent" });
+    console.log("Mail Sent for Expired Subscription");
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    console.log("Failed to Send Mail for Expired Subscription");
   }
 };
 
 // Subscription Expired
 const mailGoingToExpire = async (member) => {
+  const plan = await MembershipPlan.findById(
+    member.subscription.membershipPlan
+  );
+
   try {
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -631,7 +647,14 @@ const mailGoingToExpire = async (member) => {
         <div class="content">
             <h2>Hello, ${member.name}!</h2>
             <p>We hope you're enjoying your journey with Iron Paradise!</p>
-            <p>Your subscription plan of <strong>₹${member.subscription.planCost}</strong> is going to expire on <strong>${member.subscription.endDate}</strong>.</p>
+            <p>Your subscription plan of <strong>₹${
+              member.subscription.planCost
+            }</strong> is going to expire on <strong>${`${member.subscription.endDate}`.slice(
+      0,
+      16
+    )}</strong>.</p><br/>
+    <p>Plan Name : ${plan.name}</p><br/>
+    <p>Plan Duration : ${plan.duration} Months</p><br/>
             <p>To continue accessing all the benefits, please renew your subscription at your earliest convenience.</p>
             <p>If you have any questions or need assistance with renewing, feel free to contact us!</p>
             <p>Sincerely,<br />Iron Paradise Admin</p>
@@ -671,9 +694,9 @@ const mailGoingToExpire = async (member) => {
       html
     );
 
-    res.status(200).json({ message: "Mail Sent" });
+    console.log("Mail Sent for Upcoming Subscription Expiry");
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    console.log("Failed to Send Mail for Upcoming Subscription Expiry");
   }
 };
 
@@ -696,8 +719,7 @@ const addEvent = async (req, res) => {
   }
 };
 
-// Schedule job to run every day at 6 AM
-cron.schedule("0 6 * * *", async () => {
+cron.schedule("0 7 * * *", async () => {
   try {
     const today = moment().startOf("day");
 

@@ -15,11 +15,35 @@ import {
 
 const MySwal = withReactContent(Swal);
 
+const gymQuotes = [
+  "I only work out because I really, really like donuts.",
+  "I got 99 problems, but I'm going to the gym to ignore all of them",
+  "I'm sorry for what I said during burpees",
+  "Life has its ups and downs. We call them squats",
+  "Unless you puke, faint, or die, keep going! — Jillian Michaels",
+  "You make my knees weak. Just kidding. Yesterday was leg day.",
+  "My favorite machine at the gym is the television.",
+  "It's my workout. I can cry if I want to.",
+  "Hustle for that muscle.",
+  "Eat clean, stay fit, and have a burger to stay sane.—Gigi Hadid",
+  "Weights before dates.",
+  "I like big weights and I cannot lie.",
+  "I don't sweat, I sparkle.",
+  "Sweat is your fat crying.",
+  "Fitness: If it came in a bottle, everyone would have a great body.—Cher ",
+  "I don't want to look skinny. I want to look like I could kick your butt.",
+  "Friday night. Party at the gym with my friends dumbbell and barbell.",
+  "Life is short. Lift heavy things.",
+  "If you still look cute after working out, you didn't go hard enough.",
+  "The only BS I need in my life is breakfast and squats.",
+];
+
 const UserAttendance = () => {
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
   const [attendance, setAttendance] = useState([]);
+  const [buttonText, setButtonText] = useState("Mark Attendance");
   const [showInvalidId, setShowInvalidId] = useState(false);
 
   useEffect(() => {
@@ -37,7 +61,7 @@ const UserAttendance = () => {
     fetchAttendanceData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { value } = e.target;
     if (value && value.length > 5) return;
 
@@ -51,11 +75,21 @@ const UserAttendance = () => {
       if (foundUser) {
         setName(foundUser.name);
         setShowInvalidId(false);
+
+        const response = await axios.post("/general/check", {
+          foundUser,
+        });
+
+        if (response.status === 200) {
+          setButtonText(response.data.message);
+        }
       } else {
-        setName("");
+        setButtonText("Mark Attendance");
         setShowInvalidId(true);
+        setName("");
       }
     } else {
+      setButtonText("Mark Attendance");
       setShowInvalidId(false);
       setName("");
     }
@@ -82,12 +116,16 @@ const UserAttendance = () => {
             } Attendance ${
               action === "login" ? "Punch In" : "Punch Out"
             } Successful.`,
+            title: gymQuotes[Math.floor(Math.random() * gymQuotes.length - 1)],
             showConfirmButton: false,
-            timer: 1500,
+            timer: 3000,
           });
+
+          setButtonText(`${action === "login" ? "Punch Out" : "Punch In"}`);
         }
       } else {
         toast.error("Please enter a valid ID.");
+        setButtonText("Mark Attendance");
       }
     } catch (err) {
       console.log("Error Marking Attendance", err);
@@ -179,7 +217,7 @@ const UserAttendance = () => {
                 <span className="ms-5 text-base">Validating ...</span>
               </Fragment>
             ) : (
-              "Mark Attendance"
+              <Fragment>{buttonText}</Fragment>
             )}
           </Button>
         </Grid>

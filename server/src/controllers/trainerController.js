@@ -14,6 +14,8 @@ const registerTrainer = async (req, res) => {
     weight,
     bmi,
     address,
+    panNumber,
+    aadharNumber,
   } = req.body.trainer;
   try {
     const existingEmail = await Trainer.findOne({ email });
@@ -34,6 +36,8 @@ const registerTrainer = async (req, res) => {
       weight,
       bmi,
       address,
+      panNumber,
+      aadharNumber,
     });
 
     await newTrainer.save();

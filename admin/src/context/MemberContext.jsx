@@ -56,6 +56,7 @@ export const MemberProvider = ({ children }) => {
       }
     } catch (err) {
       console.log("Error Connecting to Server | ", err);
+      toast.warning("Email or Phone Already Exists ✉️");
     }
   };
 

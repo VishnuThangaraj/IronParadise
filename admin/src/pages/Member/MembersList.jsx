@@ -40,6 +40,7 @@ const MembersList = () => {
 
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [openplan, setOpenplan] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -271,7 +272,9 @@ const MembersList = () => {
   };
 
   const updateDietPlan = async () => {
+    setLoading(true);
     await updateFitnessPlan(editId, plandata);
+    setLoading(false);
     setEditId(null);
     setOpenplan(false);
   };
@@ -529,13 +532,14 @@ const MembersList = () => {
               variant="solid"
               color="success"
               onClick={updateDietPlan}
+              disabled={loading}
             >
               Update Plan
             </Button>
             <Button
               variant="plain"
               color="neutral"
-              onClick={() => setOpen(false)}
+              onClick={() => setOpenplan(false)}
             >
               Cancel
             </Button>

@@ -47,6 +47,16 @@ const trainerSchema = new Schema(
       type: Number,
       required: false,
     },
+    aadharNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    panNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     bmi: {
       type: Number,
       required: false,

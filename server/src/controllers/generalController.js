@@ -409,6 +409,35 @@ const markAttendance = async (req, res) => {
   }
 };
 
+// Check Attendance
+const checkAttendance = async (req, res) => {
+  const { id, role } = req.body.foundUser;
+
+  if (!id || !role) {
+    return res.status(400).json({ message: "ID and role are required" });
+  }
+
+  try {
+    const startOfDay = moment().startOf("day").toDate();
+    const endOfDay = moment().endOf("day").toDate();
+
+    const lastAction = await Attendance.findOne({
+      id,
+      role,
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    }).sort({ createdAt: -1 });
+
+    if (lastAction && lastAction.action === "login") {
+      return res.status(200).json({ message: "Punch Out" });
+    } else {
+      return res.status(200).json({ message: "Punch In" });
+    }
+  } catch (err) {
+    console.error("Error marking attendance:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 // Fetch All Attendance
 const fetchAttendance = async (req, res) => {
   try {
@@ -426,6 +455,7 @@ module.exports = {
   getUsers,
   sendBulkMail,
   markAttendance,
+  checkAttendance,
   fetchAttendance,
   sendMailFromAdmin,
 };

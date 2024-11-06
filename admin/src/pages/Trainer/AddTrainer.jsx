@@ -63,19 +63,26 @@ const AddTrainer = () => {
     weight: "",
     bmi: 0,
     address: "",
+    panNumber: "",
+    aadharNumber: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (
-      (name === "phone" || name === "height" || name === "weight") &&
+      (name === "phone" ||
+        name === "height" ||
+        name === "weight" ||
+        name === "aadharNumber") &&
       isNaN(Number(value))
     ) {
       return;
     }
 
-    // Update the trainer state
+    if (name === "aadharNumber" && value.length > 12) return;
+    if (name === "panNumber" && value.length > 10) return;
+
     const updatedTrainer = { ...trainer, [name]: value };
     setTrainer(updatedTrainer);
 
@@ -192,6 +199,42 @@ const AddTrainer = () => {
                     value={trainer.phone}
                     variant="outlined"
                     name="phone"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
+                </FormControl>
+              </div>
+              <div className="flex justify-between">
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>
+                    Aadhar Card Number
+                  </FormLabel>
+                  <Input
+                    placeholder="xxxx xxxx xxxx"
+                    value={trainer.aadharNumber}
+                    onChange={handleChange}
+                    name="aadharNumber"
+                    variant="outlined"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>Pan Card Number</FormLabel>
+                  <Input
+                    value={trainer.panNumber && trainer.panNumber.toUpperCase()}
+                    placeholder="xxxxxxxxxx"
+                    onChange={handleChange}
+                    variant="outlined"
+                    name="panNumber"
                     size="md"
                     sx={{
                       py: 1,

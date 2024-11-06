@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const nodemailer = require("nodemailer");
 const { EMAIL_USER, EMAIL_PASS } = require("../config/emailConfig");
 
@@ -51,4 +53,26 @@ const sendMailWithFile = async (to, subject, html, file) => {
   }
 };
 
-module.exports = { sendMail, sendMailWithFile };
+// Send email function with PDF attachment
+const sendMailPDF = async (to, subject, html, attachments) => {
+  try {
+    const mailOptions = {
+      from: EMAIL_USER,
+      to,
+      subject,
+      html,
+      attachments: attachments.map((filePath) => ({
+        filename: path.basename(filePath),
+        path: filePath,
+        contentType: "application/pdf",
+      })),
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Message sent: %s", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
+
+module.exports = { sendMail, sendMailWithFile, sendMailPDF };

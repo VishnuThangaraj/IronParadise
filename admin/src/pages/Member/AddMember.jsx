@@ -498,6 +498,7 @@ const AddMember = () => {
                       backgroundColor: "#222222",
                     },
                   }}
+                  disabled={loading}
                 >
                   {loading ? (
                     <Fragment>

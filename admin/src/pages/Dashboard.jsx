@@ -86,26 +86,35 @@ const Dashboard = () => {
 
     const calculateWeeklyAttendance = () => {
       const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
       const attendanceCount = daysOfWeek.map((day) => ({
         day,
         members: 0,
         trainers: 0,
       }));
 
-      const startOfWeek = moment().startOf("week"); // Start of the current week (Sunday)
-      const endOfWeek = moment().endOf("week"); // End of the current week (Saturday)
+      const startOfWeek = moment().startOf("week");
+      const endOfWeek = moment().endOf("week");
+
+      const uniqueAttendances = new Set();
 
       const currentWeekAttendances = attendances.filter(({ createdAt }) => {
         const attendanceDate = moment(createdAt);
-        return attendanceDate.isBetween(startOfWeek, endOfWeek, null, "[]"); // Inclusive of start and end dates
+        return attendanceDate.isBetween(startOfWeek, endOfWeek, null, "[]");
       });
 
-      currentWeekAttendances.forEach(({ role, createdAt }) => {
+      currentWeekAttendances.forEach(({ role, createdAt, id }) => {
         const dayIndex = moment(createdAt).day();
-        if (role === "member") {
-          attendanceCount[dayIndex].members += 1;
-        } else if (role === "trainer") {
-          attendanceCount[dayIndex].trainers += 1;
+        const dateKey = `${id}-${moment(createdAt).format("YYYY-MM-DD")}`;
+
+        if (!uniqueAttendances.has(dateKey)) {
+          uniqueAttendances.add(dateKey);
+
+          if (role === "member") {
+            attendanceCount[dayIndex].members += 1;
+          } else if (role === "trainer") {
+            attendanceCount[dayIndex].trainers += 1;
+          }
         }
       });
 
