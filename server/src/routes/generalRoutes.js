@@ -26,6 +26,13 @@ router.post(
   generalController.sendMailFromAdmin
 );
 
+// Subscription Mail
+router.post(
+  "/subscriptionmail",
+  authenticateJWT(["admin"]),
+  generalController.subscriptionMail
+);
+
 // Send Bulk Mail
 router.post(
   "/bulkmail",

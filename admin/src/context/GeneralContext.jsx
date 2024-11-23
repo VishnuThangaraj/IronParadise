@@ -117,9 +117,37 @@ export const GeneralProvider = ({ children }) => {
     }
   };
 
+  // Subscription Mail
+  const subscriptionMail = async (notificationCategory) => {
+    try {
+      const response = await axios.post(
+        `/general/subscriptionmail`,
+        { notificationCategory },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Mail Sent Successfully");
+      } else {
+        console.log("Failed to Send Mail");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
   return (
     <GeneralContext.Provider
-      value={{ eventsList, addEvent, bulkMail, sendMail, attendances }}
+      value={{
+        eventsList,
+        addEvent,
+        bulkMail,
+        sendMail,
+        attendances,
+        subscriptionMail,
+      }}
     >
       {children}
     </GeneralContext.Provider>

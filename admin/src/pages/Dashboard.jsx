@@ -130,8 +130,6 @@ const Dashboard = () => {
       return today.isBetween(startDate, endDate, null, "[]");
     });
 
-    console.log(eventsToday);
-
     setEventCount(eventsToday.length);
 
     // Animation

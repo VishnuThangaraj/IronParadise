@@ -1,9 +1,6 @@
-import jsPDF from "jspdf";
 import dayjs from "dayjs";
-import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { DatePicker } from "antd";
-import html2canvas from "html2canvas";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +28,7 @@ import {
 
 import { AuthContext } from "../context/AuthContext";
 import { MemberContext } from "../context/MemberContext";
+import { GeneralContext } from "../context/GeneralContext";
 import { SubscriptionContext } from "../context/SubscriptionContext";
 
 import { PageLocation } from "../components/PageLocation";
@@ -54,6 +52,7 @@ const SubscriptionPaylist = () => {
   const navigate = useNavigate();
 
   const { currentDate } = useContext(AuthContext);
+  const { subscriptionMail } = useContext(GeneralContext);
   const { members, findMember, makePayment, updateSubscription } =
     useContext(MemberContext);
   const {
@@ -69,7 +68,9 @@ const SubscriptionPaylist = () => {
   const [opensub, setOpensub] = useState(false);
   const [openedit, setOpenedit] = useState(false);
   const [memberRows, setMemberRows] = useState([]);
+  const [openNotify, setOpenNotify] = useState(false);
   const [openpayhis, setOpenpayhis] = useState(false);
+  const [notificationCategory, setNotificationCategory] = useState("");
   const [payment, setPayment] = useState({
     amount: "",
     paymentMethod: "cash",
@@ -150,6 +151,10 @@ const SubscriptionPaylist = () => {
       dueAmount: subscription.pending - value,
       [name]: value,
     });
+  };
+
+  const handleCategoryChange = (event, newValue) => {
+    setNotificationCategory(newValue);
   };
 
   const getPaymentHistory = async (memberId) => {
@@ -374,22 +379,16 @@ const SubscriptionPaylist = () => {
     setOpenpay(false);
   };
 
-  // const copyToClipboard = () => {
-  //   const tableData = subscription
-  //     .map((trainer) => {
-  //       return `${trainer.id}\t${trainer.name}\t${trainer.phone}\t${trainer.gender}\t${trainer.dob}\t${trainer.specialization}\t${trainer.bmi}`;
-  //     })
-  //     .join("\n");
-
-  //   navigator.clipboard
-  //     .writeText(tableData)
-  //     .then(() => {
-  //       toast.success("Table copied to clipboard 📃");
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error copying to clipboard: ", err);
-  //     });
-  // };
+  const scheduleMail = async () => {
+    console.log(notificationCategory);
+    if (!notificationCategory || notificationCategory === "") {
+      return toast.info("Please Select the Subscription Category!");
+    }
+    subscriptionMail(notificationCategory);
+    toast.success("Mail Sent Successfully 📨✔️");
+    setNotificationCategory("");
+    setOpenNotify(false);
+  };
 
   return (
     <div id="subscriptionpaylist">
@@ -401,74 +400,8 @@ const SubscriptionPaylist = () => {
 
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 4 }}>
         <CardContent>
-          <div className="flex justify-between">
-            <div className="flex gap-3">
-              {/*  <Tooltip title="Copy" placement="top" arrow>
-                <Button
-                  className="transition-all duration-300"
-                  onClick={copyToClipboard}
-                  variant="outlined"
-                  color="warning"
-                  size="md"
-                  sx={{
-                    px: 2,
-                  }}
-                >
-                  <i
-                    className="fa-duotone fa-solid fa-copy"
-                    style={{ fontSize: "23px" }}
-                  ></i>
-                </Button>
-              </Tooltip>
-              <Tooltip title="Excel" placement="top" arrow>
-                <Button
-                  className="transition-all duration-300"
-                  onClick={exportToExcel}
-                  variant="outlined"
-                  color="neutral"
-                  size="md"
-                  sx={{
-                    px: 2,
-                  }}
-                >
-                  <i
-                    className="fa-duotone fa-solid fa-file-excel"
-                    style={{ fontSize: "23px" }}
-                  ></i>
-                </Button>
-              </Tooltip>
-              <Tooltip title="CSV" placement="top" arrow>
-                <Button
-                  className="transition-all duration-300"
-                  onClick={exportToCSV}
-                  variant="outlined"
-                  color="neutral"
-                  size="md"
-                  sx={{
-                    px: 2,
-                  }}
-                >
-                  <i
-                    className="fa-duotone fa-solid fa-file-csv"
-                    style={{ fontSize: "23px" }}
-                  ></i>
-                </Button>
-              </Tooltip>
-              <Tooltip title="PDF" placement="top" arrow>
-                <Button
-                  className="transition-all duration-300"
-                  onClick={exportToPDF}
-                  variant="outlined"
-                  color="neutral"
-                  size="md"
-                >
-                  <i
-                    className="fa-duotone fa-solid fa-file-pdf"
-                    style={{ fontSize: "23px" }}
-                  ></i>
-                </Button>
-              </Tooltip> */}
-            </div>
+          <div className="flex flex-row-reverse gap-4">
+            <div className="flex gap-3"></div>
             <div>
               <Button
                 className="transition-all duration-300"
@@ -485,6 +418,25 @@ const SubscriptionPaylist = () => {
                 }}
               >
                 Add New Member
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="transition-all duration-300"
+                variant="solid"
+                onClick={() => setOpenNotify(true)}
+                size="md"
+                sx={{
+                  px: 2,
+                  borderRadius: 20,
+                  backgroundColor: "black",
+                  "&:hover": {
+                    backgroundColor: "#222222",
+                  },
+                }}
+              >
+                <i className="fa-light fa-envelopes me-2"></i> Notify
+                Subscription
               </Button>
             </div>
           </div>
@@ -937,6 +889,67 @@ const SubscriptionPaylist = () => {
               </Table>
             </div>
           </DialogContent>
+        </ModalDialog>
+      </Modal>
+
+      {/* Subscription Notification */}
+      <Modal open={openNotify} onClose={() => setOpenNotify(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "650px" }}
+        >
+          <DialogTitle>
+            <i className="fa-regular fa-envelopes-bulk text-green-600 mt-1 me-1"></i>
+            Subscription Notification
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "100%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>
+                  Select Subscription Category
+                </FormLabel>
+                <Select
+                  onChange={handleCategoryChange}
+                  placeholder="Select Category"
+                  value={notificationCategory}
+                  variant="outlined"
+                  name="notificationcategory"
+                  sx={{
+                    backgroundColor: "white",
+                    height: "42px",
+                  }}
+                  required
+                >
+                  <Option value="partial">Partially Paid Members</Option>
+                  <Option value="unpaid">Unpaid Members</Option>
+                  <Option value="both">
+                    Both (Partially Paid & Unpaid Members)
+                  </Option>
+                  <Option value="everyone">Everyone</Option>
+                </Select>
+              </FormControl>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="rounded-full py-1"
+              variant="solid"
+              color="success"
+              onClick={scheduleMail}
+            >
+              <i className="fa-light fa-envelope me-2"></i>
+              Send Mail
+            </Button>
+            <Button
+              variant="plain"
+              color="neutral"
+              onClick={() => setOpenNotify(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
         </ModalDialog>
       </Modal>
     </div>

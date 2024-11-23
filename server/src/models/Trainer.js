@@ -1,5 +1,23 @@
 const { Schema, model } = require("mongoose");
 
+const trainerPaylist = new Schema(
+  {
+    pending: {
+      type: Number,
+      required: true,
+    },
+    paymentMonth: {
+      type: String,
+      required: true,
+    },
+    paymentYear: {
+      type: Number,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
 const trainerSchema = new Schema(
   {
     name: {
@@ -57,6 +75,10 @@ const trainerSchema = new Schema(
       required: true,
       unique: true,
     },
+    salary: {
+      type: Number,
+      required: true,
+    },
     bmi: {
       type: Number,
       required: false,
@@ -68,6 +90,9 @@ const trainerSchema = new Schema(
     role: {
       type: String,
       default: "trainer",
+    },
+    payroll: {
+      type: trainerPaylist,
     },
   },
   {

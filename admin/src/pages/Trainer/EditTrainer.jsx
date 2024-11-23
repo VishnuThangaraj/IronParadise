@@ -69,6 +69,7 @@ const EditTrainer = () => {
     weight: "",
     bmi: 0,
     address: "",
+    salary: "",
     panNumber: "",
     aadharNumber: "",
   });
@@ -88,6 +89,7 @@ const EditTrainer = () => {
       (name === "phone" ||
         name === "height" ||
         name === "weight" ||
+        name === "salary" ||
         name === "aadharNumber") &&
       isNaN(Number(value))
     ) {
@@ -137,6 +139,7 @@ const EditTrainer = () => {
       gender: null,
       specialization: null,
       height: "",
+      salary: "",
       weight: "",
       bmi: 0,
       address: "",
@@ -224,7 +227,7 @@ const EditTrainer = () => {
                 </FormControl>
               </div>
               <div className="flex justify-between">
-                <FormControl sx={{ width: "48%" }}>
+                <FormControl sx={{ width: "32%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>
                     Aadhar Card Number
                   </FormLabel>
@@ -242,7 +245,7 @@ const EditTrainer = () => {
                     required
                   />
                 </FormControl>
-                <FormControl sx={{ width: "48%" }}>
+                <FormControl sx={{ width: "32%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>Pan Card Number</FormLabel>
                   <Input
                     value={trainer.panNumber && trainer.panNumber.toUpperCase()}
@@ -250,6 +253,22 @@ const EditTrainer = () => {
                     onChange={handleChange}
                     variant="outlined"
                     name="panNumber"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "32%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>Salary</FormLabel>
+                  <Input
+                    value={trainer.salary}
+                    placeholder="₹ 0000.00"
+                    onChange={handleChange}
+                    variant="outlined"
+                    name="salary"
                     size="md"
                     sx={{
                       py: 1,
