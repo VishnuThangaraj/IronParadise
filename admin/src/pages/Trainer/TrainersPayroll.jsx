@@ -5,23 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import {
   Card,
-  Chip,
   Modal,
   Input,
   Table,
   Button,
-  Option,
-  Select,
   Divider,
   Tooltip,
-  FormLabel,
   IconButton,
-  FormControl,
   CardContent,
   DialogTitle,
   ModalDialog,
-  DialogActions,
   DialogContent,
+  DialogActions,
 } from "@mui/joy";
 
 import { TrainerContext } from "../../context/TrainerContext";
@@ -33,9 +28,11 @@ const TrainersPayroll = () => {
   const { trainers, trainerSalaryHistory } = useContext(TrainerContext);
 
   const [salaryHis, setSalaryHis] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [trainerRows, setTrainerRows] = useState([]);
   const [openSalary, setOpenSalary] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
+  const [openPayment, setOpenPayment] = useState(false);
 
   useEffect(() => {
     const convertToRowFormat = (data) => {
@@ -45,7 +42,7 @@ const TrainersPayroll = () => {
         name: trainer.name,
         email: trainer.email,
         salary: `₹ ${trainer.salary.toFixed(1)}`,
-        month: ``,
+        month: `₹ `,
         index: index++,
         full_id: trainer._id,
       }));
@@ -55,6 +52,32 @@ const TrainersPayroll = () => {
     const rows = convertToRowFormat(trainers);
     setTrainerRows(rows);
   }, [trainers]);
+
+  const convertToRowFormat = (data) => {
+    let index = 0;
+    const rows = data.map((trainer) => ({
+      id: `${trainer.username.toUpperCase()}`,
+      name: trainer.name,
+      email: trainer.email,
+      salary: `₹ ${trainer.salary.toFixed(1)}`,
+      month: `₹ `,
+      index: index++,
+      full_id: trainer._id,
+    }));
+    return rows;
+  };
+
+  const filteredRows = convertToRowFormat(trainers).filter(
+    (row) =>
+      row.id.toLowerCase().includes(searchTerm) ||
+      row.name.toLowerCase().includes(searchTerm) ||
+      row.email.toLowerCase().includes(searchTerm) ||
+      row.salary.toLowerCase().includes(searchTerm)
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
 
   const columns = [
     {
@@ -90,8 +113,9 @@ const TrainersPayroll = () => {
       headerAlign: "center",
     },
     {
-      field: "pending",
-      headerName: "Pending Month",
+      field: "month",
+      headerName: "Pending Amount",
+      align: "center",
       flex: 1,
       headerAlign: "center",
     },
@@ -142,7 +166,11 @@ const TrainersPayroll = () => {
     if (!selectedUser || selectedUser.length === 0) {
       return toast.info("No Trainers Selected !");
     }
-    // await
+    setOpenPayment(true);
+  };
+
+  const trainerSalaryConfirmation = async () => {
+    setOpenPayment(false);
   };
 
   return (
@@ -154,7 +182,15 @@ const TrainersPayroll = () => {
       />
       <Card className="shadow-md" sx={{ my: 2, mb: 4, p: 4 }}>
         <CardContent>
-          <div className="flex justify-end gap-4">
+          <div className="flex justify-between gap-4">
+            <div>
+              <Input
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                sx={{ width: "350px" }}
+              />
+            </div>
             <div>
               <Button
                 className="transition-all duration-300"
@@ -185,7 +221,7 @@ const TrainersPayroll = () => {
             }}
           >
             <DataGrid
-              rows={trainerRows}
+              rows={filteredRows}
               columns={columns}
               initialState={{ pagination: { page: 0, pageSize: 5 } }}
               pageSize={5}
@@ -209,6 +245,45 @@ const TrainersPayroll = () => {
           </Paper>
         </CardContent>
       </Card>
+
+      {/* Payment Confirmation */}
+      <Modal open={openPayment} onClose={() => setOpenPayment(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "510px" }}
+        >
+          <DialogTitle>
+            <i className="fa-duotone fa-thin fa-wallet text-green-600 mt-1 me-1"></i>
+            Salary Payment Confirmation
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className=" my-4">
+              Are you sure to make payment for the selected{" "}
+              <span className="font-semibold"> {selectedUser.length} </span>{" "}
+              Trainers?
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="rounded-full py-1"
+              variant="solid"
+              color="success"
+              onClick={trainerSalaryConfirmation}
+            >
+              Confirm
+            </Button>
+            <Button
+              variant="plain"
+              color="neutral"
+              onClick={() => setOpenPayment(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </ModalDialog>
+      </Modal>
 
       {/* Salary History */}
       <Modal open={openSalary} onClose={() => setOpenSalary(false)}>

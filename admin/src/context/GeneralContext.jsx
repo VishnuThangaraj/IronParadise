@@ -138,6 +138,27 @@ export const GeneralProvider = ({ children }) => {
     }
   };
 
+  // Subscription Mail Individual
+  const subscriptionMailIndividual = async (memberId) => {
+    try {
+      const response = await axios.post(
+        `/general/indmail`,
+        { memberId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Mail Sent Successfully");
+      } else {
+        console.log("Failed to Send Mail");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
   return (
     <GeneralContext.Provider
       value={{
@@ -147,6 +168,7 @@ export const GeneralProvider = ({ children }) => {
         sendMail,
         attendances,
         subscriptionMail,
+        subscriptionMailIndividual,
       }}
     >
       {children}

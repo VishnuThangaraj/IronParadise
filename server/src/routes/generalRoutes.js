@@ -40,4 +40,11 @@ router.post(
   generalController.sendBulkMail
 );
 
+// Send Bulk Mail
+router.post(
+  "/indmail",
+  authenticateJWT(["admin"]),
+  generalController.subMailIndividual
+);
+
 module.exports = router;

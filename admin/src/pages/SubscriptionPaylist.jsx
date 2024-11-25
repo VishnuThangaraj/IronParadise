@@ -52,7 +52,8 @@ const SubscriptionPaylist = () => {
   const navigate = useNavigate();
 
   const { currentDate } = useContext(AuthContext);
-  const { subscriptionMail } = useContext(GeneralContext);
+  const { subscriptionMail, subscriptionMailIndividual } =
+    useContext(GeneralContext);
   const { members, findMember, makePayment, updateSubscription } =
     useContext(MemberContext);
   const {
@@ -66,10 +67,12 @@ const SubscriptionPaylist = () => {
   const [editId, setEditid] = useState(null);
   const [openpay, setOpenpay] = useState(false);
   const [opensub, setOpensub] = useState(false);
+  const [notifyId, setNotifyId] = useState(null);
   const [openedit, setOpenedit] = useState(false);
   const [memberRows, setMemberRows] = useState([]);
   const [openNotify, setOpenNotify] = useState(false);
   const [openpayhis, setOpenpayhis] = useState(false);
+  const [openIndividual, setOpenIndividual] = useState(false);
   const [notificationCategory, setNotificationCategory] = useState("");
   const [payment, setPayment] = useState({
     amount: "",
@@ -168,6 +171,18 @@ const SubscriptionPaylist = () => {
     setSubscriptionHistory(history);
     console.log(history);
     setOpensub(true);
+  };
+
+  const paymentReminder = (memberId) => {
+    setNotifyId(memberId);
+    setOpenIndividual(true);
+  };
+
+  const notifyConfirmation = async () => {
+    setOpenIndividual(false);
+    toast.success("Mail Sent Successfully 📨✔️");
+    await subscriptionMailIndividual(notifyId);
+    setNotifyId(null);
   };
 
   const columns = [
@@ -272,11 +287,28 @@ const SubscriptionPaylist = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 2,
+      width: 180,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
         <div className="flex justify-center space-x-1 mt-2">
+          <Tooltip title="Payment Reminder" placement="top" arrow>
+            <IconButton
+              aria-label="payment reminder"
+              onClick={() => {
+                if (params.row.received === params.row.price)
+                  return toast.info(
+                    "Member have Already Paid the Subscription Amount."
+                  );
+                paymentReminder(params.row.full_id);
+              }}
+            >
+              <i
+                className="fa-duotone fa-light fa-envelope text-green-600"
+                style={{ fontSize: "20px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Subscription History" placement="top" arrow>
             <IconButton
               aria-label="subscription history"
@@ -889,6 +921,44 @@ const SubscriptionPaylist = () => {
               </Table>
             </div>
           </DialogContent>
+        </ModalDialog>
+      </Modal>
+
+      {/* Mail Confirmation */}
+      <Modal open={openIndividual} onClose={() => setOpenIndividual(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "500px" }}
+        >
+          <DialogTitle>
+            <i className="fa-regular fa-envelopes-bulk text-green-600 mt-1 me-1"></i>
+            Payment Reminder Confirmation
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between mt-1">
+              Are you sure to make Email Notification for the Subscription
+              Payment ?
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="rounded-full py-1"
+              variant="solid"
+              color="success"
+              onClick={notifyConfirmation}
+            >
+              Confirm
+            </Button>
+            <Button
+              variant="plain"
+              color="neutral"
+              onClick={() => setOpenIndividual(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
         </ModalDialog>
       </Modal>
 

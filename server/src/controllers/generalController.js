@@ -1227,8 +1227,19 @@ const subscriptionMail = async (req, res) => {
       }
     });
 
-    console.log("done");
     res.status(200).json({ message: "Subscription Mails Sent" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Subscription Mail Individual
+const subMailIndividual = async (req, res) => {
+  const { memberId } = req.body;
+  try {
+    const member = await Member.findById(memberId);
+    mailPayment(member);
+    res.status(200).json({ message: "Subscription Mail Sent" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -1242,4 +1253,5 @@ module.exports = {
   fetchAttendance,
   subscriptionMail,
   sendMailFromAdmin,
+  subMailIndividual,
 };
