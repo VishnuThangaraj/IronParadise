@@ -11,18 +11,31 @@ export const TrainerProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
 
   const [trainers, setTrainers] = useState([]);
+  const [salaryHistory, setSalaryHistory] = useState([]);
 
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await axios.get("/trainer", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.status === 200) {
-          const trainersList = response.data.trainers;
+        const [trainer, salaryhis] = await Promise.all([
+          axios.get("/trainer", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("/trainer/salaryhistory", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        if (trainer.status === 200) {
+          const trainersList = trainer.data.trainers;
           setTrainers(trainersList || []);
         } else {
           console.log("Error Fetching Trainers List");
+        }
+        if (salaryhis.status === 200) {
+          const salaryList = salaryhis.data.salary;
+          setSalaryHistory(salaryList || []);
+        } else {
+          console.log("Error Fetching Salary History");
         }
       } catch (err) {
         console.log("Error Connecting to Server | ", err);
@@ -106,14 +119,21 @@ export const TrainerProvider = ({ children }) => {
     }
   };
 
+  // Trainer Salary History
+  const trainerSalaryHistory = async (trainerId) => {
+    return salaryHistory.filter((payment) => payment.trainer === trainerId);
+  };
+
   return (
     <TrainerContext.Provider
       value={{
         trainers,
         addTrainer,
         deleteTrainer,
+        salaryHistory,
         updateTrainer,
         findTrainerByID,
+        trainerSalaryHistory,
       }}
     >
       {children}

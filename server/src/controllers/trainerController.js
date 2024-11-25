@@ -1,4 +1,5 @@
 const Trainer = require("../models/Trainer");
+const SalaryHistory = require("../models/SalaryHistory");
 
 // Register Trainer
 const registerTrainer = async (req, res) => {
@@ -25,6 +26,12 @@ const registerTrainer = async (req, res) => {
     if (existingEmail || existingPhone) {
       return res.status(409).json({ message: "Email or Phone already exists" });
     }
+
+    const trainerPaylist = {
+      pending: -1,
+      pendingDate: moment().startOf("month").toISOString(),
+    };
+
     const newTrainer = new Trainer({
       name,
       username: `TR${username}`,
@@ -40,6 +47,7 @@ const registerTrainer = async (req, res) => {
       address,
       panNumber,
       aadharNumber,
+      trainerPaylist,
     });
 
     await newTrainer.save();
@@ -58,6 +66,19 @@ const fetchTrainers = async (req, res) => {
     const trainers = await Trainer.find();
 
     res.status(200).json({ message: "Trainers Fetched", trainers: trainers });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Fetch Salary History
+const fetchSalaryHistory = async (req, res) => {
+  try {
+    const salaryhistory = await SalaryHistory.find();
+
+    res
+      .status(200)
+      .json({ message: "Salary History Fetched", salary: salaryhistory });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -126,4 +147,5 @@ module.exports = {
   fetchTrainerById,
   updateTrainerById,
   deleteTrainerById,
+  fetchSalaryHistory,
 };

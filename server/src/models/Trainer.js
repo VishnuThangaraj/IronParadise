@@ -4,14 +4,10 @@ const trainerPaylist = new Schema(
   {
     pending: {
       type: Number,
-      required: true,
+      default: -1,
     },
-    paymentMonth: {
-      type: String,
-      required: true,
-    },
-    paymentYear: {
-      type: Number,
+    pendingDate: {
+      type: Date,
       required: true,
     },
   },

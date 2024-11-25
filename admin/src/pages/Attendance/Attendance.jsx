@@ -33,8 +33,8 @@ const Attendance = () => {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
     title: "",
-    trainers: [],
-    members: [],
+    attendees: [],
+    selectedDate: null,
   });
 
   const events = useMemo(() => {
@@ -58,7 +58,6 @@ const Attendance = () => {
 
     return Object.entries(attendanceByDate).flatMap(
       ([date, { trainers, members }]) => {
-        const events = [];
         const uniqueTrainers = Array.from(trainers).map((id) =>
           attendances.find((a) => a.id === id)
         );
@@ -66,25 +65,13 @@ const Attendance = () => {
           attendances.find((a) => a.id === id)
         );
 
-        if (uniqueTrainers.length > 0) {
-          events.push({
-            title: `${uniqueTrainers.length} | Trainers`,
-            allDay: true,
-            start: new Date(date),
-            end: new Date(date),
-            trainers: uniqueTrainers,
-          });
-        }
-        if (uniqueMembers.length > 0) {
-          events.push({
-            title: `${uniqueMembers.length} | Members`,
-            allDay: true,
-            start: new Date(date),
-            end: new Date(date),
-            members: uniqueMembers,
-          });
-        }
-        return events;
+        return {
+          title: `${uniqueTrainers.length} Trainers | ${uniqueMembers.length} Members`,
+          allDay: true,
+          start: new Date(date),
+          end: new Date(date),
+          attendees: [...uniqueTrainers, ...uniqueMembers],
+        };
       }
     );
   }, [attendances]);
@@ -92,8 +79,8 @@ const Attendance = () => {
   const handleEventClick = (event) => {
     setModalData({
       title: event.title,
-      trainers: event.trainers || [],
-      members: event.members || [],
+      attendees: event.attendees || [],
+      selectedDate: event.start,
     });
     setModalOpen(true);
   };
@@ -112,13 +99,14 @@ const Attendance = () => {
     setSelectedPerson(null);
   };
 
-  const getTodayAttendanceLogs = (id) => {
-    const today = moment().startOf("day");
+  // Update the function to accept the date parameter
+  const getAttendanceLogsForDate = (id, selectedDate) => {
+    const dateStartOfDay = moment(selectedDate).startOf("day");
     return attendances
       .filter((attendance) => {
         return (
           attendance.id === id &&
-          moment(attendance.createdAt).isSame(today, "day")
+          moment(attendance.createdAt).isSame(dateStartOfDay, "day")
         );
       })
       .map((log) => {
@@ -128,7 +116,7 @@ const Attendance = () => {
         const durationInMinutes = Math.floor(durationInSeconds / 60);
         const seconds = durationInSeconds % 60;
         const status = loginTime.isSame(logoutTime)
-          ? "Active"
+          ? "Calculating"
           : `${durationInMinutes} min ${seconds} sec`;
 
         return {
@@ -142,11 +130,14 @@ const Attendance = () => {
   const exportIndividualAttendance = () => {
     if (!selectedPerson) return;
 
-    const attendanceLogs = getTodayAttendanceLogs(selectedPerson.id);
+    const attendanceLogs = getAttendanceLogsForDate(
+      selectedPerson.id,
+      modalData.selectedDate
+    );
 
     const data = attendanceLogs.map((log) => ({
       "Login Time": log.loginTime,
-      "Logout Time": log.status === "Active" ? "---" : log.logoutTime,
+      "Logout Time": log.status === "Calculating" ? "---" : log.logoutTime,
       Duration: log.status,
     }));
 
@@ -219,15 +210,14 @@ const Attendance = () => {
           <DialogTitle>
             <div className="flex items-center gap-4">
               <i className="fa-duotone fa-solid fa-calendar-circle-user text-blue-600 me-1 text-2xl"></i>
-              Attendance List
+              Attendance List for{" "}
+              {moment(modalData.selectedDate).format("YYYY-MM-DD")}
             </div>
           </DialogTitle>
           <Divider />
           <DialogContent>
             <div className="px-2">
-              <div className="font-semibold my-2">
-                {modalData.title.slice(4)}
-              </div>
+              <div className="font-semibold my-2">{modalData.title}</div>
               <Table
                 sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
               >
@@ -239,20 +229,18 @@ const Attendance = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {modalData.trainers.length > 0
-                    ? modalData.trainers.map((trainer) => (
-                        <tr key={trainer.id}>
+                  {modalData.attendees.length > 0
+                    ? modalData.attendees.map((person) => (
+                        <tr key={person.id}>
                           <td style={{ textAlign: "center" }}>
-                            {trainer.username.toUpperCase()}
+                            {person.username.toUpperCase()}
                           </td>
-                          <td style={{ textAlign: "center" }}>
-                            {trainer.name}
-                          </td>
+                          <td style={{ textAlign: "center" }}>{person.name}</td>
                           <td style={{ textAlign: "center" }}>
                             <Button
                               variant="outlined"
                               size="small"
-                              onClick={() => handlePersonDetailClick(trainer)}
+                              onClick={() => handlePersonDetailClick(person)}
                               sx={{ p: 1 }}
                             >
                               <i className="fa-sharp-duotone fa-solid fa-share-all me-2"></i>
@@ -261,25 +249,7 @@ const Attendance = () => {
                           </td>
                         </tr>
                       ))
-                    : modalData.members.map((member) => (
-                        <tr key={member.id}>
-                          <td style={{ textAlign: "center" }}>
-                            {member.username.toUpperCase()}
-                          </td>
-                          <td style={{ textAlign: "center" }}>{member.name}</td>
-                          <td style={{ textAlign: "center" }}>
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              onClick={() => handlePersonDetailClick(member)}
-                              sx={{ p: 1 }}
-                            >
-                              <i className="fa-sharp-duotone fa-solid fa-share-all"></i>
-                              View Log
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
+                    : null}
                 </tbody>
               </Table>
             </div>
@@ -332,31 +302,33 @@ const Attendance = () => {
               </thead>
               <tbody>
                 {selectedPerson &&
-                  getTodayAttendanceLogs(selectedPerson.id).map(
-                    (log, index) => (
-                      <tr key={`log-${index}`}>
-                        <td style={{ textAlign: "center" }}>{log.loginTime}</td>
-                        <td style={{ textAlign: "center" }}>
-                          {log.status === "Active" ? "---" : log.logoutTime}
-                        </td>
-                        <td style={{ textAlign: "center" }}>
-                          <span
-                            className={
-                              log.status === "Active"
-                                ? "text-green-700 font-semibold"
-                                : ""
-                            }
-                          >
-                            {log.status}
-                          </span>
-                        </td>
-                      </tr>
-                    )
-                  )}
+                  getAttendanceLogsForDate(
+                    selectedPerson.id,
+                    modalData.selectedDate
+                  ).map((log, index) => (
+                    <tr key={`log-${index}`}>
+                      <td style={{ textAlign: "center" }}>{log.loginTime}</td>
+                      <td style={{ textAlign: "center" }}>
+                        {log.status === "Calculating" ? "---" : log.logoutTime}
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span
+                          className={
+                            log.status === "Active"
+                              ? "text-green-700 font-semibold"
+                              : ""
+                          }
+                        >
+                          {log.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
             {!selectedPerson ||
-            getTodayAttendanceLogs(selectedPerson.id).length === 0 ? (
+            getAttendanceLogsForDate(selectedPerson.id, modalData.selectedDate)
+              .length === 0 ? (
               <p>No attendance records found.</p>
             ) : null}
           </DialogContent>

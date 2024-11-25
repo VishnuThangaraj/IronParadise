@@ -27,6 +27,7 @@ const DietplanList = lazy(() => import("./pages/Dietplan/DietplanList"));
 const EditDietplan = lazy(() => import("./pages/Dietplan/EditDietplan"));
 const ViewDietplan = lazy(() => import("./pages/Dietplan/ViewDietplan"));
 const SubscriptionPaylist = lazy(() => import("./pages/SubscriptionPaylist"));
+const TrainersPayroll = lazy(() => import("./pages/Trainer/TrainersPayroll"));
 const AddWorkoutPlan = lazy(() => import("./pages/Workoutplan/AddWorkoutPlan"));
 const AttendanceReport = lazy(() =>
   import("./pages/Attendance/AttendanceReport")
@@ -96,6 +97,10 @@ export const App = () => {
                   <Route path="/trainer/add" element={<AddTrainer />} />
                   <Route path="/trainer/edit" element={<EditTrainer />} />
                   <Route path="/trainer/list" element={<TrainersList />} />
+                  <Route
+                    path="/trainer/payroll"
+                    element={<TrainersPayroll />}
+                  />
 
                   {/* Plans */}
                   <Route path="/plan/diet/add" element={<AddDietplan />} />

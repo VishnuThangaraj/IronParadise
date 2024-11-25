@@ -43,6 +43,10 @@ const sidebarApplications = [
         location: "trainer/list",
       },
       {
+        name: "Trainers Payroll",
+        location: "trainer/payroll",
+      },
+      {
         name: "Add New Trainer",
         location: "trainer/add",
       },

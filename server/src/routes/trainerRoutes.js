@@ -8,6 +8,13 @@ router.post("/add", trainerController.registerTrainer);
 // Fetch all Trainers
 router.get("/", authenticateJWT(["admin"]), trainerController.fetchTrainers);
 
+// Fetch Salary History
+router.get(
+  "/salaryhistory",
+  authenticateJWT(["admin"]),
+  trainerController.fetchSalaryHistory
+);
+
 // Fetch Trainer by ID
 router.get(
   "/profile/:id",
