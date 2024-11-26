@@ -954,6 +954,21 @@ cron.schedule("0 7 * * *", async () => {
   }
 });
 
+cron.schedule("0 1 26 * *", async () => {
+  try {
+    const trainers = await Trainer.find();
+
+    trainers.forEach(async (trainer) => {
+      trainer.pending = trainer.pending + trainer.salary;
+      await trainer.save();
+    });
+
+    console.log("Scheduled Trainer Salary job executed.");
+  } catch (err) {
+    console.error("Error running scheduled salary job:", err);
+  }
+});
+
 module.exports = {
   getEvents,
   addEvent,

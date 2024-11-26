@@ -29,6 +29,13 @@ router.post(
   trainerController.customSalary
 );
 
+// Batch Salary Payment
+router.post(
+  "/batchsalary",
+  authenticateJWT(["admin"]),
+  trainerController.batchPayment
+);
+
 // Update Trainer by ID
 router.put(
   "/update/:id",

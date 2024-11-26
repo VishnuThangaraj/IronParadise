@@ -620,6 +620,7 @@ const MailPast = async (member) => {
     </div>
 </body>
 </html>`;
+
     sendMail(
       member.email,
       "IronParadise Membership Subscription Expired",

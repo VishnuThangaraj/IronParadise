@@ -112,12 +112,12 @@ const Attendance = () => {
       .map((log) => {
         const loginTime = moment(log.createdAt);
         const logoutTime = moment(log.updatedAt || log.createdAt);
-        const durationInSeconds = logoutTime.diff(loginTime, "seconds");
-        const durationInMinutes = Math.floor(durationInSeconds / 60);
-        const seconds = durationInSeconds % 60;
+        const durationInMinutes = logoutTime.diff(loginTime, "minutes");
+        const hours = Math.floor(durationInMinutes / 60);
+        const minutes = durationInMinutes % 60;
         const status = loginTime.isSame(logoutTime)
           ? "Calculating"
-          : `${durationInMinutes} min ${seconds} sec`;
+          : `${hours} hr ${minutes} min`;
 
         return {
           loginTime: loginTime.format("YYYY-MM-DD HH:mm"),
@@ -309,17 +309,31 @@ const Attendance = () => {
                     <tr key={`log-${index}`}>
                       <td style={{ textAlign: "center" }}>{log.loginTime}</td>
                       <td style={{ textAlign: "center" }}>
-                        {log.status === "Calculating" ? "---" : log.logoutTime}
+                        {log.status === "Calculating"
+                          ? log.logoutTime.slice(0, 10) !==
+                            moment().format("YYYY-MM-DD")
+                            ? `${log.logoutTime.slice(0, 10)} 19:00`
+                            : "---"
+                          : log.logoutTime}
                       </td>
                       <td style={{ textAlign: "center" }}>
                         <span
                           className={
-                            log.status === "Active"
-                              ? "text-green-700 font-semibold"
-                              : ""
+                            log.status === "Calculating" ? "font-semibold" : ""
                           }
                         >
-                          {log.status}
+                          {log.status === "Calculating"
+                            ? (() => {
+                                const durationInMinutes = moment(
+                                  `${log.logoutTime.slice(0, 10)} 19:00`
+                                ).diff(moment(log.loginTime), "minutes");
+                                const hours = Math.floor(
+                                  durationInMinutes / 60
+                                );
+                                const minutes = durationInMinutes % 60;
+                                return `${hours}hr ${minutes}min`;
+                              })()
+                            : log.status}
                         </span>
                       </td>
                     </tr>

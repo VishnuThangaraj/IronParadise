@@ -124,7 +124,34 @@ export const TrainerProvider = ({ children }) => {
     return salaryHistory.filter((payment) => payment.trainer === trainerId);
   };
 
-  // Custom Salary
+  // Batch Salary Payment
+  const batchPayment = async (selectedTrainers, paymode) => {
+    try {
+      const response = await axios.post(
+        `/trainer/batchsalary`,
+        { trainers: selectedTrainers, paymode: paymode },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedTrainers = response.data.trainers;
+        const updatedSalary = response.data.history;
+
+        setTrainers(updatedTrainers || []);
+        setSalaryHistory(updatedSalary || []);
+
+        toast.success("Trainers Salary Payment Made Successfully ✔️");
+      } else {
+        toast.warning("Failed to Make Salary Payment 😓");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
+  // Custom Salary (Individual)
   const customSalary = async (paymentData) => {
     const trainerId = paymentData.trainer;
     const payment = {
@@ -169,6 +196,7 @@ export const TrainerProvider = ({ children }) => {
       value={{
         trainers,
         addTrainer,
+        batchPayment,
         customSalary,
         deleteTrainer,
         salaryHistory,

@@ -30,9 +30,16 @@ import { PageLocation } from "../../components/PageLocation";
 
 const TrainersPayroll = () => {
   const navigate = useNavigate();
-  const { trainers, findTrainerByID, customSalary, trainerSalaryHistory } =
-    useContext(TrainerContext);
 
+  const {
+    trainers,
+    batchPayment,
+    customSalary,
+    findTrainerByID,
+    trainerSalaryHistory,
+  } = useContext(TrainerContext);
+
+  const [paymode, setPaymode] = useState("cash");
   const [salaryHis, setSalaryHis] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [trainerRows, setTrainerRows] = useState([]);
@@ -216,6 +223,13 @@ const TrainersPayroll = () => {
     setOpenPayment(true);
   };
 
+  const makeBatchPayment = async () => {
+    setOpenPayment(false);
+    await batchPayment(selectedUser, paymode);
+    setPaymode("cash");
+    setSelectedUser([]);
+  };
+
   const trainerSalaryConfirmation = async () => {
     if (!payment.amount)
       return toast.info("Amount should not be empty or Zero.");
@@ -238,7 +252,7 @@ const TrainersPayroll = () => {
     setPayment({
       trainer: trainerId,
       trainerName: trainer.name,
-      amount: 0,
+      amount: "",
       pending: trainer.pending,
       due: trainer.pending,
       salary: trainer.salary,
@@ -249,6 +263,10 @@ const TrainersPayroll = () => {
 
   const handlePaymentChange = (event, newValue) => {
     setPayment({ ...payment, ["paymentMethod"]: newValue });
+  };
+
+  const handlePayChange = (event, newValue) => {
+    setPaymode(newValue);
   };
 
   const handleChange = (e) => {
@@ -356,13 +374,33 @@ const TrainersPayroll = () => {
               <span className="font-semibold"> {selectedUser.length} </span>{" "}
               Trainers?
             </div>
+            <div className="flex justify-between">
+              <FormControl sx={{ width: "99%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Mode of Payment</FormLabel>
+                <Select
+                  onChange={handlePayChange}
+                  value={paymode}
+                  name="paymentMethod"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "white",
+                    height: "42px",
+                  }}
+                  required
+                >
+                  <Option value="cash">Cash</Option>
+                  <Option value="upi">UPI</Option>
+                  <Option value="banktransfer">Bank Transfer</Option>
+                </Select>
+              </FormControl>
+            </div>
           </DialogContent>
           <DialogActions>
             <Button
               className="rounded-full py-1"
               variant="solid"
               color="success"
-              // onClick={trainerSalaryConfirmation}
+              onClick={makeBatchPayment}
             >
               Confirm
             </Button>
@@ -440,8 +478,6 @@ const TrainersPayroll = () => {
                 >
                   <Option value="cash">Cash</Option>
                   <Option value="upi">UPI</Option>
-                  <Option value="creditcard">Credit Card</Option>
-                  <Option value="debitcard">Debit Card</Option>
                   <Option value="banktransfer">Bank Transfer</Option>
                 </Select>
               </FormControl>
@@ -451,7 +487,7 @@ const TrainersPayroll = () => {
                   placeholder="₹ 00.00"
                   value={payment.pending}
                   variant="outlined"
-                  name="amount"
+                  name="dueamount"
                   size="md"
                   sx={{
                     py: 1,
