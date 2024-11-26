@@ -11,12 +11,17 @@ import {
   Button,
   Divider,
   Tooltip,
+  FormLabel,
   IconButton,
+  FormControl,
   CardContent,
   DialogTitle,
   ModalDialog,
   DialogContent,
   DialogActions,
+  Select,
+  Option,
+  Chip,
 } from "@mui/joy";
 
 import { TrainerContext } from "../../context/TrainerContext";
@@ -25,7 +30,8 @@ import { PageLocation } from "../../components/PageLocation";
 
 const TrainersPayroll = () => {
   const navigate = useNavigate();
-  const { trainers, trainerSalaryHistory } = useContext(TrainerContext);
+  const { trainers, findTrainerByID, customSalary, trainerSalaryHistory } =
+    useContext(TrainerContext);
 
   const [salaryHis, setSalaryHis] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +39,16 @@ const TrainersPayroll = () => {
   const [openSalary, setOpenSalary] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
   const [openPayment, setOpenPayment] = useState(false);
+  const [openCPayment, setOpenCPayment] = useState(false);
+  const [payment, setPayment] = useState({
+    trainer: null,
+    amount: "",
+    trainerName: "",
+    salary: "",
+    pending: 0,
+    due: 0,
+    paymentMethod: "cash",
+  });
 
   useEffect(() => {
     const convertToRowFormat = (data) => {
@@ -42,8 +58,10 @@ const TrainersPayroll = () => {
         name: trainer.name,
         email: trainer.email,
         salary: `₹ ${trainer.salary.toFixed(1)}`,
-        month: `₹ `,
+        month: `Failed`,
+        status: `Failed`,
         index: index++,
+        pending: trainer.pending,
         full_id: trainer._id,
       }));
       return rows;
@@ -60,8 +78,9 @@ const TrainersPayroll = () => {
       name: trainer.name,
       email: trainer.email,
       salary: `₹ ${trainer.salary.toFixed(1)}`,
-      month: `₹ `,
+      status: `Failed`,
       index: index++,
+      pending: trainer.pending,
       full_id: trainer._id,
     }));
     return rows;
@@ -110,14 +129,26 @@ const TrainersPayroll = () => {
       field: "status",
       headerName: "Status",
       flex: 1,
+      align: "center",
       headerAlign: "center",
+      renderCell: (params) => (
+        <Chip
+          color={params.row.pending == 0 ? "success" : "warning"}
+          style={{ paddingTop: "2px" }}
+          className="shadow-md"
+          variant="soft"
+        >
+          {params.row.pending == 0 ? "Fully Paid" : "Pending"}
+        </Chip>
+      ),
     },
     {
-      field: "month",
+      field: "pending",
       headerName: "Pending Amount",
       align: "center",
       flex: 1,
       headerAlign: "center",
+      renderCell: (params) => <div>₹ {`${params.row.pending.toFixed(1)}`}</div>,
     },
     {
       field: "action",
@@ -134,6 +165,22 @@ const TrainersPayroll = () => {
             >
               <i
                 className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600"
+                style={{ fontSize: "20px" }}
+              ></i>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Salary Payment" placement="top" arrow>
+            <IconButton
+              aria-label="salary payment"
+              onClick={() => {
+                if (params.row.pending === 0)
+                  return toast.info("Trainer Salary is Already Paid");
+
+                customPayment(params.row.full_id);
+              }}
+            >
+              <i
+                className="fa-duotone fa-solid fa-credit-card text-green-600"
                 style={{ fontSize: "20px" }}
               ></i>
             </IconButton>
@@ -170,7 +217,52 @@ const TrainersPayroll = () => {
   };
 
   const trainerSalaryConfirmation = async () => {
+    if (!payment.amount)
+      return toast.info("Amount should not be empty or Zero.");
+    await customSalary(payment);
     setOpenPayment(false);
+    setPayment({
+      trainer: null,
+      trainerName: "",
+      amount: "",
+      pending: "",
+      due: "",
+      salary: "",
+      paymentMethod: "cash",
+    });
+    setOpenCPayment(false);
+  };
+
+  const customPayment = async (trainerId) => {
+    const trainer = await findTrainerByID(trainerId);
+    setPayment({
+      trainer: trainerId,
+      trainerName: trainer.name,
+      amount: 0,
+      pending: trainer.pending,
+      due: trainer.pending,
+      salary: trainer.salary,
+      paymentMethod: "cash",
+    });
+    setOpenCPayment(true);
+  };
+
+  const handlePaymentChange = (event, newValue) => {
+    setPayment({ ...payment, ["paymentMethod"]: newValue });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (isNaN(Number(value)) || payment.due - value < 0) {
+      return;
+    }
+
+    setPayment({
+      ...payment,
+      pending: payment.due - value,
+      [name]: value,
+    });
   };
 
   return (
@@ -270,7 +362,7 @@ const TrainersPayroll = () => {
               className="rounded-full py-1"
               variant="solid"
               color="success"
-              onClick={trainerSalaryConfirmation}
+              // onClick={trainerSalaryConfirmation}
             >
               Confirm
             </Button>
@@ -285,12 +377,134 @@ const TrainersPayroll = () => {
         </ModalDialog>
       </Modal>
 
+      {/* Custom Salary Payment  */}
+      <Modal open={openCPayment} onClose={() => setOpenCPayment(false)}>
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ width: "700px" }}
+        >
+          <DialogTitle>
+            <i className="fa-duotone fa-solid fa-credit-card mt-1 me-1"></i>
+            Salary Payment
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className="flex justify-between my-4">
+              <FormControl sx={{ width: "48%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Trainer Name</FormLabel>
+                <Input
+                  placeholder="Trainer Name"
+                  value={payment.trainerName}
+                  name="trainerName"
+                  variant="outlined"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+              <FormControl sx={{ width: "48%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Trainer Salary</FormLabel>
+                <Input
+                  placeholder="Trainer Salary"
+                  value={payment.salary}
+                  name="trainerSalary"
+                  variant="outlined"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+            </div>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Mode of Payment</FormLabel>
+                <Select
+                  onChange={handlePaymentChange}
+                  value={payment.paymentMethod}
+                  name="paymentMethod"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "white",
+                    height: "42px",
+                  }}
+                  required
+                >
+                  <Option value="cash">Cash</Option>
+                  <Option value="upi">UPI</Option>
+                  <Option value="creditcard">Credit Card</Option>
+                  <Option value="debitcard">Debit Card</Option>
+                  <Option value="banktransfer">Bank Transfer</Option>
+                </Select>
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Due Amount</FormLabel>
+                <Input
+                  placeholder="₹ 00.00"
+                  value={payment.pending}
+                  variant="outlined"
+                  name="amount"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  disabled
+                  required
+                />
+              </FormControl>
+              <FormControl sx={{ width: "32%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Payment Amount</FormLabel>
+                <Input
+                  placeholder="₹ 00.00"
+                  onChange={handleChange}
+                  value={payment.amount}
+                  variant="outlined"
+                  name="amount"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  required
+                />
+              </FormControl>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              className="rounded-full py-1"
+              variant="solid"
+              color="success"
+              onClick={trainerSalaryConfirmation}
+            >
+              Make Payment
+            </Button>
+            <Button
+              variant="plain"
+              color="neutral"
+              onClick={() => setOpenCPayment(false)}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </ModalDialog>
+      </Modal>
+
       {/* Salary History */}
       <Modal open={openSalary} onClose={() => setOpenSalary(false)}>
         <ModalDialog
           variant="outlined"
           role="alertdialog"
-          sx={{ width: "600px" }}
+          sx={{ width: "700px" }}
         >
           <DialogTitle>
             <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
@@ -298,38 +512,68 @@ const TrainersPayroll = () => {
           </DialogTitle>
           <Divider />
           <DialogContent>
-            <div className="flex justify-between my-4">
+            <div className=" my-4">
               <Table
                 sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
               >
                 <thead>
                   <tr>
-                    <th style={{ width: "20%" }}>Payment ID</th>
-                    <th style={{ textAlign: "Center" }}> Salary</th>
-                    <th style={{ textAlign: "Center" }}>Amount Paid</th>
+                    <th style={{ width: "20%", textAlign: "Center" }}>
+                      Payment ID
+                    </th>
+                    <th style={{ textAlign: "Center" }}>Salary</th>
+                    <th style={{ textAlign: "Center" }}>Paid</th>
+                    <th style={{ textAlign: "Center" }}>Pending</th>
+                    <th style={{ textAlign: "Center" }}>Mode</th>
                     <th style={{ textAlign: "Center" }}>Date</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {salaryHis.length > 0 ? (
-                    salaryHis.map((row, index) => (
-                      <tr key={`pay-${index}`}>
-                        <td>{row._id.slice(17).toUpperCase()}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="4"
-                        className="fa-fade "
-                        style={{ textAlign: "center", height: "100px" }}
-                      >
-                        NO HISTORY FOUND
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
               </Table>
+              <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+                <Table
+                  sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
+                >
+                  <tbody>
+                    {salaryHis.length > 0 ? (
+                      salaryHis.map((row, index) => (
+                        <tr key={`pay-${index}`}>
+                          <td style={{ textAlign: "center" }}>
+                            {row._id.slice(17).toUpperCase()}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            ₹ {row.salary.toFixed(1)}
+                          </td>
+                          <td
+                            className="text-green-600"
+                            style={{ textAlign: "center" }}
+                          >
+                            ₹ {row.amount.toFixed(1)}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            ₹ {row.pending.toFixed(1)}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            {row.paymentMethod.toUpperCase()}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            {row.createdAt.slice(0, 10)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="4"
+                          className="fa-fade"
+                          style={{ textAlign: "center", height: "100px" }}
+                        >
+                          NO HISTORY FOUND
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </div>
             </div>
           </DialogContent>
         </ModalDialog>

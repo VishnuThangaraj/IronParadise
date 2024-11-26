@@ -27,11 +27,6 @@ const registerTrainer = async (req, res) => {
       return res.status(409).json({ message: "Email or Phone already exists" });
     }
 
-    const trainerPaylist = {
-      pending: -1,
-      pendingDate: moment().startOf("month").toISOString(),
-    };
-
     const newTrainer = new Trainer({
       name,
       username: `TR${username}`,
@@ -124,6 +119,41 @@ const updateTrainerById = async (req, res) => {
   }
 };
 
+const salaryPaymentMail = async (trainer, payment) => {};
+
+// Custom Salary Payment
+const customSalary = async (req, res) => {
+  const trainerId = req.params.id;
+  const payment = req.body.payment;
+
+  try {
+    const trainer = await Trainer.findById(trainerId);
+
+    if (!trainer) {
+      return res.status(404).json({ message: "Trainer not found" });
+    }
+
+    trainer.pending = payment.pending;
+    const updatedTrainer = await trainer.save();
+
+    const history = new SalaryHistory(payment);
+    const newHistory = await history.save();
+
+    salaryPaymentMail(updatedTrainer, newHistory);
+
+    res.status(200).json({
+      message: "Salary Payment Made successfully!",
+      trainer: updatedTrainer,
+      history: newHistory,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Full Salary Payment for Trainers
+const batchPayment = async (req, res) => {};
+
 // Delete Trainer by ID
 const deleteTrainerById = async (req, res) => {
   const trainerId = req.params.id;
@@ -142,6 +172,8 @@ const deleteTrainerById = async (req, res) => {
 };
 
 module.exports = {
+  customSalary,
+  batchPayment,
   fetchTrainers,
   registerTrainer,
   fetchTrainerById,

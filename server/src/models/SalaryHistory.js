@@ -15,17 +15,13 @@ const SalaryHistorySchema = new Schema(
       type: Number,
       required: true,
     },
+    pending: {
+      type: Number,
+      required: true,
+    },
     paymentMethod: {
       type: String,
       enum: ["cash", "upi", "creditcard", "debitcard", "banktransfer"],
-      required: true,
-    },
-    paymentMonth: {
-      type: String,
-      required: true,
-    },
-    paymentYear: {
-      type: Number,
       required: true,
     },
   },

@@ -22,6 +22,13 @@ router.get(
   trainerController.fetchTrainerById
 );
 
+// Custom Salary
+router.post(
+  "/salary/:id",
+  authenticateJWT(["admin"]),
+  trainerController.customSalary
+);
+
 // Update Trainer by ID
 router.put(
   "/update/:id",

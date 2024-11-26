@@ -124,11 +124,52 @@ export const TrainerProvider = ({ children }) => {
     return salaryHistory.filter((payment) => payment.trainer === trainerId);
   };
 
+  // Custom Salary
+  const customSalary = async (paymentData) => {
+    const trainerId = paymentData.trainer;
+    const payment = {
+      trainer: paymentData.trainer,
+      amount: paymentData.amount,
+      salary: paymentData.salary,
+      pending: paymentData.pending,
+      paymentMethod: paymentData.paymentMethod,
+    };
+    try {
+      const response = await axios.post(
+        `/trainer/salary/${trainerId}`,
+        { payment },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        const newHistory = response.data.history;
+        const updatedTrainer = response.data.trainer;
+
+        setTrainers((prevTrainers) =>
+          prevTrainers.map((trainer) =>
+            trainer._id === trainerId ? updatedTrainer : trainer
+          )
+        );
+
+        setSalaryHistory([...salaryHistory, newHistory]);
+
+        toast.success("Salary Payment Made Successfully ✔️");
+      } else {
+        toast.warning("Failed to Make Salary Payment 😓");
+      }
+    } catch (err) {
+      console.log("Error Connecting to Server | ", err);
+    }
+  };
+
   return (
     <TrainerContext.Provider
       value={{
         trainers,
         addTrainer,
+        customSalary,
         deleteTrainer,
         salaryHistory,
         updateTrainer,
