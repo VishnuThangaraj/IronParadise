@@ -687,7 +687,7 @@ const TrainersPayroll = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan="4"
+                        colSpan="7"
                         className="fa-fade"
                         style={{ textAlign: "center", height: "100px" }}
                       >

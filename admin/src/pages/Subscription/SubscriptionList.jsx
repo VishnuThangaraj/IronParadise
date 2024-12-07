@@ -20,6 +20,7 @@ import {
   DialogContent,
 } from "@mui/joy";
 
+import { MemberContext } from "../../context/MemberContext";
 import { SubscriptionContext } from "../../context/SubscriptionContext";
 
 import { PageLocation } from "../../components/PageLocation";
@@ -27,6 +28,7 @@ import { PageLocation } from "../../components/PageLocation";
 const SubscriptionList = () => {
   const navigate = useNavigate();
 
+  const { members } = useContext(MemberContext);
   const { subscriptions, deleteSubscription } = useContext(SubscriptionContext);
 
   const [open, setOpen] = useState(false);
@@ -47,7 +49,19 @@ const SubscriptionList = () => {
   };
 
   const deleteSubscriptionWithId = async () => {
-    await deleteSubscription(deleteId);
+    let validation = true;
+    members.forEach((member) => {
+      if (member.subscription.membershipPlan === deleteId) {
+        validation = false;
+        return;
+      }
+    });
+
+    validation
+      ? await deleteSubscription(deleteId)
+      : toast.warning(
+          "Subscription Plan assigned to members cannot be removed"
+        );
     setOpen(false);
   };
 

@@ -17,12 +17,15 @@ import {
 } from "@mui/joy";
 
 import { PlanContext } from "../../context/PlanContext";
+import { MemberContext } from "../../context/MemberContext";
 
 import { PageLocation } from "../../components/PageLocation";
+import { toast } from "sonner";
 
 const WorkoutPlanList = () => {
   const navigate = useNavigate();
 
+  const { members } = useContext(MemberContext);
   const { workoutplans, deleteWorkoutplan } = useContext(PlanContext);
 
   const [open, setOpen] = useState(false);
@@ -39,7 +42,17 @@ const WorkoutPlanList = () => {
   };
 
   const deleteWorkoutplanWithId = async () => {
-    await deleteWorkoutplan(deleteId);
+    let validation = true;
+    members.forEach((member) => {
+      if (member.workoutPlan._id === deleteId) {
+        validation = false;
+        return;
+      }
+    });
+
+    validation
+      ? await deleteWorkoutplan(deleteId)
+      : toast.warning("Workout Plan assigned to members cannot be removed");
     setOpen(false);
   };
 

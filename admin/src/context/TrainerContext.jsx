@@ -111,6 +111,8 @@ export const TrainerProvider = ({ children }) => {
           prevTrainers.filter((trainer) => trainer._id !== trainerId)
         );
         toast.success("Trainer Removed Successfully ✔️");
+      } else if (response.status === 401) {
+        toast.warning("Trainers assigned to members cannot be removed");
       } else {
         toast.warning("Failed to Remove Trainer 😓");
       }

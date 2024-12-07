@@ -23,6 +23,7 @@ import {
 } from "@mui/joy";
 
 import { AuthContext } from "../../context/AuthContext";
+import { MemberContext } from "../../context/MemberContext";
 import { GeneralContext } from "../../context/GeneralContext";
 import { TrainerContext } from "../../context/TrainerContext";
 
@@ -32,6 +33,7 @@ const TrainersList = () => {
   const navigate = useNavigate();
 
   const { user } = useContext(AuthContext);
+  const { members } = useContext(MemberContext);
   const { sendMail } = useContext(GeneralContext);
   const { trainers, deleteTrainer } = useContext(TrainerContext);
 
@@ -77,7 +79,17 @@ const TrainersList = () => {
   };
 
   const deleteTrainerWithId = async () => {
-    await deleteTrainer(deleteId);
+    let validation = true;
+    members.forEach((member) => {
+      if (member.trainerId._id === deleteId) {
+        validation = false;
+        return;
+      }
+    });
+
+    validation
+      ? await deleteTrainer(deleteId)
+      : toast.warning("Trainers assigned to members cannot be removed");
     setOpen(false);
   };
 

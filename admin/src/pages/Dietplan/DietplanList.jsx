@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useContext, useState } from "react";
@@ -17,12 +18,14 @@ import {
 } from "@mui/joy";
 
 import { PlanContext } from "../../context/PlanContext";
+import { MemberContext } from "../../context/MemberContext";
 
 import { PageLocation } from "../../components/PageLocation";
 
 const DietplanList = () => {
   const navigate = useNavigate();
 
+  const { members } = useContext(MemberContext);
   const { dietplans, deleteDietplan } = useContext(PlanContext);
 
   const [open, setOpen] = useState(false);
@@ -39,7 +42,17 @@ const DietplanList = () => {
   };
 
   const deleteDietplanWithId = async () => {
-    await deleteDietplan(deleteId);
+    let validation = true;
+    members.forEach((member) => {
+      if (member.dietPlan._id === deleteId) {
+        validation = false;
+        return;
+      }
+    });
+
+    validation
+      ? await deleteDietplan(deleteId)
+      : toast.warning("Dietplan assigned to members cannot be removed");
     setOpen(false);
   };
 

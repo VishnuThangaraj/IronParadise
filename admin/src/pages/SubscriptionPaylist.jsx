@@ -908,31 +908,43 @@ const SubscriptionPaylist = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {paymentHistory.map((row, index) => (
-                    <tr key={`pay-${index}`}>
-                      <td>{row._id.slice(17).toUpperCase()}</td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.subscription.name}
+                  {paymentHistory.length > 0 ? (
+                    paymentHistory.map((row, index) => (
+                      <tr key={`pay-${index}`}>
+                        <td>{row._id.slice(17).toUpperCase()}</td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.subscription.name}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          &#8377;{row.amount.toFixed(1)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          &#8377;{row.dueAmount.toFixed(1)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.paymentMethod.slice(0, 1).toUpperCase() +
+                            row.paymentMethod.slice(1)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.createdAt.slice(0, 10)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {convertToIST(row.createdAt)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>{row.remarks}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="fa-fade"
+                        style={{ textAlign: "center", height: "100px" }}
+                      >
+                        NO HISTORY FOUND
                       </td>
-                      <td style={{ textAlign: "Center" }}>
-                        &#8377;{row.amount.toFixed(1)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        &#8377;{row.dueAmount.toFixed(1)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.paymentMethod.slice(0, 1).toUpperCase() +
-                          row.paymentMethod.slice(1)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.createdAt.slice(0, 10)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {convertToIST(row.createdAt)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>{row.remarks}</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
             </div>
@@ -968,26 +980,38 @@ const SubscriptionPaylist = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {subscriptionHistory.map((row, index) => (
-                    <tr key={`pay-${index}`}>
-                      <td>{row.subscription.planId.toUpperCase()}</td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.subscription.name}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.subscription.duration} Months
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.startDate.slice(0, 10)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        {row.endDate.slice(0, 10)}
-                      </td>
-                      <td style={{ textAlign: "Center" }}>
-                        &#8377; {row.subscription.price}
+                  {subscriptionHistory.length > 0 ? (
+                    subscriptionHistory.map((row, index) => (
+                      <tr key={`pay-${index}`}>
+                        <td>{row.subscription.planId.toUpperCase()}</td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.subscription.name}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.subscription.duration} Months
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.startDate.slice(0, 10)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          {row.endDate.slice(0, 10)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>
+                          &#8377; {row.subscription.price}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="6"
+                        className="fa-fade"
+                        style={{ textAlign: "center", height: "100px" }}
+                      >
+                        NO HISTORY FOUND
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
             </div>
