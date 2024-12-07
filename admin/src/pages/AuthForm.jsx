@@ -31,18 +31,18 @@ const AuthForm = () => {
     >
       <div
         className="flex flex-col gap-7 items-center"
-        style={{ width: "30%" }}
+        style={{ width: "35%" }}
       >
-        <img src="images/logoBlack.png" alt="Iron Paradise" width={110} />
+        <img src="images/logoBlack.png" alt="Iron Paradise" width={130} />
         <Grid
-          sx={{ p: 5, borderRadius: 3 }}
+          sx={{ p: 4, borderRadius: 3 }}
           className="bg-white w-full shadow-md"
         >
           <div className="font-bold text-2xl pb-1">Sign in to account</div>
           <div className="text-gray-500" style={{ letterSpacing: "1px" }}>
             Enter your email & password to login
           </div>
-          <FormControl sx={{ mt: 4 }}>
+          <FormControl sx={{ mt: 5 }}>
             <FormLabel sx={{ fontSize: 16 }}>Email Address</FormLabel>
             <Input
               size="md"
@@ -53,7 +53,7 @@ const AuthForm = () => {
               variant="soft"
             />
           </FormControl>
-          <FormControl sx={{ mt: 2 }}>
+          <FormControl sx={{ mt: 4 }}>
             <FormLabel sx={{ fontSize: 16 }}>Password</FormLabel>
             <Input
               size="md"
@@ -66,7 +66,7 @@ const AuthForm = () => {
               variant="soft"
             />
           </FormControl>
-          <div className="flex justify-between my-6">
+          <div className="flex justify-between my-7">
             <div className="text-gray-500">
               <Checkbox label="Remember Password" />
             </div>

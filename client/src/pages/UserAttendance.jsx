@@ -119,7 +119,7 @@ const UserAttendance = () => {
             } Successful.`,
             title: gymQuotes[Math.floor(Math.random() * gymQuotes.length - 1)],
             showConfirmButton: false,
-            timer: 3000,
+            timer: 4500,
           });
 
           setButtonText(`${action === "login" ? "Punch Out" : "Punch In"}`);

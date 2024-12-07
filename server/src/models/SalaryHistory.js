@@ -24,6 +24,10 @@ const SalaryHistorySchema = new Schema(
       enum: ["cash", "upi", "creditcard", "debitcard", "banktransfer"],
       required: true,
     },
+    remarks: {
+      type: String,
+      default: "----",
+    },
   },
   {
     timestamps: true,

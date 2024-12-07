@@ -32,6 +32,10 @@ const PaymentHistorySchema = new Schema(
       type: Date,
       required: true,
     },
+    remarks: {
+      type: String,
+      default: "----",
+    },
   },
   {
     timestamps: true,

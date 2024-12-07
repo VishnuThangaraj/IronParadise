@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { DatePicker } from "antd";
 import { Paper } from "@mui/material";
@@ -24,6 +25,7 @@ import {
   ModalDialog,
   DialogActions,
   DialogContent,
+  Textarea,
 } from "@mui/joy";
 
 import { AuthContext } from "../context/AuthContext";
@@ -78,6 +80,7 @@ const SubscriptionPaylist = () => {
     amount: "",
     paymentMethod: "cash",
     dueAmount: 0,
+    remarks: "",
   });
   const [subscription, setSubscription] = useState({
     membershipPlan: null,
@@ -120,6 +123,18 @@ const SubscriptionPaylist = () => {
     fetchRows();
   }, [members, subscriptionName]);
 
+  const exportToExcel = () => {
+    if (paymentHistory.length === 0)
+      return toast.info("Payment History is Empty to Export.");
+
+    const worksheet = XLSX.utils.json_to_sheet(paymentHistory);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "PaymentHistory");
+    XLSX.writeFile(workbook, "paymenthistory.xlsx");
+
+    toast.success("Payment History exported to Excel 📃");
+  };
+
   const editPlan = async (memberId, edit = true) => {
     setEditid(memberId);
     const member = await findMember(memberId);
@@ -145,15 +160,23 @@ const SubscriptionPaylist = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (isNaN(Number(value)) || subscription.pending - value < 0) {
+    if (
+      (name === "amount" && isNaN(Number(value))) ||
+      subscription.pending - value < 0
+    ) {
       return;
     }
-
-    setPayment({
-      ...payment,
-      dueAmount: subscription.pending - value,
-      [name]: value,
-    });
+    if (name === "amount")
+      setPayment({
+        ...payment,
+        dueAmount: subscription.pending - value,
+        [name]: value,
+      });
+    else
+      setPayment({
+        ...payment,
+        [name]: value,
+      });
   };
 
   const handleCategoryChange = (event, newValue) => {
@@ -407,12 +430,12 @@ const SubscriptionPaylist = () => {
       amount: "",
       paymentMethod: "cash",
       dueAmount: 0,
+      remarks: "",
     });
     setOpenpay(false);
   };
 
   const scheduleMail = async () => {
-    console.log(notificationCategory);
     if (!notificationCategory || notificationCategory === "") {
       return toast.info("Please Select the Subscription Category!");
     }
@@ -788,6 +811,26 @@ const SubscriptionPaylist = () => {
                 />
               </FormControl>
             </div>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "99%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Remarks</FormLabel>
+                <Textarea
+                  placeholder="Payment Remarks"
+                  value={payment.remarks}
+                  onChange={handleChange}
+                  variant="outlined"
+                  name="remarks"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  minRows={3}
+                  maxRows={5}
+                  required
+                />
+              </FormControl>
+            </div>
           </DialogContent>
           <DialogActions>
             <Button
@@ -814,11 +857,35 @@ const SubscriptionPaylist = () => {
         <ModalDialog
           variant="outlined"
           role="alertdialog"
-          sx={{ width: "800px" }}
+          sx={{ width: "1100px" }}
         >
           <DialogTitle>
-            <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
-            Payment History
+            <div className="flex justify-between w-full px-1">
+              <div>
+                <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
+                Payment History
+              </div>
+              <div>
+                <Tooltip title="Excel" placement="top" arrow>
+                  <Button
+                    className="transition-all duration-300"
+                    onClick={exportToExcel}
+                    variant="outlined"
+                    color="warning"
+                    size="md"
+                    sx={{
+                      px: 2,
+                    }}
+                  >
+                    <i
+                      className="fa-duotone fa-solid fa-file-excel me-3"
+                      style={{ fontSize: "23px" }}
+                    ></i>{" "}
+                    Export
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
           </DialogTitle>
           <Divider />
           <DialogContent>
@@ -835,6 +902,7 @@ const SubscriptionPaylist = () => {
                     <th style={{ textAlign: "Center" }}>Method</th>
                     <th style={{ textAlign: "Center" }}>Date</th>
                     <th style={{ textAlign: "Center" }}>Time</th>
+                    <th style={{ textAlign: "Center" }}>Remarks</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -860,6 +928,7 @@ const SubscriptionPaylist = () => {
                       <td style={{ textAlign: "Center" }}>
                         {convertToIST(row.createdAt)}
                       </td>
+                      <td style={{ textAlign: "Center" }}>{row.remarks}</td>
                     </tr>
                   ))}
                 </tbody>
