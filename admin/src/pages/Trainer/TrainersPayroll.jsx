@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -22,6 +23,7 @@ import {
   Select,
   Option,
   Chip,
+  Textarea,
 } from "@mui/joy";
 
 import { TrainerContext } from "../../context/TrainerContext";
@@ -54,6 +56,7 @@ const TrainersPayroll = () => {
     salary: "",
     pending: 0,
     due: 0,
+    remarks: "",
     paymentMethod: "cash",
   });
 
@@ -225,7 +228,7 @@ const TrainersPayroll = () => {
 
   const makeBatchPayment = async () => {
     setOpenPayment(false);
-    await batchPayment(selectedUser, paymode);
+    await batchPayment(selectedUser, paymode, payment.remarks);
     setPaymode("cash");
     setSelectedUser([]);
   };
@@ -241,6 +244,7 @@ const TrainersPayroll = () => {
       amount: "",
       pending: "",
       due: "",
+      remarks: "",
       salary: "",
       paymentMethod: "cash",
     });
@@ -256,6 +260,7 @@ const TrainersPayroll = () => {
       pending: trainer.pending,
       due: trainer.pending,
       salary: trainer.salary,
+      remarks: "",
       paymentMethod: "cash",
     });
     setOpenCPayment(true);
@@ -272,15 +277,35 @@ const TrainersPayroll = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (isNaN(Number(value)) || payment.due - value < 0) {
+    if (
+      (name === "amount" && isNaN(Number(value))) ||
+      payment.due - value < 0
+    ) {
       return;
     }
+    if (name === "amount")
+      setPayment({
+        ...payment,
+        pending: payment.due - value,
+        [name]: value,
+      });
+    else
+      setPayment({
+        ...payment,
+        [name]: value,
+      });
+  };
 
-    setPayment({
-      ...payment,
-      pending: payment.due - value,
-      [name]: value,
-    });
+  const exportToExcel = () => {
+    if (salaryHis.length === 0)
+      return toast.info("Salary History is Empty to Export.");
+
+    const worksheet = XLSX.utils.json_to_sheet(salaryHis);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "SalaryHistory");
+    XLSX.writeFile(workbook, "salaryhistory.xlsx");
+
+    toast.success("Salary History exported to Excel 📃");
   };
 
   return (
@@ -392,6 +417,26 @@ const TrainersPayroll = () => {
                   <Option value="upi">UPI</Option>
                   <Option value="banktransfer">Bank Transfer</Option>
                 </Select>
+              </FormControl>
+            </div>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "99%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Remarks</FormLabel>
+                <Textarea
+                  placeholder="Payment Remarks"
+                  value={payment.remarks}
+                  onChange={handleChange}
+                  variant="outlined"
+                  name="remarks"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  minRows={3}
+                  maxRows={5}
+                  required
+                />
               </FormControl>
             </div>
           </DialogContent>
@@ -514,6 +559,26 @@ const TrainersPayroll = () => {
                 />
               </FormControl>
             </div>
+            <div className="flex justify-between mt-4">
+              <FormControl sx={{ width: "99%" }}>
+                <FormLabel sx={{ fontSize: 15 }}>Remarks</FormLabel>
+                <Textarea
+                  placeholder="Payment Remarks"
+                  value={payment.remarks}
+                  onChange={handleChange}
+                  variant="outlined"
+                  name="remarks"
+                  size="md"
+                  sx={{
+                    py: 1,
+                    backgroundColor: "white",
+                  }}
+                  minRows={3}
+                  maxRows={5}
+                  required
+                />
+              </FormControl>
+            </div>
           </DialogContent>
           <DialogActions>
             <Button
@@ -540,11 +605,35 @@ const TrainersPayroll = () => {
         <ModalDialog
           variant="outlined"
           role="alertdialog"
-          sx={{ width: "700px" }}
+          sx={{ width: "800px" }}
         >
           <DialogTitle>
-            <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
-            Salary History
+            <div className="flex justify-between w-full px-1">
+              <div>
+                <i className="fa-sharp-duotone fa-solid fa-clock-rotate-left text-green-600 mt-1 me-1"></i>
+                Salary History
+              </div>
+              <div>
+                <Tooltip title="Excel" placement="top" arrow>
+                  <Button
+                    className="transition-all duration-300"
+                    onClick={exportToExcel}
+                    variant="outlined"
+                    color="warning"
+                    size="md"
+                    sx={{
+                      px: 2,
+                    }}
+                  >
+                    <i
+                      className="fa-duotone fa-solid fa-file-excel me-3"
+                      style={{ fontSize: "23px" }}
+                    ></i>{" "}
+                    Export
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
           </DialogTitle>
           <Divider />
           <DialogContent>
@@ -554,7 +643,7 @@ const TrainersPayroll = () => {
               >
                 <thead>
                   <tr>
-                    <th style={{ width: "20%", textAlign: "Center" }}>
+                    <th style={{ width: "14%", textAlign: "Center" }}>
                       Payment ID
                     </th>
                     <th style={{ textAlign: "Center" }}>Salary</th>
@@ -562,54 +651,52 @@ const TrainersPayroll = () => {
                     <th style={{ textAlign: "Center" }}>Pending</th>
                     <th style={{ textAlign: "Center" }}>Mode</th>
                     <th style={{ textAlign: "Center" }}>Date</th>
+                    <th style={{ width: "20%", textAlign: "Center" }}>
+                      Remarks
+                    </th>
                   </tr>
                 </thead>
-              </Table>
-              <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-                <Table
-                  sx={{ "& tr > *:not(:first-child)": { textAlign: "right" } }}
-                >
-                  <tbody>
-                    {salaryHis.length > 0 ? (
-                      salaryHis.map((row, index) => (
-                        <tr key={`pay-${index}`}>
-                          <td style={{ textAlign: "center" }}>
-                            {row._id.slice(17).toUpperCase()}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            ₹ {row.salary.toFixed(1)}
-                          </td>
-                          <td
-                            className="text-green-600"
-                            style={{ textAlign: "center" }}
-                          >
-                            ₹ {row.amount.toFixed(1)}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            ₹ {row.pending.toFixed(1)}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            {row.paymentMethod.toUpperCase()}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            {row.createdAt.slice(0, 10)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="fa-fade"
-                          style={{ textAlign: "center", height: "100px" }}
-                        >
-                          NO HISTORY FOUND
+                <tbody>
+                  {salaryHis.length > 0 ? (
+                    salaryHis.map((row, index) => (
+                      <tr key={`pay-${index}`}>
+                        <td style={{ textAlign: "center" }}>
+                          {row._id.slice(17).toUpperCase()}
                         </td>
+                        <td style={{ textAlign: "center" }}>
+                          ₹ {row.salary.toFixed(1)}
+                        </td>
+                        <td
+                          className="text-green-600"
+                          style={{ textAlign: "center" }}
+                        >
+                          ₹ {row.amount.toFixed(1)}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          ₹ {row.pending.toFixed(1)}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          {row.paymentMethod.toUpperCase()}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          {row.createdAt.slice(0, 10)}
+                        </td>
+                        <td style={{ textAlign: "Center" }}>{row.remarks}</td>
                       </tr>
-                    )}
-                  </tbody>
-                </Table>
-              </div>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="fa-fade"
+                        style={{ textAlign: "center", height: "100px" }}
+                      >
+                        NO HISTORY FOUND
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
             </div>
           </DialogContent>
         </ModalDialog>

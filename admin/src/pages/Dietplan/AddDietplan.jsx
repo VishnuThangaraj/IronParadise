@@ -31,7 +31,11 @@ const AddDietplan = () => {
 
   const [loading, setLoading] = useState(false);
   const [dietplan, setDietplan] = useState({
-    planId: `DP${dietplans.length + 1}`,
+    planId: `DP${
+      dietplans.length > 0
+        ? Number(dietplans[dietplans.length - 1].planId.slice(2)) + 1
+        : 1
+    }`,
     dietPlanName: "",
     mondayBreakfast: "",
     mondayLunch: "",
@@ -69,7 +73,11 @@ const AddDietplan = () => {
     setLoading(true);
     await addDietplan(dietplan);
     setDietplan({
-      planId: `DP${dietplans.length + 2}`,
+      planId: `DP${
+        dietplans.length > 0
+          ? Number(dietplans[dietplans.length - 1].planId.slice(2)) + 2
+          : 2
+      }`,
       dietPlanName: "",
       mondayBreakfast: "",
       mondayLunch: "",

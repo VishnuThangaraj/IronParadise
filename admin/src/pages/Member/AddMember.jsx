@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { toast } from "sonner";
 import { DatePicker } from "antd";
 import { CircularProgress } from "@mui/material";
 import { Fragment, useContext, useState } from "react";
@@ -33,7 +34,11 @@ const AddMember = () => {
 
   const [loading, setLoading] = useState(false);
   const [member, setMember] = useState({
-    username: `MB${members.length + 1}`,
+    username: `MB${
+      members.length > 0
+        ? `${Number(members[members.length - 1].username.slice(2)) + 1}`
+        : 1
+    }`,
     name: "",
     email: "",
     phone: "",
@@ -51,17 +56,26 @@ const AddMember = () => {
     planCost: "",
     endDate: "",
     workoutPlan: null,
+    panNumber: "",
+    aadharNumber: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (
-      (name === "phone" || name === "height" || name === "weight") &&
+      (name === "phone" ||
+        name === "height" ||
+        name === "weight" ||
+        name === "aadharNumber") &&
       isNaN(Number(value))
     ) {
       return;
     }
+
+    if ((name === "panNumber" || name === "phone") && value.length > 10) return;
+    if (name === "aadharNumber" && value.length > 12) return;
+
     const updatedMember = { ...member, [name]: value };
     setMember(updatedMember);
 
@@ -111,10 +125,21 @@ const AddMember = () => {
 
   const validateAndAddMember = async (e) => {
     e.preventDefault();
+    if (member.aadharNumber.length < 12)
+      return toast.info("Aadhar Number should be 12 Digits.");
+    if (member.panNumber.length < 10)
+      return toast.info("Pan-Number should be 10 Digits.");
+    if (member.phone.length < 10)
+      return toast.info("Phone Number should be 10 Digits.");
+
     setLoading(true);
     await addMember(member);
     setMember({
-      username: `MB${members.length + 2}`,
+      username: `MB${
+        members.length > 0
+          ? `${Number(members[members.length - 1].username.slice(2)) + 2}`
+          : 2
+      }`,
       name: "",
       email: "",
       phone: "",
@@ -128,6 +153,8 @@ const AddMember = () => {
       dietPlan: null,
       membershipPlanId: null,
       startDate: currentDate,
+      panNumber: "",
+      aadharNumber: "",
       planDuration: "",
       planCost: "",
       endDate: "",
@@ -224,6 +251,7 @@ const AddMember = () => {
                     style={{
                       height: "42px",
                     }}
+                    required
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -238,11 +266,48 @@ const AddMember = () => {
                       backgroundColor: "white",
                       height: "42px",
                     }}
+                    required
                   >
                     <Option value="male">Male</Option>
                     <Option value="female">Female</Option>
                     <Option value="other">Other</Option>
                   </Select>
+                </FormControl>
+              </div>
+              <div className="flex justify-between">
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>
+                    Aadhar Card Number
+                  </FormLabel>
+                  <Input
+                    placeholder="xxxx xxxx xxxx"
+                    value={member.aadharNumber}
+                    onChange={handleChange}
+                    name="aadharNumber"
+                    variant="outlined"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>Pan Card Number</FormLabel>
+                  <Input
+                    value={member.panNumber && member.panNumber.toUpperCase()}
+                    placeholder="xxxxxxxxxx"
+                    onChange={handleChange}
+                    variant="outlined"
+                    name="panNumber"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
                 </FormControl>
               </div>
               <div className="flex justify-between">
@@ -308,7 +373,6 @@ const AddMember = () => {
                       backgroundColor: "white",
                       height: "42px",
                     }}
-                    required
                   >
                     {trainers.map((trainer, index) => (
                       <Option key={`trainer-${index}`} value={trainer._id}>

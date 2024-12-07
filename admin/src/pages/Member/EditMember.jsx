@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { toast } from "sonner";
 import { DatePicker } from "antd";
 import { CircularProgress } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -56,6 +57,8 @@ const EditMember = () => {
       endDate: "",
     },
     workoutPlan: null,
+    panNumber: "",
+    aadharNumber: "",
   });
 
   useEffect(() => {
@@ -75,17 +78,21 @@ const EditMember = () => {
     const { name, value } = e.target;
 
     if (
-      (name === "phone" || name === "height" || name === "weight") &&
+      (name === "phone" ||
+        name === "height" ||
+        name === "weight" ||
+        name === "aadharNumber") &&
       isNaN(Number(value))
     ) {
       return;
     }
 
-    // Update the member state
+    if ((name === "panNumber" || name === "phone") && value.length > 10) return;
+    if (name === "aadharNumber" && value.length > 12) return;
+
     const updatedMember = { ...member, [name]: value };
     setMember(updatedMember);
 
-    // Calculate BMI if height and weight are present
     if (name === "height" || name === "weight") {
       const height = Number(updatedMember.height) / 100;
       const weight = Number(updatedMember.weight);
@@ -111,6 +118,14 @@ const EditMember = () => {
 
   const validateAndUpdateMember = async (e) => {
     e.preventDefault();
+
+    if (member.aadharNumber.length < 12)
+      return toast.info("Aadhar Number should be 12 Digits.");
+    if (member.panNumber.length < 10)
+      return toast.info("Pan-Number should be 10 Digits.");
+    if (member.phone.length < 10)
+      return toast.info("Phone Number should be 10 Digits.");
+
     setLoading(true);
     const trainer = await findTrainerByID(member.trainerId);
     setMember({ ...member, trainerId: trainer });
@@ -136,6 +151,8 @@ const EditMember = () => {
         endDate: "",
       },
       workoutPlan: null,
+      panNumber: "",
+      aadharNumber: "",
     });
     setLoading(false);
     navigate("/member/list");
@@ -233,6 +250,7 @@ const EditMember = () => {
                     style={{
                       height: "42px",
                     }}
+                    required
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -247,11 +265,48 @@ const EditMember = () => {
                       backgroundColor: "white",
                       height: "42px",
                     }}
+                    required
                   >
                     <Option value="male">Male</Option>
                     <Option value="female">Female</Option>
                     <Option value="other">Other</Option>
                   </Select>
+                </FormControl>
+              </div>
+              <div className="flex justify-between">
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>
+                    Aadhar Card Number
+                  </FormLabel>
+                  <Input
+                    placeholder="xxxx xxxx xxxx"
+                    value={member.aadharNumber}
+                    onChange={handleChange}
+                    name="aadharNumber"
+                    variant="outlined"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
+                </FormControl>
+                <FormControl sx={{ width: "48%" }}>
+                  <FormLabel sx={{ fontSize: 15 }}>Pan Card Number</FormLabel>
+                  <Input
+                    value={member.panNumber && member.panNumber.toUpperCase()}
+                    placeholder="xxxxxxxxxx"
+                    onChange={handleChange}
+                    variant="outlined"
+                    name="panNumber"
+                    size="md"
+                    sx={{
+                      py: 1,
+                      backgroundColor: "white",
+                    }}
+                    required
+                  />
                 </FormControl>
               </div>
               <div className="flex justify-between">

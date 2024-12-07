@@ -43,7 +43,6 @@ const registerTrainer = async (req, res) => {
       address,
       panNumber,
       aadharNumber,
-      trainerPaylist,
     });
 
     await newTrainer.save();
@@ -330,7 +329,7 @@ const customSalary = async (req, res) => {
 
 // Full Salary Payment for Trainers
 const batchPayment = async (req, res) => {
-  const { trainers, paymode } = req.body;
+  const { trainers, paymode, remarks } = req.body;
 
   try {
     const updatePromises = trainers.map(async (trainerId) => {
@@ -348,6 +347,7 @@ const batchPayment = async (req, res) => {
           amount: trainer.pending,
           salary: trainer.salary,
           pending: 0,
+          remarks: remarks,
           paymentMethod: paymode,
         });
 

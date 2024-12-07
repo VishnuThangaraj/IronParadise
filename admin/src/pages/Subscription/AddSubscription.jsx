@@ -20,7 +20,10 @@ const AddSubscription = () => {
   const [loading, setLoading] = useState(false);
   const [subscription, setSubscription] = useState({
     name: "",
-    planId: subscriptions.length + 1,
+    planId:
+      subscriptions.length > 0
+        ? Number(subscriptions[subscriptions.length - 1].planId.slice(2)) + 1
+        : 1,
     duration: "",
     price: "",
   });
@@ -42,7 +45,10 @@ const AddSubscription = () => {
     await addSubscription(subscription);
     setSubscription({
       name: "",
-      planId: subscriptions.length + 2,
+      planId:
+        subscriptions.length > 0
+          ? Number(subscriptions[subscriptions.length - 1].planId.slice(2)) + 2
+          : 2,
       duration: "",
       price: "",
     });

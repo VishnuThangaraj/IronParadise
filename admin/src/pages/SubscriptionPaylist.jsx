@@ -895,14 +895,16 @@ const SubscriptionPaylist = () => {
               >
                 <thead>
                   <tr>
-                    <th style={{ width: "15%" }}>Payment ID</th>
+                    <th style={{ width: "10%" }}>Payment ID</th>
                     <th style={{ textAlign: "Center" }}>Plan Name</th>
                     <th style={{ textAlign: "Center" }}>Paid</th>
                     <th style={{ textAlign: "Center" }}>Due</th>
                     <th style={{ textAlign: "Center" }}>Method</th>
                     <th style={{ textAlign: "Center" }}>Date</th>
                     <th style={{ textAlign: "Center" }}>Time</th>
-                    <th style={{ textAlign: "Center" }}>Remarks</th>
+                    <th style={{ width: "20%", textAlign: "Center" }}>
+                      Remarks
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

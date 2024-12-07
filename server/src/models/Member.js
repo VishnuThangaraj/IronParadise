@@ -97,6 +97,16 @@ const memberSchema = new Schema(
       ref: "WorkoutPlan",
       required: true,
     },
+    aadharNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    panNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,

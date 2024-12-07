@@ -125,11 +125,11 @@ export const TrainerProvider = ({ children }) => {
   };
 
   // Batch Salary Payment
-  const batchPayment = async (selectedTrainers, paymode) => {
+  const batchPayment = async (selectedTrainers, paymode, remarks) => {
     try {
       const response = await axios.post(
         `/trainer/batchsalary`,
-        { trainers: selectedTrainers, paymode: paymode },
+        { trainers: selectedTrainers, paymode: paymode, remarks: remarks },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -159,6 +159,7 @@ export const TrainerProvider = ({ children }) => {
       amount: paymentData.amount,
       salary: paymentData.salary,
       pending: paymentData.pending,
+      remarks: paymentData.remarks,
       paymentMethod: paymentData.paymentMethod,
     };
     try {

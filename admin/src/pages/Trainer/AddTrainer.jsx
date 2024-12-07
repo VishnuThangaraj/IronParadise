@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { toast } from "sonner";
 import { DatePicker } from "antd";
 import { CircularProgress } from "@mui/material";
 import { Fragment, useContext, useState } from "react";
@@ -52,7 +53,10 @@ const AddTrainer = () => {
 
   const [loading, setLoading] = useState(false);
   const [trainer, setTrainer] = useState({
-    username: trainers.length + 1,
+    username:
+      trainers.length > 0
+        ? `${Number(trainers[trainers.length - 1].username.slice(2)) + 1}`
+        : 1,
     name: "",
     email: "",
     phone: "",
@@ -82,8 +86,9 @@ const AddTrainer = () => {
       return;
     }
 
+    if ((name === "panNumber" || name === "phone") && value.length > 10) return;
     if (name === "aadharNumber" && value.length > 12) return;
-    if (name === "panNumber" && value.length > 10) return;
+    if (name === "salary" && value.length > 8) return;
 
     const updatedTrainer = { ...trainer, [name]: value };
     setTrainer(updatedTrainer);
@@ -114,16 +119,29 @@ const AddTrainer = () => {
 
   const validateAndAddTrainer = async (e) => {
     e.preventDefault();
+
+    if (trainer.aadharNumber.length < 12)
+      return toast.info("Aadhar Number should be 12 Digits.");
+    if (trainer.panNumber.length < 10)
+      return toast.info("Pan-Number should be 10 Digits.");
+    if (trainer.phone.length < 10)
+      return toast.info("Phone Number should be 10 Digits.");
+
     setLoading(true);
     await addTrainer(trainer);
     setTrainer({
-      username: trainers.length + 2,
+      username:
+        trainers.length > 0
+          ? Number(trainers[trainers.length - 1].username.slice(2)) + 2
+          : 2,
       name: "",
       email: "",
       phone: "",
       dob: null,
       gender: null,
       specialization: null,
+      panNumber: "",
+      aadharNumber: "",
       height: "",
       salary: "",
       weight: "",
@@ -151,7 +169,7 @@ const AddTrainer = () => {
                 <FormControl sx={{ width: "48%" }}>
                   <FormLabel sx={{ fontSize: 15 }}>Auto Generated Id</FormLabel>
                   <Input
-                    value={`TR${trainers.length + 1}`}
+                    value={`TR${trainer.username}`}
                     variant="solid"
                     size="md"
                     sx={{ py: 1 }}

@@ -29,9 +29,9 @@ const adminLogin = async (req, res) => {
 
 // Register Admin
 const registerAdmin = async (req, res) => {
-  const { name, username, gender, password } = req.body;
+  const { name, email, gender, password } = req.body;
   try {
-    const newUser = new Admin({ name, username, gender, password });
+    const newUser = new Admin({ name, email, gender, password });
 
     await newUser.save();
   } catch (err) {

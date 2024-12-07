@@ -107,6 +107,8 @@ const registerMember = async (req, res) => {
     startDate,
     endDate,
     planDuration,
+    aadharNumber,
+    panNumber,
     planCost,
     membershipPlanId,
   } = req.body.member;
@@ -157,6 +159,8 @@ const registerMember = async (req, res) => {
       trainerId: trainerId,
       dietPlan: dietPlan,
       workoutPlan: workoutPlan,
+      aadharNumber,
+      panNumber,
       subscription,
     });
 
@@ -171,6 +175,11 @@ const registerMember = async (req, res) => {
     const workoutPlanPDF = await generateWorkoutPlanPDF(
       savedMember.workoutPlan
     );
+
+    res.status(201).json({
+      message: "Member registered successfully",
+      member: savedMember,
+    });
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -349,11 +358,6 @@ const registerMember = async (req, res) => {
     // Delete PDF Data
     fs.unlinkSync(dietPlanPDF);
     fs.unlinkSync(workoutPlanPDF);
-
-    res.status(201).json({
-      message: "Member registered successfully",
-      member: savedMember,
-    });
   } catch (err) {
     res.status(500).json({
       message: "Server error while adding new member",

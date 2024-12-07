@@ -20,7 +20,11 @@ const AddWorkoutPlan = () => {
 
   const [loading, setLoading] = useState(false);
   const [workoutplan, setWorkoutplan] = useState({
-    planId: `WP${workoutplans.length + 1}`,
+    planId: `WP${
+      workoutplans.length > 0
+        ? Number(workoutplans[workoutplans.length - 1].planId.slice(2)) + 1
+        : 1
+    }`,
     workoutPlanName: "",
     mondayWorkout: "",
     tuesdayWorkout: "",
@@ -42,7 +46,11 @@ const AddWorkoutPlan = () => {
     setLoading(true);
     await addWorkoutplan(workoutplan);
     setWorkoutplan({
-      planId: `WP${workoutplans.length + 2}`,
+      planId: `WP${
+        workoutplans.length > 0
+          ? Number(workoutplans[workoutplans.length - 1].planId.slice(2)) + 2
+          : 2
+      }`,
       workoutPlanName: "",
       mondayWorkout: "",
       tuesdayWorkout: "",
