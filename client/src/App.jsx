@@ -1,5 +1,11 @@
 import { Toaster } from "sonner";
-import UserAttendance from "./pages/UserAttendance";
+import { Suspense, lazy } from "react";
+import { Loader } from "./components/Loader";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+// Lazy-Loaded pages
+const Enquiry = lazy(() => import("./pages/Enquiry"));
+const UserAttendance = lazy(() => import("./pages/UserAttendance"));
 
 const App = () => {
   return (
@@ -11,7 +17,15 @@ const App = () => {
         }}
         richColors
       />
-      <UserAttendance />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          {/* General */}
+          <Route path="/home" element={<UserAttendance />} />
+          <Route path="/enquiry" element={<Enquiry />} />
+
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };

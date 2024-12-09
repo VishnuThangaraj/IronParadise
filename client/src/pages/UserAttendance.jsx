@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import { toast } from "sonner";
 import axios from "../service/api";
 import Grid from "@mui/material/Grid2";
+import { useNavigate } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 import withReactContent from "sweetalert2-react-content";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -39,6 +40,8 @@ const gymQuotes = [
 ];
 
 const UserAttendance = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -109,7 +112,6 @@ const UserAttendance = () => {
         const response = await axios.post("/general/attendance", { user });
         if (response.status === 200) {
           const { action, role } = response.data.attendance;
-          console.log(action, role);
           MySwal.fire({
             icon: "success",
             text: `${
@@ -188,9 +190,12 @@ const UserAttendance = () => {
           </FormControl>
           <div className="flex justify-between my-6">
             <div className="text-gray-500 cursor-pointer">
-              Forgot your ID? Contact Admin{" "}
-              <span className="cursor-pointer underline text-black">
-                Click here
+              Need any help?{" "}
+              <span
+                className="cursor-pointer underline text-black"
+                onClick={() => navigate("/enquiry")}
+              >
+                Reach out to us
               </span>
             </div>
           </div>

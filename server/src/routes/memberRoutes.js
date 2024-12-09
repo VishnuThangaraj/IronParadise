@@ -40,7 +40,7 @@ router.post(
   memberController.makePayment
 );
 
-// Deleta Member
+// Delete Member
 router.delete(
   "/delete/:id",
   authenticateJWT(["admin"]),

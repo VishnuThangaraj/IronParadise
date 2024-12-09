@@ -14,6 +14,7 @@ const AuthForm = lazy(() => import("./pages/AuthForm"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Events = lazy(() => import("./pages/Event/Events"));
+const Enquiry = lazy(() => import("./pages/Member/Enquiry"));
 const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const EditMember = lazy(() => import("./pages/Member/EditMember"));
@@ -128,6 +129,7 @@ export const App = () => {
                   <Route path="/member/add" element={<AddMember />} />
                   <Route path="/member/edit" element={<EditMember />} />
                   <Route path="/member/list" element={<MembersList />} />
+                  <Route path="/member/enquiry" element={<Enquiry />} />
 
                   {/* Subscription */}
                   <Route

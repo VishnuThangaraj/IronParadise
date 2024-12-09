@@ -1,13 +1,14 @@
-import { App } from "./App.jsx";
+import { App } from "./App";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import { AuthProvider } from "./context/AuthContext.jsx";
-import { PlanProvider } from "./context/PlanContext.jsx";
-import { MemberProvider } from "./context/MemberContext.jsx";
-import { TrainerProvider } from "./context/TrainerContext.jsx";
-import { GeneralProvider } from "./context/GeneralContext.jsx";
-import { SubscriptionProvider } from "./context/SubscriptionContext.jsx";
+import { AuthProvider } from "./context/AuthContext";
+import { PlanProvider } from "./context/PlanContext";
+import { MemberProvider } from "./context/MemberContext";
+import { EnquiryProvider } from "./context/EnquiryContext";
+import { TrainerProvider } from "./context/TrainerContext";
+import { GeneralProvider } from "./context/GeneralContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 
 createRoot(document.getElementById("root")).render(
   <Router>
@@ -17,7 +18,9 @@ createRoot(document.getElementById("root")).render(
           <SubscriptionProvider>
             <PlanProvider>
               <MemberProvider>
-                <App />
+                <EnquiryProvider>
+                  <App />
+                </EnquiryProvider>
               </MemberProvider>
             </PlanProvider>
           </SubscriptionProvider>

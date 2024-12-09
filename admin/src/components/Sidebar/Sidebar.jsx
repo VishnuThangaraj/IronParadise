@@ -58,6 +58,10 @@ const sidebarApplications = [
     location: "member",
     childrens: [
       {
+        name: "Enquiry",
+        location: "member/enquiry",
+      },
+      {
         name: "Members List",
         location: "member/list",
       },
