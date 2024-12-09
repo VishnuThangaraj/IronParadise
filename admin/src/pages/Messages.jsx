@@ -16,6 +16,7 @@ import {
   DialogContent,
 } from "@mui/joy";
 
+import { AuthContext } from "../context/AuthContext";
 import { MemberContext } from "../context/MemberContext";
 import { GeneralContext } from "../context/GeneralContext";
 import { TrainerContext } from "../context/TrainerContext";
@@ -23,6 +24,7 @@ import { TrainerContext } from "../context/TrainerContext";
 import { PageLocation } from "../components/PageLocation";
 
 const Messages = () => {
+  const { user } = useContext(AuthContext);
   const { members } = useContext(MemberContext);
   const { trainers } = useContext(TrainerContext);
   const { bulkMail } = useContext(GeneralContext);
@@ -195,6 +197,9 @@ const Messages = () => {
           </DialogTitle>
           <Divider />
           <DialogContent>
+            <div className="pb-2">
+              <span className="font-semibold">From : </span> {user.email}
+            </div>
             <form onSubmit={validateAndSendMail}>
               <Input
                 value={formData.subject}

@@ -21,22 +21,7 @@ const gymQuotes = [
   "I got 99 problems, but I'm going to the gym to ignore all of them",
   "I'm sorry for what I said during burpees",
   "Life has its ups and downs. We call them squats",
-  "Unless you puke, faint, or die, keep going! — Jillian Michaels",
-  "You make my knees weak. Just kidding. Yesterday was leg day.",
-  "My favorite machine at the gym is the television.",
-  "It's my workout. I can cry if I want to.",
-  "Hustle for that muscle.",
-  "Eat clean, stay fit, and have a burger to stay sane.—Gigi Hadid",
-  "Weights before dates.",
-  "I like big weights and I cannot lie.",
-  "I don't sweat, I sparkle.",
-  "Sweat is your fat crying.",
-  "Fitness: If it came in a bottle, everyone would have a great body.—Cher ",
-  "I don't want to look skinny. I want to look like I could kick your butt.",
-  "Friday night. Party at the gym with my friends dumbbell and barbell.",
-  "Life is short. Lift heavy things.",
-  "If you still look cute after working out, you didn't go hard enough.",
-  "The only BS I need in my life is breakfast and squats.",
+  // Additional quotes...
 ];
 
 const UserAttendance = () => {
@@ -102,7 +87,6 @@ const UserAttendance = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      // Check for valid user
       if (showInvalidId) {
         toast.error("Please enter a valid ID.");
       } else if (userId && name) {
@@ -119,7 +103,7 @@ const UserAttendance = () => {
             } Attendance ${
               action === "login" ? "Punch In" : "Punch Out"
             } Successful.`,
-            title: gymQuotes[Math.floor(Math.random() * gymQuotes.length - 1)],
+            title: gymQuotes[Math.floor(Math.random() * gymQuotes.length)],
             showConfirmButton: false,
             timer: 4500,
           });
@@ -140,13 +124,13 @@ const UserAttendance = () => {
   return (
     <div
       id="authform"
-      style={{ background: `url("images/loginBg.jpg") center no-repeat` }}
-      className="flex items-center justify-center h-screen"
+      style={{
+        background: `url("images/loginBg.jpg") center no-repeat`,
+        backgroundSize: "cover",
+      }}
+      className="flex items-center justify-center h-screen px-4"
     >
-      <div
-        className="flex flex-col gap-7 items-center"
-        style={{ width: "30%" }}
-      >
+      <div className="flex flex-col gap-7 items-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
         <img src="images/logoBlack.png" alt="Iron Paradise" width={110} />
         <Grid
           sx={{ p: 5, borderRadius: 3 }}
@@ -154,12 +138,17 @@ const UserAttendance = () => {
           component="form"
           onSubmit={handleSubmit}
         >
-          <div className="font-bold text-2xl pb-1">Attendance Portal</div>
-          <div className="text-gray-500" style={{ letterSpacing: "1px" }}>
+          <div className="font-bold text-lg md:text-2xl pb-1">
+            Attendance Portal
+          </div>
+          <div
+            className="text-gray-500 text-sm md:text-base"
+            style={{ letterSpacing: "1px" }}
+          >
             Enter your ID and verify your name
           </div>
           <FormControl sx={{ mt: 4 }}>
-            <FormLabel sx={{ fontSize: 16 }}>Enter Your ID</FormLabel>
+            <FormLabel sx={{ fontSize: 14, md: 16 }}>Enter Your ID</FormLabel>
             <Input
               onChange={handleChange}
               placeholder="MBXX"
@@ -178,17 +167,17 @@ const UserAttendance = () => {
             )}
           </FormControl>
           <FormControl sx={{ mt: 2 }}>
-            <FormLabel sx={{ fontSize: 16 }}>Full Name</FormLabel>
+            <FormLabel sx={{ fontSize: 14, md: 16 }}>Full Name</FormLabel>
             <Input
               size="md"
               sx={{ py: 1 }}
-              placeholder=""
+              placeholder="Name"
               value={name}
               variant="solid"
               disabled
             />
           </FormControl>
-          <div className="flex justify-between my-6">
+          <div className="flex justify-between my-6 text-xs md:text-sm">
             <div className="text-gray-500 cursor-pointer">
               Need any help?{" "}
               <span

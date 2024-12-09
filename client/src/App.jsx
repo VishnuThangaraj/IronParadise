@@ -4,7 +4,6 @@ import { Loader } from "./components/Loader";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Lazy-Loaded pages
-const Enquiry = lazy(() => import("./pages/Enquiry"));
 const UserAttendance = lazy(() => import("./pages/UserAttendance"));
 
 const App = () => {
@@ -21,7 +20,6 @@ const App = () => {
         <Routes>
           {/* General */}
           <Route path="/home" element={<UserAttendance />} />
-          <Route path="/enquiry" element={<Enquiry />} />
 
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>

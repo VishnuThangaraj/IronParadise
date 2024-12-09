@@ -144,8 +144,13 @@ const sendEmail = async (eventData) => {
               </div>
               <div class="content">
                   <h2>Hello, ${trainer.name}!</h2>
-                  <p>${eventData.name}</p><br />
-                  <p>${eventData.description}</p>
+                  <p>Event Name : ${eventData.name}</p>
+                  <p>Event Description : ${eventData.description}</p>
+                  <p>Event StartDate : ${`${eventData.startDate}`.slice(
+                    0,
+                    16
+                  )}</p>
+                  <p>Event EndDate : ${`${eventData.endDate}`.slice(0, 16)}</p>
                   <p>Sincerely,<br />Iron Paradise Admin</p>
               </div>
               <div class="footer">
@@ -302,8 +307,13 @@ const sendEmail = async (eventData) => {
               </div>
               <div class="content">
                   <h2>Hello, ${member.name}!</h2>
-                  <p>${eventData.name}</p><br />
-                  <p>${eventData.description}</p>
+                  <p>Event Name : ${eventData.name}</p>
+                  <p>Event Description : ${eventData.description}</p>
+                  <p>Event StartDate : ${`${eventData.startDate}`.slice(
+                    0,
+                    16
+                  )}</p>
+                  <p>Event EndDate : ${`${eventData.endDate}`.slice(0, 16)}</p>
                   <p>Sincerely,<br />Iron Paradise Admin</p>
               </div>
               <div class="footer">
@@ -893,6 +903,7 @@ const addEvent = async (req, res) => {
     });
 
     const newEvent = await event.save();
+    sendEmail(event);
     res.status(201).json({ message: "Event Added", event: newEvent });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
@@ -954,7 +965,7 @@ cron.schedule("0 7 * * *", async () => {
   }
 });
 
-cron.schedule("0 1 26 * *", async () => {
+cron.schedule("0 7 1 * *", async () => {
   try {
     const trainers = await Trainer.find();
 

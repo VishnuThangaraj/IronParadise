@@ -80,6 +80,7 @@ export const App = () => {
                 <Routes>
                   {/* General */}
                   <Route path="/home" element={<Dashboard />} />
+                  <Route path="/enquiry" element={<Enquiry />} />
                   <Route path="/message" element={<Messages />} />
                   <Route path="/payment" element={<SubscriptionPaylist />} />
 
@@ -129,7 +130,6 @@ export const App = () => {
                   <Route path="/member/add" element={<AddMember />} />
                   <Route path="/member/edit" element={<EditMember />} />
                   <Route path="/member/list" element={<MembersList />} />
-                  <Route path="/member/enquiry" element={<Enquiry />} />
 
                   {/* Subscription */}
                   <Route

@@ -265,9 +265,12 @@ const Attendance = () => {
           sx={{ width: "500px" }}
         >
           <DialogTitle>
-            <div className="flex items-center gap-4">
-              <i className="fa-duotone fa-solid fa-user-clock text-green-600 me-1 text-2xl"></i>
-              {selectedPerson ? selectedPerson.name : ""}&apos;s Attendance Log
+            <div className="flex items-center justify-between w-full gap-4">
+              <div className="flex items-center ">
+                <i className="fa-duotone fa-solid fa-user-clock text-green-600 me-4 text-2xl"></i>
+                {selectedPerson ? selectedPerson.name : ""}&apos;s Attendance
+                Log
+              </div>
               <div className="ms-10">
                 <Button
                   className="transition-all duration-300"

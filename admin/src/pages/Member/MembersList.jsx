@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
+import { useEffect } from "react";
 import { Paper } from "@mui/material";
 import html2canvas from "html2canvas";
 import { DataGrid } from "@mui/x-data-grid";
@@ -28,6 +29,7 @@ import {
 
 import { PlanContext } from "../../context/PlanContext";
 import { MemberContext } from "../../context/MemberContext";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
 
 import { PageLocation } from "../../components/PageLocation";
 
@@ -35,6 +37,7 @@ const MembersList = () => {
   const navigate = useNavigate();
 
   const { workoutplans, dietplans } = useContext(PlanContext);
+  const { subscriptionName } = useContext(SubscriptionContext);
   const { members, findMember, updateFitnessPlan, deleteMember } =
     useContext(MemberContext);
 
@@ -43,36 +46,59 @@ const MembersList = () => {
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [openplan, setOpenplan] = useState(false);
+  const [memberRows, setMemberRows] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [plandata, setPlandata] = useState({
     dietplan: null,
     workoutplan: null,
   });
 
-  const convertToRowFormat = (data) => {
-    let index = 0;
-    return data.map((member) => ({
-      id: member.username.toUpperCase(),
-      name: member.name,
-      email: member.email,
-      phone: member.phone,
-      gender: member.gender.charAt(0).toUpperCase() + member.gender.slice(1),
-      dietplan: member.dietPlan.dietPlanName,
-      workoutplan: member.workoutPlan.workoutPlanName,
-      trainer: member.trainerId.name,
-      status: member.subscription.pending < member.subscription.planCost,
-      index: index++,
-      full_id: member._id,
-    }));
-  };
+  useEffect(() => {
+    const convertToRowFormat = async (data) => {
+      let index = 0;
 
-  const filteredRows = convertToRowFormat(members).filter(
+      const rows = await Promise.all(
+        data.map(async (member) => ({
+          id: member.username.toUpperCase(),
+          name: member.name,
+          email: member.email,
+          phone: member.phone,
+          gender:
+            member.gender.charAt(0).toUpperCase() + member.gender.slice(1),
+          dietplan: member.dietPlan.dietPlanName,
+          workoutplan: member.workoutPlan.workoutPlanName,
+          trainer: member.trainerId.name,
+          subscription: await subscriptionName(
+            member.subscription.membershipPlan
+          ),
+          status: member.subscription.pending < member.subscription.planCost,
+          index: index++,
+          full_id: member._id,
+        }))
+      );
+
+      return rows;
+    };
+
+    const fetchAndSetMemberRows = async () => {
+      try {
+        const rows = await convertToRowFormat(members);
+        setMemberRows(rows);
+      } catch (error) {
+        console.error("Error converting rows:", error);
+      }
+    };
+
+    fetchAndSetMemberRows();
+  }, [members, subscriptionName]);
+
+  const filteredRows = memberRows.filter(
     (row) =>
       row.name.toLowerCase().includes(searchTerm) ||
       row.phone.toLowerCase().includes(searchTerm) ||
       row.id.toLowerCase().includes(searchTerm) ||
       row.workoutplan.toLowerCase().includes(searchTerm) ||
-      row.dietplan.toLowerCase().includes(searchTerm)
+      row.subscription.toLowerCase().includes(searchTerm)
   );
 
   const handleSearchChange = (e) => {
@@ -94,7 +120,6 @@ const MembersList = () => {
     setOpenplan(true);
   };
 
-  const memberRows = convertToRowFormat(members);
   const columns = [
     {
       field: "id",
@@ -118,8 +143,8 @@ const MembersList = () => {
       align: "center",
     },
     {
-      field: "dietplan",
-      headerName: "Diet Plan",
+      field: "subscription",
+      headerName: "Subscription Plan",
       flex: 1,
       headerAlign: "center",
       align: "center",
