@@ -46,7 +46,6 @@ export const GeneralProvider = ({ children }) => {
   // Add New Event
   const addEvent = async (eventData) => {
     try {
-      console.log(eventData);
       const response = await axios.post(
         "/event/add",
         { eventData },

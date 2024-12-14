@@ -40,14 +40,14 @@ router.get(
   planController.fetchWorkoutplans
 );
 
-// Update a Workout PLan by ID
+// Update a Workout Plan by ID
 router.put(
   "/workout/update/:id",
   authenticateJWT(["admin"]),
   planController.updateWorkoutplanById
 );
 
-// Delete Workout PLan by ID
+// Delete Workout Plan by ID
 router.delete(
   "/workout/delete/:id",
   authenticateJWT(["admin"]),

@@ -12,7 +12,7 @@ const eventSchema = new Schema(
     },
     access: {
       type: String,
-      enum: ["trainer", "member", "all"],
+      enum: ["admin", "all"],
       required: true,
     },
     startDate: {
