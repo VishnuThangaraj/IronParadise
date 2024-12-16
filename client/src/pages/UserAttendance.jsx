@@ -130,7 +130,10 @@ const UserAttendance = () => {
       }}
       className="flex items-center justify-center h-screen px-4"
     >
-      <div className="flex flex-col gap-7 items-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3">
+      <div
+        id="V06102002T"
+        className="flex flex-col gap-7 items-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3"
+      >
         <img src="images/logoBlack.png" alt="Iron Paradise" width={110} />
         <Grid
           sx={{ p: 5, borderRadius: 3 }}
@@ -177,44 +180,55 @@ const UserAttendance = () => {
               disabled
             />
           </FormControl>
-          <div className="flex justify-between my-6 text-xs md:text-sm">
+          <div className="my-6 text-sm">
+            Verify your ID and Name before marking Attendance.
+          </div>
+
+          <div className="mb-6">
+            <Button
+              type="submit"
+              size="md"
+              className="transition-all duration-300"
+              variant="solid"
+              sx={{
+                backgroundColor: "black",
+                "&:hover": {
+                  backgroundColor: "#222222",
+                },
+              }}
+              fullWidth
+            >
+              {loading ? (
+                <Fragment>
+                  <CircularProgress
+                    size={20}
+                    sx={{
+                      color: "white",
+                    }}
+                  />{" "}
+                  <span className="ms-5 text-base">Validating ...</span>
+                </Fragment>
+              ) : (
+                <Fragment>{buttonText}</Fragment>
+              )}
+            </Button>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center text-xs md:text-sm">
             <div className="text-gray-500 cursor-pointer">
               Need any help?{" "}
-              <span
-                className="cursor-pointer underline text-black"
-                onClick={() => navigate("/enquiry")}
-              >
-                Reach out to us
-              </span>
+              <span className=" text-black">Reach out to us</span>
+            </div>
+            <div
+              onClick={() => navigate("/enquiry")}
+              className="cursor-pointer hover:scale-105 transition-all duration-300 rounded-lg text-white p-2 md:mt-0 mt-3"
+              style={{
+                background: "black",
+              }}
+            >
+              <i className="fa fa-message me-2"></i> Connect with Us
             </div>
           </div>
-          <Button
-            type="submit"
-            size="md"
-            className="transition-all duration-300"
-            variant="solid"
-            sx={{
-              backgroundColor: "black",
-              "&:hover": {
-                backgroundColor: "#222222",
-              },
-            }}
-            fullWidth
-          >
-            {loading ? (
-              <Fragment>
-                <CircularProgress
-                  size={20}
-                  sx={{
-                    color: "white",
-                  }}
-                />{" "}
-                <span className="ms-5 text-base">Validating ...</span>
-              </Fragment>
-            ) : (
-              <Fragment>{buttonText}</Fragment>
-            )}
-          </Button>
         </Grid>
       </div>
     </div>

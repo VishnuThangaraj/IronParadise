@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -28,6 +29,8 @@ import { EnquiryContext } from "../../context/EnquiryContext";
 import { PageLocation } from "../../components/PageLocation";
 
 const Enquiry = () => {
+  const navigate = useNavigate();
+
   const { user } = useContext(AuthContext);
   const { enquires, findEnquiry, updateEnquiry, deleteEnquiry } =
     useContext(EnquiryContext);
@@ -61,6 +64,8 @@ const Enquiry = () => {
       message: enquiry.message,
       aadharNumber: enquiry.aadharNumber,
       panNumber: enquiry.panNumber,
+      converted: enquiry.member ? "MEMBER" : "GUEST",
+      member: enquiry.member,
       replaySubject: enquiry.replaySubject,
       replayMessage: enquiry.replayMessage,
       full_id: enquiry._id,
@@ -72,6 +77,7 @@ const Enquiry = () => {
       row.id.toLowerCase().includes(searchTerm) ||
       row.name.toLowerCase().includes(searchTerm) ||
       row.email.toLowerCase().includes(searchTerm) ||
+      row.converted.toLowerCase().includes(searchTerm) ||
       row.phone.toLowerCase().includes(searchTerm) ||
       row.subject.toLowerCase().includes(searchTerm)
   );
@@ -130,11 +136,22 @@ const Enquiry = () => {
       align: "center",
     },
     {
-      field: "subject",
-      headerName: "Subject",
+      field: "converted",
+      headerName: "Membership Status",
       flex: 1,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => (
+        <div
+          className={` font-semibold ${
+            params.row.converted === "MEMBER"
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
+          {params.row.converted}
+        </div>
+      ),
     },
     {
       field: "action",
@@ -165,6 +182,38 @@ const Enquiry = () => {
               {params.row.replayMessage === "" ? "Replay" : "Replied"}
             </Button>
           </Tooltip>
+
+          {params.row.converted === "FALSE" ? (
+            <Tooltip title="Convert to Member" placement="top" arrow>
+              <IconButton
+                aria-label="convert"
+                color="secondary"
+                onClick={async () => {
+                  navigate("/member/add", { state: params.row.full_id });
+                }}
+              >
+                <i
+                  className="fa-duotone fa-light fa-user-plus text-teal-600"
+                  style={{ fontSize: "20px" }}
+                ></i>
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="View Member" placement="top" arrow>
+              <IconButton
+                aria-label="view"
+                color="secondary"
+                onClick={async () => {
+                  navigate("/member/edit", { state: params.row.member });
+                }}
+              >
+                <i
+                  className="fa-duotone fa-solid fa-eye text-blue-600"
+                  style={{ fontSize: "20px" }}
+                ></i>
+              </IconButton>
+            </Tooltip>
+          )}
 
           <Tooltip title="Remove" placement="top" arrow>
             <IconButton

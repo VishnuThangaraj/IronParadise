@@ -65,7 +65,6 @@ const EditMember = () => {
     if (memberId === null) return navigate(-1);
     const fetchMemberData = async () => {
       const memberData = await findMember(memberId);
-      console.log(memberData);
       setMember({
         ...memberData,
         trainerId: memberData.trainerId._id,

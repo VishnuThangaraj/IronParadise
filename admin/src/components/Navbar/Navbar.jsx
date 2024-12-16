@@ -23,7 +23,7 @@ export const Navbar = () => {
       id="navbar"
       className="flex justify-between border-b-2 border-gray-200 primary-bg"
     >
-      <div className="flex flex-col">
+      <div className="flex-col lg:flex hidden">
         <div className="font-bold text-lg">Welcome {user?.name} 🖐🏼</div>
         <div className="text-base">
           Here&apos;s what&apos;s happening with your gym today.

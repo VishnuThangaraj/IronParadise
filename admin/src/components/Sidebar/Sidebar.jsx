@@ -34,7 +34,7 @@ const sidebarGeneral = [
 
 const sidebarApplications = [
   {
-    name: "Enquiries",
+    name: "Enquires",
     icon: "fa-light fa-messages-question",
     location: "enquiry",
     childrens: [],

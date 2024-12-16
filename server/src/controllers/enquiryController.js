@@ -1,3 +1,4 @@
+const Member = require("../models/Member");
 const Enquiry = require("../models/Enquiry");
 const { sendMail } = require("../service/emailService");
 
@@ -26,7 +27,13 @@ const addEnquiry = async (req, res) => {
       panNumber,
     });
 
-    await enquiry.save();
+    const saved = await enquiry.save();
+
+    const existingEmail = await Member.findOne({ email });
+    if (existingEmail) {
+      saved.member = existingEmail._id;
+      await saved.save();
+    }
 
     res.status(200).json({
       message: "Enquiry Added Successfully",

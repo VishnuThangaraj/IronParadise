@@ -17,11 +17,11 @@ createRoot(document.getElementById("root")).render(
         <TrainerProvider>
           <SubscriptionProvider>
             <PlanProvider>
-              <MemberProvider>
-                <EnquiryProvider>
+              <EnquiryProvider>
+                <MemberProvider>
                   <App />
-                </EnquiryProvider>
-              </MemberProvider>
+                </MemberProvider>
+              </EnquiryProvider>
             </PlanProvider>
           </SubscriptionProvider>
         </TrainerProvider>

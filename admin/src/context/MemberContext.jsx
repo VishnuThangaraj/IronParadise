@@ -4,12 +4,14 @@ import PropTypes from "prop-types";
 import { createContext, useState, useEffect, useContext } from "react";
 
 import { AuthContext } from "./AuthContext";
+import { EnquiryContext } from "./EnquiryContext";
 import { SubscriptionContext } from "./SubscriptionContext";
 
 export const MemberContext = createContext();
 
 export const MemberProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
+  const { updateEnquiry2 } = useContext(EnquiryContext);
   const { addHistory, addSubscriptionHistory } =
     useContext(SubscriptionContext);
 
@@ -35,11 +37,11 @@ export const MemberProvider = ({ children }) => {
   }, [token]);
 
   // Add New Member
-  const addMember = async (member) => {
+  const addMember = async (member, enquiryId) => {
     try {
       const response = await axios.post(
         "/member/add",
-        { member },
+        { member: member, enquiryId: enquiryId },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -48,6 +50,10 @@ export const MemberProvider = ({ children }) => {
       if (response.status === 201) {
         const newMember = response.data.member;
         setMembers([...members, newMember]);
+        const enquiry = response.data.enquiry;
+        if (enquiry) {
+          await updateEnquiry2(enquiry._id, enquiry);
+        }
         toast.success("Member Added Successfully ✔️");
       } else if (response.status === 409) {
         toast.warning("Email or Phone Already Exists ✉️");

@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const Member = require("../models/Member");
+const Enquiry = require("../models/Enquiry");
 const PaymentHistory = require("../models/PaymentHistory");
 const { sendMail, sendMailPDF } = require("../service/emailService");
 const SubscriptionHistory = require("../models/SubscriptionHistory");
@@ -90,6 +91,7 @@ const generateWorkoutPlanPDF = async (workoutPlan) => {
 
 // Add New Member
 const registerMember = async (req, res) => {
+  const enquiryId = req.body.enquiryId;
   const {
     name,
     username,
@@ -112,6 +114,7 @@ const registerMember = async (req, res) => {
     planCost,
     membershipPlanId,
   } = req.body.member;
+
   try {
     if (
       !name ||
@@ -176,9 +179,23 @@ const registerMember = async (req, res) => {
       savedMember.workoutPlan
     );
 
+    let savedEnquiry = "";
+    if (enquiryId) {
+      const enquiry = await Enquiry.findById(enquiryId);
+      enquiry.member = currentMember._id;
+      savedEnquiry = await enquiry.save();
+    } else {
+      const enquiry = await Enquiry.findOne({ email });
+      if (enquiry) {
+        enquiry.member = currentMember._id;
+        savedEnquiry = await enquiry.save();
+      }
+    }
+
     res.status(201).json({
       message: "Member registered successfully",
       member: savedMember,
+      enquiry: savedEnquiry,
     });
 
     const html = `<!DOCTYPE html>

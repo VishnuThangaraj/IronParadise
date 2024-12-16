@@ -92,7 +92,7 @@ const Enquiry = () => {
       className="flex items-center justify-center h-screen bg-cover px-4"
     >
       <div
-        className="flex flex-col gap-7 items-center w-full"
+        className="flex flex-col gap-7 items-center w-full "
         style={{ maxWidth: "600px" }}
       >
         <Grid

@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { toast } from "sonner";
 import { DatePicker } from "antd";
+import { useLocation } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
-import { Fragment, useContext, useState } from "react";
+import { useEffect, Fragment, useContext, useState } from "react";
 import {
   Box,
   Card,
@@ -19,14 +20,20 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import { PlanContext } from "../../context/PlanContext";
 import { MemberContext } from "../../context/MemberContext";
+import { EnquiryContext } from "../../context/EnquiryContext";
 import { TrainerContext } from "../../context/TrainerContext";
 import { SubscriptionContext } from "../../context/SubscriptionContext";
 
 import { PageLocation } from "../../components/PageLocation";
 
 const AddMember = () => {
+  const location = useLocation();
+
+  const enquiryId = location.state || null;
+
   const { currentDate } = useContext(AuthContext);
   const { trainers } = useContext(TrainerContext);
+  const { findEnquiry } = useContext(EnquiryContext);
   const { members, addMember } = useContext(MemberContext);
   const { dietplans, workoutplans } = useContext(PlanContext);
   const { subscriptions, findSubscriptionByID } =
@@ -59,6 +66,39 @@ const AddMember = () => {
     panNumber: "",
     aadharNumber: "",
   });
+
+  useEffect(() => {
+    const enquiryData = async () => {
+      const enquiry = await findEnquiry(enquiryId);
+      setMember({
+        username: `MB${
+          members.length > 0
+            ? `${Number(members[members.length - 1].username.slice(2)) + 1}`
+            : 1
+        }`,
+        name: `${enquiry.firstName} ${enquiry.lastName}`,
+        email: enquiry.email,
+        phone: enquiry.phone,
+        dob: "",
+        gender: "",
+        height: "",
+        weight: "",
+        bmi: "",
+        address: "",
+        trainerId: null,
+        dietPlan: null,
+        membershipPlanId: null,
+        startDate: currentDate,
+        planDuration: "",
+        planCost: "",
+        endDate: "",
+        workoutPlan: null,
+        aadharNumber: enquiry.aadharNumber,
+        panNumber: enquiry.panNumber,
+      });
+    };
+    enquiryId && enquiryData();
+  }, [enquiryId, findEnquiry, currentDate, members]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,7 +173,7 @@ const AddMember = () => {
       return toast.info("Phone Number should be 10 Digits.");
 
     setLoading(true);
-    await addMember(member);
+    await addMember(member, enquiryId);
     setMember({
       username: `MB${
         members.length > 0

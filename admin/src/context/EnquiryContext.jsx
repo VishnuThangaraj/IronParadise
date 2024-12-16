@@ -59,6 +59,14 @@ export const EnquiryProvider = ({ children }) => {
     }
   };
 
+  const updateEnquiry2 = async (enquiryId, enquiryData) => {
+    setEnquires((prevEnquires) =>
+      prevEnquires.map((enquiry) =>
+        enquiry._id === enquiryId ? enquiryData || enquiry : enquiry
+      )
+    );
+  };
+
   // Delete Enquiry
   const deleteEnquiry = async (enquiryId) => {
     try {
@@ -85,6 +93,7 @@ export const EnquiryProvider = ({ children }) => {
         enquires,
         findEnquiry,
         updateEnquiry,
+        updateEnquiry2,
         deleteEnquiry,
       }}
     >

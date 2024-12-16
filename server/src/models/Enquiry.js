@@ -46,6 +46,11 @@ const enquirySchema = new Schema(
       type: String,
       default: "",
     },
+    member: {
+      type: Schema.Types.ObjectId,
+      ref: "Member",
+      required: false,
+    },
   },
   {
     timestamps: true,

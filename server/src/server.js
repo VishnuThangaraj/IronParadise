@@ -1,8 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/dbConfig");
 const corsOptions = require("./config/corsConfig");
 const errorHandler = require("./middleware/errorHandler");
+
+const Admin = require("./models/Admin");
 
 const authRoutes = require("./routes/authRoutes");
 const planRoutes = require("./routes/planRoutes");
@@ -41,5 +44,26 @@ app.use("/subscription", subscriptionRoutes);
 // Error handling middleware
 app.use(errorHandler);
 
+const onServerStart = async () => {
+  try {
+    const admins = await Admin.find();
+    if (!admins) {
+      const newUser = new Admin({
+        name: "IronParadise",
+        email: process.env.ADMIN_USERNAME,
+        gender: "male",
+        password: process.env.ADMIN_PASSWORD,
+      });
+
+      await newUser.save();
+    }
+  } catch (err) {
+    console.log("Server error", err);
+  }
+};
+
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on PORT >> ${PORT} <<`));
+app.listen(PORT, () => {
+  onServerStart();
+  console.log(`Server running on PORT >> ${PORT} <<`);
+});
