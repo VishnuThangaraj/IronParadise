@@ -28,15 +28,25 @@ const enquirySchema = new Schema(
       type: String,
       required: false,
     },
-    aadharNumber: {
+    address: {
       type: String,
-      unique: false,
       default: "",
     },
-    panNumber: {
+    gender: {
       type: String,
-      unique: false,
-      default: "",
+      enum: ["male", "female", "other"],
+    },
+    height: {
+      type: Number,
+      min: 0,
+    },
+    weight: {
+      type: Number,
+      min: 0,
+    },
+    dob: {
+      type: Date,
+      required: false,
     },
     replaySubject: {
       type: String,

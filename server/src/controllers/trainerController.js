@@ -269,7 +269,9 @@ const salaryPaymentMail = async (trainer, payment) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:support@ironparadise.com">support@ironparadise.com</a></p>
+                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
+">sanzironparadise7@gmail.com
+</a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
             <div class="section">

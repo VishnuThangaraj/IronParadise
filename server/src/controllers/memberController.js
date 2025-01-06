@@ -211,6 +211,7 @@ const registerMember = async (req, res) => {
             padding: 0;
             background-color: #f2f2f2;
             color: #333333;
+            
         }
         .container {
             max-width: 700px;
@@ -348,7 +349,9 @@ const registerMember = async (req, res) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:support@ironparadise.com">support@ironparadise.com</a></p>
+                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
+">sanzironparadise7@gmail.com
+</a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
             <div class="section">
@@ -638,7 +641,9 @@ const updatePlan = async (req, res) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:support@ironparadise.com">support@ironparadise.com</a></p>
+                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
+">sanzironparadise7@gmail.com
+</a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
             <div class="section">
@@ -864,7 +869,9 @@ const makePayment = async (req, res) => {
               <div class="section">
                   <h2>Support</h2>
                   <p>If you need assistance, please contact our support team:</p>
-                  <p>Email: <a href="mailto:support@ironparadise.com">support@ironparadise.com</a></p>
+                  <p>Email: <a href="mailto:sanzironparadise7@gmail.com
+">sanzironparadise7@gmail.com
+</a></p>
                   <p>Phone: +91 6584 857 496</p>
               </div>
               <div class="section">

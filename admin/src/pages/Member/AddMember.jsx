@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { toast } from "sonner";
 import { DatePicker } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import { useEffect, Fragment, useContext, useState } from "react";
 import {
@@ -28,6 +28,7 @@ import { PageLocation } from "../../components/PageLocation";
 
 const AddMember = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const enquiryId = location.state || null;
 
@@ -79,12 +80,17 @@ const AddMember = () => {
         name: `${enquiry.firstName} ${enquiry.lastName}`,
         email: enquiry.email,
         phone: enquiry.phone,
-        dob: "",
-        gender: "",
-        height: "",
-        weight: "",
-        bmi: "",
-        address: "",
+        dob: dayjs(enquiry.dob, "YYYY-MM-DD"),
+        gender: enquiry.gender,
+        height: enquiry.height,
+        weight: enquiry.weight,
+        bmi: Number(
+          (
+            enquiry.weight /
+            ((enquiry.height / 100) * (enquiry.height / 100))
+          ).toFixed(2)
+        ),
+        address: enquiry.address,
         trainerId: null,
         dietPlan: null,
         membershipPlanId: null,
@@ -201,6 +207,7 @@ const AddMember = () => {
       workoutPlan: null,
     });
     setLoading(false);
+    navigate(location.pathname, { replace: true });
   };
 
   return (

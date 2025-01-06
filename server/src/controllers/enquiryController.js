@@ -11,8 +11,11 @@ const addEnquiry = async (req, res) => {
     phone,
     subject,
     message,
-    aadharNumber,
-    panNumber,
+    dob,
+    height,
+    weight,
+    gender,
+    address,
   } = req.body.enquiryData;
 
   try {
@@ -23,8 +26,11 @@ const addEnquiry = async (req, res) => {
       phone,
       subject,
       message,
-      aadharNumber,
-      panNumber,
+      dob,
+      height,
+      weight,
+      gender,
+      address,
     });
 
     const saved = await enquiry.save();
@@ -210,7 +216,9 @@ const updateEnquiry = async (req, res) => {
                   <div class="section">
                       <h2>Support</h2>
                       <p>If you need assistance, please contact our support team:</p>
-                      <p>Email: <a href="mailto:support@ironparadise.com">support@ironparadise.com</a></p>
+                      <p>Email: <a href="mailto:sanzironparadise7@gmail.com
+">sanzironparadise7@gmail.com
+</a></p>
                       <p>Phone: +91 6584 857 496</p>
                   </div>
                   <div class="section">

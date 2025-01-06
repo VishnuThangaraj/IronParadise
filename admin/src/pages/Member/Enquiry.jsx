@@ -48,8 +48,11 @@ const Enquiry = () => {
     email: "",
     subject: "",
     message: "",
-    panNumber: "",
-    aadharNumber: "",
+    dob: "",
+    height: "",
+    weight: "",
+    gender: "",
+    address: "",
     replaySubject: "",
     replayMessage: "",
   });
@@ -62,8 +65,11 @@ const Enquiry = () => {
       phone: enquiry.phone,
       subject: enquiry.subject,
       message: enquiry.message,
-      aadharNumber: enquiry.aadharNumber,
-      panNumber: enquiry.panNumber,
+      dob: enquiry.dob,
+      height: enquiry.height,
+      weight: enquiry.weight,
+      gender: enquiry.gender,
+      address: enquiry.address,
       converted: enquiry.member ? "MEMBER" : "GUEST",
       member: enquiry.member,
       replaySubject: enquiry.replaySubject,
@@ -183,7 +189,7 @@ const Enquiry = () => {
             </Button>
           </Tooltip>
 
-          {params.row.converted === "FALSE" ? (
+          {params.row.converted !== "MEMBER" ? (
             <Tooltip title="Convert to Member" placement="top" arrow>
               <IconButton
                 aria-label="convert"
@@ -204,7 +210,11 @@ const Enquiry = () => {
                 aria-label="view"
                 color="secondary"
                 onClick={async () => {
-                  navigate("/member/edit", { state: params.row.member });
+                  params.row.converted === "MEMBER"
+                    ? navigate("/member/edit", { state: params.row.member })
+                    : toast.error(
+                        "Guest Enquiry has not enrolled to Membership."
+                      );
                 }}
               >
                 <i
@@ -441,35 +451,73 @@ const Enquiry = () => {
                     />
                   </FormControl>
                 </div>
-                <div className="flex justify-between">
-                  <FormControl sx={{ width: "48%" }}>
-                    <FormLabel sx={{ fontSize: 15 }}>
-                      Aadhar Card Number
-                    </FormLabel>
+
+                {/* Aadhar and Pan */}
+                <div className="flex flex-wrap gap-4">
+                  <FormControl className="w-full sm:w-[48%]">
+                    <FormLabel sx={{ fontSize: 15 }}>Height (cm)</FormLabel>
                     <Input
-                      placeholder="xxxx xxxx xxxx"
-                      value={replay.aadharNumber}
-                      name="aadharNumber"
+                      placeholder="000 cm"
+                      value={replay.height}
+                      name="height"
                       variant="outlined"
                       size="md"
-                      sx={{
-                        py: 1,
-                        backgroundColor: "white",
-                      }}
+                      sx={{ py: 1 }}
                     />
                   </FormControl>
-                  <FormControl sx={{ width: "48%" }}>
-                    <FormLabel sx={{ fontSize: 15 }}>Pan Card Number</FormLabel>
+                  <FormControl className="w-full sm:w-[48%]">
+                    <FormLabel sx={{ fontSize: 15 }}>Weight (kg)</FormLabel>
                     <Input
-                      value={replay.panNumber && replay.panNumber.toUpperCase()}
-                      placeholder="xxxxxxxxxx"
+                      value={replay.weight}
+                      placeholder="00 Kg"
                       variant="outlined"
-                      name="panNumber"
+                      name="weight"
+                      size="md"
+                      sx={{ py: 1 }}
+                    />
+                  </FormControl>
+                </div>
+                {/* Date of Birth and Gender */}
+                <div className="flex flex-wrap gap-4">
+                  <FormControl className="w-full sm:w-[48%]">
+                    <FormLabel sx={{ fontSize: 15 }}>Date of Birth</FormLabel>
+                    <Input
+                      value={replay.dob && replay.dob.slice(0, 10)}
+                      placeholder="DOB"
+                      variant="outlined"
+                      name="DOB"
+                      size="md"
+                      sx={{ py: 1 }}
+                      required
+                    />
+                  </FormControl>
+                  <FormControl className="w-full sm:w-[48%]">
+                    <FormLabel sx={{ fontSize: 15 }}>Gender</FormLabel>
+                    <Input
+                      value={replay.gender}
+                      placeholder="Gender"
+                      variant="outlined"
+                      name="subject"
+                      size="md"
+                      sx={{ py: 1 }}
+                      required
+                    />
+                  </FormControl>
+                </div>
+                <div className="flex justify-between">
+                  <FormControl sx={{ width: "98%" }}>
+                    <FormLabel sx={{ fontSize: 15 }}> Address</FormLabel>
+                    <Input
+                      placeholder="address"
+                      value={replay.address}
+                      variant="outlined"
+                      name="address"
                       size="md"
                       sx={{
                         py: 1,
                         backgroundColor: "white",
                       }}
+                      required
                     />
                   </FormControl>
                 </div>
