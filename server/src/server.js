@@ -13,7 +13,7 @@ require("dotenv").config();
 
 const app = express();
 
-// Connect to MongsoDB
+// Connect to MongoDB
 connectDB();
 
 // Apply CORS middleware
@@ -30,25 +30,7 @@ app.use("/auth", authRoutes);
 // Error handling middleware
 app.use(errorHandler);
 
-const onServerStart = async () => {
-  try {
-    const admins = await Admin.find();
-    if (!admins || admins.length === 0) {
-      const newUser = new Admin({
-        name: "IronParadise",
-        email: process.env.ADMIN_USERNAME,
-        gender: "male",
-        password: process.env.ADMIN_PASSWORD,
-      });
-      await newUser.save();
-    }
-  } catch (err) {
-    console.log("Server error", err);
-  }
-};
-
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  // onServerStart();
   console.log(`Server running on PORT >> ${PORT} <<`);
 });

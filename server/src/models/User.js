@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema(
 
     specialization: String,
     experienceYears: Number,
-    salaryType: String,
     monthlySalary: Number,
     joiningDate: Date,
     status: { type: String, default: "active" },
