@@ -56,7 +56,7 @@ const registerAdmin = async (req, res) => {
       return res.status(400).json({ message: "Admin already exists" });
     }
 
-    const salt = await bcrypt.genSalt(process.env.SALT_ROUNDS);
+    const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const admin = new User({

@@ -41,16 +41,16 @@ router.get(
 // Customer //
 
 // Customer Login
-router.post("/customer/login", customerController);
+// router.post("/customer/login", customerController);
 
 // Customer Registration
-router.post(
-  "/customer/register",
-  authenticateJWT(["admin"]),
-  customerController
-);
+// router.post(
+//   "/customer/register",
+//   authenticateJWT(["admin"]),
+//   customerController
+// );
 
 // Fetch Loggin-in Customer Profile
-router.get("/customer/profile", customerController);
+// router.get("/customer/profile", customerController);
 
 module.exports = router;
