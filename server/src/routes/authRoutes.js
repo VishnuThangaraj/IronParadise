@@ -2,7 +2,6 @@ const router = require("express").Router();
 const authenticateJWT = require("../middleware/authMiddleware");
 const adminController = require("../controllers/adminController");
 const trainerController = require("../controllers/trainerController");
-const customerController = require("../controllers/customerController");
 
 // ADMIN //
 
@@ -37,20 +36,5 @@ router.get(
   authenticateJWT(["trainer"]),
   trainerController.trainerProfile
 );
-
-// Customer //
-
-// Customer Login
-router.post("/customer/login", customerController);
-
-// Customer Registration
-router.post(
-  "/customer/register",
-  authenticateJWT(["admin"]),
-  customerController
-);
-
-// Fetch Loggin-in Customer Profile
-router.get("/customer/profile", customerController);
 
 module.exports = router;
