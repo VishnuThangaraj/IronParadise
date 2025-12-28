@@ -1,0 +1,146 @@
+const bcrypt = require("bycrypt");
+const User = require("../models/User");
+const generateToken = require("../middleware/authMiddleware");
+
+//  User Login
+const userLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = generateToken(user);
+
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        username: user.userId,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+// Register User
+const registerUser = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const user = new User({
+      ...req.body,
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      message: `${
+        user.role.charAt(0).toUpperCase() + user.role.slice(1)
+      } registered successfully`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+// User Profile
+const userProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+// Fetch User by ID
+const fetchUserById = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user: user });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Update User by ID
+const UpdateUserById = async (req, res) => {
+  const userId = req.params.id;
+  const { updatedData } = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(userId, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User Updated successfully!", user: user });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Delete User by ID
+const deleteUserById = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User Deleted successfully!" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {
+  userLogin,
+  registerUser,
+  userProfile,
+  fetchUserById,
+  UpdateUserById,
+  deleteUserById,
+};

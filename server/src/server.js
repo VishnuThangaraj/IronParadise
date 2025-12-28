@@ -8,6 +8,8 @@ const errorHandler = require("./middleware/errorHandler");
 // const Admin = require("./models/Admin");
 
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const trainerRoutes = require("./routes/trainerRoutes");
 
 require("dotenv").config();
 
@@ -26,6 +28,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.use("/trainer", trainerRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
