@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
-import { login } from "../redux/auth/authSlice";
+import { login } from "../redux/auth/authThunks";
 import {
   selectAuthLoading,
   selectAuthError,
@@ -27,7 +27,7 @@ const AuthForm = () => {
     try {
       await dispatch(login({ email, password })).unwrap();
       toast.success("Login successful");
-      // ❌ No navigation here (App.jsx handles it)
+      // App.jsx handles routing
     } catch {
       toast.error("Invalid email or password");
     }

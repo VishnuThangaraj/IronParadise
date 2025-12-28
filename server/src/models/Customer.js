@@ -6,7 +6,7 @@ const CustomerSchema = new mongoose.Schema(
     customerId: { type: String, unique: true }, // CST-001
 
     name: { type: String, required: true },
-    email: { type: String },
+    email: { type: String, unique: true, required: true },
     phone: { type: String, unique: true, required: true },
     gender: String,
     dob: Date,
@@ -15,7 +15,7 @@ const CustomerSchema = new mongoose.Schema(
 
     assignedTrainer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // role = trainer
+      ref: "User",
     },
 
     status: { type: String, default: "active" },
@@ -23,11 +23,12 @@ const CustomerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-CustomerSchema.pre("save", async function (next) {
-  if (!this.customerId) {
-    this.customerId = await getNextId("customer");
-  }
-  next();
+CustomerSchema.pre("save", function () {
+  if (this.customerId) return;
+
+  return getNextId(this.role).then((id) => {
+    this.customerId = id;
+  });
 });
 
 module.exports = mongoose.model("Customer", CustomerSchema);

@@ -1,6 +1,6 @@
-const bcrypt = require("bycrypt");
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
-const generateToken = require("../middleware/authMiddleware");
+const generateToken = require("../utils/generateToken");
 
 //  User Login
 const userLogin = async (req, res) => {
@@ -100,7 +100,7 @@ const fetchUserById = async (req, res) => {
 };
 
 // Update User by ID
-const UpdateUserById = async (req, res) => {
+const updateUserById = async (req, res) => {
   const userId = req.params.id;
   const { updatedData } = req.body;
 
@@ -141,6 +141,6 @@ module.exports = {
   registerUser,
   userProfile,
   fetchUserById,
-  UpdateUserById,
+  updateUserById,
   deleteUserById,
 };

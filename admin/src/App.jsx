@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
 import LoginPage from "./pages/AuthForm";
-import { fetchUser } from "./redux/auth/authSlice";
+import { Loader } from "./components/Loader";
+import { fetchUser } from "./redux/auth/authThunks";
 import {
   selectUser,
   selectToken,
@@ -11,7 +12,7 @@ import {
 } from "./redux/auth/authSelectors";
 
 // Temporary pages
-const TrainerDashboard = () => <h1>Trajjiner Dashboard</h1>;
+const TrainerDashboard = () => <h1>Trainer Dashboard</h1>;
 const StaffDashboard = () => <h1>Staff Dashboard</h1>;
 
 const App = () => {
@@ -21,19 +22,18 @@ const App = () => {
   const token = useSelector(selectToken);
   const loading = useSelector(selectAuthLoading);
 
-  // 🔐 Fetch user if token exists
   useEffect(() => {
     if (token && !user) {
       dispatch(fetchUser());
     }
   }, [token, user, dispatch]);
 
-  // ⏳ Prevent flicker / wrong redirect
+  // Global loader
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
-  // ❌ Not logged in
+  // Not logged in
   if (!token) {
     return (
       <Routes>
@@ -43,12 +43,11 @@ const App = () => {
     );
   }
 
-  // ❌ Token exists but user failed to load
   if (!user) {
-    return null; // waiting for fetchUser
+    return null;
   }
 
-  // ✅ Logged in + role-based routing
+  // Role-based routing
   return (
     <Routes>
       {user.role === "admin" && (
