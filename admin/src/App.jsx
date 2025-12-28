@@ -1,9 +1,9 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginPage from "./pages/AuthForm";
 import { Loader } from "./components/Loader";
+import LoginPage from "./pages/Login/AuthForm";
 import { fetchUser } from "./redux/auth/authThunks";
 import {
   selectUser,
@@ -12,59 +12,67 @@ import {
 } from "./redux/auth/authSelectors";
 
 // Temporary pages
-const TrainerDashboard = () => <h1>Trainer Dashboard</h1>;
-const StaffDashboard = () => <h1>Staff Dashboard</h1>;
+const TrainerDashboard = () => (
+  <div className="flex-1 flex items-center justify-center">
+    <h1 className="text-2xl font-semibold">Trainer Dashboard</h1>
+  </div>
+);
+
+const StaffDashboard = () => (
+  <div className="flex-1 flex items-center justify-center">
+    <h1 className="text-2xl font-semibold">Staff Dashboard</h1>
+  </div>
+);
 
 const App = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
   const token = useSelector(selectToken);
-  const loading = useSelector(selectAuthLoading);
 
+  // Fetch user only when needed
   useEffect(() => {
-    if (token && !user) {
-      dispatch(fetchUser());
-    }
+    if (token && !user) dispatch(fetchUser());
   }, [token, user, dispatch]);
 
-  // Global loader
-  if (loading) {
-    return <Loader />;
-  }
+  // Memoized route decision
+  const routes = useMemo(() => {
+    // Loading handled outside
+    if (!token) {
+      return (
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      );
+    }
 
-  // Not logged in
-  if (!token) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    );
-  }
+    if (!user) return null;
 
-  if (!user) {
-    return null;
-  }
+    switch (user.role) {
+      case "admin":
+        return (
+          <Routes>
+            <Route path="/trainer" element={<TrainerDashboard />} />
+            <Route path="*" element={<Navigate to="/trainer" replace />} />
+          </Routes>
+        );
 
-  // Role-based routing
-  return (
-    <Routes>
-      {user.role === "admin" && (
-        <>
-          <Route path="/trainer" element={<TrainerDashboard />} />
-          <Route path="*" element={<Navigate to="/trainer" replace />} />
-        </>
-      )}
+      case "staff":
+        return (
+          <Routes>
+            <Route path="/staff" element={<StaffDashboard />} />
+            <Route path="*" element={<Navigate to="/staff" replace />} />
+          </Routes>
+        );
 
-      {user.role === "staff" && (
-        <>
-          <Route path="/staff" element={<StaffDashboard />} />
-          <Route path="*" element={<Navigate to="/staff" replace />} />
-        </>
-      )}
-    </Routes>
-  );
+      default:
+        return <Navigate to="/login" replace />;
+    }
+  }, [token, user]);
+
+  /* ---------------- RENDER ---------------- */
+  return <div className="h-full">{routes}</div>;
 };
 
 export default App;
