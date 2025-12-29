@@ -1,0 +1,9 @@
+#main-content-holder {
+  width: calc(100% - $navbar-height);
+  overflow-y: auto;
+}
+
+#main-content-origin {
+  height: calc(100% - $navbar-height);
+  overflow-y: auto;
+}

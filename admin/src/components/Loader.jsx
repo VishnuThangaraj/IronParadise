@@ -1,4 +1,4 @@
-export const Loader = () => {
+const Loader = () => {
   const spinnerStyle = {
     fontSize: "28px",
     display: "inline-block",
@@ -63,3 +63,5 @@ export const Loader = () => {
     </div>
   );
 };
+
+export default Loader;

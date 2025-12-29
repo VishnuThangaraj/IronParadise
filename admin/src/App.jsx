@@ -1,28 +1,20 @@
-import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useMemo, Suspense, lazy } from "react";
 
-import { Loader } from "./components/Loader";
+import "./App.scss";
+
+import Loader from "./components/Loader";
+import Footer from "./components/Footer";
 import LoginPage from "./pages/Login/AuthForm";
+import Navbar from "./components/Navbar/Navbar";
+import Sidebar from "./components/Sidebar/Sidebar";
+
 import { fetchUser } from "./redux/auth/authThunks";
-import {
-  selectUser,
-  selectToken,
-  selectAuthLoading,
-} from "./redux/auth/authSelectors";
+import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
-// Temporary pages
-const TrainerDashboard = () => (
-  <div className="flex-1 flex items-center justify-center">
-    <h1 className="text-2xl font-semibold">Trainer Dashboard</h1>
-  </div>
-);
-
-const StaffDashboard = () => (
-  <div className="flex-1 flex items-center justify-center">
-    <h1 className="text-2xl font-semibold">Staff Dashboard</h1>
-  </div>
-);
+// Lazy-loaded pages
+const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,19 +44,33 @@ const App = () => {
     switch (user.role) {
       case "admin":
         return (
-          <Routes>
-            <Route path="/trainer" element={<TrainerDashboard />} />
-            <Route path="*" element={<Navigate to="/trainer" replace />} />
-          </Routes>
+          <>
+            <Sidebar />
+            <div id="main-content-holder" className="px-6">
+              <Navbar />
+              <div
+                id="main-content-origin"
+                className="flex flex-col justify-between pt-3"
+              >
+                <Suspense fallback={<Loader />}>
+                  <Routes>
+                    <Route path="/home" element={<AdminDashborard />} />
+                    <Route path="*" element={<Navigate to="/home" replace />} />
+                  </Routes>
+                </Suspense>
+                <Footer />
+              </div>
+            </div>
+          </>
         );
 
-      case "staff":
-        return (
-          <Routes>
-            <Route path="/staff" element={<StaffDashboard />} />
-            <Route path="*" element={<Navigate to="/staff" replace />} />
-          </Routes>
-        );
+      // case "staff":
+      //   return (
+      //     <Routes>
+      //       <Route path="/staff" element={<StaffDashboard />} />
+      //       <Route path="*" element={<Navigate to="/staff" replace />} />
+      //     </Routes>
+      //   );
 
       default:
         return <Navigate to="/login" replace />;
@@ -72,7 +78,11 @@ const App = () => {
   }, [token, user]);
 
   /* ---------------- RENDER ---------------- */
-  return <div className="h-full">{routes}</div>;
+  return (
+    <div className="flex h-full" style={{ width: "100vw" }}>
+      {routes}
+    </div>
+  );
 };
 
 export default App;

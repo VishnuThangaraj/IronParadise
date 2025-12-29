@@ -63,6 +63,7 @@ const AuthForm = () => {
       style={{
         background:
           'url("images/login_background.webp") center / cover no-repeat',
+        width: "100vw",
       }}
       className="flex items-center justify-center h-screen "
     >
