@@ -19,7 +19,7 @@ export const PageLocation = ({ pageTitle, parentPath, currentPath = "" }) => {
       ref={pagelocation}
       className="w-full flex justify-between pb-2"
     >
-      <div className=" font-bold">{pageTitle}</div>
+      <div className="font-bold">{pageTitle}</div>
       <div className="text-sm flex items-center text-gray-500">
         <i className="fa-duotone fa-solid fa-house-chimney me-2 text-black"></i>{" "}
         / <span className="mx-3">{parentPath}</span> /{" "}

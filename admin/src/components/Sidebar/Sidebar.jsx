@@ -85,7 +85,7 @@ const Sidebar = () => {
                                       ? "text-white"
                                       : "text-gray-300 hover:text-white hover:ps-3"
                                   }`}
-                                  onClick={() => navigate(`/${child.location}`)}
+                                  onClick={() => navigate(`${child.location}`)}
                                 >
                                   <i className="fa-solid fa-caret-right me-2" />
                                   <span>{child.name}</span>
