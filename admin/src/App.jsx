@@ -14,6 +14,7 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
+const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 
 const App = () => {
@@ -46,18 +47,23 @@ const App = () => {
         return (
           <>
             <Sidebar />
-            <div id="main-content-holder" className="px-6">
+            <div id="main-content-holder">
               <Navbar />
               <div
                 id="main-content-origin"
-                className="flex flex-col justify-between pt-3"
+                className="flex flex-col justify-between pt-6 px-5 h-full overflow-y-auto"
               >
                 <Suspense fallback={<Loader />}>
                   <Routes>
+                    {/* General */}
                     <Route path="/home" element={<AdminDashborard />} />
+
+                    {/* Trainer */}
+                    <Route path="/trainer/list" element={<TrainersList />} />
                     <Route path="*" element={<Navigate to="/home" replace />} />
                   </Routes>
                 </Suspense>
+
                 <Footer />
               </div>
             </div>
@@ -79,7 +85,7 @@ const App = () => {
 
   /* ---------------- RENDER ---------------- */
   return (
-    <div className="flex h-full" style={{ width: "100vw" }}>
+    <div className="h-screen flex" style={{ width: "100vw" }}>
       {routes}
     </div>
   );

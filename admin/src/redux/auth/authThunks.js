@@ -33,6 +33,11 @@ export const fetchUser = createAsyncThunk(
 
       return res.data;
     } catch (err) {
+      if (err.response?.status === 403) {
+        localStorage.removeItem("token");
+
+        return rejectWithValue("Session expired");
+      }
       return rejectWithValue(err.response?.data || "Unauthorized");
     }
   }

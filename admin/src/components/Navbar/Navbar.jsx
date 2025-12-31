@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`${styles.navbar} w-100 flex justify-between border-b-2 border-gray-200 primary-bg`}
+      className={`${styles.navbar} w-100 flex justify-between border-b-2 border-gray-200 primary-bg px-5`}
     >
       <div className="nav_left_hold">
         <div className="font-bold">Welcome to IronParadise 👋🏼</div>

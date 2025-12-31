@@ -4,9 +4,10 @@ const SearchBar = ({ value, onChange }) => {
   return (
     <Input
       placeholder="Search..."
+      className="shadow-md"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      sx={{ width: "300px" }}
+      sx={{ width: "40%", borderRadius: 10 }}
     />
   );
 };

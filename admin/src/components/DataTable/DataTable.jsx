@@ -1,11 +1,11 @@
-import { Paper } from "@mui/material";
+import { Sheet } from "@mui/joy";
 import { DataGrid } from "@mui/x-data-grid";
 
 const DataTable = ({ rows, columns, pageSize = 5 }) => {
   return (
-    <Paper
+    <Sheet
       sx={{
-        height: 420,
+        height: 350,
         my: 2,
         backgroundColor: "transparent",
         boxShadow: "none",
@@ -14,17 +14,21 @@ const DataTable = ({ rows, columns, pageSize = 5 }) => {
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSizeOptions={[5, 10, 25]}
-        initialState={{ pagination: { paginationModel: { pageSize } } }}
+        getRowId={(row) => row._id}
+        pageSizeOptions={[10, 25, 50]}
+        initialState={{
+          pagination: { paginationModel: { pageSize } },
+        }}
         sx={{
           border: 0,
-          borderRadius: 2,
-          backgroundColor: "rgba(187, 221, 218, 0.048)",
+          borderRadius: 3,
+          bgcolor: "rgba(187, 221, 218, 0.048)",
           backdropFilter: "blur(10px)",
+          "--DataGrid-containerBackground": "transparent",
         }}
         className="shadow-md"
       />
-    </Paper>
+    </Sheet>
   );
 };
 

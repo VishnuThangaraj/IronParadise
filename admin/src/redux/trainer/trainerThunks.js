@@ -13,7 +13,6 @@ export const fetchAllTrainers = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to fetch trainers");

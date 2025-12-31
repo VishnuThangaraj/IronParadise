@@ -20,7 +20,11 @@ const Sidebar = () => {
     >
       <div className={`${styles.scroller} h-full`}>
         <div className="ms-4 flex gap-7 items-center justify-evenly w-full">
-          <img src="images/logo_white.webp" alt="IronParadise" width={80} />
+          <img
+            src="../../../public/images/logo_white.webp"
+            alt="IronParadise"
+            width={80}
+          />
           <span className=" fa-light fa-grid-2 text-right text-white"></span>
         </div>
         <div className="flex flex-col justify-between">
