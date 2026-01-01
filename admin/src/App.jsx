@@ -14,6 +14,7 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
+const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 
@@ -59,7 +60,9 @@ const App = () => {
                     <Route path="/home" element={<AdminDashborard />} />
 
                     {/* Trainer */}
+                    <Route path="/trainer/add" element={<AddTrainer />} />
                     <Route path="/trainer/list" element={<TrainersList />} />
+
                     <Route path="*" element={<Navigate to="/home" replace />} />
                   </Routes>
                 </Suspense>
