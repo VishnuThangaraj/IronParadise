@@ -19,3 +19,28 @@ export const fetchAllTrainers = createAsyncThunk(
     }
   }
 );
+
+export const fetchTrainerCounter = createAsyncThunk(
+  "counter/fetchTrainerCounter",
+  async ({ role }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/counter",
+        { role },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data.seq;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to fetch trainer counter"
+      );
+    }
+  }
+);

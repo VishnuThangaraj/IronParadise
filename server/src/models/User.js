@@ -35,6 +35,21 @@ const UserSchema = new mongoose.Schema(
     weight: Number,
     bmi: Number,
 
+    aadharNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+    },
+    panNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+    },
+
     specialization: String,
     experienceYears: Number,
     monthlySalary: Number,

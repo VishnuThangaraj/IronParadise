@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllTrainers } from "./trainerThunks";
+import { fetchAllTrainers, fetchTrainerCounter } from "./trainerThunks";
 
 const initialState = {
   trainers: [],
   loading: false,
   error: null,
+  counter: 0,
 };
 
 const trainerSlice = createSlice({
@@ -18,6 +19,7 @@ const trainerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch Trainer
       .addCase(fetchAllTrainers.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -27,6 +29,19 @@ const trainerSlice = createSlice({
         state.trainers = action.payload;
       })
       .addCase(fetchAllTrainers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Trainer Counter
+      .addCase(fetchTrainerCounter.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTrainerCounter.fulfilled, (state, action) => {
+        state.loading = false;
+        state.counter = action.payload;
+      })
+      .addCase(fetchTrainerCounter.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

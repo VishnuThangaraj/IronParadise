@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../service/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Login
 export const login = createAsyncThunk(
@@ -33,7 +33,7 @@ export const fetchUser = createAsyncThunk(
 
       return res.data;
     } catch (err) {
-      if (err.response?.status === 403) {
+      if (err.response?.status === 403 || err.response?.status === 404) {
         localStorage.removeItem("token");
 
         return rejectWithValue("Session expired");

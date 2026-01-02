@@ -5,10 +5,9 @@ const connectDB = require("./config/dbConfig");
 const corsOptions = require("./config/corsConfig");
 const errorHandler = require("./middleware/errorHandler");
 
-// const Admin = require("./models/Admin");
-
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const counterRoutes = require("./routes/counterRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
 
 const app = express();
@@ -27,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/counter", counterRoutes);
 app.use("/trainer", trainerRoutes);
 
 // Error handling middleware
