@@ -16,8 +16,8 @@ const TrainersList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const trainers = useSelector(selectAllTrainers);
   const [search, setSearch] = useState("");
+  const trainers = useSelector(selectAllTrainers);
 
   useEffect(() => {
     dispatch(fetchAllTrainers());
@@ -52,7 +52,7 @@ const TrainersList = () => {
             <Button
               variant="solid"
               size="md"
-              onClick={() => navigate("/admission/new")}
+              onClick={() => navigate("/trainer/add")}
               sx={{
                 px: 4,
                 borderRadius: 20,

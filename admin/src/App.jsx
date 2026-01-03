@@ -14,9 +14,17 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
+const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
+const MembersList = lazy(() => import("./pages/Member/MembersList"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
+const AddMembership = lazy(() =>
+  import("./pages/MembershipPlan/AddMembershipPlan")
+);
+const MembershipPlan = lazy(() =>
+  import("./pages/MembershipPlan/MembershipPlanList")
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -62,6 +70,20 @@ const App = () => {
                     {/* Trainer */}
                     <Route path="/trainer/add" element={<AddTrainer />} />
                     <Route path="/trainer/list" element={<TrainersList />} />
+
+                    {/* Members */}
+                    <Route path="/member/add" element={<AddMember />} />
+                    <Route path="/member/list" element={<MembersList />} />
+
+                    {/* Membership Plan */}
+                    <Route
+                      path="/subscription/add"
+                      element={<AddMembership />}
+                    />
+                    <Route
+                      path="/subscription/list"
+                      element={<MembershipPlan />}
+                    />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />
                   </Routes>

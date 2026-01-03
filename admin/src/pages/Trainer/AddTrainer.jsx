@@ -52,7 +52,6 @@ const AddTrainer = () => {
 
   const [newTrainer, setNewTrainer] = useState(initialTrainerState);
 
-  // Fetch trainer counter on mount
   useEffect(() => {
     dispatch(fetchTrainerCounter({ role: "trainer" }));
   }, [dispatch]);
@@ -108,7 +107,7 @@ const AddTrainer = () => {
     } catch {
       toast.error("Failed to Add Trainer");
     } finally {
-      // setNewTrainer(initialTrainerState);
+      setNewTrainer(initialTrainerState);
     }
   };
 

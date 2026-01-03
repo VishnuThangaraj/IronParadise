@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  addNewMembershipPlan,
   fetchAllMembershipPlans,
   fetchMembershipPlanCounter,
 } from "./membershipPlanThunks";
@@ -44,6 +45,20 @@ const membershipPlanSlice = createSlice({
           state.counter = action.payload;
         })
         .addCase(fetchMembershipPlanCounter.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        })
+        // Add New Membership Plan
+        .addCase(addNewMembershipPlan.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(addNewMembershipPlan.fulfilled, (state, action) => {
+          state.loading = false;
+          state.counter += 1;
+          state.membershipPlans.push(action.payload);
+        })
+        .addCase(addNewMembershipPlan.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload;
         });

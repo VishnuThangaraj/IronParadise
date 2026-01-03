@@ -83,15 +83,15 @@ export const AdminSidebarItems = [
       {
         name: "Membership Plans",
         icon: "fa-light fa-crown",
-        location: "/membership",
+        location: "/subscription",
         childrens: [
           {
             name: "Plans List",
-            location: "/membership/list",
+            location: "/subscription/list",
           },
           {
             name: "Add New Plan",
-            location: "/membership/add",
+            location: "/subscription/add",
           },
         ],
       },

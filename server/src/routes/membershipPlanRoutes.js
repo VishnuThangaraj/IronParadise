@@ -2,16 +2,23 @@ const router = require("express").Router();
 const authenticateJWT = require("../middleware/authMiddleware");
 const membershipPlanController = require("../controllers/membershipPlanController");
 
-// Fetch All Membership Pland
+// Fetch All Membership Plan
 router.get(
   "/",
   authenticateJWT(["admin"]),
   membershipPlanController.fetchAllMembershipPlans
 );
 
+// Create New Membership Plan
+router.post(
+  "/create",
+  authenticateJWT(["admin"]),
+  membershipPlanController.createMembershipPlan
+);
+
 // Fetch Membership Plan by ID
 router.get(
-  "details/:id",
+  "/details/:id",
   authenticateJWT(["admin"]),
   membershipPlanController.fetchmemberhsipPlanById
 );
