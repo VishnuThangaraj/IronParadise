@@ -1,5 +1,5 @@
 export const initialTrainerState = {
-  username: "",
+  userId: "",
   name: "",
   email: "",
   phone: "",
@@ -11,8 +11,11 @@ export const initialTrainerState = {
   height: "",
   weight: "",
   bmi: "",
-  salary: "",
+  monthlySalary: "",
   address: "",
+  experienceYears: 0,
+  joiningDate: null,
+  role: "trainer",
 };
 
 export const dropdownOptions = {
@@ -52,7 +55,7 @@ export const TrainerFieldGroup = [
     fields: [
       {
         label: "Trainer ID",
-        name: "username",
+        name: "userId",
         placeholder: "TRN-000",
         disabled: true,
         size: 50,
@@ -77,6 +80,19 @@ export const TrainerFieldGroup = [
         mobile: true,
         size: 50,
       },
+      {
+        label: "Experience (in Years)",
+        name: "experienceYears",
+        placeholder: "0 (Years)",
+        size: 50,
+      },
+      {
+        label: "Joining Date",
+        name: "joiningDate",
+        placeholder: "0000 0000 00",
+        type: "date",
+        size: 50,
+      },
 
       {
         label: "Aadhar Number",
@@ -92,7 +108,7 @@ export const TrainerFieldGroup = [
       },
       {
         label: "Salary",
-        name: "salary",
+        name: "monthlySalary",
         placeholder: "₹ 0000.00",
         size: 30,
       },

@@ -39,7 +39,7 @@ const userLogin = async (req, res) => {
 
 // Register User
 const registerUser = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -47,18 +47,31 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    let finalPassword = password;
+
+    if (!finalPassword) {
+      const random5Digits = Math.floor(10000 + Math.random() * 90000);
+      finalPassword = `${req.body.userId}${random5Digits}`;
+    }
+
     const user = new User({
       ...req.body,
+      password: finalPassword,
     });
 
     await user.save();
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
     res.status(201).json({
       message: `${
         user.role.charAt(0).toUpperCase() + user.role.slice(1)
       } registered successfully`,
+      user: userResponse,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({
       message: "Server error",
       error: err.message,

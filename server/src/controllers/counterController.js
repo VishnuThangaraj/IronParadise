@@ -2,7 +2,6 @@ const Counter = require("../models/Counter");
 
 // Fetch the last Counter
 const fetchLastCounter = async (req, res) => {
-  console.log("first", req);
   const { role } = req.body;
 
   try {

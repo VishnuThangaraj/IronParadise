@@ -20,8 +20,9 @@ export const fetchAllTrainers = createAsyncThunk(
   }
 );
 
+// Fetch Trainer Counter
 export const fetchTrainerCounter = createAsyncThunk(
-  "counter/fetchTrainerCounter",
+  "trainer/fetchTrainerCounter",
   async ({ role }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
@@ -36,11 +37,35 @@ export const fetchTrainerCounter = createAsyncThunk(
         }
       );
 
-      return res.data.seq;
+      return res.data.seq || 0;
     } catch (err) {
       return rejectWithValue(
         err.response?.data || "Failed to fetch trainer counter"
       );
+    }
+  }
+);
+
+// Add New Trainer
+export const addNewTrainer = createAsyncThunk(
+  "/trainer/addNewTrainer",
+  async ({ newTrainer }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/auth/user/register",
+        { ...newTrainer },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Add New Trainer");
     }
   }
 );

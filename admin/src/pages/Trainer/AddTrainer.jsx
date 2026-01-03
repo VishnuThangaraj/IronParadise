@@ -13,13 +13,15 @@ import {
   initialTrainerState,
 } from "../../config/TrainerFields";
 import {
+  addNewTrainer,
+  fetchTrainerCounter,
+} from "../../redux/trainer/trainerThunks";
+import {
   selectTrainerLoading,
-  selectTrainerError,
   selectTrainerCounter,
 } from "../../redux/trainer/trainerSelectors";
 import FormField from "../../components/Form/FormField";
 import { PageLocation } from "../../components/PageLocation";
-import { fetchTrainerCounter } from "../../redux/trainer/trainerThunks";
 
 const getColSpan = (size) => {
   switch (size) {
@@ -40,14 +42,12 @@ const maxLengthMap = {
   phone: 10,
   panNumber: 10,
   aadharNumber: 12,
-  salary: 8,
 };
 
 const AddTrainer = () => {
   const dispatch = useDispatch();
 
   const loading = useSelector(selectTrainerLoading);
-  const error = useSelector(selectTrainerError);
   const counter = useSelector(selectTrainerCounter);
 
   const [newTrainer, setNewTrainer] = useState(initialTrainerState);
@@ -61,7 +61,7 @@ const AddTrainer = () => {
     if (counter) {
       setNewTrainer((prev) => ({
         ...prev,
-        username: `TRN-${String(counter + 1).padStart(3, "0")}`,
+        userId: `TRN-${String(counter + 1).padStart(3, "0")}`,
       }));
     }
   }, [counter]);
@@ -93,16 +93,22 @@ const AddTrainer = () => {
     });
   };
 
+  const checkValidation = () => {
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(newTrainer);
+    const validation = checkValidation();
+    if (!validation) return;
 
     try {
+      await dispatch(addNewTrainer({ newTrainer })).unwrap();
       toast.success("Trainer Added Successfully!");
     } catch {
       toast.error("Failed to Add Trainer");
     } finally {
-      setNewTrainer(initialTrainerState);
+      // setNewTrainer(initialTrainerState);
     }
   };
 
