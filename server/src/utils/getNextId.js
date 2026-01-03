@@ -4,7 +4,7 @@ const PREFIX = {
   admin: "ADM",
   trainer: "TRN",
   staff: "STF",
-  customer: "CST",
+  member: "MBR",
 };
 
 async function getNextId(role) {

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const getNextId = require("../utils/getNextId");
 
-const CustomerSchema = new mongoose.Schema(
+const MemberSchema = new mongoose.Schema(
   {
-    customerId: { type: String, unique: true }, // CST-001
+    memberId: { type: String, unique: true },
 
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
@@ -23,12 +23,12 @@ const CustomerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-CustomerSchema.pre("save", function () {
-  if (this.customerId) return;
+MemberSchema.pre("save", function () {
+  if (this.memberId) return;
 
-  return getNextId(this.role).then((id) => {
-    this.customerId = id;
+  return getNextId("member").then((id) => {
+    this.memberId = id;
   });
 });
 
-module.exports = mongoose.model("Customer", CustomerSchema);
+module.exports = mongoose.model("Member", MemberSchema);

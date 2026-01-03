@@ -61,8 +61,6 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre("save", function () {
-  if (this.userId) return;
-
   return getNextId(this.role).then((id) => {
     this.userId = id;
   });
