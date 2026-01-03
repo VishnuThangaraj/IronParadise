@@ -5,6 +5,7 @@ const PREFIX = {
   trainer: "TRN",
   staff: "STF",
   member: "MBR",
+  membershipplan: "MPL",
 };
 
 async function getNextId(role) {

@@ -19,7 +19,7 @@ router.put(
   memberController.updateMemberById
 );
 
-// Delete User by ID
+// Delete Member by ID
 router.delete(
   "/delete/:id",
   authenticateJWT(["admin"]),

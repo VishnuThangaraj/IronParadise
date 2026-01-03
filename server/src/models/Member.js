@@ -24,8 +24,6 @@ const MemberSchema = new mongoose.Schema(
 );
 
 MemberSchema.pre("save", function () {
-  if (this.memberId) return;
-
   return getNextId("member").then((id) => {
     this.memberId = id;
   });

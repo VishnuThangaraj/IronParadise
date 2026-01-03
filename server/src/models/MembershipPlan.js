@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const MembershipPlanSchema = new mongoose.Schema(
   {
+    membershipPlanId: { type: String, unique: true },
     name: String,
     durationMonths: Number,
     price: Number,
@@ -10,5 +11,11 @@ const MembershipPlanSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+MembershipPlanSchema.pre("save", function () {
+  return getNextId("membershipplan").then((id) => {
+    this.membershipPlanId = id;
+  });
+});
 
 module.exports = mongoose.model("MembershipPlan", MembershipPlanSchema);

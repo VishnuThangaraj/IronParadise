@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const counterRoutes = require("./routes/counterRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
+const membershipPlanRoutes = require("./routes/membershipPlanRoutes");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/user", userRoutes);
 app.use("/member", memberRoutes);
 app.use("/counter", counterRoutes);
 app.use("/trainer", trainerRoutes);
+app.use("/membershipplan", membershipPlanRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

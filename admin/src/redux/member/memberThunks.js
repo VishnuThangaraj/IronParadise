@@ -21,8 +21,8 @@ export const fetchAllMembers = createAsyncThunk(
 );
 
 // Fetch Member Counter
-export const fetchCustomerCounter = createAsyncThunk(
-  "/customer/fetchCustomerCounter",
+export const fetchMemberCounter = createAsyncThunk(
+  "/member/fetchMemberCounter",
   async ({ role }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
@@ -40,7 +40,7 @@ export const fetchCustomerCounter = createAsyncThunk(
       return res.data.seq || 0;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || "Failed to fetch customer counter"
+        err.response?.data || "Failed to fetch Member counter"
       );
     }
   }

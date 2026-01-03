@@ -48,7 +48,7 @@ const fetchAllMembers = async (req, res) => {
 const fetchMemberById = async (req, res) => {
   const memberId = req.params.id;
   try {
-    const member = await Member.findById(memberId);
+    const member = await Member.findById(memberId).select("-password");
     if (!user) {
       return res.status(404).json({ message: "Member not found" });
     }
