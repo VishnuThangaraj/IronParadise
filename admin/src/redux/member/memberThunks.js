@@ -45,3 +45,27 @@ export const fetchMemberCounter = createAsyncThunk(
     }
   }
 );
+
+// Add new Member
+export const addNewMember = createAsyncThunk(
+  "/member/addNewMember",
+  async ({ newMember }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/member/create",
+        { ...newMember },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Add New Member");
+    }
+  }
+);

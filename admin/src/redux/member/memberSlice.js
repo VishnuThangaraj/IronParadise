@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllMembers, fetchMemberCounter } from "./memberThunks";
+import {
+  fetchAllMembers,
+  fetchMemberCounter,
+  addNewMember,
+} from "./memberThunks";
 
 const initialState = {
   members: [],
@@ -42,6 +46,20 @@ const memberSlice = createSlice({
         state.counter = action.payload;
       })
       .addCase(fetchMemberCounter.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Add New Member
+      .addCase(addNewMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addNewMember.fulfilled, (state, action) => {
+        state.loading = false;
+        state.counter += 1;
+        state.members.push(action.payload);
+      })
+      .addCase(addNewMember.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
