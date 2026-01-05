@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../service/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Fetch all trainers
 export const fetchAllTrainers = createAsyncThunk(
@@ -48,7 +48,7 @@ export const fetchTrainerCounter = createAsyncThunk(
 
 // Add New Trainer
 export const addNewTrainer = createAsyncThunk(
-  "/trainer/addNewTrainer",
+  "trainer/addNewTrainer",
   async ({ newTrainer }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
