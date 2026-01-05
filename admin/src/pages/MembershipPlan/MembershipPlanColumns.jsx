@@ -14,7 +14,7 @@ export const MembershipPlanColumns = () => [
     align: "center",
   },
   {
-    field: "duration",
+    field: "durationMonths",
     headerName: "Plan Duration (Months)",
     flex: 1,
     headerAlign: "center",

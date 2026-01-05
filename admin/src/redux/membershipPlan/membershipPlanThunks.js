@@ -25,7 +25,7 @@ export const fetchAllMembershipPlans = createAsyncThunk(
 
 // Fetch Membership Plan Counter
 export const fetchMembershipPlanCounter = createAsyncThunk(
-  "/membershipplan/fetchMembershipPlanCounter",
+  "membershipplan/fetchMembershipPlanCounter",
   async ({ role }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
@@ -40,6 +40,7 @@ export const fetchMembershipPlanCounter = createAsyncThunk(
         }
       );
 
+      console.log(res.data);
       return res.data.seq || 0;
     } catch (err) {
       return rejectWithValue(
@@ -51,7 +52,7 @@ export const fetchMembershipPlanCounter = createAsyncThunk(
 
 // Add New Membership Plan
 export const addNewMembershipPlan = createAsyncThunk(
-  "/membershipplan/addNewMembershipPlan",
+  "membershipplan/addNewMembershipPlan",
   async ({ newMembershipPlan }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;

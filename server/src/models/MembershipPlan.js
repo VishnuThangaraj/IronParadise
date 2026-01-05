@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const getNextId = require("../utils/getNextId");
 
 const MembershipPlanSchema = new mongoose.Schema(
   {

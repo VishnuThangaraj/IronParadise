@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
 
-const CustomerDietPlanSchema = new mongoose.Schema(
+const MemberFitnessPlanSchema = new mongoose.Schema(
   {
-    customer: {
+    member: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: "Member",
+    },
+    workoutPlan: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WorkoutPlan",
     },
     dietPlan: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,4 +24,4 @@ const CustomerDietPlanSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("CustomerDietPlan", CustomerDietPlanSchema);
+module.exports = mongoose.model("MemberFitnessPlan", MemberFitnessPlanSchema);

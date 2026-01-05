@@ -6,6 +6,8 @@ const PREFIX = {
   staff: "STF",
   member: "MBR",
   membershipplan: "MPL",
+  workout: "WPL",
+  diet: "DPL",
 };
 
 async function getNextId(role) {

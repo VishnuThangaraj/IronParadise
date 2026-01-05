@@ -10,3 +10,9 @@ export const initialMemberState = {
   bmi: "",
   address: "",
 };
+
+export const dropdownOptions = {
+  gender: ["Male", "Female", "Other"],
+};
+
+export const MemberFieldGroup = [];

@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const MembershipSchema = new mongoose.Schema(
   {
-    customer: {
+    member: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: "Member",
       required: true,
     },
     plan: {

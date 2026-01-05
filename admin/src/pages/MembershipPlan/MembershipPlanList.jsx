@@ -26,8 +26,13 @@ const MembershipPlanList = () => {
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
 
-    return membershipPlans.filter((row) =>
-      row.id?.toString().toLowerCase().includes(query)
+    return membershipPlans.filter(
+      (row) =>
+        row.membershipPlanId?.toString().toLowerCase().includes(query) ||
+        row.name?.toString().toLowerCase().includes(query) ||
+        row.durationMonths?.toString().toLowerCase().includes(query) ||
+        row.price?.toString().toLowerCase().includes(query) ||
+        row.features?.toString().toLowerCase().includes(query)
     );
   }, [membershipPlans, search]);
 

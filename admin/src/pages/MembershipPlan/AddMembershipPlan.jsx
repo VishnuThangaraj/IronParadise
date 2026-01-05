@@ -14,7 +14,7 @@ import {
 } from "../../config/MembershipPlanFields";
 import {
   addNewMembershipPlan,
-  fetchAllMembershipPlans,
+  fetchMembershipPlanCounter,
 } from "../../redux/membershipPlan/membershipPlanThunks";
 import {
   selectMembershipPlanLoading,
@@ -54,7 +54,7 @@ const AddMembershipPlan = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchAllMembershipPlans({ role: "membershipplan" }));
+    dispatch(fetchMembershipPlanCounter({ role: "membershipplan" }));
   }, [dispatch]);
 
   useEffect(() => {

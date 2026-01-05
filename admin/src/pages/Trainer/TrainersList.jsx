@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+
 import { Card, Button, CardContent } from "@mui/joy";
 
 import { TrainerColumns } from "./TrainerColumns";
