@@ -59,8 +59,8 @@ const FormField = ({ field, value, onChange }) => {
           onChange={handleInputChange}
           size="md"
           sx={textAreaFieldStyle}
-          minRows={2}
-          maxRows={2}
+          minRows={field.rows ? field.rows : 2}
+          maxRows={field.rows ? field.rows : 2}
           required={field.required !== false}
         />
       </FormControl>

@@ -155,6 +155,7 @@ export const TrainerFieldGroup = [
         type: "textbox",
         placeholder: "Enter Your Address",
         size: 100,
+        rows: 2,
       },
     ],
   },

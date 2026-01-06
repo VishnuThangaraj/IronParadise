@@ -17,7 +17,13 @@ import { selectUser, selectToken } from "./redux/auth/authSelectors";
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
 const MembersList = lazy(() => import("./pages/Member/MembersList"));
+const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
+const WorkoutPlanList = lazy(() =>
+  import("./pages/WorkoutPlan/WorkoutPlanList")
+);
+const AddDietPlan = lazy(() => import("./pages/DietPlan/AddDietPlan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
+const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 const AddMembership = lazy(() =>
   import("./pages/MembershipPlan/AddMembershipPlan")
@@ -83,6 +89,18 @@ const App = () => {
                     <Route
                       path="/subscription/list"
                       element={<MembershipPlan />}
+                    />
+
+                    {/* Fitness Plan */}
+                    <Route path="/plan/diet/list" element={<DietPlanList />} />
+                    <Route path="/plan/diet/add" element={<AddDietPlan />} />
+                    <Route
+                      path="/plan/workout/list"
+                      element={<WorkoutPlanList />}
+                    />
+                    <Route
+                      path="/plan/workout/add"
+                      element={<AddWorkoutPlan />}
                     />
 
                     <Route path="*" element={<Navigate to="/home" replace />} />
