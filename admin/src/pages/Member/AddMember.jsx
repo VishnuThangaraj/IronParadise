@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { toast } from "sonner";
@@ -12,35 +12,44 @@ import {
   MemberFieldGroup,
   initialMemberState,
 } from "../../config/MemberFields";
+
 import {
   addNewMember,
   fetchMemberCounter,
 } from "../../redux/member/memberThunks";
+
 import {
   selectMemberLoading,
   selectMemberCounter,
 } from "../../redux/member/memberSelector";
+
+import { fetchAllTrainers } from "../../redux/trainer/trainerThunks";
+import { selectAllTrainers } from "../../redux/trainer/trainerSelectors";
+
+import { fetchAllDietPlans } from "../../redux/dietPlan/dietPlanThunks";
+import { selectAllDietPlans } from "../../redux/dietPlan/dietPlanSelector";
+
+import { fetchAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanThunks";
+import { selectAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanSelector";
+
+import { fetchAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanThunks";
+import { selectAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanSelectors";
+
 import FormField from "../../components/Form/FormField";
 import { PageLocation } from "../../components/PageLocation";
 
-const getColSpan = (size) => {
-  switch (size) {
-    case 100:
-      return "col-span-12";
-    case 50:
-      return "col-span-6";
-    case 30:
-      return "col-span-4";
-    default:
-      return "col-span-6";
-  }
-};
+/* ---------------- Helpers ---------------- */
 
-const numericFields = ["phone", "height", "weight"];
+const getColSpan = (size = 50) =>
+  ({
+    100: "col-span-12",
+    50: "col-span-6",
+    30: "col-span-4",
+  }[size] || "col-span-6");
 
-const maxLengthMap = {
-  phone: 10,
-};
+const numericFields = new Set(["phone", "height", "weight"]);
+const maxLengthMap = { phone: 10 };
+const formatDate = (d) => d.toISOString().split("T")[0];
 
 const AddMember = () => {
   const dispatch = useDispatch();
@@ -48,122 +57,189 @@ const AddMember = () => {
   const loading = useSelector(selectMemberLoading);
   const counter = useSelector(selectMemberCounter);
 
+  const trainers = useSelector(selectAllTrainers);
+  const dietPlans = useSelector(selectAllDietPlans);
+  const workoutPlans = useSelector(selectAllWorkoutPlans);
+  const membershipPlans = useSelector(selectAllMembershipPlans);
+
   const [newMember, setNewMember] = useState(initialMemberState);
 
   useEffect(() => {
     dispatch(fetchMemberCounter({ role: "member" }));
+    dispatch(fetchAllTrainers());
+    dispatch(fetchAllDietPlans());
+    dispatch(fetchAllWorkoutPlans());
+    dispatch(fetchAllMembershipPlans());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (counter) {
-      setNewMember((prev) => ({
-        ...prev,
-        userId: `MBR-${String(counter + 1).padStart(3, "0")}`,
-      }));
-    }
+  const memberId = useMemo(() => {
+    if (counter < 0) return "";
+    return `MBR-${String(counter + 1).padStart(3, "0")}`;
   }, [counter]);
 
-  const handleChange = (name, value) => {
-    if (numericFields.includes(name) && isNaN(Number(value))) return;
+  const selectedTrainer = useMemo(
+    () => trainers.find((t) => t._id === newMember.assignedTrainer),
+    [trainers, newMember.assignedTrainer]
+  );
 
+  const trainerSpecialization = selectedTrainer?.specialization || "";
+
+  const selectedMembershipPlan = useMemo(
+    () => membershipPlans.find((m) => m._id === newMember.membershipPlan),
+    [membershipPlans, newMember.membershipPlan]
+  );
+
+  const membershipDerived = useMemo(() => {
+    if (!selectedMembershipPlan) {
+      return { durationMonths: "", price: "", startDate: "", endDate: "" };
+    }
+
+    const start = new Date();
+    const end = new Date(start);
+    end.setMonth(
+      end.getMonth() + Number(selectedMembershipPlan.durationMonths)
+    );
+
+    return {
+      durationMonths: selectedMembershipPlan.durationMonths,
+      price: selectedMembershipPlan.price,
+      startDate: formatDate(start),
+      endDate: formatDate(end),
+    };
+  }, [selectedMembershipPlan]);
+
+  const trainerOptions = useMemo(
+    () => trainers.map((t) => ({ label: t.name, value: t._id })),
+    [trainers]
+  );
+
+  const dietPlanOptions = useMemo(
+    () => dietPlans.map((d) => ({ label: d.dietPlanName, value: d._id })),
+    [dietPlans]
+  );
+
+  const workoutPlanOptions = useMemo(
+    () => workoutPlans.map((w) => ({ label: w.workoutPlanName, value: w._id })),
+    [workoutPlans]
+  );
+
+  const membershipPlanOptions = useMemo(
+    () => membershipPlans.map((m) => ({ label: m.name, value: m._id })),
+    [membershipPlans]
+  );
+
+  const updatedFieldGroups = useMemo(
+    () =>
+      MemberFieldGroup.map((group) => ({
+        ...group,
+        fields: group.fields.map((field) => {
+          const optionsMap = {
+            assignedTrainer: trainerOptions,
+            dietPlan: dietPlanOptions,
+            workoutPlan: workoutPlanOptions,
+            membershipPlan: membershipPlanOptions,
+          };
+          return optionsMap[field.name]
+            ? { ...field, options: optionsMap[field.name] }
+            : field;
+        }),
+      })),
+    [trainerOptions, dietPlanOptions, workoutPlanOptions, membershipPlanOptions]
+  );
+
+  const handleChange = useCallback((name, value) => {
+    if (numericFields.has(name) && isNaN(value)) return;
     if (maxLengthMap[name] && value.length > maxLengthMap[name]) return;
 
     setNewMember((prev) => {
       const updated = { ...prev, [name]: value };
 
       if (name === "height" || name === "weight") {
-        const height = Number(updated.height) / 100;
-        const weight = Number(updated.weight);
-
-        if (height > 0 && weight > 0) {
-          updated.bmi = Number((weight / (height * height)).toFixed(2));
-        } else {
-          updated.bmi = "";
-        }
+        const h = Number(updated.height) / 100;
+        const w = Number(updated.weight);
+        updated.bmi = h && w ? (w / (h * h)).toFixed(2) : "";
       }
-
       return updated;
     });
-  };
-
-  const checkValidation = () => {
-    return true;
-  };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validation = checkValidation();
-    if (!validation) return;
+
+    const payload = {
+      ...newMember,
+      memberId,
+      trainerSpecialization,
+      ...membershipDerived,
+    };
 
     try {
-      await dispatch(addNewMember({ newMember })).unwrap();
+      await dispatch(addNewMember({ newMember: payload })).unwrap();
       toast.success("Member Added Successfully!");
+      setNewMember(initialMemberState);
     } catch {
       toast.error("Failed to Add Member");
-    } finally {
-      setNewMember(initialMemberState);
     }
   };
 
   return (
-    <div key="Add-Member">
+    <div>
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Members"
         currentPath="Add New Member"
       />
 
-      <Card className="shadow-md" sx={{ my: 1, mb: 4, p: 0, pb: 3 }}>
+      <Card sx={{ my: 1, mb: 4, pb: 3 }}>
         <CardContent>
           <Box component="form" onSubmit={handleSubmit}>
-            <div className="text-xl font-bold border-b-2 border-gray-200 p-5">
-              Add New Member
-            </div>
+            <div className="text-xl font-bold border-b p-5">Add New Member</div>
 
             <div className="grid grid-cols-12 gap-4 px-6 pb-5">
-              {MemberFieldGroup.map((group) => (
-                <Fragment key={`add_trainer_${group.title}`}>
+              {updatedFieldGroups.map((group) => (
+                <Fragment key={group.title}>
                   <div className="col-span-12 text-lg font-semibold mt-6">
                     {group.title}
                   </div>
 
-                  {group.fields.map(
-                    (field) =>
-                      (!field.showIf || field.showIf(newMember)) && (
-                        <div
-                          key={field.name}
-                          className={getColSpan(field.size)}
-                        >
-                          <FormField
-                            field={field}
-                            value={newMember[field.name]}
-                            onChange={handleChange}
-                            disabled={field.disabled}
-                          />
-                        </div>
-                      )
-                  )}
+                  {group.fields.map((field) => {
+                    const derivedMap = {
+                      memberId,
+                      trainerSpecialization,
+                      ...membershipDerived,
+                    };
+
+                    return (
+                      <div key={field.name} className={getColSpan(field.size)}>
+                        <FormField
+                          field={field}
+                          value={
+                            derivedMap[field.name] ?? newMember[field.name]
+                          }
+                          onChange={handleChange}
+                        />
+                      </div>
+                    );
+                  })}
                 </Fragment>
               ))}
             </div>
 
             <div className="flex justify-end px-6 py-3">
               <Button
-                variant="solid"
                 type="submit"
-                size="md"
+                disabled={loading}
                 sx={{
                   px: 5,
                   backgroundColor: "black",
-                  "&:hover": { backgroundColor: "#222222" },
+                  "&:hover": { backgroundColor: "#222" },
                 }}
-                disabled={loading}
               >
                 {loading ? (
-                  <Fragment>
-                    <CircularProgress variant="solid" />{" "}
-                    <span className="ms-3">Adding ...</span>
-                  </Fragment>
+                  <>
+                    <CircularProgress size="sm" />
+                    <span className="ml-3">Adding...</span>
+                  </>
                 ) : (
                   "Add Member"
                 )}

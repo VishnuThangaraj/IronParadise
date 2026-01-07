@@ -8,17 +8,23 @@ const MemberSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     phone: { type: String, unique: true, required: true },
-    gender: String,
-    dob: Date,
-    city: String,
-    state: String,
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+      required: true,
+    },
+
+    height: Number,
+    weight: Number,
+    bmi: Number,
+    dob: { type: Date, required: true },
 
     assignedTrainer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
 
-    status: { type: String, default: "active" },
+    status: { type: String, default: "inactive" },
   },
   { timestamps: true }
 );

@@ -14,35 +14,33 @@ const fieldStyle = {
   fontSize: 15,
 };
 
-const textAreaFieldStyle = {
-  py: 1,
-  backgroundColor: "white",
-  fontSize: 15,
-};
-
 const FormField = ({ field, value, onChange }) => {
-  const handleInputChange = (e) => {
-    onChange(field.name, e.target.value);
-  };
-
   if (field.type === "select") {
     return (
       <FormControl>
         <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
+
         <Select
-          name={field.name}
-          value={value ?? ""}
+          value={value ?? null}
           placeholder={field.placeholder}
           onChange={(_, val) => onChange(field.name, val)}
           size="md"
           sx={fieldStyle}
+          disabled={field.disabled}
           required={field.required !== false}
         >
-          {field.options.map((opt) => (
-            <Option key={opt} value={opt}>
-              {opt}
-            </Option>
-          ))}
+          {field.options.map((option) => {
+            const optionValue =
+              typeof option === "object" ? option.value : option;
+            const optionLabel =
+              typeof option === "object" ? option.label : option;
+
+            return (
+              <Option key={optionValue} value={optionValue}>
+                {optionLabel}
+              </Option>
+            );
+          })}
         </Select>
       </FormControl>
     );
@@ -50,18 +48,15 @@ const FormField = ({ field, value, onChange }) => {
 
   if (field.type === "textbox") {
     return (
-      <FormControl sx={{ width: "100%" }}>
+      <FormControl>
         <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
         <Textarea
-          name={field.name}
           value={value ?? ""}
+          onChange={(e) => onChange(field.name, e.target.value)}
+          minRows={field.rows || 2}
+          maxRows={field.rows || 2}
+          disabled={field.disabled}
           placeholder={field.placeholder}
-          onChange={handleInputChange}
-          size="md"
-          sx={textAreaFieldStyle}
-          minRows={field.rows ? field.rows : 2}
-          maxRows={field.rows ? field.rows : 2}
-          required={field.required !== false}
         />
       </FormControl>
     );
@@ -71,17 +66,13 @@ const FormField = ({ field, value, onChange }) => {
     <FormControl>
       <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
       <Input
-        name={field.name}
         type={field.type || "text"}
         value={value ?? ""}
+        onChange={(e) => onChange(field.name, e.target.value)}
+        disabled={field.disabled}
+        startDecorator={field.mobile ? "+91" : null}
         placeholder={field.placeholder}
-        onChange={handleInputChange}
-        size="md"
-        variant="outlined"
         sx={fieldStyle}
-        startDecorator={field.mobile ? field.countryCode || "+91" : null}
-        required={field.required !== false}
-        disabled={Boolean(field.disabled)}
       />
     </FormControl>
   );

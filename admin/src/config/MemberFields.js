@@ -9,10 +9,160 @@ export const initialMemberState = {
   weight: "",
   bmi: "",
   address: "",
+  assignedTrainer: "",
+  trainerSpecialization: "",
+  dietPlan: "",
+  workoutPlan: "",
+  membershipPlan: "",
+  price: "",
+  durationMonths: "",
+  startDate: "",
+  endDate: "",
 };
 
 export const dropdownOptions = {
   gender: ["Male", "Female", "Other"],
 };
 
-export const MemberFieldGroup = [];
+export const MemberFieldGroup = [
+  {
+    title: "Personal Details",
+    fields: [
+      {
+        label: "Member ID",
+        name: "memberId",
+        placeholder: "MBR-000",
+        disabled: true,
+        size: 50,
+      },
+      {
+        label: "Full Name",
+        name: "name",
+        placeholder: "Member Name",
+        size: 50,
+      },
+      {
+        label: "Email",
+        name: "email",
+        type: "email",
+        placeholder: "example@gmail.com",
+        size: 50,
+      },
+      {
+        label: "Contact Number",
+        name: "phone",
+        placeholder: "0000 0000 00",
+        mobile: true,
+        size: 50,
+      },
+      { label: "Date of Birth", name: "dob", type: "date", size: 50 },
+      {
+        label: "Gender",
+        name: "gender",
+        type: "select",
+        placeholder: "Select Gender",
+        options: dropdownOptions.gender,
+        size: 50,
+      },
+      { label: "Height", placeholder: "000 cm", name: "height", size: 30 },
+      { label: "Weight", placeholder: "00 kg", name: "weight", size: 30 },
+      {
+        label: "BMI",
+        name: "bmi",
+        placeholder: "00.0",
+        disabled: true,
+        size: 30,
+      },
+      {
+        label: "Address",
+        name: "address",
+        type: "textbox",
+        placeholder: "Enter Your Address",
+        size: 100,
+        rows: 2,
+      },
+    ],
+  },
+  {
+    title: "Fitness Plan Details",
+    fields: [
+      {
+        label: "Diet Plan",
+        name: "dietPlan",
+        type: "select",
+        placeholder: "Select Diet Plan",
+        options: [],
+        size: 50,
+      },
+      {
+        label: "Workout Plan",
+        name: "workoutPlan",
+        type: "select",
+        placeholder: "Select Workout Plan",
+        options: [],
+        size: 50,
+      },
+    ],
+  },
+  {
+    title: "Trainer Details",
+    fields: [
+      {
+        label: "Trainer Name",
+        name: "assignedTrainer",
+        type: "select",
+        placeholder: "Select Trainer",
+        options: [],
+        size: 50,
+      },
+      {
+        label: "Specialization",
+        name: "trainerSpecialization",
+        placeholder: "Trainer specialization",
+        disabled: true,
+        size: 50,
+      },
+    ],
+  },
+  {
+    title: "Membership Details",
+    fields: [
+      {
+        label: "Membership Plan",
+        name: "membershipPlan",
+        type: "select",
+        placeholder: "Select MembershipPlan",
+        options: [],
+        size: 30,
+      },
+      {
+        label: "Plan Duration (in Months)",
+        name: "durationMonths",
+        placeholder: "Months",
+        disabled: true,
+        size: 30,
+      },
+      {
+        label: "Plan Cost (₹)",
+        name: "price",
+        placeholder: "₹ 000.00",
+        disabled: true,
+        size: 30,
+      },
+      {
+        label: "Plan Start Date",
+        name: "startDate",
+        type: "date",
+        size: 50,
+        disabled: true,
+      },
+      {
+        label: "Plan End Date",
+        name: "endDate",
+        type: "date",
+        size: 50,
+        disabled: true,
+      },
+    ],
+  },
+];
