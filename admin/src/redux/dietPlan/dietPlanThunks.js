@@ -51,6 +51,7 @@ export const addNewDietPlan = createAsyncThunk(
   "dietplan/addNewDietPlan",
   async ({ newDietPlan }, { getState, rejectWithValue }) => {
     try {
+      console.log(newDietPlan);
       const token = getState().auth.token;
 
       const res = await axios.post(

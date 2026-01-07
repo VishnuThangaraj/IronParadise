@@ -29,10 +29,8 @@ const DietPlanList = () => {
     return dietPlans.filter(
       (row) =>
         row.dietPlanId?.toString().toLowerCase().includes(query) ||
-        row.name?.toString().toLowerCase().includes(query) ||
-        row.durationMonths?.toString().toLowerCase().includes(query) ||
-        row.price?.toString().toLowerCase().includes(query) ||
-        row.features?.toString().toLowerCase().includes(query)
+        row.dietPlanName?.toString().toLowerCase().includes(query) ||
+        row.goal?.toString().toLowerCase().includes(query)
     );
   }, [dietPlans, search]);
 
@@ -52,7 +50,7 @@ const DietPlanList = () => {
             <Button
               variant="solid"
               size="md"
-              onClick={() => navigate("/subscription/add")}
+              onClick={() => navigate("/plan/diet/add")}
               sx={{
                 px: 4,
                 borderRadius: 20,

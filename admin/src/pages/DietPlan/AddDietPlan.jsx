@@ -42,17 +42,17 @@ const AddDietPlan = () => {
   const loading = useSelector(selectDietPlanLoading);
   const counter = useSelector(selectDietPlanCounter);
 
-  const [NewDietPlan, setNewDietPlan] = useState(initialDietPlanState);
+  const [newDietPlan, setNewDietPlan] = useState(initialDietPlanState);
 
   useEffect(() => {
     dispatch(fetchDietPlanCounter({ role: "diet" }));
   }, [dispatch]);
 
   useEffect(() => {
-    if (counter) {
+    if (counter >= 0) {
       setNewDietPlan((prev) => ({
         ...prev,
-        userId: `WPL-${String(counter + 1).padStart(3, "0")}`,
+        dietPlanId: `DPL-${String(counter + 1).padStart(3, "0")}`,
       }));
     }
   }, [counter]);
@@ -74,7 +74,7 @@ const AddDietPlan = () => {
     if (!validation) return;
 
     try {
-      await dispatch(addNewDietPlan({ NewDietPlan })).unwrap();
+      await dispatch(addNewDietPlan({ newDietPlan })).unwrap();
       toast.success("Diet Plan Added Successfully!");
     } catch {
       toast.error("Failed to Add Diet Plan");
@@ -100,20 +100,22 @@ const AddDietPlan = () => {
             <div className="grid grid-cols-12 gap-4 px-6 pb-5">
               {DietPlanFieldGroup.map((group) => (
                 <Fragment key={`add_trainer_${group.title}`}>
-                  <div className="col-span-12 text-lg font-semibold mt-6">
+                  <div
+                    className={`col-span-12 text-lg font-semibold mt-6 ${group.classes}`}
+                  >
                     {group.title}
                   </div>
 
                   {group.fields.map(
                     (field) =>
-                      (!field.showIf || field.showIf(NewDietPlan)) && (
+                      (!field.showIf || field.showIf(newDietPlan)) && (
                         <div
                           key={field.name}
                           className={getColSpan(field.size)}
                         >
                           <FormField
                             field={field}
-                            value={NewDietPlan[field.name]}
+                            value={newDietPlan[field.name]}
                             onChange={handleChange}
                             disabled={field.disabled}
                           />

@@ -42,17 +42,17 @@ const AddWorkoutPlan = () => {
   const loading = useSelector(selectWorkoutPlanLoading);
   const counter = useSelector(selectWorkoutPlanCounter);
 
-  const [NewWorkoutPlan, setNewWorkoutPlan] = useState(initialWorkoutPlanState);
+  const [newWorkoutPlan, setNewWorkoutPlan] = useState(initialWorkoutPlanState);
 
   useEffect(() => {
     dispatch(fetchWorkoutPlanCounter({ role: "workout" }));
   }, [dispatch]);
 
   useEffect(() => {
-    if (counter) {
+    if (counter >= 0) {
       setNewWorkoutPlan((prev) => ({
         ...prev,
-        userId: `WPL-${String(counter + 1).padStart(3, "0")}`,
+        workoutPlanId: `WPL-${String(counter + 1).padStart(3, "0")}`,
       }));
     }
   }, [counter]);
@@ -74,7 +74,7 @@ const AddWorkoutPlan = () => {
     if (!validation) return;
 
     try {
-      await dispatch(addNewWorkoutPlan({ NewWorkoutPlan })).unwrap();
+      await dispatch(addNewWorkoutPlan({ newWorkoutPlan })).unwrap();
       toast.success("Workout Plan Added Successfully!");
     } catch {
       toast.error("Failed to Add Workout Plan");
@@ -100,20 +100,22 @@ const AddWorkoutPlan = () => {
             <div className="grid grid-cols-12 gap-4 px-6 pb-5">
               {WorkoutPlanFieldGroup.map((group) => (
                 <Fragment key={`add_trainer_${group.title}`}>
-                  <div className="col-span-12 text-lg font-semibold mt-6">
+                  <div
+                    className={`col-span-12 text-lg font-semibold mt-6 ${group.classes}`}
+                  >
                     {group.title}
                   </div>
 
                   {group.fields.map(
                     (field) =>
-                      (!field.showIf || field.showIf(NewWorkoutPlan)) && (
+                      (!field.showIf || field.showIf(newWorkoutPlan)) && (
                         <div
                           key={field.name}
                           className={getColSpan(field.size)}
                         >
                           <FormField
                             field={field}
-                            value={NewWorkoutPlan[field.name]}
+                            value={newWorkoutPlan[field.name]}
                             onChange={handleChange}
                             disabled={field.disabled}
                           />
