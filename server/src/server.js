@@ -11,6 +11,7 @@ const memberRoutes = require("./routes/memberRoutes");
 const counterRoutes = require("./routes/counterRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
 const dietPlanRoutes = require("./routes/dietPlanRoutes");
+const membershipRoutes = require("./routes/membershipRoutes");
 const workoutPlanRoutes = require("./routes/workoutPlanRoutes");
 const membershipPlanRoutes = require("./routes/membershipPlanRoutes");
 
@@ -34,6 +35,7 @@ app.use("/member", memberRoutes);
 app.use("/counter", counterRoutes);
 app.use("/trainer", trainerRoutes);
 app.use("/dietplan", dietPlanRoutes);
+app.use("/membership", membershipRoutes);
 app.use("/workoutplan", workoutPlanRoutes);
 app.use("/membershipplan", membershipPlanRoutes);
 

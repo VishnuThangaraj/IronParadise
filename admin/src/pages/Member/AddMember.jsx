@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Fragment, useEffect, useMemo, useState, useCallback } from "react";
 
 import { toast } from "sonner";
 import Box from "@mui/joy/Box";
@@ -37,8 +37,6 @@ import { selectAllMembershipPlans } from "../../redux/membershipPlan/membershipP
 
 import FormField from "../../components/Form/FormField";
 import { PageLocation } from "../../components/PageLocation";
-
-/* ---------------- Helpers ---------------- */
 
 const getColSpan = (size = 50) =>
   ({
@@ -91,7 +89,12 @@ const AddMember = () => {
 
   const membershipDerived = useMemo(() => {
     if (!selectedMembershipPlan) {
-      return { durationMonths: "", price: "", startDate: "", endDate: "" };
+      return {
+        durationMonths: "",
+        price: "",
+        startDate: "",
+        endDate: "",
+      };
     }
 
     const start = new Date();
@@ -139,6 +142,7 @@ const AddMember = () => {
             workoutPlan: workoutPlanOptions,
             membershipPlan: membershipPlanOptions,
           };
+
           return optionsMap[field.name]
             ? { ...field, options: optionsMap[field.name] }
             : field;
@@ -159,6 +163,7 @@ const AddMember = () => {
         const w = Number(updated.weight);
         updated.bmi = h && w ? (w / (h * h)).toFixed(2) : "";
       }
+
       return updated;
     });
   }, []);
@@ -176,9 +181,11 @@ const AddMember = () => {
     try {
       await dispatch(addNewMember({ newMember: payload })).unwrap();
       toast.success("Member Added Successfully!");
-      setNewMember(initialMemberState);
-    } catch {
+    } catch (error) {
+      console.log(error);
       toast.error("Failed to Add Member");
+    } finally {
+      setNewMember(initialMemberState);
     }
   };
 
