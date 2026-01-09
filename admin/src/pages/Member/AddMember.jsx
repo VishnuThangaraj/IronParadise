@@ -171,16 +171,38 @@ const AddMember = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...newMember,
-      memberId,
-      trainerSpecialization,
+    const {
+      price: _price,
+      endDate: _endDate,
+      memberId: _memberId,
+      startDate: _startDate,
+      durationMonths: _durationMonths,
+      membershipPlan: _membershipPlan,
+      trainerSpecialization: _trainerSpecialization,
+      dietPlan,
+      workoutPlan,
+      ...member_payload
+    } = newMember;
+
+    const membership_payload = {
       ...membershipDerived,
+      plan: newMember?.membershipPlan,
+    };
+
+    const fitness_payload = {
+      dietPlan,
+      workoutPlan,
     };
 
     try {
-      await dispatch(addNewMember({ newMember: payload })).unwrap();
-      toast.success("Member Added Successfully!");
+      await dispatch(
+        addNewMember({
+          newMember: member_payload,
+          newMembership: membership_payload,
+          newFitnessPlan: fitness_payload,
+        })
+      ).unwrap();
+      toast.success("Member Added Successfully.");
     } catch (error) {
       console.log(error);
       toast.error("Failed to Add Member");

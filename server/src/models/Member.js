@@ -18,6 +18,10 @@ const MemberSchema = new mongoose.Schema(
     weight: Number,
     bmi: Number,
     dob: { type: Date, required: true },
+    address: {
+      type: String,
+      trim: true,
+    },
 
     assignedTrainer: {
       type: mongoose.Schema.Types.ObjectId,

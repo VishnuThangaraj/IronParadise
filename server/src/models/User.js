@@ -49,6 +49,10 @@ const UserSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
+    address: {
+      type: String,
+      trim: true,
+    },
 
     specialization: String,
     experienceYears: Number,

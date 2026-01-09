@@ -12,6 +12,7 @@ const MembershipSchema = new mongoose.Schema(
       ref: "MembershipPlan",
       required: true,
     },
+    durationMonths: { type: Number, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     status: { type: String, default: "inactive" },
