@@ -27,7 +27,7 @@ const sendMail = async (to, subject, html) => {
   }
 };
 
-// Send email function
+// Send email function with file
 const sendMailWithFile = async (to, subject, html, file) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,

@@ -93,7 +93,6 @@ const AddTrainer = () => {
     const updatedTrainer = { ...trainer, [name]: value };
     setTrainer(updatedTrainer);
 
-    // Calculate BMI if height and weight are present
     if (name === "height" || name === "weight") {
       const height = Number(updatedTrainer.height) / 100;
       const weight = Number(updatedTrainer.weight);
@@ -173,7 +172,7 @@ const AddTrainer = () => {
                     variant="solid"
                     size="md"
                     sx={{ py: 1 }}
-                    disabled
+                    disabled={true}
                   />
                 </FormControl>
                 <FormControl sx={{ width: "48%" }}>
@@ -430,7 +429,7 @@ const AddTrainer = () => {
                           color: "white",
                         }}
                       />{" "}
-                      <span className="ms-5 text-base">Adding ...</span>
+                      <span className="ms-3 text-base">Adding ...</span>
                     </Fragment>
                   ) : (
                     "Add Trainer"
