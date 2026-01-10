@@ -163,8 +163,8 @@ const sendEmail = async (eventData) => {
                   <div class="section">
                       <h2>Support</h2>
                       <p>If you need assistance, please contact our support team:</p>
-                      <p>Email: <a href="mailto:sanzironparadise7@gmail.com
-">sanzironparadise7@gmail.com
+                      <p>Email: <a href="mailto:vishnuthangaraj.developer@gmail.com
+">vishnuthangaraj.developer@gmail.com
 </a></p>
                       <p>Phone: +91 6584 857 496</p>
                   </div>
@@ -328,8 +328,8 @@ const sendEmail = async (eventData) => {
                   <div class="section">
                       <h2>Support</h2>
                       <p>If you need assistance, please contact our support team:</p>
-                      <p>Email: <a href="mailto:sanzironparadise7@gmail.com
-">sanzironparadise7@gmail.com
+                      <p>Email: <a href="mailto:vishnuthangaraj.developer@gmail.com
+">vishnuthangaraj.developer@gmail.com
 </a></p>
                       <p>Phone: +91 6584 857 496</p>
                   </div>
@@ -503,8 +503,8 @@ const MailPast = async (member) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
-">sanzironparadise7@gmail.com
+                <p>Email: <a href="mailto:vishnuthangaraj.developer@gmail.com
+">vishnuthangaraj.developer@gmail.com
 </a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
@@ -685,8 +685,8 @@ const mailGoingToExpire = async (member) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
-">sanzironparadise7@gmail.com
+                <p>Email: <a href="mailto:vishnuthangaraj.developer@gmail.com
+">vishnuthangaraj.developer@gmail.com
 </a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
@@ -871,8 +871,8 @@ const mailPayment = async (member) => {
             <div class="section">
                 <h2>Support</h2>
                 <p>If you need assistance, please contact our support team:</p>
-                <p>Email: <a href="mailto:sanzironparadise7@gmail.com
-">sanzironparadise7@gmail.com
+                <p>Email: <a href="mailto:vishnuthangaraj.developer@gmail.com
+">vishnuthangaraj.developer@gmail.com
 </a></p>
                 <p>Phone: +91 6584 857 496</p>
             </div>
