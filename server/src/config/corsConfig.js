@@ -5,6 +5,7 @@ const allowedOrigins = [
   process.env.ADMIN_ORIGIN,
   process.env.CLIENT_ORIGIN,
   process.env.ENQUIRY_ORIGIN,
+  process.env.HOST_ORIGIN,
 ];
 
 const corsOptions = {
