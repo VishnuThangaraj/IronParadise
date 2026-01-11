@@ -5,6 +5,13 @@ const memberController = require("../controllers/memberController");
 // Fetch All Members
 router.get("/", authenticateJWT(["admin"]), memberController.fetchAllMembers);
 
+// Create Member
+router.post(
+  "/create",
+  authenticateJWT(["admin"]),
+  memberController.registerMember
+);
+
 // Fetch Member by ID
 router.get(
   "profile/:id",

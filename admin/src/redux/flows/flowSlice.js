@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addMemberFlow } from "./addMember..flow";
+import { addMemberFlow } from "./addMember.flow";
 
 const initialState = {
   addMember: {

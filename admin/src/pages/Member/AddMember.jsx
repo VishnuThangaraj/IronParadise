@@ -13,10 +13,9 @@ import {
   initialMemberState,
 } from "../../config/MemberFields";
 
-import {
-  addNewMember,
-  fetchMemberCounter,
-} from "../../redux/member/memberThunks";
+import { fetchMemberCounter } from "../../redux/member/memberThunks";
+
+import { addMemberFlow } from "../../redux/flows/addMember.flow";
 
 import {
   selectMemberLoading,
@@ -196,7 +195,7 @@ const AddMember = () => {
 
     try {
       await dispatch(
-        addNewMember({
+        addMemberFlow({
           newMember: member_payload,
           newMembership: membership_payload,
           newFitnessPlan: fitness_payload,

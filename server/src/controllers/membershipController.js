@@ -2,7 +2,8 @@ const Membership = require("../models/Membership");
 
 // Create New Membership Plan
 const createMembership = async (req, res) => {
-  const { membershipId } = req.body;
+  console.log(req.body);
+  const { plan } = req.body;
 
   try {
     const existingMembership = await Membership.findOne({ membershipId });

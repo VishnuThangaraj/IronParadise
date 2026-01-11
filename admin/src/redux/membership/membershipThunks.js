@@ -53,7 +53,6 @@ export const addNewMembership = createAsyncThunk(
   "membership/addNewMembership",
   async ({ newMembership }, { getState, rejectWithValue }) => {
     try {
-      console.log(newMembership);
       const token = getState().auth.token;
 
       const res = await axios.post(

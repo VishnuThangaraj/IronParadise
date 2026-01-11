@@ -7,18 +7,17 @@ import { addNewFitnessPlan } from "../fitnessPlan/fitnessPlanThunks";
 export const addMemberFlow = createAsyncThunk(
   "flows/addMember",
   async (
-    { memberPayload, newMembership, newFitnessPlan },
+    { newMember, newMembership, newFitnessPlan },
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const member = await dispatch(addNewMember(memberPayload)).unwrap();
+      const member = await dispatch(addNewMember({ newMember })).unwrap();
       const memberId = member._id;
 
       if (newMembership) {
         await dispatch(
           addNewMembership({
-            ...newMembership,
-            member: memberId,
+            newMembership: { ...newMembership, member: memberId },
           })
         ).unwrap();
       }
@@ -26,8 +25,10 @@ export const addMemberFlow = createAsyncThunk(
       if (newFitnessPlan) {
         await dispatch(
           addNewFitnessPlan({
-            ...newFitnessPlan,
-            member: memberId,
+            newFitnessPlan: {
+              ...newFitnessPlan,
+              member: memberId,
+            },
           })
         );
       }
