@@ -204,7 +204,7 @@ const AddMember = () => {
       toast.success("Member Added Successfully.");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to Add Member");
+      toast.error("Failed to Add Member.");
     } finally {
       setNewMember(initialMemberState);
     }
