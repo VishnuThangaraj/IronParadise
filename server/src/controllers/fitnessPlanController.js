@@ -2,13 +2,17 @@ const FitnessPlan = require("../models/MemberFitnessPlan");
 
 // Create New Fitness Plan
 const createFitnessPlan = async (req, res) => {
-  const { fitnessPlanId } = req.body;
+  const { memberId } = req.body;
 
   try {
-    const existingFitnessPlan = await FitnessPlan.findOne({ fitnessPlanId });
+    const existingFitnessPlan = await FitnessPlan.findOne({
+      memberId: memberId,
+    });
 
     if (existingFitnessPlan) {
-      return res.status(400).json({ message: "Fitness Plan already exists" });
+      return res
+        .status(400)
+        .json({ message: "Fitness Plan already exists for the Member" });
     }
 
     const fitnessPlan = new FitnessPlan({

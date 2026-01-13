@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const MembershipSchema = new mongoose.Schema(
   {
-    member: {
+    memberId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Member",
       required: true,

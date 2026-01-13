@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const MemberFitnessPlanSchema = new mongoose.Schema(
   {
-    member: {
+    memberId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Member",
     },

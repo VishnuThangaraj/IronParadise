@@ -2,16 +2,15 @@ const Membership = require("../models/Membership");
 
 // Create New Membership Plan
 const createMembership = async (req, res) => {
-  console.log(req.body);
-  const { plan } = req.body;
+  const { memberId } = req.body;
 
   try {
-    const existingMembership = await Membership.findOne({ membershipId });
+    const existingMembership = await Membership.findOne({ memberId: memberId });
 
     if (existingMembership) {
       return res
         .status(400)
-        .json({ message: "Membership Plan already exists" });
+        .json({ message: "Membership already exists for the Member." });
     }
 
     const membership = new Membership({
@@ -23,7 +22,7 @@ const createMembership = async (req, res) => {
     const membershipResponse = membership.toObject();
 
     res.status(201).json({
-      message: `Membership Plan created successfully`,
+      message: `Membership created successfully`,
       membership: membershipResponse,
     });
   } catch (err) {

@@ -11,13 +11,15 @@ export const addMemberFlow = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const member = await dispatch(addNewMember({ newMember })).unwrap();
-      const memberId = member._id;
+      const memberResponse = await dispatch(
+        addNewMember({ newMember })
+      ).unwrap();
+      const memberId = memberResponse.member._id;
 
       if (newMembership) {
         await dispatch(
           addNewMembership({
-            newMembership: { ...newMembership, member: memberId },
+            newMembership: { ...newMembership, memberId: memberId },
           })
         ).unwrap();
       }
@@ -27,13 +29,13 @@ export const addMemberFlow = createAsyncThunk(
           addNewFitnessPlan({
             newFitnessPlan: {
               ...newFitnessPlan,
-              member: memberId,
+              memberId: memberId,
             },
           })
         );
       }
 
-      return member;
+      return memberResponse.member;
     } catch (error) {
       return rejectWithValue(error?.message || "Add member flow failed");
     }
