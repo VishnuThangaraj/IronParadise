@@ -2,7 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, CardContent } from "@mui/joy";
+import Card from "@mui/joy/Card";
+import Button from "@mui/joy/Button";
+import CardContent from "@mui/joy/CardContent";
 
 import { TrainerColumns } from "./TrainerColumns";
 import { PageLocation } from "../../components/PageLocation";

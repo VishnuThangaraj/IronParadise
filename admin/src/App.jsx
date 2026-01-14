@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useMemo, Suspense, lazy } from "react";
+import { useEffect, useMemo, Suspense, lazy, Fragment } from "react";
 
 import "./App.scss";
 
@@ -14,17 +14,18 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
+const Message = lazy(() => import("./pages/Message/Message"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
 const MembersList = lazy(() => import("./pages/Member/MembersList"));
 const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
-const WorkoutPlanList = lazy(() =>
-  import("./pages/WorkoutPlan/WorkoutPlanList")
-);
 const AddDietPlan = lazy(() => import("./pages/DietPlan/AddDietPlan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
+const WorkoutPlanList = lazy(() =>
+  import("./pages/WorkoutPlan/WorkoutPlanList")
+);
 const AddMembership = lazy(() =>
   import("./pages/MembershipPlan/AddMembershipPlan")
 );
@@ -60,7 +61,7 @@ const App = () => {
     switch (user.role) {
       case "admin":
         return (
-          <>
+          <Fragment>
             <Sidebar />
             <div id="main-content-holder">
               <Navbar />
@@ -103,6 +104,9 @@ const App = () => {
                       element={<AddWorkoutPlan />}
                     />
 
+                    {/* Messages */}
+                    <Route path="/message" element={<Message />} />
+
                     <Route path="*" element={<Navigate to="/home" replace />} />
                   </Routes>
                 </Suspense>
@@ -110,7 +114,7 @@ const App = () => {
                 <Footer />
               </div>
             </div>
-          </>
+          </Fragment>
         );
 
       // case "staff":

@@ -110,33 +110,4 @@ const Sidebar = () => {
     </div>
   );
 };
-
-{
-  /* 
-
-                {AdminSidebarItems.map((list, index) => (
-                  <div
-                    key={`side-general-${index}`}
-                    className={`p-2 cursor-pointer transition-all duration-300 w-full rounded-xl ${
-                      location.slice(1).startsWith(list.location)
-                        ? "text-white bg-gray-800"
-                        : "text-gray-300 hover:text-white hover:ps-3 hover:bg-gray-800"
-                    }`}
-                    onClick={() => {
-                      if (location.slice(1) !== list.location) {
-                        // setExpanded(null);
-                        navigate(`/${list.location}`);
-                      }
-                    }}
-                  >
-                    <i
-                      className={`pe-4 text-sm ${list.icon}`}
-                      
-                    ></i>
-                    <span >{list.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div> */
-}
 export default Sidebar;

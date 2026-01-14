@@ -1,7 +1,7 @@
 import { Sheet } from "@mui/joy";
 import { DataGrid } from "@mui/x-data-grid";
 
-const DataTable = ({ rows, columns, pageSize = 5 }) => {
+const DataTable = ({ rows, columns, pageSize = 5, checkBox = false }) => {
   return (
     <Sheet
       sx={{
@@ -16,6 +16,7 @@ const DataTable = ({ rows, columns, pageSize = 5 }) => {
         columns={columns}
         getRowId={(row) => row._id}
         pageSizeOptions={[10, 25, 50]}
+        checkboxSelection={checkBox}
         initialState={{
           pagination: { paginationModel: { pageSize } },
         }}
