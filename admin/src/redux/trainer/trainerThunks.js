@@ -69,3 +69,22 @@ export const addNewTrainer = createAsyncThunk(
     }
   }
 );
+
+// Fetch Trainer by ID
+export const fetchTrainerById = createAsyncThunk(
+  async (trainerId, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.get(`/auth/user/${trainerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Add New Trainer");
+    }
+  }
+);

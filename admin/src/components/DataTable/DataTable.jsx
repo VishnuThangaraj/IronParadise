@@ -1,7 +1,26 @@
 import { Sheet } from "@mui/joy";
 import { DataGrid } from "@mui/x-data-grid";
 
-const DataTable = ({ rows, columns, pageSize = 5, checkBox = false }) => {
+import { useNavigate } from "react-router-dom";
+
+const DataTable = ({
+  rows,
+  columns,
+  pageSize = 5,
+  checkBox = false,
+  rowClick = false,
+  rowClickPath = "",
+}) => {
+  const navigate = useNavigate();
+
+  const handleRowClick = (params) => {
+    if (!rowClick) return;
+    console.log(`${rowClickPath}/${params.row._id}`);
+    return navigate(`${rowClickPath}/${params.row._id}`, {
+      state: { edit: false },
+    });
+  };
+
   return (
     <Sheet
       sx={{
@@ -17,6 +36,7 @@ const DataTable = ({ rows, columns, pageSize = 5, checkBox = false }) => {
         getRowId={(row) => row._id}
         pageSizeOptions={[10, 25, 50]}
         checkboxSelection={checkBox}
+        onRowClick={handleRowClick}
         initialState={{
           pagination: { paginationModel: { pageSize } },
         }}

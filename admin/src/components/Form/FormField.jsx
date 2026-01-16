@@ -14,7 +14,7 @@ const fieldStyle = {
   fontSize: 15,
 };
 
-const FormField = ({ field, value, onChange }) => {
+const FormField = ({ field, value, onChange, disabled = false }) => {
   if (field.type === "select") {
     return (
       <FormControl>
@@ -26,7 +26,7 @@ const FormField = ({ field, value, onChange }) => {
           onChange={(_, val) => onChange(field.name, val)}
           size="md"
           sx={fieldStyle}
-          disabled={field.disabled}
+          disabled={disabled}
           required={field.required !== false}
         >
           {field.options.map((option) => {
@@ -55,7 +55,7 @@ const FormField = ({ field, value, onChange }) => {
           onChange={(e) => onChange(field.name, e.target.value)}
           minRows={field.rows || 2}
           maxRows={field.rows || 2}
-          disabled={field.disabled}
+          disabled={disabled}
           placeholder={field.placeholder}
         />
       </FormControl>
@@ -69,7 +69,7 @@ const FormField = ({ field, value, onChange }) => {
         type={field.type || "text"}
         value={value ?? ""}
         onChange={(e) => onChange(field.name, e.target.value)}
-        disabled={field.disabled}
+        disabled={disabled}
         startDecorator={field.mobile ? "+91" : null}
         placeholder={field.placeholder}
         sx={fieldStyle}

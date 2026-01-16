@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   addNewTrainer,
   fetchAllTrainers,
+  fetchTrainerById,
   fetchTrainerCounter,
 } from "./trainerThunks";
 
@@ -60,6 +61,19 @@ const trainerSlice = createSlice({
         state.trainers.push(action.payload);
       })
       .addCase(addNewTrainer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Trainer By Id
+      .addCase(fetchTrainerById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTrainerById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.trainers.push(action.payload);
+      })
+      .addCase(fetchTrainerById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

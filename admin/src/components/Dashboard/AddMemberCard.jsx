@@ -2,7 +2,7 @@ const AddMemberCard = ({ navigate }) => {
   return (
     <div
       key={`Add-member-card-dashboard`}
-      className="w-full flex justify-between items-center bg-teal-50 p-3 shadow-md rounded-lg"
+      className="w-full flex justify-between items-center bg-teal-50 p-3 shadow-lg rounded-lg"
     >
       <div className="text-gray-600 text-sm">
         let&apos;s add new member
@@ -14,7 +14,7 @@ const AddMemberCard = ({ navigate }) => {
         </div>
       </div>
       <div className="items-center">
-        <img src="images/dashboard_women.webp" width={75} />
+        <img src="images/dashboard_women.webp" width={72} />
       </div>
     </div>
   );

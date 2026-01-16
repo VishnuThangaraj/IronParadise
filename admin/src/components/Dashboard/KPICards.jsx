@@ -2,7 +2,7 @@ const KPICards = ({ key, title, data, border, icon, bg }) => {
   return (
     <div
       key={key}
-      className={`flex flex-col w-3/12 bg-white shadow-md p-4 rounded-lg border-b-4 ${border}`}
+      className={`flex flex-col w-3/12 bg-white shadow-lg p-4 rounded-lg border-b-4 ${border}`}
     >
       <div className="text-sm font-semibold text-gray-500">{title}</div>
       <div className="flex justify-between mt-1">

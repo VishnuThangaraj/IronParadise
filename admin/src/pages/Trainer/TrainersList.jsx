@@ -67,7 +67,12 @@ const TrainersList = () => {
             </Button>
           </div>
 
-          <DataTable rows={filteredRows} columns={TrainerColumns(navigate)} />
+          <DataTable
+            rows={filteredRows}
+            columns={TrainerColumns(navigate)}
+            rowClick={true}
+            rowClickPath={"/trainer/details"}
+          />
         </CardContent>
       </Card>
     </div>

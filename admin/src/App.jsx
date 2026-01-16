@@ -21,6 +21,7 @@ const MembersList = lazy(() => import("./pages/Member/MembersList"));
 const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
 const AddDietPlan = lazy(() => import("./pages/DietPlan/AddDietPlan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
+const TrainerDetails = lazy(() => import("./pages/Trainer/TrainerDetails"));
 const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 const WorkoutPlanList = lazy(() =>
@@ -71,12 +72,18 @@ const App = () => {
               >
                 <Suspense fallback={<Loader />}>
                   <Routes>
+                    <Route path="/" element={<Navigate to="/home" replace />} />
+
                     {/* General */}
                     <Route path="/home" element={<AdminDashborard />} />
 
                     {/* Trainer */}
                     <Route path="/trainer/add" element={<AddTrainer />} />
                     <Route path="/trainer/list" element={<TrainersList />} />
+                    <Route
+                      path="/trainer/details/:id"
+                      element={<TrainerDetails />}
+                    />
 
                     {/* Members */}
                     <Route path="/member/add" element={<AddMember />} />
@@ -107,6 +114,7 @@ const App = () => {
                     {/* Messages */}
                     <Route path="/message" element={<Message />} />
 
+                    {/* Fallback */}
                     <Route path="*" element={<Navigate to="/home" replace />} />
                   </Routes>
                 </Suspense>

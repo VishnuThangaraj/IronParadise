@@ -2,7 +2,7 @@ const NewMembersCard = ({ members }) => {
   return (
     <div
       key="NewMembersCard"
-      className="bg-white rounded-lg shadow-md py-4 px-5"
+      className="bg-white rounded-lg shadow-lg py-4 px-5"
     >
       <div className="font-semibold text-xl">New Members</div>
       {members.map((member, index) => (

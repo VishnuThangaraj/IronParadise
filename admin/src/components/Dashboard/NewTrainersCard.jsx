@@ -3,7 +3,7 @@ import { Card, CardContent, Button, Table, Divider, Box } from "@mui/joy";
 const NewTrainersCard = ({ trainers }) => {
   return (
     <div key="NewTrainersCard">
-      <Card className="shadow-md" sx={{ p: 3, backgroundColor: "white" }}>
+      <Card className="shadow-lg" sx={{ p: 3, backgroundColor: "white" }}>
         <CardContent>
           <div className="font-semibold text-lg">Recently Added Trainers</div>
           <Divider />
