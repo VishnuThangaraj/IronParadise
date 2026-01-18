@@ -14,6 +14,7 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
+const Events = lazy(() => import("./pages/Event/Events"));
 const Message = lazy(() => import("./pages/Message/Message"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
@@ -24,14 +25,14 @@ const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const TrainerDetails = lazy(() => import("./pages/Trainer/TrainerDetails"));
 const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
-const WorkoutPlanList = lazy(() =>
-  import("./pages/WorkoutPlan/WorkoutPlanList")
+const WorkoutPlanList = lazy(
+  () => import("./pages/WorkoutPlan/WorkoutPlanList"),
 );
-const AddMembership = lazy(() =>
-  import("./pages/MembershipPlan/AddMembershipPlan")
+const AddMembership = lazy(
+  () => import("./pages/MembershipPlan/AddMembershipPlan"),
 );
-const MembershipPlan = lazy(() =>
-  import("./pages/MembershipPlan/MembershipPlanList")
+const MembershipPlan = lazy(
+  () => import("./pages/MembershipPlan/MembershipPlanList"),
 );
 
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
 
                     {/* General */}
                     <Route path="/home" element={<AdminDashborard />} />
+                    <Route path="/events/view" element={<Events />} />
 
                     {/* Trainer */}
                     <Route path="/trainer/add" element={<AddTrainer />} />

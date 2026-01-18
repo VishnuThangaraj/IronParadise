@@ -7,6 +7,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const counterRoutes = require("./routes/counterRoutes");
 const trainerRoutes = require("./routes/trainerRoutes");
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/event", eventRoutes);
 app.use("/member", memberRoutes);
 app.use("/counter", counterRoutes);
 app.use("/trainer", trainerRoutes);
