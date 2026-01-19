@@ -11,7 +11,7 @@ const EventSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["trainer", "member", "workout", "diet", "system"],
+      enum: ["Trainer", "Member", "Workout", "Diet", "System"],
       required: true,
     },
 
@@ -27,13 +27,13 @@ const EventSchema = new mongoose.Schema(
 
     visibility: {
       type: String,
-      enum: ["private", "role-based", "public"],
-      default: "private",
+      enum: ["Private", "Role-based", "Public"],
+      default: "Private",
     },
 
     allowedRoles: {
       type: [String],
-      enum: ["admin", "trainer", "member"],
+      enum: ["Admin", "Trainer", "Member"],
       default: [],
     },
 

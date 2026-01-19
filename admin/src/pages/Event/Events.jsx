@@ -5,6 +5,8 @@ import CardContent from "@mui/joy/CardContent";
 import { PageLocation } from "../../components/PageLocation";
 import { useNavigate } from "react-router-dom";
 
+import Calendar from "../../components/Calendar";
+
 const Events = () => {
   const navigate = useNavigate();
 
@@ -30,11 +32,12 @@ const Events = () => {
                 "&:hover": { bgcolor: "#222" },
               }}
             >
-              <i className="fa-light fa-file-chart-column me-2"></i>
-              Generate Report
+              <i className="fa-light fa-calendar-circle-plus me-2"></i>
+              Add Event
             </Button>
           </div>
 
+          <Calendar />
           {/* <DataTable rows={filteredRows} columns={DietPlanColumns(navigate)} /> */}
         </CardContent>
       </Card>
