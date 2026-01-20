@@ -17,7 +17,7 @@ export const fetchAllTrainers = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to fetch trainers");
     }
-  }
+  },
 );
 
 // Fetch Trainer Counter
@@ -34,16 +34,16 @@ export const fetchTrainerCounter = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       return res.data.seq || 0;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || "Failed to fetch trainer counter"
+        err.response?.data || "Failed to fetch trainer counter",
       );
     }
-  }
+  },
 );
 
 // Add New Trainer
@@ -60,31 +60,31 @@ export const addNewTrainer = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to Add New Trainer");
     }
-  }
+  },
 );
 
 // Fetch Trainer by ID
 export const fetchTrainerById = createAsyncThunk(
+  "trainer/fetchTrainerById",
   async (trainerId, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
 
-      const res = await axios.get(`/auth/user/${trainerId}`, {
+      const res = await axios.get(`/user/profile/${trainerId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      return res.data;
+      return res.data.user;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to Add New Trainer");
     }
-  }
+  },
 );

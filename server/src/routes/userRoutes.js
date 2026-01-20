@@ -6,21 +6,21 @@ const userController = require("../controllers/userController");
 router.get(
   "/profile/:id",
   authenticateJWT(["admin"]),
-  userController.fetchUserById
+  userController.fetchUserById,
 );
 
 // Update User by ID
 router.put(
   "/update/:id",
   authenticateJWT(["admin"]),
-  userController.updateUserById
+  userController.updateUserById,
 );
 
 // Delete User by ID
 router.delete(
   "/delete/:id",
   authenticateJWT(["admin"]),
-  userController.deleteUserById
+  userController.deleteUserById,
 );
 
 module.exports = router;

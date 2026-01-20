@@ -7,6 +7,7 @@ import {
 } from "./trainerThunks";
 
 const initialState = {
+  currentTrainer: null,
   trainers: [],
   loading: false,
   error: null,
@@ -71,7 +72,7 @@ const trainerSlice = createSlice({
       })
       .addCase(fetchTrainerById.fulfilled, (state, action) => {
         state.loading = false;
-        state.trainers.push(action.payload);
+        state.currentTrainer = action.payload;
       })
       .addCase(fetchTrainerById.rejected, (state, action) => {
         state.loading = false;

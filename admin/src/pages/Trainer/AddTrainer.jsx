@@ -107,7 +107,7 @@ const AddTrainer = () => {
     } catch {
       toast.error("Failed to Add Trainer");
     } finally {
-      // setNewTrainer(initialTrainerState);
+      setNewTrainer(initialTrainerState);
     }
   };
 
@@ -147,7 +147,7 @@ const AddTrainer = () => {
                             disabled={field.disabled}
                           />
                         </div>
-                      )
+                      ),
                   )}
                 </Fragment>
               ))}

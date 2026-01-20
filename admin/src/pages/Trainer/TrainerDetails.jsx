@@ -12,10 +12,14 @@ import {
   TrainerFieldGroup,
   initialTrainerState,
 } from "../../config/TrainerFields";
-import { selectTrainerLoading } from "../../redux/trainer/trainerSelectors";
+import {
+  selectTrainerLoading,
+  selectCurrentTrainer,
+} from "../../redux/trainer/trainerSelectors";
 import FormField from "../../components/Form/FormField";
 import { PageLocation } from "../../components/PageLocation";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { fetchTrainerById } from "../../redux/trainer/trainerThunks";
 
 const getColSpan = (size) => {
   switch (size) {
@@ -41,15 +45,57 @@ const maxLengthMap = {
 const TrainerDetails = () => {
   const dispatch = useDispatch();
 
+  const loading = useSelector(selectTrainerLoading);
+
   const { id } = useParams();
   const { state } = useLocation();
 
   const trainerId = id ?? null;
-  const editMode = state?.edit ?? Boolean(id);
+  const [editMode, setEditMode] = useState(state?.edit ?? Boolean(id));
 
-  const loading = useSelector(selectTrainerLoading);
+  const trainerFromStore = useSelector(selectCurrentTrainer);
 
   const [trainer, setTrainer] = useState(initialTrainerState);
+
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toISOString().split("T")[0];
+  };
+
+  useEffect(() => {
+    if (trainerId) {
+      dispatch(fetchTrainerById(trainerId));
+    }
+  }, [trainerId, dispatch]);
+
+  useEffect(() => {
+    if (trainerFromStore) {
+      setTrainer({
+        ...trainerFromStore,
+        dob: formatDateForInput(trainerFromStore.dob),
+        joiningDate: formatDateForInput(trainerFromStore.joiningDate),
+      });
+    }
+  }, [trainerFromStore]);
+
+  const checkValidation = () => {
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validation = checkValidation();
+    if (!validation) return;
+
+    try {
+      // await dispatch(updateTr({ trainer })).unwrap();
+      toast.success("Trainer Updated Successfully!");
+    } catch {
+      toast.error("Failed to Update Trainer");
+    } finally {
+      setEditMode(false);
+    }
+  };
 
   return (
     <div key="Trainer_Details">
@@ -60,27 +106,26 @@ const TrainerDetails = () => {
       />
       <Card className="shadow-md" sx={{ my: 1, mb: 4, p: 0, pb: 3 }}>
         <CardContent>
-          <Box
-            component="form"
-            //   onSubmit={handleSubmit}
-          >
+          <Box component="form" onSubmit={handleSubmit}>
             <div className="flex justify-between border-b-2 border-gray-200 p-5">
               <div className="text-xl font-bold ">
                 {editMode ? "Update Existing Trainer" : "View Existing Trainer"}
               </div>
-              <Button
-                className="transition-transform duration-400 hover:scale-103"
-                variant="solid"
-                size="md"
-                sx={{
-                  px: 3,
-                  backgroundColor: "black",
-                  "&:hover": { backgroundColor: "#222222" },
-                }}
-                onClick={switchToEditMode}
-              >
-                <i className="fa-light fa-user-pen me-2"></i>Edit Trainer
-              </Button>
+              {!editMode && (
+                <Button
+                  className="transition-transform duration-400 hover:scale-103"
+                  variant="solid"
+                  size="md"
+                  sx={{
+                    px: 3,
+                    backgroundColor: "black",
+                    "&:hover": { backgroundColor: "#222222" },
+                  }}
+                  onClick={() => setEditMode(true)}
+                >
+                  <i className="fa-light fa-user-pen me-2"></i>Edit Trainer
+                </Button>
+              )}
             </div>
 
             <div className="grid grid-cols-12 gap-4 px-6 pb-5">
@@ -104,14 +149,27 @@ const TrainerDetails = () => {
                             disabled={!editMode || field.disabled}
                           />
                         </div>
-                      )
+                      ),
                   )}
                 </Fragment>
               ))}
             </div>
 
             {editMode && (
-              <div className="flex justify-end px-6 py-3">
+              <div className="flex justify-end px-6 py-3 gap-5">
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  color="danger"
+                  size="md"
+                  sx={{
+                    px: 3,
+                  }}
+                  disabled={loading}
+                  onClick={() => setEditMode(false)}
+                >
+                  Cancel
+                </Button>
                 <Button
                   variant="solid"
                   type="submit"
