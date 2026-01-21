@@ -88,3 +88,26 @@ export const fetchTrainerById = createAsyncThunk(
     }
   },
 );
+
+// Update Trainer by ID
+export const updateTrainerById = createAsyncThunk(
+  "trainer/updateTrainerById",
+  async ({ trainerId, updatedData }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.put(
+        `/user/update/${trainerId}`,
+        { updatedData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Update Trainer");
+    }
+  },
+);

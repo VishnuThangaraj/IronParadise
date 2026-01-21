@@ -19,7 +19,10 @@ import {
 import FormField from "../../components/Form/FormField";
 import { PageLocation } from "../../components/PageLocation";
 import { useLocation, useParams } from "react-router-dom";
-import { fetchTrainerById } from "../../redux/trainer/trainerThunks";
+import {
+  fetchTrainerById,
+  updateTrainerById,
+} from "../../redux/trainer/trainerThunks";
 
 const getColSpan = (size) => {
   switch (size) {
@@ -78,6 +81,33 @@ const TrainerDetails = () => {
     }
   }, [trainerFromStore]);
 
+  const handleChange = (name, value) => {
+    if (numericFields.includes(name) && isNaN(Number(value))) return;
+
+    if (maxLengthMap[name] && value.length > maxLengthMap[name]) return;
+
+    if (name === "panNumber") {
+      value = value.toUpperCase();
+    }
+
+    setTrainer((prev) => {
+      const updated = { ...prev, [name]: value };
+
+      if (name == "height" || name == "weight") {
+        const height = Number(updated.height) / 100;
+        const weight = Number(updated.weight);
+
+        if (height > 0 && weight > 0) {
+          updated.bmi = Number((weight / (height * height)).toFixed(2));
+        } else {
+          updated.bmi = "";
+        }
+      }
+
+      return updated;
+    });
+  };
+
   const checkValidation = () => {
     return true;
   };
@@ -88,7 +118,9 @@ const TrainerDetails = () => {
     if (!validation) return;
 
     try {
-      // await dispatch(updateTr({ trainer })).unwrap();
+      await dispatch(
+        updateTrainerById({ trainerId: id, updatedData: trainer }),
+      ).unwrap();
       toast.success("Trainer Updated Successfully!");
     } catch {
       toast.error("Failed to Update Trainer");
@@ -145,7 +177,7 @@ const TrainerDetails = () => {
                           <FormField
                             field={field}
                             value={trainer[field.name]}
-                            // onChange={handleChange}
+                            onChange={handleChange}
                             disabled={!editMode || field.disabled}
                           />
                         </div>
