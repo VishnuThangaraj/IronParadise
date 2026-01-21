@@ -5,6 +5,7 @@ import {
   fetchTrainerById,
   fetchTrainerCounter,
   updateTrainerById,
+  deleteTrainerById,
 } from "./trainerThunks";
 
 const initialState = {
@@ -89,7 +90,7 @@ const trainerSlice = createSlice({
 
         const updatedTrainer = action.payload;
         const index = state.trainers.findIndex(
-          (trainer) => trainer.id === updatedTrainer.id,
+          (trainer) => trainer._id === updatedTrainer._id,
         );
 
         if (index !== -1) state.trainers[index] = updatedTrainer;
@@ -97,6 +98,24 @@ const trainerSlice = createSlice({
         state.current = updatedTrainer;
       })
       .addCase(updateTrainerById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteTrainerById.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(deleteTrainerById.fulfilled, (state, action) => {
+        state.loading = false;
+        const id = action.payload;
+        console.log(id);
+
+        state.trainers = state.trainers.filter((trainer) => trainer._id !== id);
+        if (state.current?._id === id) {
+          state.current = null;
+        }
+      })
+      .addCase(deleteTrainerById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

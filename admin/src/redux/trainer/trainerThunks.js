@@ -111,3 +111,24 @@ export const updateTrainerById = createAsyncThunk(
     }
   },
 );
+
+// Delete trainer by Id
+export const deleteTrainerById = createAsyncThunk(
+  "trainer/deleteTrainerById",
+  async ({ trainerId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.delete(`/user/delete/${trainerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data.trainerId;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to UpdatDelete Trainer",
+      );
+    }
+  },
+);

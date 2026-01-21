@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { toast } from "sonner";
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
@@ -12,12 +13,19 @@ import DataTable from "../../components/DataTable/DataTable";
 import SearchBar from "../../components/DataTable/SearchBar";
 import ExportButtons from "../../components/DataTable/ExportButtons";
 
-import { fetchAllTrainers } from "../../redux/trainer/trainerThunks";
+import {
+  fetchAllTrainers,
+  deleteTrainerById,
+} from "../../redux/trainer/trainerThunks";
 import { selectAllTrainers } from "../../redux/trainer/trainerSelectors";
+import DeletionModal from "../../components/Modal/DeletionModal";
 
 const TrainersList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [search, setSearch] = useState("");
   const trainers = useSelector(selectAllTrainers);
@@ -34,9 +42,29 @@ const TrainersList = () => {
         row.id?.toString().toLowerCase().includes(query) ||
         row.name?.toLowerCase().includes(query) ||
         row.email?.toLowerCase().includes(query) ||
-        row.mobile?.includes(query)
+        row.mobile?.includes(query),
     );
   }, [trainers, search]);
+
+  const checkValidation = () => {
+    return true;
+  };
+
+  const deleteTrainerWithId = async (e) => {
+    e.preventDefault();
+    const validation = checkValidation();
+    if (!validation) return;
+
+    try {
+      await dispatch(deleteTrainerById({ trainerId: deleteId }));
+      toast.success("Trainer Deleted Successfully");
+    } catch {
+      toast.error("Failed to Delete Trainer");
+    } finally {
+      setDeleteId(null);
+      setOpenDelete(false);
+    }
+  };
 
   return (
     <div key="Trainer-List">
@@ -68,15 +96,35 @@ const TrainersList = () => {
           </div>
 
           <DataTable
-            rows={filteredRows}
-            columns={TrainerColumns(navigate)}
+            rows={filteredRows.slice()}
+            columns={TrainerColumns({
+              navigate,
+              openDelete,
+              setOpenDelete,
+              setDeleteId,
+            })}
             rowClick={true}
+            getRowId={(row) => row._id}
             rowClickPath={"/trainer/details"}
           />
         </CardContent>
       </Card>
+
+      {/* Deletion Modal */}
+      <DeletionModal
+        open={openDelete}
+        setOpen={setOpenDelete}
+        icon={`fa-light fa-user-slash`}
+        origin={"Trainer"}
+        confirmation={deleteTrainerWithId}
+      />
     </div>
   );
 };
 
 export default TrainersList;
+
+// setMailData,
+// setOpenMail,
+// setDeleteId,
+// setOpenDelete,

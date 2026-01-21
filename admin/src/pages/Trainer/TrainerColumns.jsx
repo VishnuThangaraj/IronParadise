@@ -1,4 +1,13 @@
-export const TrainerColumns = () => [
+import Tooltip from "@mui/joy/Tooltip";
+import IconButton from "@mui/joy/IconButton";
+
+export const TrainerColumns = ({
+  navigate,
+  setMailData,
+  setOpenMail,
+  setDeleteId,
+  setOpenDelete,
+}) => [
   {
     field: "userId",
     headerName: "Trainer ID",
@@ -72,5 +81,56 @@ export const TrainerColumns = () => [
     flex: 1,
     headerAlign: "center",
     align: "center",
+    renderCell: (params) => {
+      const { row } = params;
+
+      return (
+        <div
+          className="flex justify-evenly space-x-2 mt-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Mail */}
+          <Tooltip title="Mail" arrow>
+            <IconButton
+              onClick={() => {
+                setMailData({
+                  to: row.email,
+                  name: row.name,
+                });
+                setOpenMail(true);
+              }}
+            >
+              <i className="fa-duotone fa-solid fa-envelopes text-blue-600 text-[20px]" />
+            </IconButton>
+          </Tooltip>
+
+          {/* Edit */}
+          <Tooltip title="Edit" arrow>
+            <IconButton
+              onClick={() =>
+                navigate(`/trainer/details/${row._id}`, {
+                  state: { edit: true },
+                })
+              }
+            >
+              <i className="fa-duotone fa-solid fa-pencil text-green-600 text-[20px]" />
+            </IconButton>
+          </Tooltip>
+
+          {/* Delete */}
+          <Tooltip title="Delete" arrow>
+            <IconButton
+              color="error"
+              onClick={() => {
+                setDeleteId(row._id);
+                setOpenDelete(true);
+              }}
+            >
+              <i className="fa-duotone fa-solid fa-trash-can text-red-600 text-[20px]" />
+            </IconButton>
+          </Tooltip>
+        </div>
+      );
+    },
   },
 ];

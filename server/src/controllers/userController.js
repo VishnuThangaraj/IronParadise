@@ -147,8 +147,11 @@ const deleteUserById = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User Deleted successfully!" });
+    res
+      .status(200)
+      .json({ message: "User Deleted successfully!", trainerId: userId });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

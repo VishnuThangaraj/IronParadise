@@ -10,13 +10,13 @@ const DataTable = ({
   checkBox = false,
   rowClick = false,
   rowClickPath = "",
+  getRowId,
 }) => {
   const navigate = useNavigate();
 
   const handleRowClick = (params) => {
     if (!rowClick) return;
-    console.log(`${rowClickPath}/${params.row._id}`);
-    return navigate(`${rowClickPath}/${params.row._id}`, {
+    return navigate(`${rowClickPath}/${getRowId(params.row)}`, {
       state: { edit: false },
     });
   };
