@@ -95,7 +95,7 @@ const trainerSlice = createSlice({
 
         if (index !== -1) state.trainers[index] = updatedTrainer;
 
-        state.current = updatedTrainer;
+        state.currentTrainer = updatedTrainer;
       })
       .addCase(updateTrainerById.rejected, (state, action) => {
         state.loading = false;
@@ -108,11 +108,10 @@ const trainerSlice = createSlice({
       .addCase(deleteTrainerById.fulfilled, (state, action) => {
         state.loading = false;
         const id = action.payload;
-        console.log(id);
 
         state.trainers = state.trainers.filter((trainer) => trainer._id !== id);
-        if (state.current?._id === id) {
-          state.current = null;
+        if (state.currentTrainer?._id === id) {
+          state.currentTrainer = null;
         }
       })
       .addCase(deleteTrainerById.rejected, (state, action) => {

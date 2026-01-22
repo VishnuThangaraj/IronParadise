@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { toast } from "sonner";
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
@@ -12,12 +13,19 @@ import SearchBar from "../../components/DataTable/SearchBar";
 import { DietPlanColumns } from "./DietPlanColumns";
 import ExportButtons from "../../components/DataTable/ExportButtons";
 
-import { fetchAllDietPlans } from "../../redux/dietPlan/dietPlanThunks";
+import {
+  fetchAllDietPlans,
+  deleteDietPlanById,
+} from "../../redux/dietPlan/dietPlanThunks";
 import { selectAllDietPlans } from "../../redux/dietPlan/dietPlanSelector";
+import DeletionModal from "../../components/Modal/DeletionModal";
 
 const DietPlanList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [search, setSearch] = useState("");
   const dietPlans = useSelector(selectAllDietPlans);
@@ -36,6 +44,26 @@ const DietPlanList = () => {
         row.goal?.toString().toLowerCase().includes(query),
     );
   }, [dietPlans, search]);
+
+  const checkValidation = () => {
+    return true;
+  };
+
+  const deleteDietPlanWithId = async (e) => {
+    e.preventDefault();
+    const validation = checkValidation();
+    if (!validation) return;
+
+    try {
+      await dispatch(deleteDietPlanById({ dietPlanId: deleteId }));
+      toast.success("Diet Plan Deleted Successfully");
+    } catch {
+      toast.error("Failed to Delete Diet Plan");
+    } finally {
+      setDeleteId(null);
+      setOpenDelete(false);
+    }
+  };
 
   return (
     <div key="DietPlan-List">
@@ -65,9 +93,24 @@ const DietPlanList = () => {
             </Button>
           </div>
 
-          <DataTable rows={filteredRows} columns={DietPlanColumns(navigate)} />
+          <DataTable
+            rows={filteredRows}
+            columns={DietPlanColumns({ navigate, setDeleteId, setOpenDelete })}
+            rowClick={true}
+            getRowId={(row) => row._id}
+            rowClickPath={"/plan/diet/details"}
+          />
         </CardContent>
       </Card>
+
+      {/* Deletion Modal */}
+      <DeletionModal
+        open={openDelete}
+        setOpen={setOpenDelete}
+        icon={`fa-light fa-pot-food`}
+        origin={"Diet Plan"}
+        confirmation={deleteDietPlanWithId}
+      />
     </div>
   );
 };

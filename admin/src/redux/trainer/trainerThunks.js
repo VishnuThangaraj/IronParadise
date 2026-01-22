@@ -84,7 +84,7 @@ export const fetchTrainerById = createAsyncThunk(
       });
       return res.data.user;
     } catch (err) {
-      return rejectWithValue(err.response?.data || "Failed to Add New Trainer");
+      return rejectWithValue(err.response?.data || "Failed to Fetch Trainer");
     }
   },
 );

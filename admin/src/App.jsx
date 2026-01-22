@@ -21,14 +21,18 @@ const Message = lazy(() => import("./pages/Message/Message"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
 const MembersList = lazy(() => import("./pages/Member/MembersList"));
-const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
 const AddDietPlan = lazy(() => import("./pages/DietPlan/AddDietPlan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
+const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
 const TrainerDetails = lazy(() => import("./pages/Trainer/TrainerDetails"));
+const DietPlanDetails = lazy(() => import("./pages/DietPlan/DietPlanDetails"));
 const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 const WorkoutPlanList = lazy(
   () => import("./pages/WorkoutPlan/WorkoutPlanList"),
+);
+const WorkoutPlanDetails = lazy(
+  () => import("./pages/WorkoutPlan/WorkoutPlanDetails"),
 );
 const AddMembership = lazy(
   () => import("./pages/MembershipPlan/AddMembershipPlan"),
@@ -108,10 +112,18 @@ const App = () => {
 
                     {/* Fitness Plan */}
                     <Route path="/plan/diet/list" element={<DietPlanList />} />
+                    <Route
+                      path="/plan/diet/details/:id"
+                      element={<DietPlanDetails />}
+                    />
                     <Route path="/plan/diet/add" element={<AddDietPlan />} />
                     <Route
                       path="/plan/workout/list"
                       element={<WorkoutPlanList />}
+                    />
+                    <Route
+                      path="/plan/workout/details/:id"
+                      element={<WorkoutPlanDetails />}
                     />
                     <Route
                       path="/plan/workout/add"

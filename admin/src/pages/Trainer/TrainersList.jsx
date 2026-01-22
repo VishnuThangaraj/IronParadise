@@ -123,8 +123,3 @@ const TrainersList = () => {
 };
 
 export default TrainersList;
-
-// setMailData,
-// setOpenMail,
-// setDeleteId,
-// setOpenDelete,

@@ -3,9 +3,13 @@ import {
   addNewWorkoutPlan,
   fetchAllWorkoutPlans,
   fetchWorkoutPlanCounter,
+  fetchWorkoutPlanById,
+  updateWorkoutPlanById,
+  deleteWorkoutPlanById,
 } from "./workoutPlanThunks";
 
 const initialState = {
+  currentWorkoutPlan: null,
   workoutPlans: [],
   loading: false,
   error: null,
@@ -60,6 +64,59 @@ const workoutPlanSlice = createSlice({
         state.workoutPlans.push(action.payload);
       })
       .addCase(addNewWorkoutPlan.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch WorkoutPlan By Id
+      .addCase(fetchWorkoutPlanById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWorkoutPlanById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentWorkoutPlan = action.payload;
+      })
+      .addCase(fetchWorkoutPlanById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Update WorkoutPlan by Id
+      .addCase(updateWorkoutPlanById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateWorkoutPlanById.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const updatedWorkoutPlan = action.payload;
+        const index = state.workoutPlans.findIndex(
+          (workoutPlan) => workoutPlan._id === updatedWorkoutPlan._id,
+        );
+
+        if (index !== -1) state.workoutPlans[index] = updatedWorkoutPlan;
+
+        state.currentWorkoutPlan = updatedWorkoutPlan;
+      })
+      .addCase(updateWorkoutPlanById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteWorkoutPlanById.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(deleteWorkoutPlanById.fulfilled, (state, action) => {
+        state.loading = false;
+        const id = action.payload;
+
+        state.workoutPlans = state.workoutPlans.filter(
+          (workoutPlan) => workoutPlan._id !== id,
+        );
+        if (state.currentWorkoutPlan?._id === id) {
+          state.currentWorkoutPlan = null;
+        }
+      })
+      .addCase(deleteWorkoutPlanById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
