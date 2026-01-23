@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, CardContent } from "@mui/joy";
+import { toast } from "sonner";
+import Card from "@mui/joy/Card";
+import Button from "@mui/joy/Button";
+import CardContent from "@mui/joy/CardContent";
+
 import { PageLocation } from "../../components/PageLocation";
 import DataTable from "../../components/DataTable/DataTable";
 import SearchBar from "../../components/DataTable/SearchBar";
@@ -11,6 +15,8 @@ import ExportButtons from "../../components/DataTable/ExportButtons";
 
 import { fetchAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanThunks";
 import { selectAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanSelectors";
+
+import DeletionModal from "../../components/Modal/DeletionModal";
 
 const MembershipPlanList = () => {
   const navigate = useNavigate();
@@ -32,7 +38,7 @@ const MembershipPlanList = () => {
         row.name?.toString().toLowerCase().includes(query) ||
         row.durationMonths?.toString().toLowerCase().includes(query) ||
         row.price?.toString().toLowerCase().includes(query) ||
-        row.features?.toString().toLowerCase().includes(query)
+        row.features?.toString().toLowerCase().includes(query),
     );
   }, [membershipPlans, search]);
 

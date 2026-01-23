@@ -40,6 +40,9 @@ const AddMembership = lazy(
 const MembershipPlan = lazy(
   () => import("./pages/MembershipPlan/MembershipPlanList"),
 );
+const MembershipPlanDetails = lazy(
+  () => import("./pages/MembershipPlan/MembershipPlanDetails"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -108,6 +111,10 @@ const App = () => {
                     <Route
                       path="/subscription/list"
                       element={<MembershipPlan />}
+                    />
+                    <Route
+                      path="/subscription/details/:id"
+                      element={<MembershipPlanDetails />}
                     />
 
                     {/* Fitness Plan */}
