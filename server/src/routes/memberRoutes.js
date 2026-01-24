@@ -9,28 +9,28 @@ router.get("/", authenticateJWT(["admin"]), memberController.fetchAllMembers);
 router.post(
   "/create",
   authenticateJWT(["admin"]),
-  memberController.registerMember
+  memberController.registerMember,
 );
 
 // Fetch Member by ID
 router.get(
-  "profile/:id",
+  "/profile/:id",
   authenticateJWT(["admin"]),
-  memberController.fetchMemberById
+  memberController.fetchMemberById,
 );
 
 // Update Member by ID
 router.put(
   "/update/:id",
   authenticateJWT(["admin"]),
-  memberController.updateMemberById
+  memberController.updateMemberById,
 );
 
 // Delete Member by ID
 router.delete(
   "/delete/:id",
   authenticateJWT(["admin"]),
-  memberController.deleteMemberById
+  memberController.deleteMemberById,
 );
 
 module.exports = router;

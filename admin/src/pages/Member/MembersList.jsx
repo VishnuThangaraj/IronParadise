@@ -2,7 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { Card, Button, CardContent } from "@mui/joy";
+import { toast } from "sonner";
+import Card from "@mui/joy/Card";
+import Button from "@mui/joy/Button";
+import CardContent from "@mui/joy/CardContent";
 
 import { MemberColumns } from "./MemberColumns";
 import { PageLocation } from "../../components/PageLocation";
@@ -10,7 +13,10 @@ import DataTable from "../../components/DataTable/DataTable";
 import SearchBar from "../../components/DataTable/SearchBar";
 import ExportButtons from "../../components/DataTable/ExportButtons";
 
-import { fetchAllMembers } from "../../redux/member/memberThunks";
+import {
+  deleteMemberById,
+  fetchAllMembers,
+} from "../../redux/member/memberThunks";
 import { selectAllMembers } from "../../redux/member/memberSelector";
 
 import { fetchAllTrainers } from "../../redux/trainer/trainerThunks";
@@ -22,9 +28,14 @@ import { selectAllDietPlans } from "../../redux/dietPlan/dietPlanSelector";
 import { fetchAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanThunks";
 import { selectAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanSelector";
 
+import DeletionModal from "../../components/Modal/DeletionModal";
+
 const MembersList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [search, setSearch] = useState("");
   const members = useSelector(selectAllMembers);
@@ -41,9 +52,29 @@ const MembersList = () => {
         row.memberId?.toString().toLowerCase().includes(query) ||
         row.name?.toLowerCase().includes(query) ||
         row.email?.toLowerCase().includes(query) ||
-        row.mobile?.includes(query)
+        row.mobile?.includes(query),
     );
   }, [members, search]);
+
+  const checkValidation = () => {
+    return true;
+  };
+
+  const deleteTrainerWithId = async (e) => {
+    e.preventDefault();
+    const validation = checkValidation();
+    if (!validation) return;
+
+    try {
+      await dispatch(deleteMemberById({ trainerId: deleteId }));
+      toast.success("Member Deleted Successfully");
+    } catch {
+      toast.error("Failed to Delete Member");
+    } finally {
+      setDeleteId(null);
+      setOpenDelete(false);
+    }
+  };
 
   return (
     <div key="Members-List">
@@ -74,7 +105,27 @@ const MembersList = () => {
             </Button>
           </div>
 
-          <DataTable rows={filteredRows} columns={MemberColumns(navigate)} />
+          <DataTable
+            rows={filteredRows}
+            columns={MemberColumns({
+              navigate,
+              openDelete,
+              setOpenDelete,
+              setDeleteId,
+            })}
+            rowClick={true}
+            getRowId={(row) => row._id}
+            rowClickPath={"/member/details"}
+          />
+
+          {/* Deletion Modal */}
+          <DeletionModal
+            open={openDelete}
+            setOpen={setOpenDelete}
+            icon={`fa-light fa-user-slash`}
+            origin={"Member"}
+            confirmation={deleteTrainerWithId}
+          />
         </CardContent>
       </Card>
     </div>

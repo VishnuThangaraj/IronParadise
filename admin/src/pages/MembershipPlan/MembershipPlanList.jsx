@@ -115,7 +115,7 @@ const MembershipPlanList = () => {
         open={openDelete}
         setOpen={setOpenDelete}
         icon={`fa-light fa-dumbbell`}
-        origin={"Workout Plan"}
+        origin={"Membership Plan"}
         confirmation={deleteMembershipPlanWithId}
       />
     </div>

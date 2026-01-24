@@ -49,7 +49,7 @@ const fetchMemberById = async (req, res) => {
   const memberId = req.params.id;
   try {
     const member = await Member.findById(memberId).select("-password");
-    if (!user) {
+    if (!member) {
       return res.status(404).json({ message: "Member not found" });
     }
 
@@ -97,7 +97,9 @@ const deleteMemberById = async (req, res) => {
       return res.status(404).json({ message: "Member not found" });
     }
 
-    res.status(200).json({ message: "Member Deleted successfully!" });
+    res
+      .status(200)
+      .json({ message: "Member Deleted successfully!", memberId: memberId });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
