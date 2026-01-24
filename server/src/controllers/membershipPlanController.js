@@ -2,7 +2,7 @@ const MembershipPlan = require("../models/MembershipPlan");
 
 // Create New Membership Plan
 const createMembershipPlan = async (req, res) => {
-  const {membershipPlanId} = req.body;
+  const { membershipPlanId } = req.body;
 
   try {
     const existingMembershipPlan = await MembershipPlan.findOne({
@@ -11,7 +11,7 @@ const createMembershipPlan = async (req, res) => {
     if (existingMembershipPlan) {
       return res
         .status(400)
-        .json({message: "Membership Plan already exists"});
+        .json({ message: "Membership Plan already exists" });
     }
 
     const membershipPlan = new MembershipPlan({
@@ -54,27 +54,27 @@ const fetchmemberhsipPlanById = async (req, res) => {
   try {
     const membershipPlan = await MembershipPlan.findById(membershipPlanId);
     if (!membershipPlan) {
-      return res.status(404).json({message: "Membership Plan not found"});
+      return res.status(404).json({ message: "Membership Plan not found" });
     }
-    res.status(200).json({membershipPlan: membershipPlan});
+    res.status(200).json({ membershipPlan: membershipPlan });
   } catch (err) {
-    res.status(500).json({message: "Server error", error: err.message});
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 // Update Membership Plan by Id
 const updateMembershipPlanById = async (req, res) => {
   const membershipPlanId = req.params.id;
-  const {updatedData} = req.body;
+  const { updatedData } = req.body;
   try {
     const membershipPlan = await MembershipPlan.findByIdAndUpdate(
       membershipPlanId,
       updatedData,
-      {new: true, runValidators: true}
+      { new: true, runValidators: true },
     );
 
     if (!membershipPlan) {
-      return res.status(404).json({message: "Membership Plan not found"});
+      return res.status(404).json({ message: "Membership Plan not found" });
     }
 
     const membershipPlanResponse = membershipPlan.toObject();
@@ -95,17 +95,19 @@ const deleteMembershipPlanById = async (req, res) => {
   const membershipPlanId = req.params.id;
 
   try {
-    const membershipPlan = await MembershipPlan.findByIdAndDelete(
-      membershipPlanId
-    );
+    const membershipPlan =
+      await MembershipPlan.findByIdAndDelete(membershipPlanId);
 
     if (!membershipPlan) {
-      return res.status(404).json({message: "Membership Plan not found"});
+      return res.status(404).json({ message: "Membership Plan not found" });
     }
 
-    res.status(200).json({message: "Membership Plan Deleted successfully!"});
+    res.status(200).json({
+      message: "Membership Plan Deleted successfully!",
+      membershipPlanId: membershipPlanId,
+    });
   } catch (err) {
-    res.status(500).json({message: "Server error", error: err.message});
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 

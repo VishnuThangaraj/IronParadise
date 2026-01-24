@@ -13,7 +13,10 @@ import SearchBar from "../../components/DataTable/SearchBar";
 import { MembershipPlanColumns } from "./MembershipPlanColumns";
 import ExportButtons from "../../components/DataTable/ExportButtons";
 
-import { fetchAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanThunks";
+import {
+  deleteMembershipPlanById,
+  fetchAllMembershipPlans,
+} from "../../redux/membershipPlan/membershipPlanThunks";
 import { selectAllMembershipPlans } from "../../redux/membershipPlan/membershipPlanSelectors";
 
 import DeletionModal from "../../components/Modal/DeletionModal";
@@ -21,6 +24,9 @@ import DeletionModal from "../../components/Modal/DeletionModal";
 const MembershipPlanList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [search, setSearch] = useState("");
   const membershipPlans = useSelector(selectAllMembershipPlans);
@@ -41,6 +47,26 @@ const MembershipPlanList = () => {
         row.features?.toString().toLowerCase().includes(query),
     );
   }, [membershipPlans, search]);
+
+  const checkValidation = () => {
+    return true;
+  };
+
+  const deleteMembershipPlanWithId = async (e) => {
+    e.preventDefault();
+    const validation = checkValidation();
+    if (!validation) return;
+
+    try {
+      await dispatch(deleteMembershipPlanById({ membershipPlanId: deleteId }));
+      toast.success("Membership Plan Deleted Successfully");
+    } catch {
+      toast.error("Failed to Delete Membership Plan");
+    } finally {
+      setDeleteId(null);
+      setOpenDelete(false);
+    }
+  };
 
   return (
     <div key="MembershipPlan-List">
@@ -72,10 +98,26 @@ const MembershipPlanList = () => {
 
           <DataTable
             rows={filteredRows}
-            columns={MembershipPlanColumns(navigate)}
+            columns={MembershipPlanColumns({
+              navigate,
+              setDeleteId,
+              setOpenDelete,
+            })}
+            rowClick={true}
+            getRowId={(row) => row._id}
+            rowClickPath={"/subscription/details"}
           />
         </CardContent>
       </Card>
+
+      {/* Deletion Modal */}
+      <DeletionModal
+        open={openDelete}
+        setOpen={setOpenDelete}
+        icon={`fa-light fa-dumbbell`}
+        origin={"Workout Plan"}
+        confirmation={deleteMembershipPlanWithId}
+      />
     </div>
   );
 };
