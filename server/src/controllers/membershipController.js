@@ -2,10 +2,19 @@ const Membership = require("../models/Membership");
 
 // Create New Membership Plan
 const createMembership = async (req, res) => {
-  const { memberId } = req.body;
+  const { memberId, plan, price, durationMonths, startDate, endDate } =
+    req.body;
 
   try {
-    const existingMembership = await Membership.findOne({ memberId: memberId });
+    const member = await Member.findOne({ memberId });
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    const existingMembership = await Membership.findOne({
+      memberId: member._id,
+    });
 
     if (existingMembership) {
       return res
@@ -13,17 +22,22 @@ const createMembership = async (req, res) => {
         .json({ message: "Membership already exists for the Member." });
     }
 
-    const membership = new Membership({
-      ...req.body,
+    const membership = await Membership.create({
+      memberId: member._id,
+      plan,
+      price,
+      durationMonths,
+      startDate,
+      endDate,
     });
 
-    await membership.save();
-
-    const membershipResponse = membership.toObject();
+    const populatedMembership = await Membership.findById(membership._id)
+      .populate("memberId")
+      .populate("plan");
 
     res.status(201).json({
-      message: `Membership created successfully`,
-      membership: membershipResponse,
+      message: "Membership created successfully",
+      membership: populatedMembership,
     });
   } catch (err) {
     res.status(500).json({
@@ -51,7 +65,8 @@ const fetchAllMemberships = async (req, res) => {
 const fetchMembershipById = async (req, res) => {
   const membershipId = req.params.id;
   try {
-    const membership = await Membership.findById(membershipId);
+    const membership =
+      await Membership.findById(membershipId).populate("memberId");
     if (!membership) {
       return res.status(404).json({ message: "Membership Plan not found" });
     }
@@ -72,7 +87,7 @@ const updateMembershipById = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     if (!membership) {

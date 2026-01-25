@@ -27,6 +27,7 @@ const MemberDetails = lazy(() => import("./pages/Member/MemberDetails"));
 const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
 const TrainerDetails = lazy(() => import("./pages/Trainer/TrainerDetails"));
 const DietPlanDetails = lazy(() => import("./pages/DietPlan/DietPlanDetails"));
+const MembershipList = lazy(() => import("./pages/Membership/MembershipList"));
 const AddWorkoutPlan = lazy(() => import("./pages/WorkoutPlan/AddWorkoutPlan"));
 const AdminDashborard = lazy(() => import("./pages/Dashboard/AdminDashborard"));
 const WorkoutPlanList = lazy(
@@ -107,6 +108,9 @@ const App = () => {
                       path="/member/details/:id"
                       element={<MemberDetails />}
                     />
+
+                    {/* Membership */}
+                    <Route path="/payment" element={<MembershipList />} />
 
                     {/* Membership Plan */}
                     <Route

@@ -74,37 +74,37 @@ export const addNewMembership = createAsyncThunk(
   },
 );
 
-// Fetch Workout plan by Id
-export const fetchWorkoutPlanById = createAsyncThunk(
-  "workoutplan/fetchWorkoutPlanById",
-  async (workoutPlanId, { getState, rejectWithValue }) => {
+// Fetch Membership by Id
+export const fetchMembershipById = createAsyncThunk(
+  "membership/fetchMembershipById",
+  async (membershipId, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
 
-      const res = await axios.get(`/workoutplan/details/${workoutPlanId}`, {
+      const res = await axios.get(`/membership/details/${membershipId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      return res.data.workoutPlan;
+      return res.data.membership;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || "Failed to Fetch Workout Plan",
+        err.response?.data || "Failed to Fetch Membership ",
       );
     }
   },
 );
 
-// Update Workout Plan by ID
-export const updateWorkoutPlanById = createAsyncThunk(
-  "workoutplan/updateWorkoutPlanById",
-  async ({ workoutPlanId, updatedData }, { getState, rejectWithValue }) => {
+// Update Membership  by ID
+export const updateMembershipById = createAsyncThunk(
+  "membership/updateMembershipById",
+  async ({ membershipId, updatedData }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
 
       const res = await axios.put(
-        `/workoutplan/update/${workoutPlanId}`,
+        `/membership/update/${membershipId}`,
         { updatedData },
         {
           headers: {
@@ -112,31 +112,31 @@ export const updateWorkoutPlanById = createAsyncThunk(
           },
         },
       );
-      return res.data.workoutPlan;
+      return res.data.membership;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || "Failed to Update WorkoutPlan",
+        err.response?.data || "Failed to Update Membership",
       );
     }
   },
 );
 
-// Delete Workout Plan by Id
-export const deleteWorkoutPlanById = createAsyncThunk(
-  "workoutplan/deleteWorkoutPlanById",
-  async ({ workoutPlanId }, { getState, rejectWithValue }) => {
+// Delete Membership  by Id
+export const deleteMembershipById = createAsyncThunk(
+  "membership/deleteMembershipById",
+  async ({ membershipId }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
 
-      const res = await axios.delete(`/workoutplan/delete/${workoutPlanId}`, {
+      const res = await axios.delete(`/membership/delete/${membershipId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      return res.data.workoutPlanId;
+      return res.data.membershipId;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data || "Failed to UpdatDelete Workout Plan",
+        err.response?.data || "Failed to UpdatDelete Membership ",
       );
     }
   },
