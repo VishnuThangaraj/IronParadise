@@ -14,7 +14,9 @@ import { fetchUser } from "./redux/auth/authThunks";
 import { selectUser, selectToken } from "./redux/auth/authSelectors";
 
 // Lazy-loaded pages
-
+const AttendancePortal = lazy(
+  () => import("./pages/Attendance/AttendancePortal"),
+);
 const Events = lazy(() => import("./pages/Event/Events"));
 const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const Message = lazy(() => import("./pages/Message/Message"));
@@ -52,14 +54,11 @@ const App = () => {
   const user = useSelector(selectUser);
   const token = useSelector(selectToken);
 
-  // Fetch user only when needed
   useEffect(() => {
     if (token && !user) dispatch(fetchUser());
   }, [token, user, dispatch]);
 
-  // Memoized route decision
   const routes = useMemo(() => {
-    // Loading handled outside
     if (!token) {
       return (
         <Routes>
@@ -71,109 +70,117 @@ const App = () => {
 
     if (!user) return null;
 
-    switch (user.role) {
-      case "admin":
-        return (
-          <Fragment>
-            <Sidebar />
-            <div id="main-content-holder">
-              <Navbar />
-              <div
-                id="main-content-origin"
-                className="flex flex-col justify-between pt-6 px-5 h-full overflow-y-auto"
-              >
-                <Suspense fallback={<Loader />}>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/home" replace />} />
-
-                    {/* General */}
-                    <Route path="/home" element={<AdminDashborard />} />
-
-                    {/* Events */}
-                    <Route path="/events/view" element={<Events />} />
-                    <Route path="/events/add" element={<AddEvent />} />
-
-                    {/* Trainer */}
-                    <Route path="/trainer/add" element={<AddTrainer />} />
-                    <Route path="/trainer/list" element={<TrainersList />} />
-                    <Route
-                      path="/trainer/details/:id"
-                      element={<TrainerDetails />}
-                    />
-
-                    {/* Member */}
-                    <Route path="/member/add" element={<AddMember />} />
-                    <Route path="/member/list" element={<MembersList />} />
-                    <Route
-                      path="/member/details/:id"
-                      element={<MemberDetails />}
-                    />
-
-                    {/* Membership */}
-                    <Route path="/payment" element={<MembershipList />} />
-
-                    {/* Membership Plan */}
-                    <Route
-                      path="/subscription/add"
-                      element={<AddMembership />}
-                    />
-                    <Route
-                      path="/subscription/list"
-                      element={<MembershipPlan />}
-                    />
-                    <Route
-                      path="/subscription/details/:id"
-                      element={<MembershipPlanDetails />}
-                    />
-
-                    {/* Fitness Plan */}
-                    <Route path="/plan/diet/list" element={<DietPlanList />} />
-                    <Route
-                      path="/plan/diet/details/:id"
-                      element={<DietPlanDetails />}
-                    />
-                    <Route path="/plan/diet/add" element={<AddDietPlan />} />
-                    <Route
-                      path="/plan/workout/list"
-                      element={<WorkoutPlanList />}
-                    />
-                    <Route
-                      path="/plan/workout/details/:id"
-                      element={<WorkoutPlanDetails />}
-                    />
-                    <Route
-                      path="/plan/workout/add"
-                      element={<AddWorkoutPlan />}
-                    />
-
-                    {/* Messages */}
-                    <Route path="/message" element={<Message />} />
-
-                    {/* Fallback */}
-                    <Route path="*" element={<Navigate to="/home" replace />} />
-                  </Routes>
-                </Suspense>
-
-                <Footer />
-              </div>
-            </div>
-          </Fragment>
-        );
-
-      // case "staff":
-      //   return (
-      //     <Routes>
-      //       <Route path="/staff" element={<StaffDashboard />} />
-      //       <Route path="*" element={<Navigate to="/staff" replace />} />
-      //     </Routes>
-      //   );
-
-      default:
-        return <Navigate to="/login" replace />;
+    if (user.role !== "admin") {
+      return <Navigate to="/login" replace />;
     }
+
+    return (
+      <Routes>
+        {/* Attendance Portal (NO Sidebar / Navbar) */}
+        <Route
+          path="/attendance/portal"
+          element={
+            <Suspense fallback={<Loader />}>
+              <AttendancePortal />
+            </Suspense>
+          }
+        />
+
+        {/* Admin Layout */}
+        <Route
+          path="/*"
+          element={
+            <Fragment>
+              <Sidebar />
+              <div id="main-content-holder">
+                <Navbar />
+                <div
+                  id="main-content-origin"
+                  className="flex flex-col justify-between pt-6 px-5 h-full overflow-y-auto"
+                >
+                  <Suspense fallback={<Loader />}>
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={<Navigate to="/home" replace />}
+                      />
+
+                      <Route path="/home" element={<AdminDashborard />} />
+
+                      <Route path="/events/view" element={<Events />} />
+                      <Route path="/events/add" element={<AddEvent />} />
+
+                      <Route path="/trainer/add" element={<AddTrainer />} />
+                      <Route path="/trainer/list" element={<TrainersList />} />
+                      <Route
+                        path="/trainer/details/:id"
+                        element={<TrainerDetails />}
+                      />
+
+                      <Route path="/member/add" element={<AddMember />} />
+                      <Route path="/member/list" element={<MembersList />} />
+                      <Route
+                        path="/member/details/:id"
+                        element={<MemberDetails />}
+                      />
+
+                      <Route path="/payment" element={<MembershipList />} />
+
+                      <Route
+                        path="/subscription/add"
+                        element={<AddMembership />}
+                      />
+                      <Route
+                        path="/subscription/list"
+                        element={<MembershipPlan />}
+                      />
+                      <Route
+                        path="/subscription/details/:id"
+                        element={<MembershipPlanDetails />}
+                      />
+
+                      <Route
+                        path="/plan/diet/list"
+                        element={<DietPlanList />}
+                      />
+                      <Route
+                        path="/plan/diet/details/:id"
+                        element={<DietPlanDetails />}
+                      />
+                      <Route path="/plan/diet/add" element={<AddDietPlan />} />
+
+                      <Route
+                        path="/plan/workout/list"
+                        element={<WorkoutPlanList />}
+                      />
+                      <Route
+                        path="/plan/workout/details/:id"
+                        element={<WorkoutPlanDetails />}
+                      />
+                      <Route
+                        path="/plan/workout/add"
+                        element={<AddWorkoutPlan />}
+                      />
+
+                      <Route path="/message" element={<Message />} />
+
+                      <Route
+                        path="*"
+                        element={<Navigate to="/home" replace />}
+                      />
+                    </Routes>
+                  </Suspense>
+
+                  <Footer />
+                </div>
+              </div>
+            </Fragment>
+          }
+        />
+      </Routes>
+    );
   }, [token, user]);
 
-  /* ---------------- RENDER ---------------- */
   return (
     <div className="h-screen flex" style={{ width: "100vw" }}>
       {routes}

@@ -1,6 +1,3 @@
-// ===================================
-// Initial State (UNCHANGED)
-// ===================================
 export const initialDietPlanState = {
   dietPlanId: "",
   dietPlanName: "",

@@ -42,7 +42,7 @@ const getColSpan = (size = 50) =>
     100: "col-span-12",
     50: "col-span-6",
     30: "col-span-4",
-  }[size] || "col-span-6");
+  })[size] || "col-span-6";
 
 const numericFields = new Set(["phone", "height", "weight"]);
 const maxLengthMap = { phone: 10 };
@@ -76,14 +76,14 @@ const AddMember = () => {
 
   const selectedTrainer = useMemo(
     () => trainers.find((t) => t._id === newMember.assignedTrainer),
-    [trainers, newMember.assignedTrainer]
+    [trainers, newMember.assignedTrainer],
   );
 
   const trainerSpecialization = selectedTrainer?.specialization || "";
 
   const selectedMembershipPlan = useMemo(
     () => membershipPlans.find((m) => m._id === newMember.membershipPlan),
-    [membershipPlans, newMember.membershipPlan]
+    [membershipPlans, newMember.membershipPlan],
   );
 
   const membershipDerived = useMemo(() => {
@@ -99,7 +99,7 @@ const AddMember = () => {
     const start = new Date();
     const end = new Date(start);
     end.setMonth(
-      end.getMonth() + Number(selectedMembershipPlan.durationMonths)
+      end.getMonth() + Number(selectedMembershipPlan.durationMonths),
     );
 
     return {
@@ -112,22 +112,22 @@ const AddMember = () => {
 
   const trainerOptions = useMemo(
     () => trainers.map((t) => ({ label: t.name, value: t._id })),
-    [trainers]
+    [trainers],
   );
 
   const dietPlanOptions = useMemo(
     () => dietPlans.map((d) => ({ label: d.dietPlanName, value: d._id })),
-    [dietPlans]
+    [dietPlans],
   );
 
   const workoutPlanOptions = useMemo(
     () => workoutPlans.map((w) => ({ label: w.workoutPlanName, value: w._id })),
-    [workoutPlans]
+    [workoutPlans],
   );
 
   const membershipPlanOptions = useMemo(
     () => membershipPlans.map((m) => ({ label: m.name, value: m._id })),
-    [membershipPlans]
+    [membershipPlans],
   );
 
   const updatedFieldGroups = useMemo(
@@ -147,7 +147,12 @@ const AddMember = () => {
             : field;
         }),
       })),
-    [trainerOptions, dietPlanOptions, workoutPlanOptions, membershipPlanOptions]
+    [
+      trainerOptions,
+      dietPlanOptions,
+      workoutPlanOptions,
+      membershipPlanOptions,
+    ],
   );
 
   const handleChange = useCallback((name, value) => {
@@ -185,7 +190,7 @@ const AddMember = () => {
 
     const membership_payload = {
       ...membershipDerived,
-      plan: newMember?.membershipPlan,
+      planId: newMember?.membershipPlan,
     };
 
     const fitness_payload = {
@@ -199,7 +204,7 @@ const AddMember = () => {
           newMember: member_payload,
           newMembership: membership_payload,
           newFitnessPlan: fitness_payload,
-        })
+        }),
       ).unwrap();
       toast.success("Member Added Successfully.");
     } catch (error) {
@@ -245,6 +250,7 @@ const AddMember = () => {
                             derivedMap[field.name] ?? newMember[field.name]
                           }
                           onChange={handleChange}
+                          disabled={field.disabled}
                         />
                       </div>
                     );

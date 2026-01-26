@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Tooltip from "@mui/joy/Tooltip";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./Navbar.module.scss";
 import LogoutImage from "../../../public/images/logout_icon.webp";
@@ -18,6 +19,7 @@ import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const user = useSelector(selectUser);
 
   const [openlogout, setOpenLogout] = useState(false);
@@ -37,6 +39,11 @@ const Navbar = () => {
               <div
                 key={`nav_icons-${index}`}
                 className={NavbarItemStyles.container}
+                onClick={() => {
+                  if (nav_item.location)
+                    return navigate(`${nav_item.location}`);
+                  return console.log("No Operation");
+                }}
               >
                 <i className={`${nav_item.icon} ${NavbarItemStyles.icon}`}></i>
                 <span className={NavbarItemStyles.text}>{nav_item.name}</span>

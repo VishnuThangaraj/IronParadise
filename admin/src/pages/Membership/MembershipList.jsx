@@ -27,8 +27,6 @@ const MembershipList = () => {
     dispatch(fetchAllMemberships());
   }, [dispatch]);
 
-  console.log(memberships);
-
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
 

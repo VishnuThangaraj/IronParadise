@@ -50,7 +50,7 @@ const AddMembershipPlan = () => {
   const counter = useSelector(selectMembershipPlanCounter);
 
   const [newMembershipPlan, setNewMembershipPlan] = useState(
-    initialMembershipPlanState
+    initialMembershipPlanState,
   );
 
   useEffect(() => {
@@ -131,10 +131,10 @@ const AddMembershipPlan = () => {
                             field={field}
                             value={newMembershipPlan[field.name]}
                             onChange={handleChange}
-                            disabled={field.disabled}
+                            disabled={field?.disabled ?? false}
                           />
                         </div>
-                      )
+                      ),
                   )}
                 </Fragment>
               ))}

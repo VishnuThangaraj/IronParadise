@@ -2,6 +2,7 @@ export const NavbarItems = [
   {
     name: "Attendance",
     icon: "fa-duotone fa-thin fa-clipboard-user",
+    location: "/attendance/portal",
   },
   {
     name: "Notification",

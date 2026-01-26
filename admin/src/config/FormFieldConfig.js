@@ -1,4 +1,4 @@
-export const getColSpan = (size) => {
+export const formFieldColSpan = (size) => {
   switch (size) {
     case 100:
       return "col-span-12";

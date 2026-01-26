@@ -7,7 +7,7 @@ const MembershipSchema = new mongoose.Schema(
       ref: "Member",
       required: true,
     },
-    plan: {
+    planId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "MembershipPlan",
       required: true,
@@ -21,7 +21,7 @@ const MembershipSchema = new mongoose.Schema(
     endDate: { type: Date, required: true },
     status: { type: String, default: "inactive" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Membership", MembershipSchema);

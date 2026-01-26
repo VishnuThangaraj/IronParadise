@@ -8,30 +8,31 @@ export const addMemberFlow = createAsyncThunk(
   "flows/addMember",
   async (
     { newMember, newMembership, newFitnessPlan },
-    { dispatch, rejectWithValue }
+    { dispatch, rejectWithValue },
   ) => {
     try {
       const memberResponse = await dispatch(
-        addNewMember({ newMember })
+        addNewMember({ newMember }),
       ).unwrap();
       const memberId = memberResponse.member._id;
 
-      if (newMembership) {
+      console.log(newMembership);
+      if (newMembership && memberId) {
         await dispatch(
           addNewMembership({
             newMembership: { ...newMembership, memberId: memberId },
-          })
+          }),
         ).unwrap();
       }
 
-      if (newFitnessPlan) {
+      if (newFitnessPlan && memberId) {
         await dispatch(
           addNewFitnessPlan({
             newFitnessPlan: {
               ...newFitnessPlan,
               memberId: memberId,
             },
-          })
+          }),
         );
       }
 
@@ -39,5 +40,5 @@ export const addMemberFlow = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error?.message || "Add member flow failed");
     }
-  }
+  },
 );

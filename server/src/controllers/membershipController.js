@@ -1,12 +1,14 @@
+const Member = require("../models/Member");
 const Membership = require("../models/Membership");
+const MembershipPlan = require("../models/MembershipPlan");
 
 // Create New Membership Plan
 const createMembership = async (req, res) => {
-  const { memberId, plan, price, durationMonths, startDate, endDate } =
+  const { memberId, planId, price, durationMonths, startDate, endDate } =
     req.body;
 
   try {
-    const member = await Member.findOne({ memberId });
+    const member = await Member.findById(memberId);
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
@@ -22,9 +24,14 @@ const createMembership = async (req, res) => {
         .json({ message: "Membership already exists for the Member." });
     }
 
+    const membershipPlan = await MembershipPlan.findById(planId);
+
+    if (!membershipPlan)
+      return res.status(404).json({ message: "Membership Plan not found" });
+
     const membership = await Membership.create({
       memberId: member._id,
-      plan,
+      planId: membershipPlan._id,
       price,
       durationMonths,
       startDate,
@@ -33,7 +40,7 @@ const createMembership = async (req, res) => {
 
     const populatedMembership = await Membership.findById(membership._id)
       .populate("memberId")
-      .populate("plan");
+      .populate("planId");
 
     res.status(201).json({
       message: "Membership created successfully",
@@ -50,7 +57,9 @@ const createMembership = async (req, res) => {
 // Fetch All Membership Plan
 const fetchAllMemberships = async (req, res) => {
   try {
-    const memberships = await Membership.find();
+    const memberships = await Membership.find()
+      .populate("memberId")
+      .populate("planId");
 
     res.status(200).json(memberships);
   } catch (err) {
@@ -65,8 +74,12 @@ const fetchAllMemberships = async (req, res) => {
 const fetchMembershipById = async (req, res) => {
   const membershipId = req.params.id;
   try {
-    const membership =
-      await Membership.findById(membershipId).populate("memberId");
+    const membership = await Membership.findById(membershipId)
+      .populate("memberId")
+      .populate("planId");
+
+    console.log(membership);
+
     if (!membership) {
       return res.status(404).json({ message: "Membership Plan not found" });
     }
