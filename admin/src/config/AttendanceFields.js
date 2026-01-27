@@ -1,8 +1,3 @@
-export const initialAttendanceState = {
-  userName: "",
-  name: "",
-};
-
 export const AttendanceFieldGroup = [
   {
     label: "Enter your ID",

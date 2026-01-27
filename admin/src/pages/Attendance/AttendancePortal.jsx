@@ -13,41 +13,66 @@ import {
   initialAttendanceState,
 } from "../../config/AttendanceFields";
 
+import { fetchMemberById } from "../../redux/member/memberThunks";
+import { fetchTrainerById } from "../../redux/trainer/trainerThunks";
+
 const AttendancePortal = () => {
-  const [attendance, setAttendance] = useState(initialAttendanceState);
+  const dispatch = useDispatch();
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+
+  const isAlphabetic = (v) => /^[A-Z]+$/.test(v);
+  const isNumeric = (v) => /^\d+(\.\d+)?$/.test(v);
+
+  const handleIdValidation = async (value) => {
+    try {
+      if (value.startsWith("MBR")) {
+        await dispatch(fetchMemberById({ memberId: value }));
+      }
+    } catch {
+      toast.error("Failed to Update Member");
+    }
+  };
 
   const handleChange = (name, value) => {
-    const raw = value.toUpperCase();
+    let v = value.toUpperCase();
+    const prevValue = attendance[name];
+    const prevSize = prevValue.length;
 
-    let letters = "";
-    let numbers = "";
+    if (v.length > 7) return;
 
-    for (const char of raw) {
-      if (letters.length < 3 && /[A-Z]/.test(char)) {
-        letters += char;
-        continue;
-      }
+    if (v.endsWith("-")) v = v.slice(0, -1);
 
-      if (letters.length === 3 && /[0-9]/.test(char) && numbers.length < 3) {
-        numbers += char;
-      }
+    const size = v.length;
+    const first = v.slice(0, 3);
+
+    if (size == 4 && prevValue.slice(-1) != "-")
+      v = `${first}-${value.slice(-1)}`;
+    if (size == 3 && prevValue.slice(-1) == "-") v = value.slice(0, -1);
+
+    const last = size > 3 ? v.slice(4) : "";
+
+    const validRoots = ["MBR", "TRN"];
+
+    const isValidPrefix = (v) => validRoots.some((root) => root.startsWith(v));
+
+    if (first && (!isAlphabetic(first) || !isValidPrefix(first))) return;
+    if (last && !isNumeric(last)) return;
+
+    if (size >= 3 && prevSize < size && !v.includes("-")) {
+      v = `${first}-${last}`;
     }
-
-    let formatted = letters;
-
-    if (letters.length === 3) {
-      formatted += "-";
-    }
-
-    formatted += numbers;
 
     setAttendance((prev) => ({
       ...prev,
-      [name]: formatted,
+      [name]: v,
     }));
+
+    if (size == 7) handleIdValidation(v);
   };
 
   const handleSubmit = () => {};
+
   return (
     <div
       id="AttendancePortal"
