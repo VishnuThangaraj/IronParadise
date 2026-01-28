@@ -19,6 +19,13 @@ router.get(
   memberController.fetchMemberById,
 );
 
+// Fetch Member by MemberID
+router.get(
+  "/profile/id/:id",
+  authenticateJWT(["admin"]),
+  memberController.fetchMemberByMemberId,
+);
+
 // Update Member by ID
 router.put(
   "/update/:id",

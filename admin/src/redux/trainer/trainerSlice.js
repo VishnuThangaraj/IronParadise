@@ -4,6 +4,7 @@ import {
   fetchAllTrainers,
   fetchTrainerById,
   fetchTrainerCounter,
+  fetchTrainerByUserId,
   updateTrainerById,
   deleteTrainerById,
 } from "./trainerThunks";
@@ -77,6 +78,20 @@ const trainerSlice = createSlice({
         state.currentTrainer = action.payload;
       })
       .addCase(fetchTrainerById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Trainer By UserId
+      .addCase(fetchTrainerByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.currentTrainer = null;
+      })
+      .addCase(fetchTrainerByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentTrainer = action.payload;
+      })
+      .addCase(fetchTrainerByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

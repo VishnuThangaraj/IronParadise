@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { toast } from "sonner";
 import Grid from "@mui/joy/Grid";
@@ -13,51 +13,76 @@ import {
   initialAttendanceState,
 } from "../../config/AttendanceFields";
 
-import { fetchMemberById } from "../../redux/member/memberThunks";
-import { fetchTrainerById } from "../../redux/trainer/trainerThunks";
+import { fetchMemberByMemberId } from "../../redux/member/memberThunks";
+import { fetchTrainerByUserId } from "../../redux/trainer/trainerThunks";
+import { addNewAttendance } from "../../redux/attendance/attendanceThunks";
 
 const AttendancePortal = () => {
   const dispatch = useDispatch();
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
+  const [attendance, setAttendance] = useState(initialAttendanceState);
+  const [invalidIdError, setInvalidIdError] = useState(null);
 
   const isAlphabetic = (v) => /^[A-Z]+$/.test(v);
   const isNumeric = (v) => /^\d+(\.\d+)?$/.test(v);
 
-  const handleIdValidation = async (value) => {
+  const fetchUserWithId = async (value) => {
     try {
-      if (value.startsWith("MBR")) {
-        await dispatch(fetchMemberById({ memberId: value }));
-      }
+      const isMember = value.startsWith("MBR");
+
+      const action = isMember
+        ? fetchMemberByMemberId({ memberId: value })
+        : fetchTrainerByUserId({ trainerId: value });
+
+      const data = await dispatch(action).unwrap();
+
+      setAttendance((prev) => ({
+        ...prev,
+        name: data?.name || "",
+      }));
+
+      setInvalidIdError("");
     } catch {
-      toast.error("Failed to Update Member");
+      setAttendance((prev) => ({
+        ...prev,
+        name: "",
+      }));
+
+      setInvalidIdError(
+        `Invalid ${value.startsWith("MBR") ? "Member" : "Trainer"} ID Provided`,
+      );
     }
   };
 
   const handleChange = (name, value) => {
     let v = value.toUpperCase();
-    const prevValue = attendance[name];
+    const prevValue = attendance[name] || "";
     const prevSize = prevValue.length;
 
     if (v.length > 7) return;
+
+    setAttendance((prev) => ({ ...prev, name: "" }));
+    setInvalidIdError("");
 
     if (v.endsWith("-")) v = v.slice(0, -1);
 
     const size = v.length;
     const first = v.slice(0, 3);
-
-    if (size == 4 && prevValue.slice(-1) != "-")
-      v = `${first}-${value.slice(-1)}`;
-    if (size == 3 && prevValue.slice(-1) == "-") v = value.slice(0, -1);
-
     const last = size > 3 ? v.slice(4) : "";
 
     const validRoots = ["MBR", "TRN"];
-
-    const isValidPrefix = (v) => validRoots.some((root) => root.startsWith(v));
+    const isValidPrefix = (val) =>
+      validRoots.some((root) => root.startsWith(val));
 
     if (first && (!isAlphabetic(first) || !isValidPrefix(first))) return;
     if (last && !isNumeric(last)) return;
+
+    if (size === 4 && prevValue.slice(-1) !== "-") {
+      v = `${first}-${value.slice(-1)}`;
+    }
+
+    if (size === 3 && prevValue.slice(-1) === "-") {
+      v = value.slice(0, -1);
+    }
 
     if (size >= 3 && prevSize < size && !v.includes("-")) {
       v = `${first}-${last}`;
@@ -68,10 +93,50 @@ const AttendancePortal = () => {
       [name]: v,
     }));
 
-    if (size == 7) handleIdValidation(v);
+    if (size === 7) fetchUserWithId(v);
   };
 
-  const handleSubmit = () => {};
+  const handleIdValidation = () => {
+    const id = attendance?.userName || "";
+
+    if (id.length !== 7) {
+      setInvalidIdError("ID must be in format MBR-001 or TRN-001");
+      return false;
+    }
+
+    if (!attendance.name) {
+      setInvalidIdError("Please enter a valid ID and verify name");
+      return false;
+    }
+
+    setInvalidIdError("");
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isValid = handleIdValidation();
+    if (!isValid) return;
+
+    try {
+      const role = attendance.userName.startsWith("MBR") ? "member" : "trainer";
+
+      await dispatch(
+        addNewAttendance({
+          newAttendance: { userId: attendance.userName, role },
+        }),
+      ).unwrap();
+
+      toast.success("Attendance marked successfully");
+
+      setAttendance({});
+      setInvalidIdError("");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to mark attendance");
+    }
+  };
 
   return (
     <div
@@ -105,7 +170,7 @@ const AttendancePortal = () => {
           </div>
           <form
             className="flex flex-col justify-between mb-1"
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
           >
             {AttendanceFieldGroup.map((field, index) => {
               return (
@@ -126,7 +191,15 @@ const AttendancePortal = () => {
                 </FormControl>
               );
             })}
-            <div className="flex justify-between my-7 text-sm">
+            {invalidIdError && (
+              <div className="text-red-500 mt-2 text-sm transition-opacity duration-200 ease-in">
+                {invalidIdError}
+              </div>
+            )}
+
+            <div
+              className={`flex justify-between ${invalidIdError ? "mb-6 mt-2" : "my-6"} text-sm`}
+            >
               <div>Verify your ID and Name before marking Attendance.</div>
             </div>
             <Button

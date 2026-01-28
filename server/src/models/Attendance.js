@@ -4,14 +4,27 @@ const AttendanceSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      required: true,
+      refPath: "userType",
     },
-    userType: String,
-    date: Date,
-    checkIn: String,
-    checkOut: String,
+    userType: {
+      type: String,
+      required: true,
+      enum: ["User", "Member"],
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+
+    sessions: [
+      {
+        checkIn: String,
+        checkOut: String,
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Attendance", AttendanceSchema);

@@ -89,6 +89,25 @@ export const fetchMemberById = createAsyncThunk(
   },
 );
 
+// Fetch Member by MemberID
+export const fetchMemberByMemberId = createAsyncThunk(
+  "member/fetchMemberByMemberId",
+  async ({ memberId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.get(`/member/profile/id/${memberId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data.member;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Fetch Member");
+    }
+  },
+);
+
 // Update Member by ID
 export const updateMemberById = createAsyncThunk(
   "member/updateMemberById",

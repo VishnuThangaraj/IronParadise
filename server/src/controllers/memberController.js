@@ -59,6 +59,24 @@ const fetchMemberById = async (req, res) => {
   }
 };
 
+// Fetch Member by MemberID
+const fetchMemberByMemberId = async (req, res) => {
+  const memberId = req.params.id;
+  try {
+    const member = await Member.findOne({ memberId: memberId }).select(
+      "-password",
+    );
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    res.status(200).json({ member: member });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
 // Update Member by Id
 const updateMemberById = async (req, res) => {
   const memberId = req.params.id;
@@ -71,7 +89,7 @@ const updateMemberById = async (req, res) => {
     });
 
     if (!member) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Member not found" });
     }
 
     const memberResponse = member.toObject();
@@ -109,6 +127,7 @@ module.exports = {
   registerMember,
   fetchAllMembers,
   fetchMemberById,
+  fetchMemberByMemberId,
   updateMemberById,
   deleteMemberById,
 };

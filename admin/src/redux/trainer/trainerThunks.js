@@ -89,6 +89,25 @@ export const fetchTrainerById = createAsyncThunk(
   },
 );
 
+// Fetch Trainer by UserID
+export const fetchTrainerByUserId = createAsyncThunk(
+  "trainer/fetchTrainerByUserId",
+  async ({ trainerId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.get(`/user/profile/id/${trainerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Fetch Trainer");
+    }
+  },
+);
+
 // Update Trainer by ID
 export const updateTrainerById = createAsyncThunk(
   "trainer/updateTrainerById",

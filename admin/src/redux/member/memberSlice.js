@@ -6,6 +6,7 @@ import {
   fetchMemberById,
   updateMemberById,
   deleteMemberById,
+  fetchMemberByMemberId,
 } from "./memberThunks";
 
 const initialState = {
@@ -66,7 +67,8 @@ const memberSlice = createSlice({
       .addCase(addNewMember.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }) // Fetch Member By Id
+      })
+      // Fetch Member By Id
       .addCase(fetchMemberById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -76,6 +78,20 @@ const memberSlice = createSlice({
         state.currentMember = action.payload;
       })
       .addCase(fetchMemberById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Member By Id
+      .addCase(fetchMemberByMemberId.pending, (state) => {
+        state.currentMember = null;
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMemberByMemberId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentMember = action.payload;
+      })
+      .addCase(fetchMemberByMemberId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
