@@ -11,7 +11,7 @@ const Events = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div key="Admin_events_page">
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Calendar"
@@ -38,7 +38,6 @@ const Events = () => {
           </div>
 
           <Calendar />
-          {/* <DataTable rows={filteredRows} columns={DietPlanColumns(navigate)} /> */}
         </CardContent>
       </Card>
     </div>

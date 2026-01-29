@@ -19,6 +19,9 @@ const AttendancePortal = lazy(
 );
 const Events = lazy(() => import("./pages/Event/Events"));
 const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
+const AttendanceCalendar = lazy(
+  () => import("./pages/Attendance/AttendanceCalendar"),
+);
 const Message = lazy(() => import("./pages/Message/Message"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
@@ -106,6 +109,11 @@ const App = () => {
                       />
 
                       <Route path="/home" element={<AdminDashborard />} />
+
+                      <Route
+                        path="/attendance"
+                        element={<AttendanceCalendar />}
+                      />
 
                       <Route path="/events/view" element={<Events />} />
                       <Route path="/events/add" element={<AddEvent />} />

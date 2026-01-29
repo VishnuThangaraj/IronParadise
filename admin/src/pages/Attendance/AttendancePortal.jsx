@@ -130,7 +130,7 @@ const AttendancePortal = () => {
 
       toast.success("Attendance marked successfully");
 
-      setAttendance({});
+      setAttendance(initialAttendanceState);
       setInvalidIdError("");
     } catch (err) {
       console.error(err);
