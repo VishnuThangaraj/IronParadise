@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
+import Swal from "sweetalert2";
 import { toast } from "sonner";
 import Grid from "@mui/joy/Grid";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import FormLabel from "@mui/joy/FormLabel";
 import FormControl from "@mui/joy/FormControl";
+import withReactContent from "sweetalert2-react-content";
+
+import { gymQuotes } from "../../config/GymQuotes";
 
 import {
   AttendanceFieldGroup,
@@ -17,8 +22,11 @@ import { fetchMemberByMemberId } from "../../redux/member/memberThunks";
 import { fetchTrainerByUserId } from "../../redux/trainer/trainerThunks";
 import { addNewAttendance } from "../../redux/attendance/attendanceThunks";
 
+const MySwal = withReactContent(Swal);
+
 const AttendancePortal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [attendance, setAttendance] = useState(initialAttendanceState);
   const [invalidIdError, setInvalidIdError] = useState(null);
 
@@ -122,13 +130,21 @@ const AttendancePortal = () => {
     try {
       const role = attendance.userName.startsWith("MBR") ? "member" : "trainer";
 
-      await dispatch(
+      const response = await dispatch(
         addNewAttendance({
           newAttendance: { userId: attendance.userName, role },
         }),
       ).unwrap();
 
-      toast.success("Attendance marked successfully");
+      console.log();
+
+      MySwal.fire({
+        icon: "success",
+        text: `${role.slice(0, 1).toUpperCase() + role.slice(1)} Attendance ${response.message}.`,
+        title: gymQuotes[Math.floor(Math.random() * gymQuotes.length)],
+        showConfirmButton: false,
+        timer: 4500,
+      });
 
       setAttendance(initialAttendanceState);
       setInvalidIdError("");
@@ -228,6 +244,7 @@ const AttendancePortal = () => {
               sx={{
                 border: "1px solid black",
               }}
+              onClick={() => navigate("/enquiry")}
             >
               <i className="fa fa-message me-1"></i>Connect with Us
             </Button>

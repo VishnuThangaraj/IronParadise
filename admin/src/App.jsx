@@ -18,6 +18,7 @@ const AttendancePortal = lazy(
   () => import("./pages/Attendance/AttendancePortal"),
 );
 const Events = lazy(() => import("./pages/Event/Events"));
+const Enquiry = lazy(() => import("./pages/Enquiry/Enquiry"));
 const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const AttendanceCalendar = lazy(
   () => import("./pages/Attendance/AttendanceCalendar"),
@@ -85,6 +86,14 @@ const App = () => {
           element={
             <Suspense fallback={<Loader />}>
               <AttendancePortal />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/enquiry"
+          element={
+            <Suspense fallback={<Loader />}>
+              <Enquiry />
             </Suspense>
           }
         />

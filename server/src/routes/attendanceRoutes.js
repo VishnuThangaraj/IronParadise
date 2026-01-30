@@ -16,4 +16,11 @@ router.post(
   attendanceController.registerAttendance,
 );
 
+// Fetch Monthly Attendance
+router.get(
+  "/monthly/:month",
+  authenticateJWT(["admin"]),
+  attendanceController.fetchMonthlyAttendance,
+);
+
 module.exports = router;
