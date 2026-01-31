@@ -27,6 +27,7 @@ const MySwal = withReactContent(Swal);
 const AttendancePortal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [attendance, setAttendance] = useState(initialAttendanceState);
   const [invalidIdError, setInvalidIdError] = useState(null);
 
@@ -135,8 +136,6 @@ const AttendancePortal = () => {
           newAttendance: { userId: attendance.userName, role },
         }),
       ).unwrap();
-
-      console.log();
 
       MySwal.fire({
         icon: "success",
