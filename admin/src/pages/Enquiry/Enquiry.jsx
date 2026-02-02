@@ -42,7 +42,7 @@ const Enquiry = () => {
           sx={{ p: 5, borderRadius: 9 }}
           className="bg-white w-120 shadow-md"
         >
-          <div></div>
+          <div>a</div>
           <div className="loginform_header">
             <div className="font-bold text-xl">Enquiry</div>
             <div
