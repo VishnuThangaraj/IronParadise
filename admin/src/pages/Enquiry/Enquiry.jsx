@@ -38,6 +38,7 @@ const Enquiry = () => {
           alt="Iron Paradise"
           width={100}
         />
+        <div></div>
         <Grid
           sx={{ p: 5, borderRadius: 9 }}
           className="bg-white w-120 shadow-md"
