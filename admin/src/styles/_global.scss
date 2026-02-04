@@ -16,3 +16,13 @@ body,
 .primary-bg {
   background-color: $primary-background;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* Chrome/Safari */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

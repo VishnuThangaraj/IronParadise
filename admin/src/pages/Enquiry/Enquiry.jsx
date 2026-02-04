@@ -1,25 +1,50 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import Grid from "@mui/joy/Grid";
-import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import FormLabel from "@mui/joy/FormLabel";
 import FormControl from "@mui/joy/FormControl";
 import withReactContent from "sweetalert2-react-content";
 
-import { initialEnquiryState } from "../../config/EnquiryFields";
+import FormField from "../../components/Form/FormField";
+import {
+  initialEnquiryState,
+  EnquiryFieldGroup,
+} from "../../config/EnquiryFields";
+
+import { formFieldColSpan } from "../../config/FormFieldConfig";
+
+import { userEmail, userMobile } from "../../config/UserConfig";
 
 const MySwal = withReactContent(Swal);
 
+const numericFields = ["phone"];
+
+const maxLengthMap = {
+  phone: 10,
+};
+
 const Enquiry = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [enquiry, setEnquiry] = useState(initialEnquiryState);
+
+  const handleChange = (name, value) => {
+    if (numericFields.includes(name) && isNaN(Number(value))) return;
+
+    if (maxLengthMap[name] && value.length > maxLengthMap[name]) return;
+
+    setEnquiry((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div
@@ -33,92 +58,80 @@ const Enquiry = () => {
       className="flex items-center justify-center h-screen "
     >
       <div className="flex flex-col gap-5 items-center">
-        <img
-          src="../../../public/images/logo_black.webp"
-          alt="Iron Paradise"
-          width={100}
-        />
-        <div></div>
         <Grid
-          sx={{ p: 5, borderRadius: 9 }}
-          className="bg-white w-120 shadow-md"
+          sx={{ p: 4, px: 3, borderRadius: 9 }}
+          className="bg-white w-150 max-w-3xl shadow-md flex flex-col"
         >
-          <div>a</div>
-          <div className="loginform_header">
-            <div className="font-bold text-xl">Enquiry</div>
-            <div
-              className="text-sm text-gray-500"
-              style={{ letterSpacing: "1px" }}
-            >
-              Enter your ID and verify your name
-            </div>
+          <div className="font-bold text-2xl text-center mb-4">
+            LET US SERVE YOU BETTER
           </div>
-          <form
-            className="flex flex-col justify-between mb-1"
-            // onSubmit={handleSubmit}
-          >
-            {/* {AttendanceFieldGroup.map((field, index) => {
-                return (
-                  <FormControl
-                    key={`attendance-portal-${field.name}-${index}`}
-                    sx={{ mt: 3 }}
-                  >
-                    <FormLabel className="font-semibold">
-                      {field.label}
-                    </FormLabel>
-                    <Input
-                      size="sm"
-                      sx={{ py: 1 }}
-                      value={attendance[field.name]}
-                      onChange={(e) => handleChange(field.name, e.target.value)}
-                      placeholder={field.placeholder}
-                      disabled={field?.disabled ?? false}
-                      variant="soft"
-                    />
-                  </FormControl>
-                );
-              })} */}
-            {/* {invalidIdError && (
-                <div className="text-red-500 mt-2 text-sm transition-opacity duration-200 ease-in">
-                  {invalidIdError}
-                </div>
-              )} */}
 
-            <div
-            // className={`flex justify-between ${invalidIdError ? "mb-6 mt-2" : "my-6"} text-sm`}
-            >
-              <div>Verify your ID and Name before marking Attendance.</div>
+          <form
+            className="flex flex-col flex-1 justify-between"
+            onSubmit={handleSubmit}
+          >
+            {/* Scrollable form area */}
+            <div className="grid grid-cols-12 gap-2 px-6 pb-5 max-h-[75vh] overflow-y-auto overflow-x-hidden no-scrollbar">
+              {EnquiryFieldGroup.map((group, index) => (
+                <Fragment key={`group_${group.title}_${index}`}>
+                  <div className="col-span-12 text-sm font-semibold mt-2">
+                    {group.title}
+                  </div>
+
+                  {group.fields.map(
+                    (field) =>
+                      (!field.showIf || field.showIf(enquiry)) && (
+                        <div
+                          key={field.name}
+                          className={formFieldColSpan(field.size)}
+                        >
+                          <FormField
+                            field={field}
+                            value={enquiry[field.name]}
+                            label={false}
+                            onChange={handleChange}
+                            disabled={field.disabled}
+                          />
+                        </div>
+                      ),
+                  )}
+                </Fragment>
+              ))}
             </div>
-            <Button
-              type="submit"
-              size="md"
-              className="transition-all duration-300 hover:scale-101"
-              variant="solid"
-              sx={{
-                backgroundColor: "black",
-                "&:hover": {
-                  backgroundColor: "#2A2A2A",
-                },
-              }}
-              fullWidth
-            >
-              Mark Attendance
-            </Button>
+            <div className="mx-5">
+              <Button
+                type="submit"
+                size="md"
+                variant="solid"
+                fullWidth
+                sx={{
+                  backgroundColor: "black",
+                  mt: 1,
+                  "&:hover": { backgroundColor: "#2A2A2A" },
+                }}
+              >
+                Submit
+              </Button>
+            </div>
           </form>
-          <div className="mt-7 flex items-center justify-between">
-            <span className="text-sm">Need any help? Reach out to us</span>
-            <Button
-              size="md"
-              className="transition-all duration-300 hover:scale-101"
-              variant="outlined"
-              color="neutral"
-              sx={{
-                border: "1px solid black",
-              }}
-              onClick={() => navigate("/enquiry")}
-            >
-              <i className="fa fa-message me-1"></i>Connect with Us
-            </Button>
+
+          {/* Contact Info */}
+          <div className="flex flex-row gap-5 mt-4 ms-4 text-sm items-center text-gray-500">
+            <div className="font-medium whitespace-nowrap">Reach us:</div>
+
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2 hover:cursor-pointer">
+                <i className="fa-regular fa-circle-phone" aria-hidden="true" />
+                <span>{userMobile}</span>
+              </div>
+
+              <span className="text-gray-400 select-none">|</span>
+
+              <div className="flex items-center gap-2 hover:cursor-pointer">
+                <i className="fa-regular fa-envelope" aria-hidden="true" />
+                <span>{userEmail}</span>
+              </div>
+            </div>
           </div>
         </Grid>
       </div>

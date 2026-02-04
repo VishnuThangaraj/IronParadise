@@ -14,11 +14,17 @@ const fieldStyle = {
   fontSize: 15,
 };
 
-const FormField = ({ field, value, onChange, disabled = false }) => {
+const FormField = ({
+  field,
+  value,
+  onChange,
+  label = true,
+  disabled = false,
+}) => {
   if (field.type === "select") {
     return (
       <FormControl>
-        <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
+        {label && <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>}
 
         <Select
           value={value ?? null}
@@ -49,7 +55,7 @@ const FormField = ({ field, value, onChange, disabled = false }) => {
   if (field.type === "textbox") {
     return (
       <FormControl>
-        <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
+        {label && <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>}
         <Textarea
           value={value ?? ""}
           onChange={(e) => onChange(field.name, e.target.value)}
@@ -64,7 +70,7 @@ const FormField = ({ field, value, onChange, disabled = false }) => {
 
   return (
     <FormControl>
-      <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>
+      {label && <FormLabel sx={{ fontSize: 15 }}>{field.label}</FormLabel>}
       <Input
         type={field.type || "text"}
         value={value ?? ""}
