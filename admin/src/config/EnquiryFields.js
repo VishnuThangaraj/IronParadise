@@ -2,7 +2,7 @@ export const initialEnquiryState = {
   firstName: "",
   lastName: "",
   email: "",
-  phone: "",
+  mobile: "",
   subject: "",
   message: "",
 };
@@ -41,7 +41,7 @@ export const EnquiryFieldGroup = [
       },
       {
         label: "Contact Number",
-        name: "phone",
+        name: "mobile",
         placeholder: "0000 0000 00",
         mobile: true,
         size: 50,
@@ -64,7 +64,7 @@ export const EnquiryFieldGroup = [
     fields: [
       {
         label: "Message",
-        name: "subject",
+        name: "message",
         type: "textbox",
         placeholder: "Enter Your Message...",
         size: 100,

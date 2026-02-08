@@ -15,6 +15,22 @@ const fetchAllEnquiry = async (req, res) => {
   }
 };
 
+// Add New Enquiry
+const addNewEnquiry = async (req, res) => {
+  try {
+    const enquiry = new Enquiry({ ...req.body });
+    await enquiry.save();
+
+    res.status(201).json({
+      message: "Enquiry added successfully",
+      enquiry,
+    });
+  } catch (err) {
+    console.error("Adding Enquiry Error:", err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 // Fetch Enquiry by ID
 const fetchEnquiryById = async (req, res) => {
   try {
@@ -26,7 +42,6 @@ const fetchEnquiryById = async (req, res) => {
 
     res.status(200).json({ enquiry });
   } catch (err) {
-    console.error("Fetch Enquiry Error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -37,10 +52,7 @@ const updateEnquiryById = async (req, res) => {
     const enquiry = await Enquiry.findByIdAndUpdate(
       req.params.id,
       { replied: true },
-      {
-        new: true,
-        runValidators: true,
-      },
+      { new: true, runValidators: true },
     )
       .select("-__v")
       .lean();
@@ -54,7 +66,6 @@ const updateEnquiryById = async (req, res) => {
       enquiry,
     });
   } catch (err) {
-    console.error("Update Enquiry Error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -62,9 +73,7 @@ const updateEnquiryById = async (req, res) => {
 // Delete Enquiry by ID
 const deleteEnquiryById = async (req, res) => {
   try {
-    const enquiry = await Enquiry.findByIdAndDelete(req.params.id)
-      .select("-__v")
-      .lean();
+    const enquiry = await Enquiry.findByIdAndDelete(req.params.id).lean();
 
     if (!enquiry) {
       return res.status(404).json({ message: "Enquiry not found" });
@@ -75,13 +84,13 @@ const deleteEnquiryById = async (req, res) => {
       enquiry,
     });
   } catch (err) {
-    console.error("Delete Enquiry Error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
 module.exports = {
   fetchAllEnquiry,
+  addNewEnquiry,
   fetchEnquiryById,
   updateEnquiryById,
   deleteEnquiryById,

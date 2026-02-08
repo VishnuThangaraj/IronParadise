@@ -18,6 +18,7 @@ import {
 import { formFieldColSpan } from "../../config/FormFieldConfig";
 
 import { userEmail, userMobile } from "../../config/UserConfig";
+import { addNewEnquiry } from "../../redux/enquiry/enquiryThunks";
 
 const MySwal = withReactContent(Swal);
 
@@ -42,8 +43,22 @@ const Enquiry = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const isFormValid = Object.values(enquiry).every(
+      (value) => value.trim() !== "",
+    );
+    if (!isFormValid) return toast.warning("All Fields are Required.");
+
+    try {
+      await dispatch(addNewEnquiry({ newEnquiry: enquiry })).unwrap();
+      toast.success("Enquiry send Successfully.");
+    } catch {
+      toast.error("Failed to Submit Enquiry.");
+    } finally {
+      setEnquiry(initialEnquiryState);
+    }
   };
 
   return (

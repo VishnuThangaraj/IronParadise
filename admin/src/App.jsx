@@ -31,6 +31,7 @@ const AddDietPlan = lazy(() => import("./pages/DietPlan/AddDietPlan"));
 const TrainersList = lazy(() => import("./pages/Trainer/TrainersList"));
 const MemberDetails = lazy(() => import("./pages/Member/MemberDetails"));
 const DietPlanList = lazy(() => import("./pages/DietPlan/DietPlanList"));
+const EnquiriesList = lazy(() => import("./pages/Enquiry/EnquiriesList"));
 const TrainerDetails = lazy(() => import("./pages/Trainer/TrainerDetails"));
 const DietPlanDetails = lazy(() => import("./pages/DietPlan/DietPlanDetails"));
 const MembershipList = lazy(() => import("./pages/Membership/MembershipList"));
@@ -126,6 +127,8 @@ const App = () => {
 
                       <Route path="/events/view" element={<Events />} />
                       <Route path="/events/add" element={<AddEvent />} />
+
+                      <Route path="/enquiry/list" element={<EnquiriesList />} />
 
                       <Route path="/trainer/add" element={<AddTrainer />} />
                       <Route path="/trainer/list" element={<TrainersList />} />

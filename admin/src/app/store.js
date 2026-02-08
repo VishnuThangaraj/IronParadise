@@ -3,6 +3,7 @@ import authReducer from "../redux/auth/authSlice";
 import flowReducer from "../redux/flows/flowSlice";
 import eventReducer from "../redux/event/eventSlice";
 import memberReducer from "../redux/member/memberSlice";
+import enquiryReducer from "../redux/enquiry/enquirySlice";
 import trainerReducer from "../redux/trainer/trainerSlice";
 import dietPlanReducer from "../redux/dietPlan/dietPlanSlice";
 import membershipReducer from "../redux/membership/membershipSlice";
@@ -16,6 +17,7 @@ export const store = configureStore({
     flows: flowReducer,
     event: eventReducer,
     member: memberReducer,
+    enquiry: enquiryReducer,
     trainer: trainerReducer,
     dietPlan: dietPlanReducer,
     membership: membershipReducer,

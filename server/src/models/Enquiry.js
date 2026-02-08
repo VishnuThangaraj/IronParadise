@@ -57,11 +57,10 @@ const EnquirySchema = new mongoose.Schema(
 
 EnquirySchema.index({ email: 1, createdAt: -1 });
 
-EnquirySchema.pre("save", function (next) {
+EnquirySchema.pre("save", function () {
   this.firstName = this.firstName?.replace(/\s+/g, " ").trim();
   this.lastName = this.lastName?.replace(/\s+/g, " ").trim();
   this.subject = this.subject?.replace(/\s+/g, " ").trim();
-  next();
 });
 
 module.exports = mongoose.model("Enquiry", EnquirySchema);

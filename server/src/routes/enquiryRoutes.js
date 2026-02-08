@@ -7,11 +7,15 @@ const {
   fetchAllEnquiry,
   fetchEnquiryById,
   updateEnquiryById,
+  addNewEnquiry,
   deleteEnquiryById,
 } = require("../controllers/enquiryController");
 
 // GET all enquiries
 router.get("/", fetchAllEnquiry);
+
+// POST new Enquiry
+router.post("/create/", addNewEnquiry);
 
 // GET single enquiry
 router.get("/:id", validateObjectId("id"), fetchEnquiryById);

@@ -20,7 +20,7 @@ export const AdminSidebarItems = [
     items: [
       {
         name: "Enquires",
-        location: "/enquiry",
+        location: "/enquiry/list",
         icon: "fa-light fa-messages-question",
       },
       {
