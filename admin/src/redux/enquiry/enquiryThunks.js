@@ -43,3 +43,46 @@ export const addNewEnquiry = createAsyncThunk(
     }
   },
 );
+
+// Replay to Enquiry
+export const replayEnquiry = createAsyncThunk(
+  async ({ mailData, enquiryID }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.patch(
+        `/enquiry/replay/${enquiryID}`,
+        { ...mailData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to replay Enquiry");
+    }
+  },
+);
+
+// Delete Enquiry by ID
+export const deleteEnquiryById = createAsyncThunk(
+  "enquiry/deleteEnquiryById",
+  async ({ enquiryId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.delete(`enquiry/${enquiryId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return res.data._id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to Delete Enquiry");
+    }
+  },
+);

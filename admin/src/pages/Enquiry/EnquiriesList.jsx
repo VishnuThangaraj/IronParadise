@@ -31,14 +31,16 @@ const EnquiriesList = () => {
     dispatch(fetchAllEnquiry());
   }, [dispatch]);
 
+  const deleteTrainerWithId = () => {};
+
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
-    console.log(enquiries);
     return (enquiries || []).filter(
       (row) =>
         row.firstName?.toLowerCase().includes(query) ||
         row.lastName?.toLowerCase().includes(query) ||
         row.email?.toLowerCase().includes(query) ||
+        row.createdAt?.toLowerCase().includes(query) ||
         row.mobile?.includes(query) ||
         row.subject?.toLowerCase().includes(query),
     );
@@ -77,9 +79,9 @@ const EnquiriesList = () => {
       <DeletionModal
         open={openDelete}
         setOpen={setOpenDelete}
-        icon={`fa-light fa-user-slash`}
+        icon={`fa-duotone fa-light fa-messages`}
         origin={"Enquiry"}
-        // confirmation={deleteTrainerWithId}
+        confirmation={deleteTrainerWithId}
       />
     </div>
   );

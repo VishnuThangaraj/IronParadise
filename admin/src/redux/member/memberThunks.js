@@ -145,9 +145,7 @@ export const deleteMemberById = createAsyncThunk(
       });
       return res.data.memberId;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data || "Failed to UpdatDelete Member",
-      );
+      return rejectWithValue(err.response?.data || "Failed to Delete Member");
     }
   },
 );

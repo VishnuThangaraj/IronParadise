@@ -1,7 +1,12 @@
 import Tooltip from "@mui/joy/Tooltip";
 import IconButton from "@mui/joy/IconButton";
 
-export const EnquiryColumns = ({ setDeleteId, setOpenDelete }) => [
+export const EnquiryColumns = ({
+  setDeleteId,
+  setOpenDelete,
+  setMailData,
+  setOpenMail,
+}) => [
   {
     field: "name",
     headerName: "Full Name",
@@ -11,6 +16,25 @@ export const EnquiryColumns = ({ setDeleteId, setOpenDelete }) => [
     renderCell: (params) => {
       const { row } = params;
       return `${row.firstName} ${row.lastName}`;
+    },
+  },
+  {
+    field: "createdAt",
+    headerName: "Date",
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+    valueFormatter: (value) => {
+      if (!value) return "-";
+
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return "-";
+
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      });
     },
   },
   {
@@ -42,14 +66,28 @@ export const EnquiryColumns = ({ setDeleteId, setOpenDelete }) => [
           onClick={(e) => e.stopPropagation()}
         >
           {/* View Message */}
-          <Tooltip title="Change Fitness Plan" arrow>
+          <Tooltip title="View Message" arrow>
             <IconButton
               onClick={() => {
-                console.log("Member");
                 return;
               }}
             >
-              <i className="fa-sharp-duotone fa-solid fa-arrows-rotate-reverse text-blue-600 text-[20px]" />
+              <i className="fa-duotone fa-solid fa-messages text-green-600 text-[20px]" />
+            </IconButton>
+          </Tooltip>
+
+          {/* Mail */}
+          <Tooltip title="Send Replay Mail" arrow>
+            <IconButton
+              onClick={() => {
+                setMailData({
+                  to: row.email,
+                  name: row.name,
+                });
+                setOpenMail(true);
+              }}
+            >
+              <i className="fa-duotone fa-solid fa-envelopes text-blue-600 text-[20px]" />
             </IconButton>
           </Tooltip>
 

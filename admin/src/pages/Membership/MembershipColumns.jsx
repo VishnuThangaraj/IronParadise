@@ -89,9 +89,7 @@ export const MembershipColumns = () => [
     flex: 1.5,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) => {
-      const { row } = params;
-
+    renderCell: () => {
       return (
         <div
           className="flex justify-evenly space-x-2 mt-2"

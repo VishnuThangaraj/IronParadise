@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllEnquiry, addNewEnquiry } from "./enquiryThunks";
+import {
+  fetchAllEnquiry,
+  addNewEnquiry,
+  replayEnquiry,
+  deleteEnquiryById,
+} from "./enquiryThunks";
 
 const initialState = {
   enquiries: [],
@@ -42,6 +47,39 @@ const enquirySlice = createSlice({
         state.enquiries.push(action.payload);
       })
       .addCase(addNewEnquiry.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Replay Enquiry
+      .addCase(replayEnquiry.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(replayEnquiry.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.enquiries.push(action.payload);
+      })
+      .addCase(replayEnquiry.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Delete Enquiry
+      .addCase(deleteEnquiryById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteEnquiryById.fulfilled, (state, action) => {
+        state.loading = false;
+        const id = action.payload;
+
+        state.enquiries = state.enquiries.filter(
+          (enquiry) => enquiry._id !== id,
+        );
+        if (state.currentEnquiry?._id === id) {
+          state.currentEnquiry = null;
+        }
+      })
+      .addCase(deleteEnquiryById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

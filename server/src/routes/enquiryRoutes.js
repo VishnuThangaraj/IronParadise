@@ -21,7 +21,7 @@ router.post("/create/", addNewEnquiry);
 router.get("/:id", validateObjectId("id"), fetchEnquiryById);
 
 // PATCH mark enquiry as replied
-router.patch("/:id/reply", validateObjectId("id"), updateEnquiryById);
+router.patch("/replay/:id", validateObjectId("id"), updateEnquiryById);
 
 // DELETE enquiry
 router.delete("/:id", validateObjectId("id"), deleteEnquiryById);
