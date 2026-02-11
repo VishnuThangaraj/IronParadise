@@ -19,14 +19,8 @@ import {
 } from "../../redux/member/memberThunks";
 import { selectAllMembers } from "../../redux/member/memberSelector";
 
-import { fetchAllTrainers } from "../../redux/trainer/trainerThunks";
-import { selectAllTrainers } from "../../redux/trainer/trainerSelectors";
-
-import { fetchAllDietPlans } from "../../redux/dietPlan/dietPlanThunks";
-import { selectAllDietPlans } from "../../redux/dietPlan/dietPlanSelector";
-
-import { fetchAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanThunks";
-import { selectAllWorkoutPlans } from "../../redux/workoutPlan/workoutPlanSelector";
+import { fetchAllMemberships } from "../../redux/membership/membershipThunks";
+import { selectAllMemberships } from "../../redux/membership/membershipSelector";
 
 import DeletionModal from "../../components/Modal/DeletionModal";
 
@@ -40,21 +34,40 @@ const MembersList = () => {
   const [search, setSearch] = useState("");
   const members = useSelector(selectAllMembers);
 
+  const memberships = useSelector(selectAllMemberships);
+
   useEffect(() => {
     dispatch(fetchAllMembers());
+    dispatch(fetchAllMemberships());
   }, [dispatch]);
+
+  const membersWithMembership = useMemo(() => {
+    if (!members.length || !memberships.length) return members;
+
+    const membershipsMap = memberships.reduce((acc, membership) => {
+      acc[membership.memberObjectId] = membership.planName;
+      return acc;
+    }, {});
+
+    return members.map((member) => ({
+      ...member,
+      membershipName: membershipsMap[member._id] || "Not Assigned",
+    }));
+  }, [members, memberships]);
 
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
 
-    return members.filter(
+    console.log(membersWithMembership);
+    return membersWithMembership?.filter(
       (row) =>
         row.memberId?.toString().toLowerCase().includes(query) ||
         row.name?.toLowerCase().includes(query) ||
         row.email?.toLowerCase().includes(query) ||
+        row.trainerName?.toLowerCase().includes(query) ||
         row.mobile?.includes(query),
     );
-  }, [members, search]);
+  }, [membersWithMembership, search]);
 
   const checkValidation = () => {
     return true;

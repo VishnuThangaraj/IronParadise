@@ -1,3 +1,4 @@
+import Chip from "@mui/joy/Chip";
 import Tooltip from "@mui/joy/Tooltip";
 import IconButton from "@mui/joy/IconButton";
 
@@ -8,12 +9,12 @@ export const MembershipColumns = () => [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) => {
+    renderCell: ({ row }) => {
       return (
         <div
-          className={`font-semibold ${params.row?.status == "active" ? "text-green-600" : "text-red-600"}`}
+          className={`${row?.status === "active" ? "text-green-600" : "text-red-500"} font-semibold`}
         >
-          {params.row?.memberId?.memberId ?? "ID Error"}
+          {row?.memberId ?? "ID Error"}
         </div>
       );
     },
@@ -24,8 +25,8 @@ export const MembershipColumns = () => [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) => {
-      return <div>{params.row?.memberId?.name ?? "Name Error"}</div>;
+    renderCell: ({ row }) => {
+      return <div>{row?.memberName ?? "Name Error"}</div>;
     },
   },
   {
@@ -34,8 +35,14 @@ export const MembershipColumns = () => [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) => {
-      return <div>{params.row?.planId?.name ?? "-"}</div>;
+    renderCell: ({ row }) => {
+      const planName = row?.planName;
+
+      return (
+        <div className={!planName ? "font-semibold" : undefined}>
+          {planName || "Not Assigned"}
+        </div>
+      );
     },
   },
   {
@@ -78,10 +85,20 @@ export const MembershipColumns = () => [
   },
   {
     field: "status",
-    headerName: "Status",
+    headerName: "Payment",
     flex: 1,
     headerAlign: "center",
     align: "center",
+    renderCell: ({ row }) => {
+      return (
+        <Chip
+          color={`${row.status === "active" ? "success" : "danger"}`}
+          variant="soft"
+        >
+          {row.status.toUpperCase()}
+        </Chip>
+      );
+    },
   },
   {
     field: "action",

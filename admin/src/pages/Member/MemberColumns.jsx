@@ -25,14 +25,14 @@ export const MemberColumns = ({ navigate, setDeleteId, setOpenDelete }) => [
   },
 
   {
-    field: "subscriptionPlan",
+    field: "membershipName",
     headerName: "Subscription Plan",
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
-    field: "trainer",
+    field: "trainerName",
     headerName: "Trainer",
     flex: 1,
     headerAlign: "center",

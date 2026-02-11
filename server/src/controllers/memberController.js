@@ -33,9 +33,23 @@ const registerMember = async (req, res) => {
 // Fetch All Members
 const fetchAllMembers = async (req, res) => {
   try {
-    const members = await Member.find().select("-password");
+    const members = await Member.find()
+      .select("-createdAt -updatedAt -password -__v")
+      .populate({
+        path: "assignedTrainer",
+        select: "name",
+      })
+      .lean();
 
-    res.status(200).json(members);
+    const formattedMembers = members.map((member) => ({
+      ...member,
+      assignedTrainer: member.assignedTrainer?._id || null,
+      trainerName: member.assignedTrainer?.name || "Not Assigned",
+    }));
+
+    console.log(formattedMembers);
+
+    res.status(200).json({ members: formattedMembers });
   } catch (err) {
     res.status(500).json({
       message: "Server error",

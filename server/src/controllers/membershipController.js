@@ -58,10 +58,29 @@ const createMembership = async (req, res) => {
 const fetchAllMemberships = async (req, res) => {
   try {
     const memberships = await Membership.find()
-      .populate("memberId")
-      .populate("planId");
+      .select("-createdAt -updatedAt -password -__v")
+      .populate({
+        path: "planId",
+        select: "name",
+      })
+      .populate({
+        path: "memberId",
+        select: "name memberId",
+      })
+      .lean();
 
-    res.status(200).json(memberships);
+    const formattedMemberships = memberships.map((membership) => ({
+      ...membership,
+
+      planId: membership.planId?._id || null,
+      planName: membership.planId?.name || "Not Assigned",
+
+      memberObjectId: membership.memberId?._id || null,
+      memberId: membership.memberId?.memberId || "Not Assigned",
+      memberName: membership.memberId?.name || "Not Assigned",
+    }));
+
+    res.status(200).json({ memberships: formattedMemberships });
   } catch (err) {
     res.status(500).json({
       message: "Server error",

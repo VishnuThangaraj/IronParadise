@@ -77,7 +77,10 @@ const TrainersList = () => {
       <Card className="shadow-md" sx={{ my: 2, p: 4 }}>
         <CardContent>
           <div className="flex justify-between items-center mb-3 gap-3">
-            <ExportButtons />
+            <ExportButtons
+              data={filteredRows.slice()}
+              fileName="trainer-data"
+            />
             <SearchBar value={search} onChange={setSearch} />
 
             <Button

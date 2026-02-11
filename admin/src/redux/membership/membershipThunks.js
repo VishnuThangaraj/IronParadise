@@ -13,7 +13,8 @@ export const fetchAllMemberships = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      return res.data;
+
+      return res.data.memberships;
     } catch (err) {
       return rejectWithValue(
         err.response?.data || "Failed to fetch Membership",

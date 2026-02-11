@@ -13,7 +13,7 @@ export const fetchAllMembers = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      return res.data;
+      return res.data.members;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to fetch Customers");
     }
