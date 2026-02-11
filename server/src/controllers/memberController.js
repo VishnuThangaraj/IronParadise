@@ -47,8 +47,6 @@ const fetchAllMembers = async (req, res) => {
       trainerName: member.assignedTrainer?.name || "Not Assigned",
     }));
 
-    console.log(formattedMembers);
-
     res.status(200).json({ members: formattedMembers });
   } catch (err) {
     res.status(500).json({

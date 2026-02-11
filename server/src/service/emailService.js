@@ -1,9 +1,8 @@
-const fs = require("fs");
-const path = require("path");
 const nodemailer = require("nodemailer");
+const path = require("path");
 const { EMAIL_USER, EMAIL_PASS } = require("../config/emailConfig");
 
-// Nodemailer configuration
+// Create transporter (modern & secure)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -12,67 +11,86 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send email function
-const sendMail = async (to, subject, html) => {
+// Verify connection once at startup
+transporter.verify((error) => {
+  if (error) {
+    console.error("Email transporter error:", error);
+  } else {
+    console.log("Email server ready");
+  }
+});
+
+// Base Mail Sender
+const baseSendMail = async (options) => {
   try {
     const info = await transporter.sendMail({
-      from: EMAIL_USER,
-      to,
-      subject,
-      html,
+      from: `"Gym Management" <${EMAIL_USER}>`,
+      ...options,
     });
-    console.log("Message sent: %s", info.messageId);
+
+    return {
+      success: true,
+      messageId: info.messageId,
+    };
   } catch (error) {
     console.error("Error sending email:", error);
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 };
 
-// Send email function with file
-const sendMailWithFile = async (to, subject, html, file) => {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+// Send Simple Email
+
+const sendMail = async (to, subject, html, text = "") => {
+  return baseSendMail({
     to,
     subject,
     html,
-  };
-
-  if (file) {
-    mailOptions.attachments = [
-      {
-        filename: file.originalname,
-        content: file.buffer,
-      },
-    ];
-  }
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Message sent: %s", info.messageId);
-  } catch (error) {
-    console.error("Error sending email:", error);
-  }
+    text,
+  });
 };
 
-// Send email function with PDF attachment
-const sendMailPDF = async (to, subject, html, attachments) => {
-  try {
-    const mailOptions = {
-      from: EMAIL_USER,
-      to,
-      subject,
-      html,
-      attachments: attachments.map((filePath) => ({
-        filename: path.basename(filePath),
-        path: filePath,
-        contentType: "application/pdf",
-      })),
-    };
+// Send Email With Single Uploaded File (multer buffer)
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Message sent: %s", info.messageId);
-  } catch (error) {
-    console.error("Error sending email:", error);
-  }
+const sendMailWithFile = async (to, subject, html, file) => {
+  const attachments = file
+    ? [
+        {
+          filename: file.originalname,
+          content: file.buffer,
+        },
+      ]
+    : [];
+
+  return baseSendMail({
+    to,
+    subject,
+    html,
+    attachments,
+  });
 };
 
-module.exports = { sendMail, sendMailWithFile, sendMailPDF };
+// Send Email With PDF File Paths
+
+const sendMailPDF = async (to, subject, html, filePaths = []) => {
+  const attachments = filePaths.map((filePath) => ({
+    filename: path.basename(filePath),
+    path: filePath,
+    contentType: "application/pdf",
+  }));
+
+  return baseSendMail({
+    to,
+    subject,
+    html,
+    attachments,
+  });
+};
+
+module.exports = {
+  sendMail,
+  sendMailWithFile,
+  sendMailPDF,
+};
