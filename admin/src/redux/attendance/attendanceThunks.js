@@ -43,3 +43,29 @@ export const addNewAttendance = createAsyncThunk(
     }
   },
 );
+
+// Fetch Attendance with Date
+export const fetchAllAttendance = createAsyncThunk(
+  "/attendance/fetchAllAttendance",
+  async ({ date }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/attendance/",
+        { date },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to Fetch Attendance",
+      );
+    }
+  },
+);

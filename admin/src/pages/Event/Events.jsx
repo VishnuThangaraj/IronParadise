@@ -10,6 +10,10 @@ import Calendar from "../../components/Calendar";
 const Events = () => {
   const navigate = useNavigate();
 
+  const displayEvent = (info) => {
+    console.log(info);
+  };
+
   return (
     <div key="Admin_events_page">
       <PageLocation
@@ -37,7 +41,7 @@ const Events = () => {
             </Button>
           </div>
 
-          <Calendar />
+          <Calendar eventOnClick={displayEvent} showEventCountOnly={false} />
         </CardContent>
       </Card>
     </div>

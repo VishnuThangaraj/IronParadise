@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
@@ -7,18 +10,28 @@ import { useNavigate } from "react-router-dom";
 
 import Calendar from "../../components/Calendar";
 
+import { fetchAllAttendances } from "../../redux/attendance/attendanceThunks";
+import { selectAllAttendances } from "../../redux/attendance/attendanceSelector";
+
 const AttendanceCalendar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const attendances = useSelector(selectAllAttendances);
+
+  useEffect(() => {
+    dispatch(fetchAllAttendances());
+  }, [dispatch]);
+
+  const displayAttendance = (info) => {
+    console.log(info);
+  };
 
   const handleDatesChange = (arg) => {
-    console.log(arg);
-
     const currentMonth = arg.view.currentStart.toLocaleString("default", {
       month: "long",
       year: "numeric",
     });
-
-    console.log(currentMonth);
   };
 
   return (
@@ -35,7 +48,8 @@ const AttendanceCalendar = () => {
             Attendance Calendar
           </div>
           <Calendar
-            events={[{ title: "Trainer Session", date: "2026-01-20" }]}
+            events={attendances || []}
+            eventOnClick={displayAttendance}
             showEventCountOnly={true}
             handleDatesChange={handleDatesChange}
           />

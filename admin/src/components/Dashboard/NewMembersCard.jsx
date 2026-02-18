@@ -1,4 +1,5 @@
 const NewMembersCard = ({ members }) => {
+  console.log(members);
   return (
     <div
       key="NewMembersCard"
@@ -14,7 +15,7 @@ const NewMembersCard = ({ members }) => {
           <div className="flex flex-col">
             <div className="font-semibold text-gray-600">{member.name}</div>
             <div className="text-xs font-semibold text-gray-400">
-              {member.createdAt.slice(0, 10)}
+              {member?.memberId || "ID Not Assigned"}
             </div>
           </div>
         </div>

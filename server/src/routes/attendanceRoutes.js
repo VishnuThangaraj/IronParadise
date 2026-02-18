@@ -17,10 +17,17 @@ router.post(
 );
 
 // Fetch Monthly Attendance
-router.get(
-  "/monthly/:month",
+router.post(
+  "/monthly",
   authenticateJWT(["admin"]),
   attendanceController.fetchMonthlyAttendance,
+);
+
+// Fetch Daily Attendance
+router.post(
+  "/daily",
+  authenticateJWT(["admin"]),
+  attendanceController.fetchDailyAttendance,
 );
 
 module.exports = router;

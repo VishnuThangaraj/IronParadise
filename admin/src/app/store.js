@@ -6,6 +6,7 @@ import memberReducer from "../redux/member/memberSlice";
 import enquiryReducer from "../redux/enquiry/enquirySlice";
 import trainerReducer from "../redux/trainer/trainerSlice";
 import dietPlanReducer from "../redux/dietPlan/dietPlanSlice";
+import attendanceReducer from "../redux/attendance/attendanceSlice";
 import membershipReducer from "../redux/membership/membershipSlice";
 import fitnessPlanReducer from "../redux/fitnessPlan/fitnessPlanSlice";
 import workoutPlanReducer from "../redux/workoutPlan/workoutPlanSlice";
@@ -20,6 +21,7 @@ export const store = configureStore({
     enquiry: enquiryReducer,
     trainer: trainerReducer,
     dietPlan: dietPlanReducer,
+    attendance: attendanceReducer,
     membership: membershipReducer,
     fitnessPlan: fitnessPlanReducer,
     workoutPlan: workoutPlanReducer,

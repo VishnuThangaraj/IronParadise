@@ -106,9 +106,31 @@ const registerAttendance = async (req, res) => {
 
 // Fetch Monthly Attendance
 const fetchMonthlyAttendance = async (req, res) => {
-  const { month } = req.params.id;
+  const { date } = req.body;
   try {
-    const [year, month] = month.split("-").map(Number);
+    const selectedDate = new Date(date);
+
+    const startOfMonth = new Date(
+      now.getFullYear(),
+      selectedDate.getMonth(),
+      1,
+    );
+    const startOfNextMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      1,
+    );
+
+    const attendances = await Attendance.find({
+      createdAt: {
+        $gte: startOfMonth,
+        $lte: startOfNextMonth,
+      },
+    })
+      .select("-createdAt -updatedAt -__v")
+      .lean();
+
+    res.status(200).json(attendances);
   } catch (err) {
     res.status(500).json({
       message: "Server error",
@@ -117,8 +139,37 @@ const fetchMonthlyAttendance = async (req, res) => {
   }
 };
 
+// Fetch Daily Attendance
+const fetchDailyAttendance = async (req, res) => {
+  const { date } = req.body;
+
+  try {
+    const selectedDate = new Date(date);
+
+    const start = new Date(selectedDate.setHours(0, 0, 0, 0));
+    const end = new Date(selectedDate.setHours(23, 59, 59, 999));
+
+    const attendances = await Attendance.find({
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    })
+      .select("-createdAt -updatedAt -__v")
+      .lean();
+
+    res.status(200).json(attendances);
+  } catch (err) {
+    res.staus(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
-  fetchAllAttendances,
   registerAttendance,
+  fetchAllAttendances,
+  fetchDailyAttendance,
   fetchMonthlyAttendance,
 };

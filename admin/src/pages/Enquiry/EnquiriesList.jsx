@@ -24,6 +24,8 @@ const EnquiriesList = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const [openMessage, SetOpenMessage] = useState(null);
+
   const [search, setSearch] = useState("");
   const enquiries = useSelector(selectAllenquiries);
 
