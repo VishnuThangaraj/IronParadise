@@ -5,7 +5,7 @@ export const MemberColumns = ({ navigate, setDeleteId, setOpenDelete }) => [
   {
     field: "memberId",
     headerName: "Member ID",
-    width: 100,
+    flex: 1,
     headerAlign: "center",
     align: "center",
   },

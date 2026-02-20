@@ -4,8 +4,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 
 const DataTable = ({
-  rows,
-  columns,
+  rows = [],
+  columns = [],
   pageSize = 5,
   checkBox = false,
   rowClick = false,

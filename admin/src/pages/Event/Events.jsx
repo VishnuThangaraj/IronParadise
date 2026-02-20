@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { toast } from "sonner";
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
@@ -8,7 +12,18 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "../../components/Calendar";
 
 const Events = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleDatesChange = async (arg) => {
+    const date = arg.view.currentStart;
+
+    const formattedDate = `${date.getFullYear()}-${String(
+      date.getMonth() + 1,
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+    console.log(formattedDate);
+  };
 
   const displayEvent = (info) => {
     console.log(info);
@@ -41,7 +56,11 @@ const Events = () => {
             </Button>
           </div>
 
-          <Calendar eventOnClick={displayEvent} showEventCountOnly={false} />
+          <Calendar
+            eventOnClick={displayEvent}
+            showEventCountOnly={false}
+            handleDatesChange={handleDatesChange}
+          />
         </CardContent>
       </Card>
     </div>

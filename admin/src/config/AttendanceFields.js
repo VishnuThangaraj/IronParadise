@@ -2,6 +2,12 @@ export const initialAttendanceState = {
   userName: "",
   name: "",
 };
+
+export const initialAttendanceSessionState = {
+  name: "",
+  sessions: [],
+};
+
 export const AttendanceFieldGroup = [
   {
     label: "Enter your ID",

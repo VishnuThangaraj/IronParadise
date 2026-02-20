@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllAttendances, addNewAttendance } from "./attendanceThunks";
+import {
+  fetchAllAttendances,
+  addNewAttendance,
+  fetchDailyAttendance,
+  fetchMonthlyAttendance,
+} from "./attendanceThunks";
 
 const initialState = {
   currentAttendance: null,
@@ -49,6 +54,34 @@ const attendanceSlice = createSlice({
         state.currentMember = updatedAttendance;
       })
       .addCase(addNewAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Monthly Attendance
+      .addCase(fetchMonthlyAttendance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.currentAttendance = [];
+      })
+      .addCase(fetchMonthlyAttendance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentAttendance = action.payload;
+      })
+      .addCase(fetchMonthlyAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Daily Attendance
+      .addCase(fetchDailyAttendance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.currentAttendance = [];
+      })
+      .addCase(fetchDailyAttendance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentAttendance = action.payload;
+      })
+      .addCase(fetchDailyAttendance.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

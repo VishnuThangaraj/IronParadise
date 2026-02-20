@@ -49,7 +49,7 @@ const registerAttendance = async (req, res) => {
 
     const now = new Date();
 
-    const currentTime = now.toTimeString().slice(0, 5); // "HH:MM"
+    const currentTime = now.toTimeString().slice(0, 5);
 
     let attendance = await Attendance.findOne({
       user: person._id,
@@ -72,9 +72,9 @@ const registerAttendance = async (req, res) => {
       });
     }
 
-    const lastSession = attendance.sessions.at(-1); // cleaner
+    const lastSession = attendance.sessions.at(-1);
 
-    //  CHECK-OUT
+    // Checkout
     if (lastSession && !lastSession.checkOut) {
       lastSession.checkOut = currentTime;
       await attendance.save();
@@ -86,7 +86,7 @@ const registerAttendance = async (req, res) => {
       });
     }
 
-    //  NEW CHECK-IN SESSION
+    //  New Check-In Session
     attendance.sessions.push({ checkIn: currentTime });
     await attendance.save();
 
@@ -155,10 +155,25 @@ const fetchDailyAttendance = async (req, res) => {
         $lte: end,
       },
     })
+      .populate({
+        path: "user",
+        select: "name userId memberId",
+      })
       .select("-createdAt -updatedAt -__v")
       .lean();
 
-    res.status(200).json(attendances);
+    const formattedAttendances = attendances.map((attendance) => {
+      const { __v, user, ...rest } = attendance;
+
+      return {
+        ...rest,
+        user_id: user?._id || null,
+        userName: user?.name || null,
+        userId: user.userId || user.memberId,
+      };
+    });
+
+    res.status(200).json({ attendances: formattedAttendances });
   } catch (err) {
     res.staus(500).json({
       message: "Server error",
