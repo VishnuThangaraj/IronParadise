@@ -40,6 +40,7 @@ const CompactTable = ({
                 <th
                   key={col.field}
                   className="
+                  text-center 
                     px-4 py-3
                     font-semibold
                     text-gray-700 dark:text-gray-200
@@ -62,6 +63,7 @@ const CompactTable = ({
                   key={id}
                   onClick={() => handleRowClick(row)}
                   className={`
+                    text-center 
                     transition-colors duration-150
                     hover:bg-slate-100/60 dark:hover:bg-slate-700/40
                     ${rowClick ? "cursor-pointer" : ""}
@@ -74,7 +76,7 @@ const CompactTable = ({
                             row,
                             value: row[col.field] || "---",
                           })
-                        : row[col.field] || "---"}
+                        : row[col.field] || "Active"}
                     </td>
                   ))}
                 </tr>

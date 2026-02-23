@@ -23,6 +23,9 @@ const AddEvent = lazy(() => import("./pages/Event/AddEvent"));
 const AttendanceCalendar = lazy(
   () => import("./pages/Attendance/AttendanceCalendar"),
 );
+const AttendanceReport = lazy(
+  () => import("./pages/Attendance/AttendanceReport"),
+);
 const Message = lazy(() => import("./pages/Message/Message"));
 const AddMember = lazy(() => import("./pages/Member/AddMember"));
 const AddTrainer = lazy(() => import("./pages/Trainer/AddTrainer"));
@@ -123,6 +126,10 @@ const App = () => {
                       <Route
                         path="/attendance"
                         element={<AttendanceCalendar />}
+                      />
+                      <Route
+                        path="/attendance/report"
+                        element={<AttendanceReport />}
                       />
 
                       <Route path="/events/view" element={<Events />} />

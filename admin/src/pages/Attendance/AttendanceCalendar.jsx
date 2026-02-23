@@ -73,9 +73,24 @@ const AttendanceCalendar = () => {
 
       <Card className="shadow-md" sx={{ my: 2, py: 4 }}>
         <CardContent>
-          <div className="text-xl font-bold border-b-2 border-gray-200 pb-4 mb-3">
-            Attendance Calendar
+          <div className="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-3 gap-3">
+            <div className="text-xl font-bold ">Attendance Calendar</div>
+            <Button
+              variant="solid"
+              size="md"
+              onClick={() => navigate("/attendance/report")}
+              sx={{
+                px: 3,
+                borderRadius: 20,
+                bgcolor: "black",
+                "&:hover": { bgcolor: "#222" },
+              }}
+            >
+              <i className="fa-light fa-file me-2"></i>
+              Generate Report
+            </Button>
           </div>
+
           <Calendar
             events={attendances || []}
             eventOnClick={displayAttendance}

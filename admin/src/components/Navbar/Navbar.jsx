@@ -52,6 +52,7 @@ const Navbar = () => {
           })}
         </div>
 
+        {/* Profile */}
         <div className="flex justify-between gap-3 border-l-2 border-gray-200">
           <div className="relative w-10 h-10 group cursor-pointer ms-4">
             <Tooltip title="Click to Logout" variant="solid">

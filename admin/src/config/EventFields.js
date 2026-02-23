@@ -18,4 +18,29 @@ export const dropdownOptions = {
   allowedRoles: ["Admin", "Trainer", "Member"],
 };
 
-export const EventFieldGroup = [];
+export const EventFieldGroup = [
+  {
+    label: "Title",
+    name: "title",
+    placeholder: "Event Title",
+    size: 50,
+  },
+  {
+    label: "start",
+    name: "start",
+    placeholder: "Event Title",
+    size: 50,
+  },
+  {
+    label: "Title",
+    name: "title",
+    placeholder: "Event Title",
+    size: 50,
+  },
+  {
+    label: "Title",
+    name: "title",
+    placeholder: "Event Title",
+    size: 50,
+  },
+];
