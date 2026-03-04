@@ -30,4 +30,18 @@ router.post(
   attendanceController.fetchDailyAttendance,
 );
 
+// Fetch Attendance in Range
+router.post(
+  "/range",
+  authenticateJWT(["admin"]),
+  attendanceController.fetchRangeAttendance,
+);
+
+// Fetch Individual Attendance in Range
+router.post(
+  "/range/user",
+  authenticateJWT(["admin"]),
+  attendanceController.fetchIndividualAttendance,
+);
+
 module.exports = router;

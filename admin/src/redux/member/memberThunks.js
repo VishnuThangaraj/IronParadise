@@ -82,8 +82,10 @@ export const fetchMemberById = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      return res.data.member;
+
+      return res.data.member[0] || {};
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err.response?.data || "Failed to Fetch Member");
     }
   },

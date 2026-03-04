@@ -4,6 +4,8 @@ import {
   addNewAttendance,
   fetchDailyAttendance,
   fetchMonthlyAttendance,
+  fetchRangeAttendance,
+  fetchIndividualAttendance,
 } from "./attendanceThunks";
 
 const initialState = {
@@ -82,6 +84,34 @@ const attendanceSlice = createSlice({
         state.currentAttendance = action.payload;
       })
       .addCase(fetchDailyAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Range Attendance
+      .addCase(fetchRangeAttendance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.currentAttendance = [];
+      })
+      .addCase(fetchRangeAttendance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentAttendance = action.payload;
+      })
+      .addCase(fetchRangeAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch Range Attendance
+      .addCase(fetchIndividualAttendance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.currentAttendance = [];
+      })
+      .addCase(fetchIndividualAttendance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentAttendance = action.payload;
+      })
+      .addCase(fetchIndividualAttendance.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

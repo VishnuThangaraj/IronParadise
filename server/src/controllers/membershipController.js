@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Member = require("../models/Member");
 const Membership = require("../models/Membership");
 const MembershipPlan = require("../models/MembershipPlan");
@@ -8,14 +9,17 @@ const createMembership = async (req, res) => {
     req.body;
 
   try {
-    const member = await Member.findById(memberId);
+    const memberObjectId = new mongoose.Types.ObjectId(memberId);
+    const planObjectId = new mongoose.Types.ObjectId(planId);
+
+    const member = await Member.findById(memberObjectId);
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
     }
 
     const existingMembership = await Membership.findOne({
-      memberId: member._id,
+      memberId: memberObjectId,
     });
 
     if (existingMembership) {
@@ -24,14 +28,15 @@ const createMembership = async (req, res) => {
         .json({ message: "Membership already exists for the Member." });
     }
 
-    const membershipPlan = await MembershipPlan.findById(planId);
+    const membershipPlan = await MembershipPlan.findById(planObjectId);
 
-    if (!membershipPlan)
+    if (!membershipPlan) {
       return res.status(404).json({ message: "Membership Plan not found" });
+    }
 
     const membership = await Membership.create({
-      memberId: member._id,
-      planId: membershipPlan._id,
+      memberId: memberObjectId,
+      planId: planObjectId,
       price,
       durationMonths,
       startDate,
@@ -39,7 +44,7 @@ const createMembership = async (req, res) => {
     });
 
     const populatedMembership = await Membership.findById(membership._id)
-      .populate("memberId")
+      .populate("memberId", "-password")
       .populate("planId");
 
     res.status(201).json({
@@ -47,6 +52,7 @@ const createMembership = async (req, res) => {
       membership: populatedMembership,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       message: "Server error",
       error: err.message,

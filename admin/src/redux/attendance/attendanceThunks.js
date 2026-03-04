@@ -95,3 +95,55 @@ export const fetchDailyAttendance = createAsyncThunk(
     }
   },
 );
+
+// Fetch Attendance in Range
+export const fetchRangeAttendance = createAsyncThunk(
+  "/attendance/fetchRangeAttendance",
+  async ({ attendanceData }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/attendance/range",
+        { attendanceData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      return res.data.attendances;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to Fetch Daily Attendance",
+      );
+    }
+  },
+);
+
+// Fetch Individual Attendance in Range
+export const fetchIndividualAttendance = createAsyncThunk(
+  "/attendance/fetchIndividualAttendance",
+  async ({ attendanceData }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.post(
+        "/attendance/range/user",
+        { attendanceData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      return res.data.attendances;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || "Failed to Fetch Daily Attendance",
+      );
+    }
+  },
+);

@@ -182,9 +182,108 @@ const fetchDailyAttendance = async (req, res) => {
   }
 };
 
+// Fetch Attendance by Date Range
+const fetchRangeAttendance = async (req, res) => {
+  const { startDate, endDate } = req.body;
+
+  try {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    const query = {
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    };
+
+    const attendances = await Attendance.find(query)
+      .populate({
+        path: "user",
+        select: "name userId memberId",
+      })
+      .select("-createdAt -updatedAt -__v")
+      .lean();
+
+    const formattedAttendances = attendances.map((attendance) => {
+      const { user, ...rest } = attendance;
+
+      return {
+        ...rest,
+        user_id: user?._id || null,
+        userName: user?.name || null,
+        userId: user?.userId || user?.memberId || null,
+      };
+    });
+
+    res.status(200).json({
+      attendances: formattedAttendances,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+// Fetch Individual User Attendance
+const fetchIndividualAttendance = async (req, res) => {
+  const { startDate, endDate, userId } = req.body;
+
+  try {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+
+    const query = {
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+      user: userId,
+    };
+
+    const attendances = await Attendance.find(query)
+      .populate({
+        path: "user",
+        select: "name userId memberId",
+      })
+      .select("-createdAt -updatedAt -__v")
+      .lean();
+
+    const formattedAttendances = attendances.map((attendance) => {
+      const { user, ...rest } = attendance;
+
+      return {
+        ...rest,
+        user_id: user?._id || null,
+        userName: user?.name || null,
+        userId: user?.userId || user?.memberId || null,
+      };
+    });
+
+    res.status(200).json({
+      attendances: formattedAttendances,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   registerAttendance,
   fetchAllAttendances,
   fetchDailyAttendance,
+  fetchRangeAttendance,
   fetchMonthlyAttendance,
+  fetchIndividualAttendance,
 };

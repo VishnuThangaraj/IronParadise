@@ -20,21 +20,71 @@ import {
   selectCurrentAttendance,
   selectAttendanceLoading,
 } from "../../redux/attendance/attendanceSelector";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import FormField from "../../components/Form/FormField";
 import { formFieldColSpan } from "../../config/FormFieldConfig";
 
+import { fetchMemberByMemberId } from "../../redux/member/memberThunks";
+import { fetchTrainerByUserId } from "../../redux/trainer/trainerThunks";
+
 const AttendanceReport = () => {
+  const dispatch = useDispatch();
   const loading = useSelector(selectAttendanceLoading);
   const attendances = useSelector(selectCurrentAttendance);
+
+  const isAlphabetic = (v) => /^[A-Z]+$/.test(v);
+  const isNumeric = (v) => /^\d+(\.\d+)?$/.test(v);
 
   const [attendanceReport, setAttendanceReport] = useState(
     initialAttendanceReportState,
   );
+
   const [individualAttendance, setIndividualAttendance] = useState(
     initialIndividualAttendanceState,
   );
+
+  const fetchUserWithId = async (value) => {
+    try {
+      const isMember = value.startsWith("MBR");
+
+      const action = isMember
+        ? fetchMemberByMemberId({ memberId: value })
+        : fetchTrainerByUserId({ trainerId: value });
+
+      const data = await dispatch(action).unwrap();
+
+      setIndividualAttendance((prev) => ({
+        ...prev,
+        name: data?.name || "",
+      }));
+    } catch {
+      setIndividualAttendance((prev) => ({
+        ...prev,
+        name: "",
+      }));
+
+      toast.warning(
+        `Invalid ${value.startsWith("MBR") ? "Member" : "Trainer"} ID Provided`,
+      );
+    }
+  };
+
+  const handleIdValidation = () => {
+    const id = individualAttendance?.userId || "";
+
+    if (id.length !== 7) {
+      toast.warning("ID must be in format MBR-001 or TRN-001");
+      return false;
+    }
+
+    if (!individualAttendance.name) {
+      toast.warning("Please enter a valid ID and verify name");
+      return false;
+    }
+
+    return true;
+  };
 
   const generateAttendance = (e) => {
     e.preventDefault();
@@ -42,11 +92,63 @@ const AttendanceReport = () => {
 
   const individualAttendanceReport = (e) => {
     e.preventDefault();
+    if (!handleIdValidation) return;
   };
 
-  const handleAttendanceChange = (name, value) => {};
+  const handleAttendanceChange = (name, value) => {
+    setAttendanceReport((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
 
-  const handleIndividualAttendanceChange = (name, value) => {};
+  const handleIndividualAttendanceChange = (name, value) => {
+    if (name == "userId") {
+      let v = value.toUpperCase();
+      const prevValue = individualAttendance[name] || "";
+      const prevSize = prevValue.length;
+
+      if (v.length > 7) return;
+
+      setIndividualAttendance((prev) => ({ ...prev, name: "" }));
+      setInvalidIdError("");
+
+      if (v.endsWith("-")) v = v.slice(0, -1);
+
+      const size = v.length;
+      const first = v.slice(0, 3);
+      const last = size > 3 ? v.slice(4) : "";
+
+      const validRoots = ["MBR", "TRN"];
+      const isValidPrefix = (val) =>
+        validRoots.some((root) => root.startsWith(val));
+
+      if (first && (!isAlphabetic(first) || !isValidPrefix(first))) return;
+      if (last && !isNumeric(last)) return;
+
+      if (size === 4 && prevValue.slice(-1) !== "-") {
+        v = `${first}-${value.slice(-1)}`;
+      }
+
+      if (size === 3 && prevValue.slice(-1) === "-") {
+        v = value.slice(0, -1);
+      }
+
+      if (size >= 3 && prevSize < size && !v.includes("-")) {
+        v = `${first}-${last}`;
+      }
+
+      setIndividualAttendance((prev) => ({
+        ...prev,
+        [name]: v,
+      }));
+
+      if (size === 7) fetchUserWithId(v);
+    } else {
+      setIndividualAttendance((prev) => {
+        return { ...prev, [name]: value };
+      });
+    }
+  };
 
   return (
     <div key="Attendance-Report">
@@ -126,7 +228,7 @@ const AttendanceReport = () => {
                       <FormField
                         field={field}
                         value={individualAttendance[field.name]}
-                        onChange={handleAttendanceChange}
+                        onChange={handleIndividualAttendanceChange}
                         disabled={field.disabled}
                       />
                     </div>

@@ -1,3 +1,4 @@
+import Chip from "@mui/joy/Chip";
 import Tooltip from "@mui/joy/Tooltip";
 import IconButton from "@mui/joy/IconButton";
 
@@ -8,6 +9,11 @@ export const MemberColumns = ({ navigate, setDeleteId, setOpenDelete }) => [
     flex: 1,
     headerAlign: "center",
     align: "center",
+    renderCell: (params) => {
+      const { row } = params;
+
+      return <div className="font-semibold text-gray-700">{row.memberId}</div>;
+    },
   },
   {
     field: "name",
@@ -32,18 +38,37 @@ export const MemberColumns = ({ navigate, setDeleteId, setOpenDelete }) => [
     align: "center",
   },
   {
-    field: "trainerName",
+    field: "assignedTrainerName",
     headerName: "Trainer",
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
-    field: "status",
+    field: "subscriptionActive",
     headerName: "Status",
     flex: 1,
     headerAlign: "center",
     align: "center",
+    renderCell: (params) => {
+      const { row } = params;
+      const isActive = row.subscriptionActive;
+
+      return (
+        <div>
+          <Chip
+            color={isActive ? "success" : "danger"}
+            variant="soft"
+            sx={{
+              px: 3,
+              boxShadow: "sm",
+            }}
+          >
+            {`${isActive ? "Active" : "InActive"}`}
+          </Chip>
+        </div>
+      );
+    },
   },
   {
     field: "action",

@@ -58,7 +58,6 @@ const MembersList = () => {
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
 
-    console.log(membersWithMembership);
     return membersWithMembership?.filter(
       (row) =>
         row.memberId?.toString().toLowerCase().includes(query) ||
