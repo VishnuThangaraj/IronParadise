@@ -213,9 +213,36 @@ const MemberDetails = () => {
 
     if (!checkValidation()) return;
 
+    const {
+      price: _price,
+      endDate: _endDate,
+      memberId: _memberId,
+      startDate: _startDate,
+      durationMonths: _durationMonths,
+      membershipPlan: _membershipPlan,
+      trainerSpecialization: _trainerSpecialization,
+      dietPlan,
+      workoutPlan,
+      ...member_payload
+    } = member;
+
+    const membership_payload = {
+      ...membershipDerived,
+      planId: member?.membershipPlan,
+    };
+
+    const fitness_payload = {
+      dietPlan,
+      workoutPlan,
+    };
+
     try {
       await dispatch(
-        updateMemberById({ memberId: id, updatedData: member }),
+        updateMemberById({
+          member: member_payload,
+          membership: membership_payload,
+          fitnessPlan: fitness_payload,
+        }),
       ).unwrap();
 
       toast.success("Member Updated Successfully!");

@@ -28,6 +28,12 @@ import { formFieldColSpan } from "../../config/FormFieldConfig";
 import { fetchMemberByMemberId } from "../../redux/member/memberThunks";
 import { fetchTrainerByUserId } from "../../redux/trainer/trainerThunks";
 
+import {
+  fetchRangeAttendance,
+  fetchIndividualAttendance,
+} from "../../redux/attendance/attendanceThunks";
+import { Fragment } from "react";
+
 const AttendanceReport = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectAttendanceLoading);
@@ -86,8 +92,23 @@ const AttendanceReport = () => {
     return true;
   };
 
-  const generateAttendance = (e) => {
+  const generateAttendance = async (e) => {
     e.preventDefault();
+
+    if (!Object.values(attendanceReport).every((value) => value !== null))
+      return toast.warning("All fields are required !");
+
+    try {
+      await dispatch(
+        fetchRangeAttendance({ attendanceData: attendanceReport }),
+      ).unwrap();
+      console.log(attendances);
+      toast.success("Attendance Generated Successfully!");
+    } catch {
+      toast.error("Failed to Generate Attendance Trainer");
+    } finally {
+      setAttendanceReport(initialAttendanceReportState);
+    }
   };
 
   const individualAttendanceReport = (e) => {
@@ -110,7 +131,6 @@ const AttendanceReport = () => {
       if (v.length > 7) return;
 
       setIndividualAttendance((prev) => ({ ...prev, name: "" }));
-      setInvalidIdError("");
 
       if (v.endsWith("-")) v = v.slice(0, -1);
 

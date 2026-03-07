@@ -1,4 +1,5 @@
 const Member = require("../models/Member");
+
 const {
   getAllMembersQuery,
   getMemberByIdQuery,
@@ -58,6 +59,7 @@ const fetchAllMembers = async (req, res) => {
 // Fetch Member by Id
 const fetchMemberById = async (req, res) => {
   const memberId = req.params.id;
+
   try {
     const member = await Member.aggregate(getMemberByIdQuery(memberId));
 
@@ -80,99 +82,12 @@ const fetchMemberById = async (req, res) => {
 const fetchMemberByMemberId = async (req, res) => {
   const memberId = req.params.id;
   try {
-    const members = await Member.aggregate([
-      {
-        $lookup: {
-          from: "memberfitnessplans",
-          localField: "_id",
-          foreignField: "memberId",
-          as: "fitness",
-        },
-      },
-      {
-        $unwind: {
-          path: "$fitness",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "memberships",
-          localField: "_id",
-          foreignField: "memberId",
-          as: "membership",
-        },
-      },
-      {
-        $unwind: {
-          path: "$membership",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "membershipplans",
-          localField: "membership.planId",
-          foreignField: "_id",
-          as: "subscription",
-        },
-      },
-      {
-        $unwind: {
-          path: "$subscription",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "assignedTrainer",
-          foreignField: "_id",
-          as: "trainer",
-        },
-      },
-      {
-        $unwind: {
-          path: "$trainer",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $project: {
-          password: 0,
+    const member = await Member.findOne({ memberId: memberId })
+      .select("-createdAt -updatedAt -__v")
+      .lean();
 
-          memberId: 1,
-          name: 1,
-          email: 1,
-          phone: 1,
-          gender: 1,
-          height: 1,
-          weight: 1,
-          bmi: 1,
-          dob: 1,
-          address: 1,
-          status: 1,
-          createdAt: 1,
-          updatedAt: 1,
-
-          workoutPlanId: "$fitness.workoutPlan",
-          dietPlanId: "$fitness.dietPlan",
-
-          assignedTrainerId: "$trainer._id",
-          assignedTrainerName: "$trainer.name",
-
-          subscriptionId: "$subscription._id",
-          subscriptionName: "$subscription.name",
-        },
-      },
-    ]);
-    const { getAllMembersQuery } = require("../queries/memberQueries");
-
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
-    }
-
-    res.status(200).json({ member: member });
+    if (!member) return res.status(404).json({ message: "Member not found" });
+    res.json({ member });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -182,6 +97,8 @@ const fetchMemberByMemberId = async (req, res) => {
 const updateMemberById = async (req, res) => {
   const memberId = req.params.id;
   const { updatedData } = req.body;
+  console.log(updatedData);
+  return;
 
   try {
     const member = await Member.findByIdAndUpdate(memberId, updatedData, {

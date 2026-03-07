@@ -105,7 +105,7 @@ export const fetchRangeAttendance = createAsyncThunk(
 
       const res = await axios.post(
         "/attendance/range",
-        { attendanceData },
+        { ...attendanceData },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -113,6 +113,7 @@ export const fetchRangeAttendance = createAsyncThunk(
         },
       );
 
+      console.log(res.data.attendances);
       return res.data.attendances;
     } catch (err) {
       return rejectWithValue(

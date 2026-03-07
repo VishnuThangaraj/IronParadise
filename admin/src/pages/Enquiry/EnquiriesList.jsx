@@ -11,11 +11,12 @@ import { EnquiryColumns } from "./EnquiryColumns";
 import { PageLocation } from "../../components/PageLocation";
 import DataTable from "../../components/DataTable/DataTable";
 import SearchBar from "../../components/DataTable/SearchBar";
+import DisplayModal from "../../components/Modal/DisplayModal";
+import DeletionModal from "../../components/Modal/DeletionModal";
 import ExportButtons from "../../components/DataTable/ExportButtons";
 
 import { fetchAllEnquiry } from "../../redux/enquiry/enquiryThunks";
 import { selectAllenquiries } from "../../redux/enquiry/enquirySelector";
-import DeletionModal from "../../components/Modal/DeletionModal";
 
 const EnquiriesList = () => {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ const EnquiriesList = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const [openMessage, SetOpenMessage] = useState(null);
+  const [openMessage, SetOpenMessage] = useState(false);
+  const [currentEnquiry, setCurrentEnquiry] = useState(null);
 
   const [search, setSearch] = useState("");
   const enquiries = useSelector(selectAllenquiries);
@@ -34,6 +36,11 @@ const EnquiriesList = () => {
   }, [dispatch]);
 
   const deleteTrainerWithId = () => {};
+
+  const fetchCurrentEnquiry = (enquiry) => {
+    setCurrentEnquiry(enquiry);
+    SetOpenMessage(true);
+  };
 
   const filteredRows = useMemo(() => {
     const query = search.toLowerCase();
@@ -70,13 +77,23 @@ const EnquiriesList = () => {
               openDelete,
               setOpenDelete,
               setDeleteId,
+              fetchCurrentEnquiry,
             })}
-            rowClick={true}
             getRowId={(row) => row._id}
             rowClickPath={"/enquiry/details"}
           />
         </CardContent>
       </Card>
+      {/* Display Modal */}
+      <DisplayModal
+        open={openMessage}
+        setOpen={SetOpenMessage}
+        icon={`fa-duotone fa-light fa-messages`}
+        origin={"Enquiry"}
+        title={"Enquiry Message"}
+        content={currentEnquiry?.message}
+        subject={currentEnquiry?.subject}
+      />
       {/* Deletion Modal */}
       <DeletionModal
         open={openDelete}

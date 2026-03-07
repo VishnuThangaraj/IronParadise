@@ -16,7 +16,6 @@ export const addMemberFlow = createAsyncThunk(
       ).unwrap();
       const memberId = memberResponse.member._id;
 
-      console.log(newMembership);
       if (newMembership && memberId) {
         await dispatch(
           addNewMembership({

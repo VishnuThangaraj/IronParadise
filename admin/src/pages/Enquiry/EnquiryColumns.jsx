@@ -1,3 +1,4 @@
+import Chip from "@mui/joy/Chip";
 import Tooltip from "@mui/joy/Tooltip";
 import IconButton from "@mui/joy/IconButton";
 
@@ -6,6 +7,7 @@ export const EnquiryColumns = ({
   setOpenDelete,
   setMailData,
   setOpenMail,
+  fetchCurrentEnquiry,
 }) => [
   {
     field: "name",
@@ -52,6 +54,31 @@ export const EnquiryColumns = ({
     align: "center",
   },
   {
+    field: "replied",
+    headerName: "Status",
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+    renderCell: (params) => {
+      const { replied } = params.row;
+
+      return (
+        <div>
+          <Chip
+            color={replied ? "success" : "danger"}
+            variant="soft"
+            sx={{
+              px: 2,
+              boxShadow: "sm",
+            }}
+          >
+            {`${replied ? "Resolved" : "Unresolved"}`}
+          </Chip>
+        </div>
+      );
+    },
+  },
+  {
     field: "action",
     headerName: "Action",
     flex: 1.2,
@@ -69,27 +96,30 @@ export const EnquiryColumns = ({
           <Tooltip title="View Message" arrow>
             <IconButton
               onClick={() => {
-                return;
+                fetchCurrentEnquiry(row);
               }}
             >
-              <i className="fa-duotone fa-solid fa-messages text-green-600 text-[20px]" />
+              <i className="fa-duotone fa-solid fa-messages text-green-600 text-[20px] me-2" />
+              {row.replied && <span className="text-sm">View</span>}
             </IconButton>
           </Tooltip>
 
           {/* Mail */}
-          <Tooltip title="Send Replay Mail" arrow>
-            <IconButton
-              onClick={() => {
-                setMailData({
-                  to: row.email,
-                  name: row.name,
-                });
-                setOpenMail(true);
-              }}
-            >
-              <i className="fa-duotone fa-solid fa-envelopes text-blue-600 text-[20px]" />
-            </IconButton>
-          </Tooltip>
+          {!row.replied && (
+            <Tooltip title="Send Replay Mail" arrow>
+              <IconButton
+                onClick={() => {
+                  setMailData({
+                    to: row.email,
+                    name: row.name,
+                  });
+                  setOpenMail(true);
+                }}
+              >
+                <i className="fa-duotone fa-solid fa-envelopes text-blue-600 text-[20px]" />
+              </IconButton>
+            </Tooltip>
+          )}
 
           {/* Delete */}
           <Tooltip title="Delete" arrow>

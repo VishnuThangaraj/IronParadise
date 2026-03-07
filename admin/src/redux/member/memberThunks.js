@@ -103,6 +103,7 @@ export const fetchMemberByMemberId = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(res.data);
       return res.data.member;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to Fetch Member");
