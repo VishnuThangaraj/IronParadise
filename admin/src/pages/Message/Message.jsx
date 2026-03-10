@@ -18,6 +18,7 @@ import { MessageColumns } from "./MessageColumns";
 
 import { fetchAllMembers } from "../../redux/member/memberThunks";
 import { selectAllMembers } from "../../redux/member/memberSelector";
+import SendMailModal from "../../components/Modal/SendMailModal";
 
 const Message = () => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const Message = () => {
   const [search, setSearch] = useState("");
   const members = useSelector(selectAllMembers);
   const trainers = useSelector(selectAllTrainers);
+
+  const [openMail, setOpenMail] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAllTrainers());
@@ -51,7 +54,7 @@ const Message = () => {
         row.role?.toLowerCase().includes(query) ||
         row.userId?.toLowerCase().includes(query) ||
         row.memberId?.toLowerCase().includes(query) ||
-        row.phone?.includes(query)
+        row.phone?.includes(query),
     );
   }, [users, search]);
 
@@ -90,6 +93,7 @@ const Message = () => {
           />
         </CardContent>
       </Card>
+      <SendMailModal />
     </div>
   );
 };

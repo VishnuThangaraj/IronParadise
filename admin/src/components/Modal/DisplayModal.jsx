@@ -16,6 +16,8 @@ const DisplayModal = ({
   content,
   subject = null,
   showAction = false,
+  buttonAction = () => {},
+  buttonDisable = true,
 }) => {
   return (
     <Modal
@@ -44,10 +46,19 @@ const DisplayModal = ({
               className="rounded-full py-1"
               variant="solid"
               color="neutral"
-              // onClick={confirmation}
+              onClick={buttonAction}
             >
-              <i className="fa-regular fa-reply me-3"></i>
-              Replay {origin}
+              {buttonDisable ? (
+                <Fragment>
+                  <i class="fa-duotone fa-regular fa-envelope me-3"></i>
+                  View Replay
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <i className="fa-regular fa-reply me-3"></i>
+                  Replay {origin}
+                </Fragment>
+              )}
             </Button>
             <Button
               variant="plain"

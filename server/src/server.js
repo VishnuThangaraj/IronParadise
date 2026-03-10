@@ -7,6 +7,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const memberRoutes = require("./routes/memberRoutes");
 const enquiryRoutes = require("./routes/enquiryRoutes");
@@ -34,12 +35,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Test Route
 app.get("/", (req, res) => {
-  return res.status(200).send("Welcome to IronParadise.");
+  return res
+    .status(200)
+    .send("Welcome to IronParadise. Developed by VishnuThangaraj");
 });
 
 // Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/email", emailRoutes);
 app.use("/event", eventRoutes);
 app.use("/member", memberRoutes);
 app.use("/counter", counterRoutes);

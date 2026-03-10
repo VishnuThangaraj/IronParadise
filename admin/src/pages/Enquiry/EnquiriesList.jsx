@@ -17,6 +17,7 @@ import ExportButtons from "../../components/DataTable/ExportButtons";
 
 import { fetchAllEnquiry } from "../../redux/enquiry/enquiryThunks";
 import { selectAllenquiries } from "../../redux/enquiry/enquirySelector";
+import SendMailModal from "../../components/Modal/SendMailModal";
 
 const EnquiriesList = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const EnquiriesList = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const [openReplay, setOpenReplay] = useState(false);
   const [openMessage, SetOpenMessage] = useState(false);
   const [currentEnquiry, setCurrentEnquiry] = useState(null);
 
@@ -40,6 +42,11 @@ const EnquiriesList = () => {
   const fetchCurrentEnquiry = (enquiry) => {
     setCurrentEnquiry(enquiry);
     SetOpenMessage(true);
+  };
+
+  const openMailReplay = (enquiry) => {
+    if (enquiry) setCurrentEnquiry(enquiry);
+    setOpenReplay(true);
   };
 
   const filteredRows = useMemo(() => {
@@ -73,11 +80,11 @@ const EnquiriesList = () => {
           <DataTable
             rows={filteredRows.slice()}
             columns={EnquiryColumns({
-              navigate,
               openDelete,
               setOpenDelete,
               setDeleteId,
               fetchCurrentEnquiry,
+              openMailReplay,
             })}
             getRowId={(row) => row._id}
             rowClickPath={"/enquiry/details"}
@@ -93,6 +100,9 @@ const EnquiriesList = () => {
         title={"Enquiry Message"}
         content={currentEnquiry?.message}
         subject={currentEnquiry?.subject}
+        showAction={true}
+        buttonDisable={currentEnquiry?.replied}
+        buttonAction={openMailReplay}
       />
       {/* Deletion Modal */}
       <DeletionModal
@@ -101,6 +111,14 @@ const EnquiriesList = () => {
         icon={`fa-duotone fa-light fa-messages`}
         origin={"Enquiry"}
         confirmation={deleteTrainerWithId}
+      />
+      {/* Send Reply Mail */}
+      <SendMailModal
+        open={openReplay}
+        setOpen={setOpenReplay}
+        icon="fa-light fa-envelope-open-text"
+        title={`${currentEnquiry?.firstName ?? ""} ${currentEnquiry?.lastName ?? ""}`.trim()}
+        sender={currentEnquiry?.email}
       />
     </div>
   );

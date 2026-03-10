@@ -2,17 +2,21 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const { EMAIL_USER, EMAIL_PASS } = require("../config/emailConfig");
 
-// Create transporter (modern & secure)
+// Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  secure: true,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
 });
 
-// Verify connection once at startup
-transporter.verify((error) => {
+// Verify connection on startup
+transporter.verify((error, success) => {
   if (error) {
     console.error("Email transporter error:", error);
   } else {
@@ -23,17 +27,21 @@ transporter.verify((error) => {
 // Base Mail Sender
 const baseSendMail = async (options) => {
   try {
-    const info = await transporter.sendMail({
+    const mailOptions = {
       from: `"Gym Management" <${EMAIL_USER}>`,
       ...options,
-    });
+    };
+
+    const info = await transporter.sendMail(mailOptions);
 
     return {
       success: true,
       messageId: info.messageId,
+      response: info.response,
     };
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("❌ Error sending email:", error.message);
+
     return {
       success: false,
       error: error.message,
@@ -42,27 +50,26 @@ const baseSendMail = async (options) => {
 };
 
 // Send Simple Email
-
-const sendMail = async (to, subject, html, text = "") => {
+const sendMail = async (to, subject, html, text = "", extra = {}) => {
   return baseSendMail({
     to,
     subject,
     html,
     text,
+    ...extra,
   });
 };
 
-// Send Email With Single Uploaded File (multer buffer)
-
+// Send Email With Uploaded File (multer buffer)
 const sendMailWithFile = async (to, subject, html, file) => {
-  const attachments = file
-    ? [
-        {
-          filename: file.originalname,
-          content: file.buffer,
-        },
-      ]
-    : [];
+  const attachments = [];
+
+  if (file) {
+    attachments.push({
+      filename: file.originalname,
+      content: file.buffer,
+    });
+  }
 
   return baseSendMail({
     to,
@@ -73,7 +80,6 @@ const sendMailWithFile = async (to, subject, html, file) => {
 };
 
 // Send Email With PDF File Paths
-
 const sendMailPDF = async (to, subject, html, filePaths = []) => {
   const attachments = filePaths.map((filePath) => ({
     filename: path.basename(filePath),
@@ -93,4 +99,5 @@ module.exports = {
   sendMail,
   sendMailWithFile,
   sendMailPDF,
+  transporter,
 };

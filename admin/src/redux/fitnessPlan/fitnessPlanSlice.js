@@ -18,6 +18,7 @@ const fitnessPlanSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       // Fetch Fitness Plans
       .addCase(fetchAllFitnessPlans.pending, (state) => {
         state.loading = true;

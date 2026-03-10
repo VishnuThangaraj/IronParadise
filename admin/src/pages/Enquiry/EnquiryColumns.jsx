@@ -5,9 +5,9 @@ import IconButton from "@mui/joy/IconButton";
 export const EnquiryColumns = ({
   setDeleteId,
   setOpenDelete,
-  setMailData,
-  setOpenMail,
+  openDelete,
   fetchCurrentEnquiry,
+  openMailReplay,
 }) => [
   {
     field: "name",
@@ -109,11 +109,7 @@ export const EnquiryColumns = ({
             <Tooltip title="Send Replay Mail" arrow>
               <IconButton
                 onClick={() => {
-                  setMailData({
-                    to: row.email,
-                    name: row.name,
-                  });
-                  setOpenMail(true);
+                  openMailReplay(row);
                 }}
               >
                 <i className="fa-duotone fa-solid fa-envelopes text-blue-600 text-[20px]" />
