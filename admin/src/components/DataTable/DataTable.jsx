@@ -1,6 +1,5 @@
 import { Sheet } from "@mui/joy";
 import { DataGrid } from "@mui/x-data-grid";
-
 import { useNavigate } from "react-router-dom";
 
 const DataTable = ({
@@ -11,6 +10,7 @@ const DataTable = ({
   rowClick = false,
   rowClickPath = "",
   getRowId,
+  onRowSelectionModelChange, // optional
 }) => {
   const navigate = useNavigate();
 
@@ -37,6 +37,7 @@ const DataTable = ({
         pageSizeOptions={[10, 25, 50]}
         checkboxSelection={checkBox}
         onRowClick={handleRowClick}
+        onRowSelectionModelChange={onRowSelectionModelChange}
         initialState={{
           pagination: { paginationModel: { pageSize } },
         }}

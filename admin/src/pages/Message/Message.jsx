@@ -9,7 +9,6 @@ import CardContent from "@mui/joy/CardContent";
 import { PageLocation } from "../../components/PageLocation";
 import DataTable from "../../components/DataTable/DataTable";
 import SearchBar from "../../components/DataTable/SearchBar";
-import ExportButtons from "../../components/DataTable/ExportButtons";
 
 import { fetchAllTrainers } from "../../redux/trainer/trainerThunks";
 import { selectAllTrainers } from "../../redux/trainer/trainerSelectors";
@@ -25,10 +24,11 @@ const Message = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
+  const [openMail, setOpenMail] = useState(false);
+  const [selectedUser, setSelectedUser] = useState([]);
+
   const members = useSelector(selectAllMembers);
   const trainers = useSelector(selectAllTrainers);
-
-  const [openMail, setOpenMail] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAllTrainers());
@@ -58,14 +58,30 @@ const Message = () => {
     );
   }, [users, search]);
 
+  const handleRowSelectionChange = (selectionModel) => {
+    const selectedIds = Array.from(selectionModel.ids);
+
+    const selectedData = filteredRows.filter((row) =>
+      selectedIds.includes(row._id),
+    );
+
+    const emails = selectedData.map((row) => row.email);
+
+    setSelectedUser(emails);
+  };
+
+  const openMailModal = () => {
+    setOpenMail(true);
+  };
+
   return (
     <div key="Messages-Page_Main">
-      {" "}
       <PageLocation
         pageTitle="Gym Management"
         parentPath="Messages"
         currentPath="Email Sender"
       />
+
       <Card className="shadow-md" sx={{ my: 2, p: 4 }}>
         <CardContent>
           <div className="flex justify-between items-center mb-3 gap-3">
@@ -74,7 +90,7 @@ const Message = () => {
             <Button
               variant="solid"
               size="md"
-              // onClick={() => navigate("/trainer/add")}
+              onClick={openMailModal}
               sx={{
                 px: 4,
                 borderRadius: 20,
@@ -90,10 +106,18 @@ const Message = () => {
             rows={filteredRows}
             columns={MessageColumns(navigate)}
             checkBox={true}
+            onRowSelectionModelChange={handleRowSelectionChange}
           />
         </CardContent>
       </Card>
-      <SendMailModal />
+
+      <SendMailModal
+        open={openMail}
+        setOpen={setOpenMail}
+        sender={selectedUser}
+        title="Selected Users"
+        icon="fa-solid fa-envelope"
+      />
     </div>
   );
 };

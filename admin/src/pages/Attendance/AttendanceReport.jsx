@@ -102,7 +102,6 @@ const AttendanceReport = () => {
       await dispatch(
         fetchRangeAttendance({ attendanceData: attendanceReport }),
       ).unwrap();
-      console.log(attendances);
       toast.success("Attendance Generated Successfully!");
     } catch {
       toast.error("Failed to Generate Attendance Trainer");

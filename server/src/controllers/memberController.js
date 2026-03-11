@@ -1,4 +1,6 @@
 const Member = require("../models/Member");
+const { sendMail } = require("../service/emailService");
+const renderTemplate = require("../service/templateEngine");
 
 const {
   getAllMembersQuery,
@@ -21,13 +23,27 @@ const registerMember = async (req, res) => {
 
     await member.save();
 
-    const memberResponse = member.toObject();
+    const memberResponse = {
+      ...member.toObject(),
+      formattedDob: new Date(member.dob).toDateString(),
+    };
+
+    const html = renderTemplate("layouts/base.hbs", {
+      body: renderTemplate("member/welcome.hbs", {
+        member: memberResponse,
+      }),
+    });
+
+    const subject = "Iron Paradise - Membership Registration";
+
+    sendMail(memberResponse.email, subject, html);
 
     res.status(201).json({
       message: `Member registered successfully`,
       member: memberResponse,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       message: "Server error",
       error: err.message,
