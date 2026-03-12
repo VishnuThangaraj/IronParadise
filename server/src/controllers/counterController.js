@@ -2,12 +2,13 @@ const Counter = require("../models/Counter");
 
 // Fetch the last Counter
 const fetchLastCounter = async (req, res) => {
-  const { role } = req.body;
+  const { identity } = req.body;
 
   try {
-    const counter = await Counter.findById(role);
+    const counter = await Counter.findById(identity);
 
-    res.status(200).json(counter);
+    res.status(200).json(counter ? counter.seq : 0);
+
   } catch (err) {
     res.status(500).json({
       message: "Server error",

@@ -1,118 +1,127 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useMemo, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
-import { toast } from "sonner";
+import {toast} from "sonner";
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
 
-import { PageLocation } from "../../components/PageLocation";
-import DataTable from "../../components/DataTable/DataTable";
-import SearchBar from "../../components/DataTable/SearchBar";
-import { DietPlanColumns } from "./DietPlanColumns";
-import ExportButtons from "../../components/DataTable/ExportButtons";
+import {DietPlanColumns} from "./DietPlanColumns";
+import DataTable from "@/components/DataTable/DataTable";
+import {PageLocation} from "@/components/PageLocation";
+import SearchBar from "@/components/DataTable/SearchBar";
+import ExportButtons from "@/components/DataTable/ExportButtons";
+import DeletionModal from "@/components/Modal/DeletionModal";
 
-import {
-  fetchAllDietPlans,
-  deleteDietPlanById,
-} from "../../redux/dietPlan/dietPlanThunks";
-import { selectAllDietPlans } from "../../redux/dietPlan/dietPlanSelector";
-import DeletionModal from "../../components/Modal/DeletionModal";
+import {deleteDietPlanById, fetchAllDietPlans,} from "@/redux/dietPlan/dietPlanThunks";
+
+import {selectAllDietPlans} from "@/redux/dietPlan/dietPlanSelector";
 
 const DietPlanList = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const [deleteId, setDeleteId] = useState(null);
-  const [openDelete, setOpenDelete] = useState(false);
+    const dietPlans = useSelector(selectAllDietPlans);
 
-  const [search, setSearch] = useState("");
-  const dietPlans = useSelector(selectAllDietPlans);
+    const [search, setSearch] = useState("");
+    const [deleteId, setDeleteId] = useState(null);
+    const [openDelete, setOpenDelete] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchAllDietPlans());
-  }, [dispatch]);
+    useEffect(() => {
+        dispatch(fetchAllDietPlans());
+    }, [dispatch]);
 
-  const filteredRows = useMemo(() => {
-    const query = search.toLowerCase();
+    /* ---------------- SEARCH FILTER ---------------- */
 
-    return dietPlans.filter(
-      (row) =>
-        row.dietPlanId?.toString().toLowerCase().includes(query) ||
-        row.dietPlanName?.toString().toLowerCase().includes(query) ||
-        row.goal?.toString().toLowerCase().includes(query),
+    const filteredRows = useMemo(() => {
+        if (!search) return dietPlans;
+
+        const query = search.toLowerCase();
+
+        return dietPlans.filter((row) =>
+            [row.dietPlanId, row.dietPlanName, row.goal]
+                .some((value) =>
+                    value?.toString().toLowerCase().includes(query)
+                )
+        );
+    }, [dietPlans, search]);
+
+    /* ---------------- DELETE HANDLER ---------------- */
+
+    const deleteDietPlanWithId = useCallback(
+        async (e) => {
+            e.preventDefault();
+
+            try {
+                await dispatch(deleteDietPlanById({dietPlanId: deleteId})).unwrap();
+                toast.success("Diet Plan Deleted Successfully");
+            } catch (error) {
+                toast.error(error?.message || "Failed to Delete Diet Plan");
+            } finally {
+                setDeleteId(null);
+                setOpenDelete(false);
+            }
+        },
+        [dispatch, deleteId]
     );
-  }, [dietPlans, search]);
 
-  const checkValidation = () => {
-    return true;
-  };
+    /* ---------------- TABLE COLUMNS ---------------- */
 
-  const deleteDietPlanWithId = async (e) => {
-    e.preventDefault();
-    const validation = checkValidation();
-    if (!validation) return;
+    const columns = useMemo(
+        () => DietPlanColumns({navigate, setDeleteId, setOpenDelete}),
+        [navigate]
+    );
 
-    try {
-      await dispatch(deleteDietPlanById({ dietPlanId: deleteId }));
-      toast.success("Diet Plan Deleted Successfully");
-    } catch {
-      toast.error("Failed to Delete Diet Plan");
-    } finally {
-      setDeleteId(null);
-      setOpenDelete(false);
-    }
-  };
+    return (
+        <div key="DietPlan-List">
+            <PageLocation
+                pageTitle="Gym Management"
+                parentPath="Diet"
+                currentPath="Diet Plan List"
+            />
 
-  return (
-    <div key="DietPlan-List">
-      <PageLocation
-        pageTitle="Gym Management"
-        parentPath="Diet"
-        currentPath="Diet Plan List"
-      />
-      <Card className="shadow-md" sx={{ my: 2, p: 4 }}>
-        <CardContent>
-          <div className="flex justify-between items-center mb-3 gap-3">
-            <ExportButtons />
-            <SearchBar value={search} onChange={setSearch} />
+            <Card className="shadow-md" sx={{my: 2, p: 4}}>
+                <CardContent>
+                    <div className="flex justify-between items-center mb-3 gap-3">
+                        <ExportButtons/>
 
-            <Button
-              variant="solid"
-              size="md"
-              onClick={() => navigate("/plan/diet/add")}
-              sx={{
-                px: 4,
-                borderRadius: 20,
-                bgcolor: "black",
-                "&:hover": { bgcolor: "#222" },
-              }}
-            >
-              Add New Diet Plan
-            </Button>
-          </div>
+                        <SearchBar value={search} onChange={setSearch}/>
 
-          <DataTable
-            rows={filteredRows}
-            columns={DietPlanColumns({ navigate, setDeleteId, setOpenDelete })}
-            rowClick={true}
-            getRowId={(row) => row._id}
-            rowClickPath={"/plan/diet/details"}
-          />
-        </CardContent>
-      </Card>
+                        <Button
+                            variant="solid"
+                            size="md"
+                            onClick={() => navigate("/plan/diet/add")}
+                            sx={{
+                                px: 4,
+                                borderRadius: 20,
+                                bgcolor: "black",
+                                "&:hover": {bgcolor: "#222"},
+                            }}
+                        >
+                            Add New Diet Plan
+                        </Button>
+                    </div>
 
-      {/* Deletion Modal */}
-      <DeletionModal
-        open={openDelete}
-        setOpen={setOpenDelete}
-        icon={`fa-light fa-pot-food`}
-        origin={"Diet Plan"}
-        confirmation={deleteDietPlanWithId}
-      />
-    </div>
-  );
+                    <DataTable
+                        rows={filteredRows}
+                        columns={columns}
+                        rowClick={true}
+                        getRowId={(row) => row._id}
+                        rowClickPath={"/plan/diet/details"}
+                    />
+                </CardContent>
+            </Card>
+
+            <DeletionModal
+                open={openDelete}
+                setOpen={setOpenDelete}
+                icon={`fa-light fa-pot-food`}
+                origin={"Diet Plan"}
+                confirmation={deleteDietPlanWithId}
+            />
+        </div>
+    );
 };
 
 export default DietPlanList;

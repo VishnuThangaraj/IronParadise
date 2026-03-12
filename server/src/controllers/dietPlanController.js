@@ -2,31 +2,48 @@ const DietPlan = require("../models/DietPlan");
 
 // Create New Diet Plan
 const createDietPlan = async (req, res) => {
-  const { dietPlanId } = req.body;
-
   try {
-    const existingDietPlan = await DietPlan.findOne({ dietPlanId });
+    const { dietPlanId, dietPlanName } = req.body;
+
+    if (!dietPlanId || !dietPlanName) {
+      return res.status(400).json({
+        message: "DietPlanId and DietPlan Name are required"
+      });
+    }
+
+    const existingDietPlan = await DietPlan.findOne({
+      $or: [{ dietPlanId }, { dietPlanName }]
+    });
 
     if (existingDietPlan) {
-      return res.status(400).json({ message: "Diet Plan already exists" });
+      if (existingDietPlan.dietPlanId === dietPlanId) {
+        return res.status(400).json({
+          message: "Diet Plan with this ID already exists"
+        });
+      }
+
+      if (existingDietPlan.dietPlanName === dietPlanName) {
+        return res.status(400).json({
+          message: "Diet Plan with this name already exists"
+        });
+      }
     }
 
     const dietPlan = new DietPlan({
-      ...req.body,
+      ...req.body
     });
 
     await dietPlan.save();
 
-    const dietPlanResponse = dietPlan.toObject();
-
-    res.status(201).json({
-      message: `Diet Plan created successfully`,
-      dietPlan: dietPlanResponse,
+    return res.status(201).json({
+      message: "Diet Plan created successfully",
+      dietPlan
     });
+
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Server error",
-      error: err.message,
+      error: err.message
     });
   }
 };
@@ -59,7 +76,7 @@ const fetchDietPlanById = async (req, res) => {
   }
 };
 
-// Update Diet Plan by Id
+// Update Diet Plan by ID
 const updateDietPlanById = async (req, res) => {
   const dietPlanId = req.params.id;
   const { updatedData } = req.body;
