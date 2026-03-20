@@ -45,9 +45,22 @@ export const MembershipPlanFieldGroup = [
     },
 ];
 
-export const MembershipPlanNumericFields = ["durationMonths", "price"];
-
-export const MembershipPlanMaxLengthMap = {
-    price: 5,
-    durationMonths: 24,
+export const MembershipPlanRules = {
+    name: {
+        type: "string",
+        maxLength: 20,
+        pattern: /^[A-Za-z0-9\s-]+$/,
+    },
+    price: {
+        type: "number",
+        maxLength: 5,
+    },
+    durationMonths: {
+        type: "number",
+        maxValue: 24,
+    },
+    features: {
+        type: "string",
+        maxLength: 100
+    }
 };

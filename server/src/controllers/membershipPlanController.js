@@ -7,7 +7,7 @@ const createMembershipPlan = async (req, res) => {
 
     try {
         const existingMembershipPlan = await MembershipPlan.findOne({
-            membershipPlanId, name
+            $or: [{membershipPlanId}, {name}]
         });
         if (existingMembershipPlan) {
             return res

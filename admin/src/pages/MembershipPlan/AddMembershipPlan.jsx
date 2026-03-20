@@ -4,24 +4,18 @@ import {Fragment, useEffect, useMemo, useState} from "react";
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
 
 import Loader from "@/components/Loader"
 import FormField from "@/components/Form/FormField";
 import {PageLocation} from "@/components/PageLocation";
+import ButtonSubmit from "@/components/Button/ButtonSubmit";
 
 import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig";
-import {
-    initialMembershipPlanState,
-    MembershipPlanFieldGroup,
-    MembershipPlanMaxLengthMap,
-    MembershipPlanNumericFields
-} from "@/config/MembershipPlanFields";
+import {initialMembershipPlanState, MembershipPlanFieldGroup, MembershipPlanRules} from "@/config/MembershipPlanFields";
 
-import {selectCounter} from "@/redux/counter/counterSelector";
 import {fetchCounter} from "@/redux/counter/counterThunks";
+import {selectCounter} from "@/redux/counter/counterSelector";
 import {addNewMembershipPlan} from "@/redux/membershipPlan/membershipPlanThunks";
 import {selectMembershipPlanLoading} from "@/redux/membershipPlan/membershipPlanSelectors";
 
@@ -45,9 +39,17 @@ const AddMembershipPlan = () => {
     }, [dispatch]);
 
     const handleChange = (name, value) => {
-        if (MembershipPlanNumericFields.includes(name) && isNaN(Number(value))) return;
+        const rules = MembershipPlanRules[name];
 
-        if (MembershipPlanMaxLengthMap[name] && value.length > MembershipPlanMaxLengthMap[name]) return;
+        if (rules?.type === "number") {
+            if (value !== "" && isNaN(Number(value))) return;
+        }
+
+        if (rules?.maxLength && value.length > rules.maxLength) return;
+
+        if (rules?.maxValue && value !== "" && Number(value) > rules.maxValue) return;
+
+        if (rules?.pattern && !rules.pattern.test(value)) return;
 
         setNewMembershipPlan((prev) => ({
             ...prev,
@@ -127,26 +129,11 @@ const AddMembershipPlan = () => {
                         </div>
 
                         <div className="flex justify-end px-6 py-3">
-                            <Button
-                                variant="solid"
-                                type="submit"
-                                size="md"
-                                sx={{
-                                    px: 5,
-                                    backgroundColor: "black",
-                                    "&:hover": {backgroundColor: "#222222"},
-                                }}
-                                disabled={loading}
+                            <ButtonSubmit
+                                loading={loading}
                             >
-                                {loading ? (
-                                    <Fragment>
-                                        <CircularProgress variant="solid"/>
-                                        <span className="ms-3">Adding ...</span>
-                                    </Fragment>
-                                ) : (
-                                    "Add Membership Plan"
-                                )}
-                            </Button>
+                                Add Membership Plan
+                            </ButtonSubmit>
                         </div>
                     </Box>
                 </CardContent>
