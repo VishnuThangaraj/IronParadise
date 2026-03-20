@@ -10,6 +10,7 @@ import CircularProgress from "@mui/joy/CircularProgress";
 
 import FormField from "@/components/Form/FormField";
 import {PageLocation} from "@/components/PageLocation";
+
 import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig.js";
 
 import {fetchCounter} from "@/redux/counter/counterThunks";
@@ -95,7 +96,7 @@ const AddDietPlan = () => {
                                         {group.title}
                                     </div>
 
-                                    {group.fields.map(
+                                    {group?.fields.map(
                                         (field) =>
                                             (!field.showIf || field.showIf(newDietPlan)) && (
                                                 <div
@@ -109,7 +110,7 @@ const AddDietPlan = () => {
                                                         disabled={field.disabled}
                                                     />
                                                 </div>
-                                            )
+                                            ),
                                     )}
                                 </Fragment>
                             ))}
