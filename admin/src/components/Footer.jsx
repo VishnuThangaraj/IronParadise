@@ -1,13 +1,19 @@
+import {useState} from "react";
 import Tooltip from '@mui/joy/Tooltip';
+
+import ProfileCard from "@/components/Modal/ProfileCard";
 
 const year = new Date().getFullYear();
 
 const Footer = () => {
+    const [open, setOpen] = useState(true);
     return (
         <div
             className="text-center py-2 text-sm"
             style={{letterSpacing: "1px"}}
         >
+            <ProfileCard open={open} setOpen={setOpen}/>
+
             &copy; {year}{" "}
             <Tooltip title='Click to view my profile' placement="top"
                      size="sm"
