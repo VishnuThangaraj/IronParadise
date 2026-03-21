@@ -9,9 +9,11 @@ import CardContent from "@mui/joy/CardContent";
 import Loader from "@/components/Loader"
 import FormField from "@/components/Form/FormField";
 import PageLocation from "@/components/PageLocation";
-import ButtonSubmit from "@/components/Button/ButtonSubmit";
+import ButtonPrimary from "@/components/Button/ButtonPrimary.jsx";
 
-import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig";
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
+
+import {formFieldColSpan} from "@/config/FormFieldConfig";
 import {initialMembershipPlanState, MembershipPlanFieldGroup, MembershipPlanRules} from "@/config/MembershipPlanFields";
 
 import {fetchCounter} from "@/redux/counter/counterThunks";
@@ -40,16 +42,7 @@ const AddMembershipPlan = () => {
 
     const handleChange = (name, value) => {
         const rules = MembershipPlanRules[name];
-
-        if (rules?.type === "number") {
-            if (value !== "" && isNaN(Number(value))) return;
-        }
-
-        if (rules?.maxLength && value.length > rules.maxLength) return;
-
-        if (rules?.maxValue && value !== "" && Number(value) > rules.maxValue) return;
-
-        if (rules?.pattern && !rules.pattern.test(value)) return;
+        if (!handleChangeValidation(value, rules)) return;
 
         setNewMembershipPlan((prev) => ({
             ...prev,
@@ -129,11 +122,11 @@ const AddMembershipPlan = () => {
                         </div>
 
                         <div className="flex justify-end px-6 py-3">
-                            <ButtonSubmit
+                            <ButtonPrimary
                                 loading={loading}
                             >
                                 Add Membership Plan
-                            </ButtonSubmit>
+                            </ButtonPrimary>
                         </div>
                     </Box>
                 </CardContent>

@@ -44,7 +44,8 @@ const membershipPlanSlice = createSlice({
             })
             .addCase(addNewMembershipPlan.rejected, (state) => {
                 state.loading = false;
-            }) // Fetch MembershipPlan By ID
+            })
+            // Fetch MembershipPlan By ID
             .addCase(fetchMembershipPlanById.pending, (state) => {
                 state.loading = true;
             })
@@ -74,6 +75,7 @@ const membershipPlanSlice = createSlice({
             .addCase(updateMembershipPlanById.rejected, (state) => {
                 state.loading = false;
             })
+            // Delete Membership Plan By ID
             .addCase(deleteMembershipPlanById.pending, (state) => {
                 state.loading = true;
             })

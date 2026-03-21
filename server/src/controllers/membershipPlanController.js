@@ -1,7 +1,7 @@
 const Membership = require("../models/Membership")
 const MembershipPlan = require("../models/MembershipPlan");
 
-const {getAllMembershipPlans} = require("../queries/membershipPlanQueries");
+const {getAllMembershipPlans, getMembershipPlanById} = require("../queries/membershipPlanQueries");
 
 // Create New Membership Plan
 const createMembershipPlan = async (req, res) => {
@@ -51,26 +51,35 @@ const fetchAllMembershipPlans = async (req, res) => {
     }
 };
 
-// Fetch Membership Plan by Id
-const fetchmemberhsipPlanById = async (req, res) => {
+// Fetch Membership Plan by ID
+const fetchMembershipPlanById = async (req, res) => {
     const membershipPlanId = req.params.id;
     try {
-        const membershipPlan = await MembershipPlan.findById(membershipPlanId);
+        const membershipPlan = await MembershipPlan.aggregate(getMembershipPlanById(membershipPlanId));
 
         if (!membershipPlan) {
             return res.status(404).json({message: "No membership plan found with the given ID"});
         }
-        res.status(200).json({membershipPlan: membershipPlan});
+        res.status(200).json({membershipPlan: membershipPlan[0] || []});
     } catch (err) {
         res.status(500).json({message: "Server error", error: err.message});
     }
 };
 
-// Update Membership Plan by Id
+// Update Membership Plan by ID
 const updateMembershipPlanById = async (req, res) => {
     const membershipPlanId = req.params.id;
     const {updatedData} = req.body;
     try {
+        const existingMembershipPlan = await MembershipPlan.findOne({
+            name: updatedData?.name
+        });
+
+        if (existingMembershipPlan) {
+            return res
+                .status(400)
+                .json({message: "A membership plan with this name already exists."});
+        }
         const membershipPlan = await MembershipPlan.findByIdAndUpdate(
             membershipPlanId,
             updatedData,
@@ -94,7 +103,7 @@ const updateMembershipPlanById = async (req, res) => {
     }
 };
 
-// Delete Membership by Id
+// Delete Membership by ID
 const deleteMembershipPlanById = async (req, res) => {
     const membershipPlanId = req.params.id;
 
@@ -123,7 +132,7 @@ const deleteMembershipPlanById = async (req, res) => {
 
 module.exports = {
     createMembershipPlan,
-    fetchmemberhsipPlanById,
+    fetchMembershipPlanById,
     fetchAllMembershipPlans,
     updateMembershipPlanById,
     deleteMembershipPlanById,

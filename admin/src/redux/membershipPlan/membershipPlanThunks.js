@@ -40,7 +40,7 @@ export const addNewMembershipPlan = createAsyncThunk(
                 },
             );
 
-            return res.data;
+            return res.data || {};
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to Add New Membership Plan",
@@ -49,7 +49,7 @@ export const addNewMembershipPlan = createAsyncThunk(
     },
 );
 
-// Fetch Membership plan by Id
+// Fetch Membership plan by ID
 export const fetchMembershipPlanById = createAsyncThunk(
     "membershipplan/fetchMembershipPlanById",
     async (membershipPlanId, {getState, rejectWithValue}) => {
@@ -65,7 +65,7 @@ export const fetchMembershipPlanById = createAsyncThunk(
                 },
             );
 
-            return res.data.membershipPlan;
+            return res.data.membershipPlan || {};
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to Fetch Membership Plan",
@@ -90,7 +90,7 @@ export const updateMembershipPlanById = createAsyncThunk(
                     },
                 },
             );
-            return res.data.membershipPlan;
+            return res.data.membershipPlan || {};
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to Update MembershipPlan",
@@ -99,7 +99,7 @@ export const updateMembershipPlanById = createAsyncThunk(
     },
 );
 
-// Delete Membership Plan by Id
+// Delete Membership Plan by ID
 export const deleteMembershipPlanById = createAsyncThunk(
     "membershipplan/deleteMembershipPlanById",
     async ({membershipPlanId}, {getState, rejectWithValue}) => {

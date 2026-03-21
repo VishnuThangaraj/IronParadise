@@ -1,30 +1,50 @@
 import {Input} from "@mui/joy";
+import {useEffect, useRef} from "react";
+import {gsap} from "gsap";
 
 const SearchBar = ({value, onChange}) => {
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        gsap.fromTo(
+            inputRef.current,
+            {
+                opacity: 0,
+                x: 0,
+                y: 60,
+                scale: 0.9,
+            },
+            {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                scale: 1,
+                duration: 0.7,
+                ease: "power3.out",
+            }
+        );
+    }, []);
+
     return (
         <Input
+            ref={inputRef}
             placeholder="Search..."
-            className="shadow-md hover:scale-101 transition duration-300 ease-in-out"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             sx={{
-                width: "40%",
+                width: "35%",
                 borderRadius: 10,
 
                 "--Input-focusedHighlight": "#4b5563",
                 "--Input-focusedThickness": "1px",
 
                 "--joy-palette-primary-500": "#4b5563",
-                "--joy-palette-primary-solidColor": "#4b5563",
-                "--joy-palette-primary-outlinedBorder": "#4b5563",
 
-                boxShadow: "0 1px 2px rgba(0,0,0,0.08)",
-                transition: "all 0.15s ease",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
 
                 "&:focus-within": {
                     boxShadow:
-                        "0px 4px 6px -1px rgba(0,0,0,0.1), 0px 2px 4px -2px rgba(0,0,0,0.1)",
-                    transform: "scale(1.005)",
+                        "0px 6px 12px rgba(0,0,0,0.2), 0px 3px 6px rgba(0,0,0,0.15)",
                 },
             }}
         />

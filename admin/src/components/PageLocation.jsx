@@ -59,7 +59,7 @@ const PageLocation = ({pageTitle, parentPath, currentPath = ""}) => {
         >
             <div className="font-bold text-lg">{pageTitle}</div>
             <div className="flex items-center text-gray-500 transition-all duration-200 "><i
-                className="fa-duotone fa-solid fa-house-chimney me-2 text-black"></i>
+                className="fa-duotone fa-solid fa-house-chimney me-2 text-gray-700"></i>
                 <span className="mx-2 opacity-70">/</span> <span className="mx-3">{parentPath}</span> <span
                     className="mx-2 opacity-70">/</span>
                 <span className="text-black font-semibold ms-2">{currentPath}</span>

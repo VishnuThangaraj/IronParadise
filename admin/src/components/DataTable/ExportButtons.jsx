@@ -2,12 +2,26 @@ import {Button, Tooltip} from "@mui/joy";
 import * as XLSX from "xlsx";
 import {jsPDF} from "jspdf";
 import autoTable from "jspdf-autotable";
+import {useEffect, useRef} from "react";
+import {gsap} from "gsap";
 
 const ExportButtons = ({data = [], fileName = "export"}) => {
+    const btnRef = useRef([]);
+
+    // ✨ Entrance animation
+    useEffect(() => {
+        gsap.from(btnRef.current, {
+            opacity: 0,
+            y: 20,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out",
+        });
+    }, []);
+
     if (!data.length) return null;
 
     const exportData = data.map(({_id, ...rest}) => rest);
-
     const headers = Object.keys(exportData[0]);
 
     // Copy
@@ -15,7 +29,7 @@ const ExportButtons = ({data = [], fileName = "export"}) => {
         const csvContent = [
             headers.join(","),
             ...exportData.map((row) =>
-                headers.map((field) => JSON.stringify(row[field] ?? "")).join(","),
+                headers.map((field) => JSON.stringify(row[field] ?? "")).join(",")
             ),
         ].join("\n");
 
@@ -50,32 +64,9 @@ const ExportButtons = ({data = [], fileName = "export"}) => {
             format: "A4",
         });
 
-        const headers = Object.keys(exportData[0]);
-
         autoTable(doc, {
             head: [headers],
             body: exportData.map((row) => headers.map((h) => row[h] ?? "")),
-
-            startY: 40,
-            theme: "grid",
-
-            styles: {
-                fontSize: 8,
-                cellPadding: 4,
-                overflow: "linebreak",
-            },
-
-            headStyles: {
-                fillColor: [255, 193, 7],
-                textColor: 0,
-                fontStyle: "bold",
-            },
-
-            tableWidth: "auto",
-
-            margin: {top: 40, left: 40, right: 40},
-
-            horizontalPageBreak: true,
         });
 
         doc.save(`${fileName}.pdf`);
@@ -88,16 +79,40 @@ const ExportButtons = ({data = [], fileName = "export"}) => {
         {title: "PDF", icon: "fa-file-pdf", onClick: handlePDF},
     ];
 
+    // 💥 Click animation
+    const handleClickAnim = (index, callback) => {
+        const el = btnRef.current[index];
+
+        gsap.fromTo(
+            el,
+            {scale: 1},
+            {
+                scale: 0.85,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power1.inOut",
+                onComplete: callback,
+            }
+        );
+    };
+
     return (
         <div className="flex gap-2">
-            {buttons.map((btn) => (
+            {buttons.map((btn, i) => (
                 <Tooltip key={btn.title} title={btn.title} placement="top" arrow>
                     <Button
+                        ref={(el) => (btnRef.current[i] = el)}
                         variant="outlined"
-                        className={`transition-all duration-300 hover:scale-105 shadow-md`}
                         color="warning"
                         size="md"
-                        onClick={btn.onClick}
+                        onClick={() => handleClickAnim(i, btn.onClick)}
+                        onMouseEnter={(e) =>
+                            gsap.to(e.currentTarget, {scale: 1.1, duration: 0.2})
+                        }
+                        onMouseLeave={(e) =>
+                            gsap.to(e.currentTarget, {scale: 1, duration: 0.2})
+                        }
                     >
                         <i className={`fa-solid ${btn.icon}`} style={{fontSize: 18}}></i>
                     </Button>

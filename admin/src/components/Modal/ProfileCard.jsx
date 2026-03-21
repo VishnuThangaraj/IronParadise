@@ -12,7 +12,7 @@ import Button from "@mui/joy/Button";
 import Divider from "@mui/joy/Divider";
 import Box from "@mui/joy/Box";
 
-import ButtonSubmit from "@/components/Button/ButtonSubmit.jsx"
+import ButtonPrimary from "@/components/Button/ButtonPrimary.jsx"
 
 import ProfileImage from "../../../public/images/admin_image.webp";
 import {userEmail, userName} from "@/config/UserConfig"
@@ -119,10 +119,10 @@ const ProfileCard = ({open, setOpen}) => {
                         ><i className="fa-duotone fa-thin fa-envelope me-2"></i>
                             Contact Me
                         </Button>
-                        <ButtonSubmit
+                        <ButtonPrimary
                         ><i className="fa-light fa-download me-2"></i>
                             Resume
-                        </ButtonSubmit>
+                        </ButtonPrimary>
                     </div>
                 </DialogActions>
             </ModalDialog>

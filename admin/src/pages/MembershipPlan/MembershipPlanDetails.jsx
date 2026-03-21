@@ -1,42 +1,32 @@
 import {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {useLocation, useParams} from "react-router-dom";
 
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
+
+import FormField from "@/components/Form/FormField";
+import PageLocation from "@/components/PageLocation";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
+import ButtonOutlined from "@/components/Button/ButtonOutlined";
+
+import {formFieldColSpan} from "@/config/FormFieldConfig";
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
 
 import {
-    MembershipPlanFieldGroup,
     initialMembershipPlanState,
-} from "../../config/MembershipPlanFields";
+    MembershipPlanFieldGroup,
+    MembershipPlanRules,
+} from "@/config/MembershipPlanFields";
 import {
-    selectMembershipPlanLoading,
     selectCurrentMembershipPlan,
-} from "../../redux/membershipPlan/membershipPlanSelectors";
+    selectMembershipPlanLoading,
+} from "@/redux/membershipPlan/membershipPlanSelectors";
 
-import FormField from "../../components/Form/FormField";
-import PageLocation from "../../components/PageLocation";
-import {useLocation, useParams} from "react-router-dom";
-import {
-    fetchMembershipPlanById,
-    updateMembershipPlanById,
-} from "../../redux/membershipPlan/membershipPlanThunks";
-
-const getColSpan = (size) => {
-    switch (size) {
-        case 100:
-            return "col-span-12";
-        case 50:
-            return "col-span-6";
-        case 30:
-            return "col-span-4";
-        default:
-            return "col-span-6";
-    }
-};
+import {fetchMembershipPlanById, updateMembershipPlanById,} from "@/redux/membershipPlan/membershipPlanThunks";
+import Loader from "@/components/Loader.jsx";
 
 const MembershipPlanDetails = () => {
     const dispatch = useDispatch();
@@ -68,20 +58,19 @@ const MembershipPlanDetails = () => {
     }, [membershipPlanFromStore]);
 
     const handleChange = (name, value) => {
-        setMembershipPlan((prev) => {
-            const updated = {...prev, [name]: value};
-            return updated;
-        });
-    };
+        const rules = MembershipPlanRules[name];
+        if (!handleChangeValidation(value, rules)) return;
 
-    const checkValidation = () => {
-        return true;
+        setMembershipPlan((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validation = checkValidation();
-        if (!validation) return;
+
+        if (!validateFields(membershipPlan)) return;
 
         try {
             await dispatch(
@@ -91,12 +80,13 @@ const MembershipPlanDetails = () => {
                 }),
             ).unwrap();
             toast.success("Membership Plan Updated Successfully!");
-        } catch {
-            toast.error("Failed to Update Membership Plan");
-        } finally {
             setEditMode(false);
+        } catch (error) {
+            toast.warning(error?.message || "Failed to Update Membership Plan");
         }
     };
+
+    if (!membershipPlan) return <Loader/>;
 
     return (
         <div key="MembershipPlanDetails">
@@ -115,19 +105,11 @@ const MembershipPlanDetails = () => {
                                     : "View Existing Membership Plan"}
                             </div>
                             {!editMode && (
-                                <Button
-                                    className="transition-transform duration-400 hover:scale-103"
-                                    variant="solid"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
+                                <ButtonPrimary
                                     onClick={() => setEditMode(true)}
                                 >
-                                    <i className="fa-light fa-crown me-2"></i>Edit Membership Plan
-                                </Button>
+                                    <i className="fa-duotone fa-solid fa-pen-to-square me-2"></i>Edit Membership Plan
+                                </ButtonPrimary>
                             )}
                         </div>
 
@@ -145,7 +127,7 @@ const MembershipPlanDetails = () => {
                                             (!field.showIf || field.showIf(membershipPlan)) && (
                                                 <div
                                                     key={field.name}
-                                                    className={getColSpan(field.size)}
+                                                    className={formFieldColSpan(field.size)}
                                                 >
                                                     <FormField
                                                         field={field}
@@ -162,39 +144,19 @@ const MembershipPlanDetails = () => {
 
                         {editMode && (
                             <div className="flex justify-end px-6 py-3 gap-5">
-                                <Button
-                                    variant="outlined"
-                                    type="submit"
+                                <ButtonOutlined
                                     color="danger"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                    }}
-                                    disabled={loading}
+                                    loading={loading}
                                     onClick={() => setEditMode(false)}
                                 >
                                     Cancel
-                                </Button>
-                                <Button
-                                    variant="solid"
-                                    type="submit"
-                                    size="md"
-                                    sx={{
-                                        px: 5,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
-                                    disabled={loading}
+                                </ButtonOutlined>
+                                <ButtonPrimary
+                                    loading={loading}
+                                    loadingText={"Updating ..."}
                                 >
-                                    {loading ? (
-                                        <Fragment>
-                                            <CircularProgress variant="solid"/>{" "}
-                                            <span className="ms-3">Updating ...</span>
-                                        </Fragment>
-                                    ) : (
-                                        "Update Membership Plan"
-                                    )}
-                                </Button>
+                                    Update Membership Plan
+                                </ButtonPrimary>
                             </div>
                         )}
                     </Box>

@@ -16,6 +16,7 @@ import ExportButtons from "@/components/DataTable/ExportButtons";
 
 import {selectAllMembershipPlans} from "@/redux/membershipPlan/membershipPlanSelectors";
 import {deleteMembershipPlanById, fetchAllMembershipPlans,} from "@/redux/membershipPlan/membershipPlanThunks";
+import Loader from "@/components/Loader.jsx";
 
 
 const MembershipPlanList = () => {
@@ -58,6 +59,8 @@ const MembershipPlanList = () => {
             setOpenDelete(false);
         }
     };
+
+    if (membershipPlans == null) return <Loader/>;
 
     return (
         <div key="MembershipPlan-List">
