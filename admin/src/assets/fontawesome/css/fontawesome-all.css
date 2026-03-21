@@ -1,0 +1,45 @@
+@import "./fontawesome.css";
+
+@import "./brands.css";
+
+@import "./solid.css";
+@import "./regular.css";
+@import "./light.css";
+@import "./thin.css";
+
+@import "./duotone.css";
+@import "./duotone-light.css";
+@import "./duotone-regular.css";
+@import "./duotone-thin.css";
+
+@import "./sharp-solid.css";
+@import "./sharp-regular.css";
+@import "./sharp-light.css";
+@import "./sharp-thin.css";
+
+@import "./sharp-duotone-solid.css";
+@import "./sharp-duotone-regular.css";
+@import "./sharp-duotone-light.css";
+@import "./sharp-duotone-thin.css";
+
+@import "./chisel-regular.css";
+@import "./etch-solid.css";
+@import "./graphite-thin.css";
+
+@import "./jelly-regular.css";
+@import "./jelly-duo-regular.css";
+@import "./jelly-fill-regular.css";
+
+@import "./notdog-solid.css";
+@import "./notdog-duo-solid.css";
+
+@import "./slab-regular.css";
+@import "./slab-press-regular.css";
+
+@import "./thumbprint-light.css";
+
+@import "./utility-semibold.css";
+@import "./utility-duo-semibold.css";
+@import "./utility-fill-semibold.css";
+
+@import "./whiteboard-semibold.css";

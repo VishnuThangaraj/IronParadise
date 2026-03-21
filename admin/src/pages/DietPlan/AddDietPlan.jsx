@@ -9,7 +9,7 @@ import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 
 import FormField from "@/components/Form/FormField";
-import {PageLocation} from "@/components/PageLocation";
+import PageLocation from "@/components/PageLocation";
 
 import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig.js";
 

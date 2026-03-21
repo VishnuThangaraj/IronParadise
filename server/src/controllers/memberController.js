@@ -36,7 +36,7 @@ const registerMember = async (req, res) => {
 
         const subject = "Iron Paradise - Membership Registration";
 
-        sendMail(memberResponse.email, subject, html);
+        // sendMail(memberResponse.email, subject, html);
 
         res.status(201).json({
             message: `Member registered successfully`,

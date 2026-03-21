@@ -16,7 +16,7 @@ const ButtonSubmit = ({
         type="submit"
         variant={variant}
         size={size}
-        className={`transition-all duration-300 hover:scale-105 ${className}`}
+        className={`transition-all duration-300 hover:scale-102 shadow-md ${className}`}
         sx={{
             px: 3,
             borderRadius: 7,

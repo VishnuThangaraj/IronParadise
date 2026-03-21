@@ -9,7 +9,7 @@ import CardContent from "@mui/joy/CardContent";
 
 import {DietPlanColumns} from "./DietPlanColumns";
 import DataTable from "@/components/DataTable/DataTable";
-import {PageLocation} from "@/components/PageLocation";
+import PageLocation from "@/components/PageLocation";
 import SearchBar from "@/components/DataTable/SearchBar";
 import ExportButtons from "@/components/DataTable/ExportButtons";
 import DeletionModal from "@/components/Modal/DeletionModal";

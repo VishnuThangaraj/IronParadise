@@ -26,6 +26,11 @@ export const MembershipPlanColumns = ({
         flex: 1,
         headerAlign: "center",
         align: "center",
+        renderCell: (params) => {
+            const {durationMonths} = params ? params.row : undefined;
+
+            return <div>{`${durationMonths} ${durationMonths === 1 ? 'Month' : 'Months'}`}</div>
+        }
     },
     {
         field: "price",
@@ -33,6 +38,10 @@ export const MembershipPlanColumns = ({
         flex: 1,
         headerAlign: "center",
         align: "center",
+        renderCell: (params) => {
+            const {price} = params ? params.row : undefined;
+            return <div>₹ {Number(price).toFixed(1)}</div>
+        }
     },
     {
         field: "action",

@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import "./assets/fontawesome/css/fontawesome-all.css";
+
 import "./index.css";
 import App from "./App";
 import { store } from "./app/store";
@@ -13,5 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <App />
       <Toaster richColors position="top-right" />
     </Router>
-  </Provider>
+  </Provider>,
 );

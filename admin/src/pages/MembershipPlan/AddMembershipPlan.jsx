@@ -8,7 +8,7 @@ import CardContent from "@mui/joy/CardContent";
 
 import Loader from "@/components/Loader"
 import FormField from "@/components/Form/FormField";
-import {PageLocation} from "@/components/PageLocation";
+import PageLocation from "@/components/PageLocation";
 import ButtonSubmit from "@/components/Button/ButtonSubmit";
 
 import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig";

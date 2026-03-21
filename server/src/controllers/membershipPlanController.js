@@ -1,6 +1,8 @@
 const Membership = require("../models/Membership")
 const MembershipPlan = require("../models/MembershipPlan");
 
+const {getAllMembershipPlans} = require("../queries/membershipPlanQueries");
+
 // Create New Membership Plan
 const createMembershipPlan = async (req, res) => {
     const {membershipPlanId, name} = req.body;
@@ -38,7 +40,7 @@ const createMembershipPlan = async (req, res) => {
 // Fetch All Membership Plans
 const fetchAllMembershipPlans = async (req, res) => {
     try {
-        const membershipPlans = await MembershipPlan.find();
+        const membershipPlans = await MembershipPlan.aggregate(getAllMembershipPlans());
 
         res.status(200).json(membershipPlans);
     } catch (err) {
@@ -54,6 +56,7 @@ const fetchmemberhsipPlanById = async (req, res) => {
     const membershipPlanId = req.params.id;
     try {
         const membershipPlan = await MembershipPlan.findById(membershipPlanId);
+
         if (!membershipPlan) {
             return res.status(404).json({message: "No membership plan found with the given ID"});
         }
