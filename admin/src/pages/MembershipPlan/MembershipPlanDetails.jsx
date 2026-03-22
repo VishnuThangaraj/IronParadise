@@ -7,14 +7,15 @@ import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 
+import Loader from "@/components/Loader";
 import FormField from "@/components/Form/FormField";
 import PageLocation from "@/components/PageLocation";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import ButtonOutlined from "@/components/Button/ButtonOutlined";
 
-import {formFieldColSpan} from "@/config/FormFieldConfig";
 import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
 
+import {formFieldColSpan} from "@/config/FormFieldConfig";
 import {
     initialMembershipPlanState,
     MembershipPlanFieldGroup,
@@ -26,7 +27,6 @@ import {
 } from "@/redux/membershipPlan/membershipPlanSelectors";
 
 import {fetchMembershipPlanById, updateMembershipPlanById,} from "@/redux/membershipPlan/membershipPlanThunks";
-import Loader from "@/components/Loader.jsx";
 
 const MembershipPlanDetails = () => {
     const dispatch = useDispatch();

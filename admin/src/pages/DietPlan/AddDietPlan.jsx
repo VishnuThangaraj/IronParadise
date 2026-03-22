@@ -4,21 +4,22 @@ import {Fragment, useEffect, useMemo, useState} from "react";
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
 
+import Loader from "@/components/Loader"
 import FormField from "@/components/Form/FormField";
 import PageLocation from "@/components/PageLocation";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
 
-import {formFieldColSpan, validateFields} from "@/config/FormFieldConfig.js";
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
+
+import {formFieldColSpan} from "@/config/FormFieldConfig";
+import {DietPlanFieldGroup, DietPlanRules, initialDietPlanState} from "@/config/DietPlanFields";
 
 import {fetchCounter} from "@/redux/counter/counterThunks";
 import {selectCounter} from "@/redux/counter/counterSelector";
 import {addNewDietPlan} from "@/redux/dietPlan/dietPlanThunks";
 import {selectDietPlanLoading} from "@/redux/dietPlan/dietPlanSelector";
-
-import {DietPlanFieldGroup, initialDietPlanState,} from "@/config/DietPlanFields";
 
 const AddDietPlan = () => {
     const dispatch = useDispatch();
@@ -32,8 +33,7 @@ const AddDietPlan = () => {
     }, [counter]);
 
     const [newDietPlan, setNewDietPlan] = useState({
-        ...initialDietPlanState,
-        dietPlanId,
+        ...initialDietPlanState
     });
 
     useEffect(() => {
@@ -41,6 +41,9 @@ const AddDietPlan = () => {
     }, [dispatch]);
 
     const handleChange = (name, value) => {
+        const rules = DietPlanRules[name];
+        if (!handleChangeValidation(value, rules)) return;
+
         setNewDietPlan((prev) => ({
             ...prev,
             [name]: value,
@@ -71,6 +74,8 @@ const AddDietPlan = () => {
             });
         }
     };
+
+    if (counter < 0) return <Loader/>;
 
     return (
         <div>
@@ -117,26 +122,12 @@ const AddDietPlan = () => {
                         </div>
 
                         <div className="flex justify-end px-6 py-3">
-                            <Button
-                                variant="solid"
-                                type="submit"
-                                size="md"
-                                sx={{
-                                    px: 5,
-                                    backgroundColor: "black",
-                                    "&:hover": {backgroundColor: "#222222"},
-                                }}
-                                disabled={loading}
+                            <ButtonPrimary
+                                loading={loading}
+                                loadingText="Adding .."
                             >
-                                {loading ? (
-                                    <Fragment>
-                                        <CircularProgress variant="solid"/>
-                                        <span className="ms-3">Adding ...</span>
-                                    </Fragment>
-                                ) : (
-                                    "Add Diet Plan"
-                                )}
-                            </Button>
+                                Add Diet Plan
+                            </ButtonPrimary>
                         </div>
                     </Box>
                 </CardContent>

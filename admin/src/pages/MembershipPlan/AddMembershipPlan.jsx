@@ -9,7 +9,7 @@ import CardContent from "@mui/joy/CardContent";
 import Loader from "@/components/Loader"
 import FormField from "@/components/Form/FormField";
 import PageLocation from "@/components/PageLocation";
-import ButtonPrimary from "@/components/Button/ButtonPrimary.jsx";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
 
 import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
 

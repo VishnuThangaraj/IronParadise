@@ -1,30 +1,26 @@
 import {useState} from "react";
-import Tooltip from "@mui/joy/Tooltip";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import Tooltip from "@mui/joy/Tooltip";
 
 import styles from "./Navbar.module.scss";
 import LogoutImage from "../../../public/images/logout_icon.webp";
 import ProfileImage from "../../../public/images/admin_image.webp";
-import {NavbarItems, NavbarItemStyles} from "@/config/NavbarItems";
 
 import {selectUser} from "@/redux/auth/authSelectors";
 
-import Button from "@mui/joy/Button";
-import Divider from "@mui/joy/Divider";
-import DialogTitle from "@mui/joy/DialogTitle";
-import DialogContent from "@mui/joy/DialogContent";
-import DialogActions from "@mui/joy/DialogActions";
-import Modal from "@mui/joy/Modal";
-import ModalDialog from "@mui/joy/ModalDialog";
 import ProfileCard from "@/components/Modal/ProfileCard.jsx";
+
+import {NavbarItems, NavbarItemStyles} from "@/config/NavbarItems";
+import LogoutModal from "@/components/Modal/LogoutModal.jsx";
+
 
 const Navbar = () => {
     const navigate = useNavigate();
     const user = useSelector(selectUser);
 
-    const [openProfile, setOpenProfile] = useState(false);
     const [openLogout, setOpenLogout] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
 
     return (
         <div
@@ -86,31 +82,9 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-            <Modal open={openLogout} onClose={() => setOpenLogout(false)}>
-                <ModalDialog variant="outlined" role="alertdialog">
-                    <DialogTitle>Logout Confirmation</DialogTitle>
-                    <Divider/>
-                    <DialogContent>
-                        Proceed with logging out of the current session?
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            variant="solid"
-                            color="danger"
-                            onClick={() => setOpenLogout(false)}
-                        >
-                            Logout
-                        </Button>
-                        <Button
-                            variant="plain"
-                            color="neutral"
-                            onClick={() => setOpenLogout(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </DialogActions>
-                </ModalDialog>
-            </Modal>
+
+            {/*Logout Modal*/}
+            <LogoutModal open={openLogout} setOpen={setOpenLogout}/>
 
             {/*Profile Card*/}
             <ProfileCard open={openProfile} setOpen={setOpenProfile}/>

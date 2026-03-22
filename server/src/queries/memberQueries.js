@@ -69,6 +69,7 @@ const getAllMembersQuery = () => [
 
     {
         $project: {
+            _id: 1,
             memberId: 1,
             name: 1,
             email: 1,
@@ -182,6 +183,7 @@ const getMemberByIdQuery = (memberId) => [
 
     {
         $project: {
+            _id: 1,
             memberId: 1,
             name: 1,
             email: 1,

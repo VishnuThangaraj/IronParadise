@@ -50,10 +50,10 @@ const MembershipPlanList = () => {
         e.preventDefault();
 
         try {
-            await dispatch(deleteMembershipPlanById({membershipPlanId: deleteId}));
+            await dispatch(deleteMembershipPlanById({membershipPlanId: deleteId})).unwrap();
             toast.success("Membership Plan Deleted Successfully");
-        } catch {
-            toast.error("Failed to Delete Membership Plan");
+        } catch (error) {
+            toast.warning(error?.message || "Failed to Delete Membership Plan");
         } finally {
             setDeleteId(null);
             setOpenDelete(false);
@@ -99,7 +99,7 @@ const MembershipPlanList = () => {
             <DeletionModal
                 open={openDelete}
                 setOpen={setOpenDelete}
-                icon={`fa-light fa-dumbbell`}
+                icon={`fa-chisel fa-regular fa-crown`}
                 origin={"Membership Plan"}
                 confirmation={deleteMembershipPlanWithId}
             />
