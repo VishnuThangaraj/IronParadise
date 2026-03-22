@@ -1,25 +1,23 @@
 import {useNavigate} from "react-router-dom";
-import {useState, useMemo, useEffect} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import {useEffect, useMemo, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
 import {toast} from "sonner";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
 
-import PageLocation from "../../components/PageLocation";
-import DataTable from "../../components/DataTable/DataTable";
-import SearchBar from "../../components/DataTable/SearchBar";
+import Loader from "@/components/Loader.jsx";
+import PageLocation from "@/components/PageLocation";
+import DataTable from "@/components/DataTable/DataTable";
+import SearchBar from "@/components/DataTable/SearchBar";
+import DeletionModal from "@/components/Modal/DeletionModal";
+import ButtonRounded from "@/components/Button/ButtonRounded";
+import ExportButtons from "@/components/DataTable/ExportButtons";
+
 import {WorkoutPlanColumns} from "./WorkoutPlanColumns";
-import ExportButtons from "../../components/DataTable/ExportButtons";
 
-import {
-    fetchAllWorkoutPlans,
-    deleteWorkoutPlanById,
-} from "../../redux/workoutPlan/workoutPlanThunks";
-import {selectAllWorkoutPlans} from "../../redux/workoutPlan/workoutPlanSelector";
-
-import DeletionModal from "../../components/Modal/DeletionModal";
+import {selectAllWorkoutPlans} from "@/redux/workoutPlan/workoutPlanSelector";
+import {deleteWorkoutPlanById, fetchAllWorkoutPlans,} from "@/redux/workoutPlan/workoutPlanThunks";
 
 const WorkoutPlanList = () => {
     const navigate = useNavigate();
@@ -36,35 +34,35 @@ const WorkoutPlanList = () => {
     }, [dispatch]);
 
     const filteredRows = useMemo(() => {
+        if (!search) return workoutPlans;
+
         const query = search.toLowerCase();
 
-        return workoutPlans.filter(
-            (row) =>
-                row.workoutPlanId?.toString().toLowerCase().includes(query) ||
-                row.workoutPlanName?.toString().toLowerCase().includes(query) ||
-                row.goal?.toString().toLowerCase().includes(query),
+        return workoutPlans.filter((row) => {
+                return [row?.workoutPlanId, row?.workoutPlanName, row?.goal]
+                    .filter(Boolean)
+                    .some((value) =>
+                        value.toString().toLowerCase().includes(query)
+                    );
+            }
         );
     }, [workoutPlans, search]);
 
-    const checkValidation = () => {
-        return true;
-    };
-
     const deleteWorkoutPlanWithId = async (e) => {
         e.preventDefault();
-        const validation = checkValidation();
-        if (!validation) return;
 
         try {
             await dispatch(deleteWorkoutPlanById({workoutPlanId: deleteId}));
-            toast.success("Workout Plan Deleted Successfully");
-        } catch {
-            toast.error("Failed to Delete Workout Plan");
+            toast.success("Workout plan deleted successfully");
+        } catch (error) {
+            toast.error(error?.message || "Failed to delete Workout plan");
         } finally {
             setDeleteId(null);
             setOpenDelete(false);
         }
     };
+
+    if (workoutPlans == null) return <Loader/>
 
     return (
         <div key="WorkoutPlan-List">
@@ -76,22 +74,13 @@ const WorkoutPlanList = () => {
             <Card className="shadow-md" sx={{my: 2, p: 4}}>
                 <CardContent>
                     <div className="flex justify-between items-center mb-3 gap-3">
-                        <ExportButtons/>
+                        <ExportButtons data={filteredRows.slice()}
+                                       fileName="workout_plans"/>
                         <SearchBar value={search} onChange={setSearch}/>
 
-                        <Button
-                            variant="solid"
-                            size="md"
-                            onClick={() => navigate("/subscription/add")}
-                            sx={{
-                                px: 4,
-                                borderRadius: 20,
-                                bgcolor: "black",
-                                "&:hover": {bgcolor: "#222"},
-                            }}
-                        >
-                            Add New Workout Plan
-                        </Button>
+                        <ButtonRounded location={"/plan/workout/add"}>
+                            Add New Plan
+                        </ButtonRounded>
                     </div>
 
                     <DataTable

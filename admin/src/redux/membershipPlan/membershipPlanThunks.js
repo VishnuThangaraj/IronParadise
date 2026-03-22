@@ -6,7 +6,7 @@ export const fetchAllMembershipPlans = createAsyncThunk(
     "membershipplan/fetchAllMembershipPlans",
     async (_, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.get("/membershipplan/", {
                 headers: {
@@ -14,7 +14,7 @@ export const fetchAllMembershipPlans = createAsyncThunk(
                 },
             });
 
-            return res.data || [];
+            return res.data.membershipPlans || [];
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to fetch Membership plans",
@@ -28,7 +28,7 @@ export const addNewMembershipPlan = createAsyncThunk(
     "membershipplan/addNewMembershipPlan",
     async ({newMembershipPlan}, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.post(
                 "/membershipplan/create",
@@ -40,7 +40,7 @@ export const addNewMembershipPlan = createAsyncThunk(
                 },
             );
 
-            return res.data || {};
+            return res.data.membershipPlan || {};
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to Add New Membership Plan",
@@ -54,7 +54,7 @@ export const fetchMembershipPlanById = createAsyncThunk(
     "membershipplan/fetchMembershipPlanById",
     async (membershipPlanId, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.get(
                 `/membershipplan/details/${membershipPlanId}`,
@@ -79,7 +79,7 @@ export const updateMembershipPlanById = createAsyncThunk(
     "membershipplan/updateMembershipPlanById",
     async ({membershipPlanId, updatedData}, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.put(
                 `/membershipplan/update/${membershipPlanId}`,
@@ -104,7 +104,7 @@ export const deleteMembershipPlanById = createAsyncThunk(
     "membershipplan/deleteMembershipPlanById",
     async ({membershipPlanId}, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.delete(
                 `/membershipplan/delete/${membershipPlanId}`,
@@ -117,7 +117,7 @@ export const deleteMembershipPlanById = createAsyncThunk(
             return res.data.membershipPlanId;
         } catch (err) {
             return rejectWithValue(
-                err.response?.data || "Failed to UpdatDelete Membership Plan",
+                err.response?.data || "Failed to Delete Membership Plan",
             );
         }
     },

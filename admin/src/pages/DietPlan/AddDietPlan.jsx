@@ -32,9 +32,7 @@ const AddDietPlan = () => {
         return `DPL-${String(counter + 1).padStart(3, "0")}`;
     }, [counter]);
 
-    const [newDietPlan, setNewDietPlan] = useState({
-        ...initialDietPlanState
-    });
+    const [newDietPlan, setNewDietPlan] = useState(initialDietPlanState);
 
     useEffect(() => {
         dispatch(fetchCounter({identity: "diet"}));
@@ -53,29 +51,27 @@ const AddDietPlan = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateFields(newDietPlan)) return;
+        const payload = {
+            ...newDietPlan,
+            dietPlanId
+        }
+
+        if (!validateFields(payload)) return;
 
         try {
-            await dispatch(addNewDietPlan({newDietPlan})).unwrap();
+            await dispatch(addNewDietPlan({newDietPlan: payload})).unwrap();
+            await dispatch(fetchCounter({identity: "diet"})).unwrap();
 
-            toast.success("Diet Plan Added Successfully!");
+            toast.success("Diet plan added successfully");
 
-            const nextId = `DPL-${String(counter + 2).padStart(3, "0")}`;
-            setNewDietPlan({
-                ...initialDietPlanState,
-                dietPlanId: nextId,
-            });
+            setNewDietPlan(initialDietPlanState);
+
         } catch (error) {
-            toast.warning(error?.message || "Failed to Add Diet Plan");
-
-            setNewDietPlan({
-                ...initialDietPlanState,
-                dietPlanId,
-            });
+            toast.warning(error?.message || "Failed to add Diet plan");
         }
     };
 
-    if (counter < 0) return <Loader/>;
+    if (!counter || counter < 0) return <Loader/>;
 
     return (
         <div>
@@ -110,9 +106,9 @@ const AddDietPlan = () => {
                                                 >
                                                     <FormField
                                                         field={field}
-                                                        value={newDietPlan[field.name]}
+                                                        value={field.name === "dietPlanId" ? dietPlanId : newDietPlan[field.name]}
                                                         onChange={handleChange}
-                                                        disabled={field.disabled}
+                                                        disabled={field.disabled ?? false}
                                                     />
                                                 </div>
                                             ),

@@ -1,77 +1,71 @@
 import {useNavigate} from "react-router-dom";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {toast} from "sonner";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
 
-import {DietPlanColumns} from "./DietPlanColumns";
-import DataTable from "@/components/DataTable/DataTable";
+import Loader from "@/components/Loader.jsx";
 import PageLocation from "@/components/PageLocation";
+import DataTable from "@/components/DataTable/DataTable";
 import SearchBar from "@/components/DataTable/SearchBar";
-import ExportButtons from "@/components/DataTable/ExportButtons";
 import DeletionModal from "@/components/Modal/DeletionModal";
+import ButtonRounded from "@/components/Button/ButtonRounded";
+import ExportButtons from "@/components/DataTable/ExportButtons";
 
-import {deleteDietPlanById, fetchAllDietPlans,} from "@/redux/dietPlan/dietPlanThunks";
+import {DietPlanColumns} from "@/pages/DietPlan/DietPlanColumns.jsx";
 
 import {selectAllDietPlans} from "@/redux/dietPlan/dietPlanSelector";
+import {deleteDietPlanById, fetchAllDietPlans,} from "@/redux/dietPlan/dietPlanThunks";
 
 const DietPlanList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const dietPlans = useSelector(selectAllDietPlans);
-
-    const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
     const [openDelete, setOpenDelete] = useState(false);
+
+    const [search, setSearch] = useState("");
+
+    const dietPlans = useSelector(selectAllDietPlans);
 
     useEffect(() => {
         dispatch(fetchAllDietPlans());
     }, [dispatch]);
-
-    /* ---------------- SEARCH FILTER ---------------- */
 
     const filteredRows = useMemo(() => {
         if (!search) return dietPlans;
 
         const query = search.toLowerCase();
 
-        return dietPlans.filter((row) =>
-            [row.dietPlanId, row.dietPlanName, row.goal]
+        return dietPlans.filter((row) => {
+            return [
+                row?.dietPlanId, row?.dietPlanName, row?.goal
+            ]
+                .filter(Boolean)
                 .some((value) =>
-                    value?.toString().toLowerCase().includes(query)
-                )
-        );
+                    value.toString().toLowerCase().includes(query)
+                );
+        })
+
     }, [dietPlans, search]);
 
-    /* ---------------- DELETE HANDLER ---------------- */
+    const deleteDietPlanWithId = async (e) => {
+        e.preventDefault();
 
-    const deleteDietPlanWithId = useCallback(
-        async (e) => {
-            e.preventDefault();
+        try {
+            await dispatch(deleteDietPlanById({dietPlanId: deleteId})).unwrap();
+            toast.success("Diet plan deleted successfully");
+        } catch (error) {
+            toast.error(error?.message || "Failed to delete Diet plan");
+        } finally {
+            setDeleteId(null);
+            setOpenDelete(false);
+        }
+    };
 
-            try {
-                await dispatch(deleteDietPlanById({dietPlanId: deleteId})).unwrap();
-                toast.success("Diet Plan Deleted Successfully");
-            } catch (error) {
-                toast.error(error?.message || "Failed to Delete Diet Plan");
-            } finally {
-                setDeleteId(null);
-                setOpenDelete(false);
-            }
-        },
-        [dispatch, deleteId]
-    );
-
-    /* ---------------- TABLE COLUMNS ---------------- */
-
-    const columns = useMemo(
-        () => DietPlanColumns({navigate, setDeleteId, setOpenDelete}),
-        [navigate]
-    );
+    if (dietPlans == null) return <Loader/>;
 
     return (
         <div key="DietPlan-List">
@@ -84,28 +78,23 @@ const DietPlanList = () => {
             <Card className="shadow-md" sx={{my: 2, p: 4}}>
                 <CardContent>
                     <div className="flex justify-between items-center mb-3 gap-3">
-                        <ExportButtons/>
+                        <ExportButtons data={filteredRows.slice()}
+                                       fileName="diet_plans"/>
 
                         <SearchBar value={search} onChange={setSearch}/>
 
-                        <Button
-                            variant="solid"
-                            size="md"
-                            onClick={() => navigate("/plan/diet/add")}
-                            sx={{
-                                px: 4,
-                                borderRadius: 20,
-                                bgcolor: "black",
-                                "&:hover": {bgcolor: "#222"},
-                            }}
-                        >
-                            Add New Diet Plan
-                        </Button>
+                        <ButtonRounded location={"/subscription/add"}>
+                            Add New Plan
+                        </ButtonRounded>
                     </div>
 
                     <DataTable
                         rows={filteredRows}
-                        columns={columns}
+                        columns={DietPlanColumns({
+                            navigate,
+                            setDeleteId,
+                            setOpenDelete
+                        })}
                         rowClick={true}
                         getRowId={(row) => row._id}
                         rowClickPath={"/plan/diet/details"}

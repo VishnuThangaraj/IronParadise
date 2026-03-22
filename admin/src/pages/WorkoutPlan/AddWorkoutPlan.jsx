@@ -1,87 +1,78 @@
-import {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {Fragment, useEffect, useMemo, useState} from "react";
 
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
 
-import {
-    WorkoutPlanFieldGroup,
-    initialWorkoutPlanState,
-} from "../../config/WorkoutPlanFields";
-import {
-    addNewWorkoutPlan,
-    fetchWorkoutPlanCounter,
-} from "../../redux/workoutPlan/workoutPlanThunks";
-import {
-    selectWorkoutPlanLoading,
-    selectWorkoutPlanCounter,
-} from "../../redux/workoutPlan/workoutPlanSelector";
-import FormField from "../../components/Form/FormField";
-import PageLocation from "../../components/PageLocation";
+import Loader from "@/components/Loader"
+import FormField from "@/components/Form/FormField";
+import PageLocation from "@/components/PageLocation";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
 
-const getColSpan = (size) => {
-    switch (size) {
-        case 100:
-            return "col-span-12";
-        case 50:
-            return "col-span-6";
-        case 30:
-            return "col-span-4";
-        default:
-            return "col-span-6";
-    }
-};
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
+
+import {formFieldColSpan} from "@/config/FormFieldConfig";
+import {initialWorkoutPlanState, WorkoutPlanFieldGroup, WorkoutPlanRules} from "@/config/WorkoutPlanFields";
+
+import {fetchCounter} from "@/redux/counter/counterThunks";
+import {selectCounter} from "@/redux/counter/counterSelector";
+import {addNewWorkoutPlan} from "@/redux/workoutPlan/workoutPlanThunks";
+import {selectWorkoutPlanLoading} from "@/redux/workoutPlan/workoutPlanSelector";
 
 const AddWorkoutPlan = () => {
     const dispatch = useDispatch();
 
+    const counter = useSelector(selectCounter);
     const loading = useSelector(selectWorkoutPlanLoading);
-    const counter = useSelector(selectWorkoutPlanCounter);
+
+    const workoutPlanId = useMemo(() => {
+        if (counter < 0) return "";
+        return `WPL-${String(counter + 1).padStart(3, "0")}`;
+    }, [counter]);
 
     const [newWorkoutPlan, setNewWorkoutPlan] = useState(initialWorkoutPlanState);
 
     useEffect(() => {
-        dispatch(fetchWorkoutPlanCounter({role: "workout"}));
+        dispatch(fetchCounter({identity: "workout"}));
     }, [dispatch]);
 
-    useEffect(() => {
-        if (counter >= 0) {
-            setNewWorkoutPlan((prev) => ({
-                ...prev,
-                workoutPlanId: `WPL-${String(counter + 1).padStart(3, "0")}`,
-            }));
-        }
-    }, [counter]);
 
     const handleChange = (name, value) => {
-        setNewWorkoutPlan((prev) => {
-            const updated = {...prev, [name]: value};
-            return updated;
-        });
-    };
+        const rules = WorkoutPlanRules[name];
+        if (!handleChangeValidation(value, rules)) return;
 
-    const checkValidation = () => {
-        return true;
+        setNewWorkoutPlan((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validation = checkValidation();
-        if (!validation) return;
+        const payload = {
+            ...newWorkoutPlan,
+            workoutPlanId
+        }
+
+        if (!validateFields(payload)) return;
 
         try {
-            await dispatch(addNewWorkoutPlan({newWorkoutPlan})).unwrap();
-            toast.success("Workout Plan Added Successfully!");
-        } catch {
-            toast.error("Failed to Add Workout Plan");
-        } finally {
+            await dispatch(addNewWorkoutPlan({newWorkoutPlan: payload})).unwrap();
+            await dispatch(fetchCounter({identity: "workout"})).unwrap();
+
+            toast.success("Workout plan added successfully!");
+
             setNewWorkoutPlan(initialWorkoutPlanState);
+
+        } catch (error) {
+            toast.warning(error?.message || "Failed to add Workout plan");
         }
     };
+
+    if (!counter || counter < 0) return <Loader/>;
+
     return (
         <div>
             <PageLocation
@@ -106,16 +97,16 @@ const AddWorkoutPlan = () => {
                                         {group.title}
                                     </div>
 
-                                    {group.fields.map(
+                                    {group?.fields.map(
                                         (field) =>
                                             (!field.showIf || field.showIf(newWorkoutPlan)) && (
                                                 <div
                                                     key={field.name}
-                                                    className={getColSpan(field.size)}
+                                                    className={formFieldColSpan(field.size)}
                                                 >
                                                     <FormField
                                                         field={field}
-                                                        value={newWorkoutPlan[field.name]}
+                                                        value={field.name === 'workoutPlanId' ? workoutPlanId : newWorkoutPlan[field.name]}
                                                         onChange={handleChange}
                                                         disabled={field.disabled}
                                                     />
@@ -127,26 +118,12 @@ const AddWorkoutPlan = () => {
                         </div>
 
                         <div className="flex justify-end px-6 py-3">
-                            <Button
-                                variant="solid"
-                                type="submit"
-                                size="md"
-                                sx={{
-                                    px: 5,
-                                    backgroundColor: "black",
-                                    "&:hover": {backgroundColor: "#222222"},
-                                }}
-                                disabled={loading}
+                            <ButtonPrimary
+                                loading={loading}
+                                loadingText="Adding .."
                             >
-                                {loading ? (
-                                    <Fragment>
-                                        <CircularProgress variant="solid"/>{" "}
-                                        <span className="ms-3">Adding ...</span>
-                                    </Fragment>
-                                ) : (
-                                    "Add Workout Plan"
-                                )}
-                            </Button>
+                                Add Workout Plan
+                            </ButtonPrimary>
                         </div>
                     </Box>
                 </CardContent>

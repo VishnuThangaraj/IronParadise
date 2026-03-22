@@ -1,42 +1,25 @@
 import {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {useLocation, useParams} from "react-router-dom";
 
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
 
-import {
-    WorkoutPlanFieldGroup,
-    initialWorkoutPlanState,
-} from "../../config/WorkoutPlanFields";
-import {
-    selectWorkoutPlanLoading,
-    selectCurrentWorkoutPlan,
-} from "../../redux/workoutPlan/workoutPlanSelector";
+import Loader from "@/components/Loader";
+import FormField from "@/components/Form/FormField";
+import PageLocation from "@/components/PageLocation";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
+import ButtonOutlined from "@/components/Button/ButtonOutlined";
 
-import FormField from "../../components/Form/FormField";
-import PageLocation from "../../components/PageLocation";
-import {useLocation, useParams} from "react-router-dom";
-import {
-    fetchWorkoutPlanById,
-    updateWorkoutPlanById,
-} from "../../redux/workoutPlan/workoutPlanThunks";
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
 
-const getColSpan = (size) => {
-    switch (size) {
-        case 100:
-            return "col-span-12";
-        case 50:
-            return "col-span-6";
-        case 30:
-            return "col-span-4";
-        default:
-            return "col-span-6";
-    }
-};
+import {formFieldColSpan} from "@/config/FormFieldConfig";
+import {initialWorkoutPlanState, WorkoutPlanFieldGroup, WorkoutPlanRules,} from "@/config/WorkoutPlanFields";
+
+import {selectCurrentWorkoutPlan, selectWorkoutPlanLoading,} from "@/redux/workoutPlan/workoutPlanSelector";
+import {fetchWorkoutPlanById, updateWorkoutPlanById,} from "@/redux/workoutPlan/workoutPlanThunks";
 
 const WorkoutPlanDetails = () => {
     const dispatch = useDispatch();
@@ -66,32 +49,32 @@ const WorkoutPlanDetails = () => {
     }, [workoutPlanFromStore]);
 
     const handleChange = (name, value) => {
-        setWorkoutPlan((prev) => {
-            const updated = {...prev, [name]: value};
-            return updated;
-        });
-    };
+        const rules = WorkoutPlanRules[name];
+        if (!handleChangeValidation(value, rules)) return;
 
-    const checkValidation = () => {
-        return true;
+        setWorkoutPlan((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validation = checkValidation();
-        if (!validation) return;
+
+        if (!validateFields(workoutPlan)) return;
 
         try {
             await dispatch(
                 updateWorkoutPlanById({workoutPlanId: id, updatedData: workoutPlan}),
             ).unwrap();
-            toast.success("Workout Plan Updated Successfully!");
-        } catch {
-            toast.error("Failed to Update Workout Plan");
-        } finally {
+            toast.success("Workout plan updated successfully");
             setEditMode(false);
+        } catch (error) {
+            toast.warning(error?.message || "Failed to update Workout plan");
         }
     };
+
+    if (!workoutPlan) return <Loader/>
 
     return (
         <div key="WorkoutPlanDetails">
@@ -110,19 +93,11 @@ const WorkoutPlanDetails = () => {
                                     : "View Existing Workout Plan"}
                             </div>
                             {!editMode && (
-                                <Button
-                                    className="transition-transform duration-400 hover:scale-103"
-                                    variant="solid"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
+                                <ButtonPrimary
                                     onClick={() => setEditMode(true)}
                                 >
                                     <i className="fa-light fa-pot-food me-2"></i>Edit Workout Plan
-                                </Button>
+                                </ButtonPrimary>
                             )}
                         </div>
 
@@ -135,12 +110,12 @@ const WorkoutPlanDetails = () => {
                                         {group.title}
                                     </div>
 
-                                    {group.fields.map(
+                                    {group?.fields.map(
                                         (field) =>
                                             (!field.showIf || field.showIf(workoutPlan)) && (
                                                 <div
                                                     key={field.name}
-                                                    className={getColSpan(field.size)}
+                                                    className={formFieldColSpan(field.size)}
                                                 >
                                                     <FormField
                                                         field={field}
@@ -157,39 +132,19 @@ const WorkoutPlanDetails = () => {
 
                         {editMode && (
                             <div className="flex justify-end px-6 py-3 gap-5">
-                                <Button
-                                    variant="outlined"
-                                    type="submit"
+                                <ButtonOutlined
                                     color="danger"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                    }}
-                                    disabled={loading}
+                                    loading={loading}
                                     onClick={() => setEditMode(false)}
                                 >
                                     Cancel
-                                </Button>
-                                <Button
-                                    variant="solid"
-                                    type="submit"
-                                    size="md"
-                                    sx={{
-                                        px: 5,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
+                                </ButtonOutlined>
+                                <ButtonPrimary
+                                    loading={loading}
+                                    loadingText={"Updating ..."}
                                     disabled={loading}
-                                >
-                                    {loading ? (
-                                        <Fragment>
-                                            <CircularProgress variant="solid"/>{" "}
-                                            <span className="ms-3">Updating ...</span>
-                                        </Fragment>
-                                    ) : (
-                                        "Update Workout Plan"
-                                    )}
-                                </Button>
+                                >Update Workout Plan
+                                </ButtonPrimary>
                             </div>
                         )}
                     </Box>

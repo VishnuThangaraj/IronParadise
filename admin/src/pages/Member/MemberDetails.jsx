@@ -20,23 +20,14 @@ import {selectAllWorkoutPlans} from "../../redux/workoutPlan/workoutPlanSelector
 import {fetchAllMembershipPlans} from "../../redux/membershipPlan/membershipPlanThunks";
 import {selectAllMembershipPlans} from "../../redux/membershipPlan/membershipPlanSelectors";
 
-import {
-    MemberFieldGroup,
-    initialMemberState,
-} from "../../config/MemberFields";
+import {initialMemberState, MemberFieldGroup,} from "../../config/MemberFields";
 
-import {
-    selectMemberLoading,
-    selectCurrentMember,
-} from "../../redux/member/memberSelector";
+import {selectCurrentMember, selectMemberLoading,} from "../../redux/member/memberSelector";
 
 import FormField from "../../components/Form/FormField";
 import PageLocation from "../../components/PageLocation";
 import {useLocation, useParams} from "react-router-dom";
-import {
-    fetchMemberById,
-    updateMemberById,
-} from "../../redux/member/memberThunks";
+import {fetchMemberById, updateMemberById,} from "../../redux/member/memberThunks";
 
 const getColSpan = (size = 50) =>
     ({

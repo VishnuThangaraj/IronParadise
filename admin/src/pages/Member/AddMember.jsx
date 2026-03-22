@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {Fragment, useEffect, useMemo, useState, useCallback} from "react";
+import {Fragment, useCallback, useEffect, useMemo, useState} from "react";
 
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
@@ -8,19 +8,13 @@ import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
 import CircularProgress from "@mui/joy/CircularProgress";
 
-import {
-    MemberFieldGroup,
-    initialMemberState,
-} from "../../config/MemberFields";
+import {initialMemberState, MemberFieldGroup,} from "../../config/MemberFields";
 
 import {fetchMemberCounter} from "../../redux/member/memberThunks";
 
 import {addMemberFlow} from "../../redux/flows/addMember.flow";
 
-import {
-    selectMemberLoading,
-    selectMemberCounter,
-} from "../../redux/member/memberSelector";
+import {selectMemberCounter, selectMemberLoading,} from "../../redux/member/memberSelector";
 
 import {fetchAllTrainers} from "../../redux/trainer/trainerThunks";
 import {selectAllTrainers} from "../../redux/trainer/trainerSelectors";

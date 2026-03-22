@@ -102,7 +102,8 @@ const updateWorkoutPlanById = async (req, res) => {
     const {updatedData} = req.body;
     try {
         const existingWorkoutPlan = await WorkoutPlan.findOne({
-            workoutPlanName: updatedData?.workoutPlanName
+            workoutPlanName: updatedData?.workoutPlanName,
+            _id: {$ne: workoutPlanId}
         });
 
         if (existingWorkoutPlan) {

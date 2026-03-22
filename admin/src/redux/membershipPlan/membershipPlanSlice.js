@@ -16,11 +16,7 @@ const initialState = {
 const membershipPlanSlice = createSlice({
     name: "membershipplan",
     initialState,
-    reducers: {
-        clearMembershipPlans: (state) => {
-            state.membershipPlans = [];
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             // Fetch Membership Plans
@@ -34,6 +30,7 @@ const membershipPlanSlice = createSlice({
             .addCase(fetchAllMembershipPlans.rejected, (state) => {
                 state.loading = false;
             })
+
             // Add New Membership Plan
             .addCase(addNewMembershipPlan.pending, (state) => {
                 state.loading = true;
@@ -45,6 +42,7 @@ const membershipPlanSlice = createSlice({
             .addCase(addNewMembershipPlan.rejected, (state) => {
                 state.loading = false;
             })
+
             // Fetch MembershipPlan By ID
             .addCase(fetchMembershipPlanById.pending, (state) => {
                 state.loading = true;
@@ -56,6 +54,7 @@ const membershipPlanSlice = createSlice({
             .addCase(fetchMembershipPlanById.rejected, (state) => {
                 state.loading = false;
             })
+
             // Update MembershipPlan by ID
             .addCase(updateMembershipPlanById.pending, (state) => {
                 state.loading = true;
@@ -75,6 +74,7 @@ const membershipPlanSlice = createSlice({
             .addCase(updateMembershipPlanById.rejected, (state) => {
                 state.loading = false;
             })
+
             // Delete Membership Plan By ID
             .addCase(deleteMembershipPlanById.pending, (state) => {
                 state.loading = true;
@@ -96,5 +96,4 @@ const membershipPlanSlice = createSlice({
     },
 });
 
-export const {clearMembershipPlans} = membershipPlanSlice.actions;
 export default membershipPlanSlice.reducer;

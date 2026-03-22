@@ -103,7 +103,8 @@ const updateDietPlanById = async (req, res) => {
     const {updatedData} = req.body;
     try {
         const existingDietPlan = await DietPlan.findOne({
-            dietPlanName: updatedData?.dietPlanName
+            dietPlanName: updatedData?.dietPlanName,
+            _id: {$ne: dietPlanId}
         });
 
         if (existingDietPlan) {

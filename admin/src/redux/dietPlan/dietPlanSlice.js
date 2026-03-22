@@ -1,10 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {
-  addNewDietPlan,
-  deleteDietPlanById,
-  fetchAllDietPlans,
-  fetchDietPlanById,
-  updateDietPlanById,
+    addNewDietPlan,
+    deleteDietPlanById,
+    fetchAllDietPlans,
+    fetchDietPlanById,
+    updateDietPlanById,
 } from "./dietPlanThunks";
 
 const initialState = {
@@ -16,11 +16,7 @@ const initialState = {
 const dietPlanSlice = createSlice({
     name: "dietplan",
     initialState,
-    reducers: {
-        clearDietplans: (state) => {
-            state.dietPlans = [];
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             // Fetch Diet Plans
@@ -47,23 +43,21 @@ const dietPlanSlice = createSlice({
                 state.loading = false;
             })
 
-            // Fetch DietPlan By Id
+            // Fetch DietPlan By ID
             .addCase(fetchDietPlanById.pending, (state) => {
                 state.loading = true;
-                state.error = null;
             })
             .addCase(fetchDietPlanById.fulfilled, (state, action) => {
                 state.loading = false;
                 state.currentDietPlan = action.payload;
             })
-            .addCase(fetchDietPlanById.rejected, (state, action) => {
+            .addCase(fetchDietPlanById.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload;
             })
+
             // Update DietPlan by Id
             .addCase(updateDietPlanById.pending, (state) => {
                 state.loading = true;
-                state.error = null;
             })
             .addCase(updateDietPlanById.fulfilled, (state, action) => {
                 state.loading = false;
@@ -77,13 +71,13 @@ const dietPlanSlice = createSlice({
 
                 state.currentDietPlan = updatedDietPlan;
             })
-            .addCase(updateDietPlanById.rejected, (state, action) => {
+            .addCase(updateDietPlanById.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload;
             })
+
+            // Delete Diet Plan by ID
             .addCase(deleteDietPlanById.pending, (state) => {
                 state.loading = true;
-                state.error = false;
             })
             .addCase(deleteDietPlanById.fulfilled, (state, action) => {
                 state.loading = false;
@@ -96,12 +90,10 @@ const dietPlanSlice = createSlice({
                     state.currentDietPlan = null;
                 }
             })
-            .addCase(deleteDietPlanById.rejected, (state, action) => {
+            .addCase(deleteDietPlanById.rejected, (state) => {
                 state.loading = false;
-                state.error = action.payload;
             });
     },
 });
 
-export const {clearDietplans} = dietPlanSlice.actions;
 export default dietPlanSlice.reducer;

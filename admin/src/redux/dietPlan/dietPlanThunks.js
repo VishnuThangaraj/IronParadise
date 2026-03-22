@@ -6,7 +6,7 @@ export const fetchAllDietPlans = createAsyncThunk(
     "dietplan/fetchAllDietPlans",
     async (_, {getState, rejectWithValue}) => {
         try {
-            const token = getState()?.auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.get("/dietplan/", {
                 headers: {
@@ -14,7 +14,7 @@ export const fetchAllDietPlans = createAsyncThunk(
                 },
             });
 
-            return res.data || [];
+            return res.data.dietPlans || [];
         } catch (err) {
             return rejectWithValue(err.response?.data || "Failed to fetch Diet plans");
         }
@@ -26,7 +26,7 @@ export const addNewDietPlan = createAsyncThunk(
     "dietplan/addNewDietPlan",
     async ({newDietPlan}, {getState, rejectWithValue}) => {
         try {
-            const token = getState()?.auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.post(
                 "/dietplan/create",
@@ -38,7 +38,7 @@ export const addNewDietPlan = createAsyncThunk(
                 },
             );
 
-            return res.data;
+            return res.data.dietPlan || {};
         } catch (err) {
             return rejectWithValue(
                 err.response?.data || "Failed to Add New Diet Plan",
@@ -47,12 +47,12 @@ export const addNewDietPlan = createAsyncThunk(
     },
 );
 
-// Fetch Diet plan by Id
+// Fetch Diet plan by ID
 export const fetchDietPlanById = createAsyncThunk(
     "dietplan/fetchDietPlanById",
     async (dietPlanId, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.get(`/dietplan/details/${dietPlanId}`, {
                 headers: {
@@ -60,7 +60,7 @@ export const fetchDietPlanById = createAsyncThunk(
                 },
             });
 
-            return res.data.dietPlan;
+            return res.data.dietPlan || {};
         } catch (err) {
             return rejectWithValue(err.response?.data || "Failed to Fetch Diet Plan");
         }
@@ -72,7 +72,7 @@ export const updateDietPlanById = createAsyncThunk(
     "dietplan/updateDietPlanById",
     async ({dietPlanId, updatedData}, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.put(
                 `/dietplan/update/${dietPlanId}`,
@@ -83,19 +83,19 @@ export const updateDietPlanById = createAsyncThunk(
                     },
                 },
             );
-            return res.data.dietPlan;
+            return res.data.dietPlan || {};
         } catch (err) {
             return rejectWithValue(err.response?.data || "Failed to Update DietPlan");
         }
     },
 );
 
-// Delete Diet Plan by Id
+// Delete Diet Plan by ID
 export const deleteDietPlanById = createAsyncThunk(
     "dietplan/deleteDietPlanById",
     async ({dietPlanId}, {getState, rejectWithValue}) => {
         try {
-            const token = getState().auth.token;
+            const token = getState()?.auth?.token;
 
             const res = await axios.delete(`/dietplan/delete/${dietPlanId}`, {
                 headers: {
@@ -105,7 +105,7 @@ export const deleteDietPlanById = createAsyncThunk(
             return res.data.dietPlanId;
         } catch (err) {
             return rejectWithValue(
-                err.response?.data || "Failed to UpdatDelete Diet Plan",
+                err.response?.data || "Failed to Delete Diet Plan",
             );
         }
     },

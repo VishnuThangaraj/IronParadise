@@ -93,7 +93,7 @@ export const DietPlanRules = {
     },
     goal: {
         type: "string",
-        maxLength: 100
+        maxLength: 25
     },
     description: {
         type: "string",

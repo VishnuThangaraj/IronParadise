@@ -32,9 +32,7 @@ const AddMembershipPlan = () => {
         return `MPL-${String(counter + 1).padStart(3, "0")}`;
     }, [counter]);
 
-    const [newMembershipPlan, setNewMembershipPlan] = useState(
-        initialMembershipPlanState
-    );
+    const [newMembershipPlan, setNewMembershipPlan] = useState(initialMembershipPlanState);
 
     useEffect(() => {
         dispatch(fetchCounter({identity: "membershipplan"}));
@@ -64,7 +62,7 @@ const AddMembershipPlan = () => {
             await dispatch(addNewMembershipPlan({newMembershipPlan: payload})).unwrap();
             await dispatch(fetchCounter({identity: "membershipplan"})).unwrap();
 
-            toast.success("Membership Plan Added Successfully!");
+            toast.success("Membership Plan Added Successfully");
 
             setNewMembershipPlan(initialMembershipPlanState);
 

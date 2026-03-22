@@ -104,7 +104,8 @@ const updateMembershipPlanById = async (req, res) => {
     const {updatedData} = req.body;
     try {
         const existingMembershipPlan = await MembershipPlan.findOne({
-            name: updatedData?.name
+            name: updatedData?.name,
+            _id: {$ne: membershipPlanId}
         });
 
         if (existingMembershipPlan) {

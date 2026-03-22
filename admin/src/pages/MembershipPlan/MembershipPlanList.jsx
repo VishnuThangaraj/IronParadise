@@ -6,18 +6,18 @@ import {toast} from "sonner";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 
+import Loader from "@/components/Loader.jsx";
 import PageLocation from "@/components/PageLocation";
 import DataTable from "@/components/DataTable/DataTable";
 import SearchBar from "@/components/DataTable/SearchBar";
 import DeletionModal from "@/components/Modal/DeletionModal";
 import ButtonRounded from "@/components/Button/ButtonRounded";
-import {MembershipPlanColumns} from "./MembershipPlanColumns";
 import ExportButtons from "@/components/DataTable/ExportButtons";
+
+import {MembershipPlanColumns} from "@/pages/MembershipPlan/MembershipPlanColumns";
 
 import {selectAllMembershipPlans} from "@/redux/membershipPlan/membershipPlanSelectors";
 import {deleteMembershipPlanById, fetchAllMembershipPlans,} from "@/redux/membershipPlan/membershipPlanThunks";
-import Loader from "@/components/Loader.jsx";
-
 
 const MembershipPlanList = () => {
     const navigate = useNavigate();
@@ -34,16 +34,23 @@ const MembershipPlanList = () => {
     }, [dispatch]);
 
     const filteredRows = useMemo(() => {
+        if (!search) return membershipPlans;
+
         const query = search.toLowerCase();
 
-        return membershipPlans.filter(
-            (row) =>
-                row.membershipPlanId?.toString().toLowerCase().includes(query) ||
-                row.name?.toString().toLowerCase().includes(query) ||
-                row.durationMonths?.toString().toLowerCase().includes(query) ||
-                row.price?.toString().toLowerCase().includes(query) ||
-                row.features?.toString().toLowerCase().includes(query),
-        );
+        return membershipPlans.filter((row) => {
+            return [
+                row?.membershipPlanId,
+                row?.name,
+                row?.durationMonths,
+                row?.price,
+                row?.features,
+            ]
+                .filter(Boolean)
+                .some((value) =>
+                    value.toString().toLowerCase().includes(query)
+                );
+        });
     }, [membershipPlans, search]);
 
     const deleteMembershipPlanWithId = async (e) => {
@@ -51,9 +58,9 @@ const MembershipPlanList = () => {
 
         try {
             await dispatch(deleteMembershipPlanById({membershipPlanId: deleteId})).unwrap();
-            toast.success("Membership Plan Deleted Successfully");
+            toast.success("Membership plan deleted successfully");
         } catch (error) {
-            toast.warning(error?.message || "Failed to Delete Membership Plan");
+            toast.warning(error?.message || "Failed to delete Membership plan");
         } finally {
             setDeleteId(null);
             setOpenDelete(false);

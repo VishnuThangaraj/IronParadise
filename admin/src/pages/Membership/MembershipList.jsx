@@ -1,20 +1,19 @@
 import {useNavigate} from "react-router-dom";
-import {useState, useMemo, useEffect} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import {useEffect, useMemo, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 
-import {toast} from "sonner";
 import Card from "@mui/joy/Card";
 import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
 
-import PageLocation from "../../components/PageLocation";
-import DataTable from "../../components/DataTable/DataTable";
-import SearchBar from "../../components/DataTable/SearchBar";
+import PageLocation from "@/components/PageLocation";
+import DataTable from "@/components/DataTable/DataTable";
+import SearchBar from "@/components/DataTable/SearchBar";
 
 import {MembershipColumns} from "./MembershipColumns";
 
-import {selectAllMemberships} from "../../redux/membership/membershipSelector";
-import {fetchAllMemberships} from "../../redux/membership/membershipThunks";
+import {selectAllMemberships} from "@/redux/membership/membershipSelector";
+import {fetchAllMemberships} from "@/redux/membership/membershipThunks";
 
 const MembershipList = () => {
     const navigate = useNavigate();

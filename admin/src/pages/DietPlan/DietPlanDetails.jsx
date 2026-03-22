@@ -1,42 +1,25 @@
 import {Fragment, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {useLocation, useParams} from "react-router-dom";
 
 import {toast} from "sonner";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
-import Button from "@mui/joy/Button";
 import CardContent from "@mui/joy/CardContent";
-import CircularProgress from "@mui/joy/CircularProgress";
 
-import {
-    DietPlanFieldGroup,
-    initialDietPlanState,
-} from "../../config/DietPlanFields";
-import {
-    selectDietPlanLoading,
-    selectCurrentDietPlan,
-} from "../../redux/dietPlan/dietPlanSelector";
+import Loader from "@/components/Loader";
+import FormField from "@/components/Form/FormField";
+import PageLocation from "@/components/PageLocation";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
+import ButtonOutlined from "@/components/Button/ButtonOutlined";
 
-import FormField from "../../components/Form/FormField";
-import PageLocation from "../../components/PageLocation";
-import {useLocation, useParams} from "react-router-dom";
-import {
-    fetchDietPlanById,
-    updateDietPlanById,
-} from "../../redux/dietPlan/dietPlanThunks";
+import {handleChangeValidation, validateFields} from "@/utils/FormFieldValidation"
 
-const getColSpan = (size) => {
-    switch (size) {
-        case 100:
-            return "col-span-12";
-        case 50:
-            return "col-span-6";
-        case 30:
-            return "col-span-4";
-        default:
-            return "col-span-6";
-    }
-};
+import {formFieldColSpan} from "@/config/FormFieldConfig";
+import {DietPlanFieldGroup, DietPlanRules, initialDietPlanState,} from "@/config/DietPlanFields";
+
+import {selectCurrentDietPlan, selectDietPlanLoading,} from "@/redux/dietPlan/dietPlanSelector";
+import {fetchDietPlanById, updateDietPlanById} from "@/redux/dietPlan/dietPlanThunks";
 
 const DietPlanDetails = () => {
     const dispatch = useDispatch();
@@ -66,32 +49,32 @@ const DietPlanDetails = () => {
     }, [dietPlanFromStore]);
 
     const handleChange = (name, value) => {
-        setDietPlan((prev) => {
-            const updated = {...prev, [name]: value};
-            return updated;
-        });
-    };
+        const rules = DietPlanRules[name];
+        if (!handleChangeValidation(value, rules)) return;
 
-    const checkValidation = () => {
-        return true;
+        setDietPlan((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validation = checkValidation();
-        if (!validation) return;
+
+        if (!validateFields(dietPlan)) return;
 
         try {
             await dispatch(
                 updateDietPlanById({dietPlanId: id, updatedData: dietPlan}),
             ).unwrap();
-            toast.success("Diet Plan Updated Successfully!");
-        } catch {
-            toast.error("Failed to Update Diet Plan");
-        } finally {
+            toast.success("Diet plan updated successfully");
             setEditMode(false);
+        } catch (error) {
+            toast.warning(error?.message || "Failed to update Diet plan");
         }
     };
+
+    if (!dietPlan) return <Loader/>;
 
     return (
         <div key="DietPlanDetails">
@@ -110,19 +93,11 @@ const DietPlanDetails = () => {
                                     : "View Existing Diet Plan"}
                             </div>
                             {!editMode && (
-                                <Button
-                                    className="transition-transform duration-400 hover:scale-103"
-                                    variant="solid"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
+                                <ButtonPrimary
                                     onClick={() => setEditMode(true)}
                                 >
                                     <i className="fa-light fa-pot-food me-2"></i>Edit Diet Plan
-                                </Button>
+                                </ButtonPrimary>
                             )}
                         </div>
 
@@ -135,12 +110,12 @@ const DietPlanDetails = () => {
                                         {group.title}
                                     </div>
 
-                                    {group.fields.map(
+                                    {group?.fields.map(
                                         (field) =>
                                             (!field.showIf || field.showIf(dietPlan)) && (
                                                 <div
                                                     key={field.name}
-                                                    className={getColSpan(field.size)}
+                                                    className={formFieldColSpan(field.size)}
                                                 >
                                                     <FormField
                                                         field={field}
@@ -157,39 +132,19 @@ const DietPlanDetails = () => {
 
                         {editMode && (
                             <div className="flex justify-end px-6 py-3 gap-5">
-                                <Button
-                                    variant="outlined"
-                                    type="submit"
+                                <ButtonOutlined
                                     color="danger"
-                                    size="md"
-                                    sx={{
-                                        px: 3,
-                                    }}
-                                    disabled={loading}
+                                    loading={loading}
                                     onClick={() => setEditMode(false)}
                                 >
                                     Cancel
-                                </Button>
-                                <Button
-                                    variant="solid"
-                                    type="submit"
-                                    size="md"
-                                    sx={{
-                                        px: 5,
-                                        backgroundColor: "black",
-                                        "&:hover": {backgroundColor: "#222222"},
-                                    }}
-                                    disabled={loading}
+                                </ButtonOutlined>
+                                <ButtonPrimary
+                                    loading={loading}
+                                    loadingText={"Updating ..."}
                                 >
-                                    {loading ? (
-                                        <Fragment>
-                                            <CircularProgress variant="solid"/>{" "}
-                                            <span className="ms-3">Updating ...</span>
-                                        </Fragment>
-                                    ) : (
-                                        "Update Diet Plan"
-                                    )}
-                                </Button>
+                                    Update Diet Plan
+                                </ButtonPrimary>
                             </div>
                         )}
                     </Box>

@@ -21,11 +21,11 @@ import {
     MembershipPlanFieldGroup,
     MembershipPlanRules,
 } from "@/config/MembershipPlanFields";
+
 import {
     selectCurrentMembershipPlan,
     selectMembershipPlanLoading,
 } from "@/redux/membershipPlan/membershipPlanSelectors";
-
 import {fetchMembershipPlanById, updateMembershipPlanById,} from "@/redux/membershipPlan/membershipPlanThunks";
 
 const MembershipPlanDetails = () => {
@@ -41,9 +41,7 @@ const MembershipPlanDetails = () => {
 
     const membershipPlanFromStore = useSelector(selectCurrentMembershipPlan);
 
-    const [membershipPlan, setMembershipPlan] = useState(
-        initialMembershipPlanState,
-    );
+    const [membershipPlan, setMembershipPlan] = useState(initialMembershipPlanState);
 
     useEffect(() => {
         if (membershipPlanId) {
@@ -79,10 +77,10 @@ const MembershipPlanDetails = () => {
                     updatedData: membershipPlan,
                 }),
             ).unwrap();
-            toast.success("Membership Plan Updated Successfully!");
+            toast.success("Membership plan updated successfully");
             setEditMode(false);
         } catch (error) {
-            toast.warning(error?.message || "Failed to Update Membership Plan");
+            toast.warning(error?.message || "Failed to update Membership plan");
         }
     };
 
@@ -122,7 +120,7 @@ const MembershipPlanDetails = () => {
                                         {group.title}
                                     </div>
 
-                                    {group.fields.map(
+                                    {group?.fields.map(
                                         (field) =>
                                             (!field.showIf || field.showIf(membershipPlan)) && (
                                                 <div
@@ -164,6 +162,6 @@ const MembershipPlanDetails = () => {
             </Card>
         </div>
     );
-};
+}
 
 export default MembershipPlanDetails;
