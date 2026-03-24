@@ -20,14 +20,14 @@ const createDietPlan = async (req, res) => {
         });
 
         if (existingDietPlan) {
-            if (existingDietPlan.dietPlanId === dietPlanId) {
+            if (existingDietPlan?.dietPlanId === dietPlanId) {
                 return res.status(409).json({
                     success: false,
                     message: "Diet plan with this ID already exists"
                 });
             }
 
-            if (existingDietPlan.dietPlanName === dietPlanName) {
+            if (existingDietPlan?.dietPlanName === dietPlanName) {
                 return res.status(409).json({
                     success: false,
                     message: "Diet plan with this name already exists"
@@ -52,7 +52,7 @@ const createDietPlan = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             success: false,
-            message: "Server error",
+            message: "Failed to create new Diet plan",
             error: err.message
         });
     }
@@ -65,13 +65,14 @@ const fetchAllDietPlans = async (req, res) => {
 
         res.status(200).json({
             success: true,
+            count: dietPlans?.length || 0,
             message: 'Diet plans have been fetched successfully',
             dietPlans
         });
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: "Server error",
+            message: "Failed to fetch all Diet plans",
             error: err.message,
         });
     }
@@ -93,7 +94,11 @@ const fetchDietPlanById = async (req, res) => {
             dietPlan: dietPlan[0] || {}
         });
     } catch (err) {
-        res.status(500).json({success: false, message: "Server error", error: err.message});
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch Diet plan by ID",
+            error: err.message
+        });
     }
 };
 

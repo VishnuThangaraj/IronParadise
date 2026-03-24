@@ -51,7 +51,13 @@ export const TrainerColumns = ({
     valueFormatter: (value) => {
       if (!value) return "-";
 
-      const date = new Date(value);
+      let date = new Date(value);
+
+      if (isNaN(date.getTime()) && typeof value === "string") {
+        const [day, month, year] = value.split("-");
+        date = new Date(`${year}-${month}-${day}T00:00:00`);
+      }
+
       if (isNaN(date.getTime())) return "-";
 
       return date.toLocaleDateString("en-US", {

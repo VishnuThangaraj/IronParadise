@@ -30,7 +30,7 @@ const MemberSchema = new mongoose.Schema(
 
     status: { type: String, default: "inactive" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 MemberSchema.pre("save", function () {

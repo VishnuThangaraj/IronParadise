@@ -51,7 +51,7 @@ export const addNewMember = createAsyncThunk(
   "/member/addNewMember",
   async ({ newMember }, { getState, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const { token } = getState().auth;
 
       const res = await axios.post(
         "/member/create",
@@ -114,13 +114,17 @@ export const fetchMemberByMemberId = createAsyncThunk(
 // Update Member by ID
 export const updateMemberById = createAsyncThunk(
   "member/updateMemberById",
-  async ({ memberId, updatedData }, { getState, rejectWithValue }) => {
+  async (
+    { member, membership, fitnessPlan },
+    { getState, rejectWithValue },
+  ) => {
     try {
-      const token = getState().auth.token;
+      const { token } = getState().auth;
+      const { _id: memberId } = member;
 
       const res = await axios.put(
         `/member/update/${memberId}`,
-        { updatedData },
+        { member, membership, fitnessPlan },
         {
           headers: {
             Authorization: `Bearer ${token}`,

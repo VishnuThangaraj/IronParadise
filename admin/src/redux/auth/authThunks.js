@@ -11,11 +11,11 @@ export const login = createAsyncThunk(
         password,
       });
 
-      return res.data;
+      return res.data.user;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Login failed");
     }
-  }
+  },
 );
 
 // Fetch logged-in user profile
@@ -31,7 +31,7 @@ export const fetchUser = createAsyncThunk(
         },
       });
 
-      return res.data;
+      return res.data.user;
     } catch (err) {
       if (err.response?.status === 403 || err.response?.status === 404) {
         localStorage.removeItem("token");
@@ -40,5 +40,5 @@ export const fetchUser = createAsyncThunk(
       }
       return rejectWithValue(err.response?.data || "Unauthorized");
     }
-  }
+  },
 );

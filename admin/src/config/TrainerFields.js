@@ -160,3 +160,58 @@ export const TrainerFieldGroup = [
     ],
   },
 ];
+
+export const TrainerRules = {
+  name: {
+    type: "string",
+    maxLength: 25,
+    pattern: /^[A-Za-z0-9\s-]+$/,
+  },
+  email: {
+    type: "email",
+    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  },
+  phone: {
+    type: "string",
+    maxLength: 10,
+    pattern: /^[0-9]{10}$/,
+  },
+  experienceYears: {
+    type: "number",
+    min: 0,
+    max: 100,
+  },
+  monthlySalary: {
+    type: "number",
+    min: 0,
+  },
+  height: {
+    type: "number",
+    min: 0,
+    max: 300,
+  },
+  weight: {
+    type: "number",
+    min: 0,
+    max: 500,
+  },
+  bmi: {
+    type: "number",
+    min: 0,
+    max: 100,
+  },
+  address: {
+    type: "string",
+    maxLength: 255,
+  },
+  aadharNumber: {
+    type: "string",
+    maxLength: 12,
+    pattern: /^[0-9]{12}$/,
+  },
+  panNumber: {
+    type: "string",
+    maxLength: 10,
+    pattern: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+  },
+};

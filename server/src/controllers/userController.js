@@ -1,25 +1,40 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
+
+const { getById } = require("../queries/generalQueries");
 
 //  User Login
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide email and password" });
+    }
+
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Please enter a valid Email ID" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect Password provided" });
     }
 
     const token = generateToken(user);
 
     res.status(200).json({
+      success: true,
       token,
       user: {
         id: user._id,
@@ -31,7 +46,8 @@ const userLogin = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Failed to Authenticate",
       error: err.message,
     });
   }
@@ -39,18 +55,33 @@ const userLogin = async (req, res) => {
 
 // Register User
 const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, phone, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({
+      $or: [{ email }, { phone }],
+    });
+
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      if (existingUser.email === email) {
+        return res.status(409).json({
+          success: false,
+          message: "User with this email already exists",
+        });
+      }
+
+      if (existingUser.phone === phone) {
+        return res.status(409).json({
+          success: false,
+          message: "User with this phone number already exists",
+        });
+      }
     }
 
     let finalPassword = password;
 
     if (!finalPassword) {
-      const random5Digits = Math.floor(10000 + Math.random() * 90000);
+      const random5Digits = crypto.randomInt(10000, 100000);
       finalPassword = `${req.body.userId}${random5Digits}`;
     }
 
@@ -65,6 +96,7 @@ const registerUser = async (req, res) => {
     delete userResponse.password;
 
     res.status(201).json({
+      success: true,
       message: `${
         user.role.charAt(0).toUpperCase() + user.role.slice(1)
       } registered successfully`,
@@ -72,7 +104,8 @@ const registerUser = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Failed to register user",
       error: err.message,
     });
   }
@@ -84,13 +117,20 @@ const userProfile = async (req, res) => {
     const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully",
+      user: user,
+    });
   } catch (err) {
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Failed to fetch user profile",
       error: err.message,
     });
   }
@@ -100,14 +140,25 @@ const userProfile = async (req, res) => {
 const fetchUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findById(userId);
+    const user = await User.aggregate(getById(userId));
+
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ user: user });
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      user: user[0] || {},
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch User",
+      error: err.message,
+    });
   }
 };
 
@@ -117,38 +168,84 @@ const fetchUserByUserId = async (req, res) => {
   try {
     const user = await User.findOne({ userId: userId });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    res.status(200).json({ user: user });
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      user: user || {},
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch User",
+      error: err.message,
+    });
   }
 };
 
 // Update User by ID
 const updateUserById = async (req, res) => {
   const userId = req.params.id;
-  const { updatedData } = req.body;
+  const { member, membership, fitnessPlan } = req.body;
 
   try {
-    const user = await User.findByIdAndUpdate(userId, updatedData, {
-      new: true,
-      runValidators: true,
-    });
+    const [existingMember, existingMembership, existingFitnessPlan] =
+      await Promise.all([
+        Member.findOne({ userId }),
+        Membership.findOne({ memberId: userId }),
+        FitnessPlan.findOne({ memberId: userId }),
+      ]);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!existingMember || !existingMembership || !existingFitnessPlan) {
+      return res.status(404).json({
+        success: false,
+        message: !existingMember
+          ? "Member not found"
+          : !existingMembership
+          ? "Membership not found"
+          : "Fitness Plan not found",
+      });
+    }
+
+    const [user, updatedMembership, updatedFitnessPlan] = await Promise.all([
+      User.findByIdAndUpdate(userId, member, {
+        new: true,
+        runValidators: true,
+      }),
+      Membership.findByIdAndUpdate(existingMembership._id, membership, {
+        new: true,
+        runValidators: true,
+      }),
+      FitnessPlan.findByIdAndUpdate(existingFitnessPlan._id, fitnessPlan, {
+        new: true,
+        runValidators: true,
+      }),
+    ]);
+
+    if (!user || !updatedMembership || !updatedFitnessPlan) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Failed to update User" });
     }
 
     const userResponse = user.toObject();
     delete userResponse.password;
 
-    res
-      .status(200)
-      .json({ message: "User Updated successfully!", user: userResponse });
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user: userResponse,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update User",
+      error: err.message,
+    });
   }
 };
 
@@ -156,18 +253,29 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findByIdAndDelete(userId);
+    const [user, deletedMembership, deletedFitnessPlan] = await Promise.all([
+      User.findByIdAndDelete(userId),
+      Membership.findOneAndDelete({ memberId: userId }),
+      FitnessPlan.findOneAndDelete({ memberId: userId }),
+    ]);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!user || !deletedMembership || !deletedFitnessPlan) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Failed to delete User" });
     }
 
-    res
-      .status(200)
-      .json({ message: "User Deleted successfully!", trainerId: userId });
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+      trainerId: userId,
+    });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete User",
+      error: err.message,
+    });
   }
 };
 

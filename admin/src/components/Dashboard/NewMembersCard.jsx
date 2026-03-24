@@ -1,5 +1,4 @@
 const NewMembersCard = ({ members }) => {
-  console.log(members);
   return (
     <div
       key="NewMembersCard"
