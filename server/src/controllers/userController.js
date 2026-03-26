@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
+const TrainerSalary = require("../models/TrainerSalary");
 
 const { getById } = require("../queries/generalQueries");
 
@@ -91,6 +92,24 @@ const registerUser = async (req, res) => {
     });
 
     await user.save();
+
+    if (user.role == "trainer") {
+      const trainerSalary = new TrainerSalary({
+        trainer: user._id,
+        month: new Date().toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        }),
+        salary: user.monthlySalary,
+        deductions: 0,
+        totalPayable: user.monthlySalary,
+        paymentStatus: "pending",
+        paidOn: null,
+        pendingAmount: user.monthlySalary,
+      });
+
+      await trainerSalary.save();
+    }
 
     const userResponse = user.toObject();
     delete userResponse.password;
@@ -206,8 +225,8 @@ const updateUserById = async (req, res) => {
         message: !existingMember
           ? "Member not found"
           : !existingMembership
-          ? "Membership not found"
-          : "Fitness Plan not found",
+            ? "Membership not found"
+            : "Fitness Plan not found",
       });
     }
 

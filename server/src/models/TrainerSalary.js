@@ -8,14 +8,14 @@ const TrainerSalarySchema = new mongoose.Schema(
       required: true,
     },
     month: String,
-    baseSalary: Number,
-    bonus: Number,
+    salary: Number,
     deductions: Number,
     totalPayable: Number,
     paymentStatus: String,
     paidOn: Date,
+    pendingAmount: Number,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("TrainerSalary", TrainerSalarySchema);

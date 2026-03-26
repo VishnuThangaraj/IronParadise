@@ -11,7 +11,6 @@ export const TrainerColumns = ({
   {
     field: "userId",
     headerName: "Trainer ID",
-    width: 100,
     headerAlign: "center",
     align: "center",
   },

@@ -29,7 +29,7 @@ const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [incorrectTry, setIncorrectTry] = useState(
-    Number(Cookies.get(COOKIE_KEY)) || 0
+    Number(Cookies.get(COOKIE_KEY)) || 0,
   );
 
   const handleSubmit = async (e) => {
@@ -138,8 +138,8 @@ const AuthForm = () => {
               {incorrectTry > maxIncorrectAttempt
                 ? "Contact Admin"
                 : loading
-                ? "Logging in..."
-                : "Login"}
+                  ? "Logging in..."
+                  : "Login"}
             </Button>
 
             {error && (
