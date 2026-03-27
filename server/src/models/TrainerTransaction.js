@@ -1,7 +1,13 @@
 const { Schema, model } = require("mongoose");
+const getNextId = require("../utils/getNextId");
 
 const TrainerTransactionSchema = new Schema(
   {
+    transactionId: {
+      type: String,
+      unique: true,
+    },
+
     trainerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -10,7 +16,7 @@ const TrainerTransactionSchema = new Schema(
 
     salaryRef: {
       type: Schema.Types.ObjectId,
-      ref: "TrainerSalary", // link to monthly salary
+      ref: "TrainerSalary",
       required: true,
     },
 
@@ -45,5 +51,11 @@ const TrainerTransactionSchema = new Schema(
     timestamps: true,
   },
 );
+
+TrainerTransactionSchema.pre("save", async function () {
+  if (this.isNew) {
+    this.transactionId = await getNextId("transaction");
+  }
+});
 
 module.exports = model("TrainerTransaction", TrainerTransactionSchema);

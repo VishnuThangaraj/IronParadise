@@ -4,10 +4,7 @@ const TrainerSalary = require("../models/TrainerSalary");
 const TrainerTransaction = require("../models/TrainerTransaction");
 
 const { getById } = require("../queries/generalQueries");
-const {
-  getAllTrainerQuery,
-  getTrainerSalary,
-} = require("../queries/trainerQueries");
+const { getAllTrainerQuery } = require("../queries/trainerQueries");
 
 // Fetch All Trainers
 const fetchAllTrainers = async (req, res) => {
@@ -189,8 +186,10 @@ const updateTrainerById = async (req, res) => {
     const updateTrainerPromise = User.findByIdAndUpdate(
       trainerId,
       { monthlySalary, ...updatedData },
-      { new: true, runValidators: true }
-    ).select("-password").lean();
+      { new: true, runValidators: true },
+    )
+      .select("-password")
+      .lean();
 
     const latestSalaryPromise = monthlySalary
       ? TrainerSalary.findOne({ trainer: trainerId }).sort({ createdAt: -1 })
@@ -285,25 +284,6 @@ const deleteTrainerById = async (req, res) => {
   }
 };
 
-// Fetch All Trainers with Salary
-const fetchAllTrainersWithSalary = async (req, res) => {
-  try {
-    const trainers = await TrainerSalary.aggregate(getTrainerSalary());
-
-    res.status(200).json({
-      success: true,
-      message: "Trainers have been fetched successfully",
-      trainers: trainers || [],
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch trainers",
-      error: err.message,
-    });
-  }
-};
-
 module.exports = {
   fetchAllTrainers,
   registerTrainer,
@@ -311,5 +291,4 @@ module.exports = {
   updateTrainerById,
   deleteTrainerById,
   fetchTrainerByUserId,
-  fetchAllTrainersWithSalary,
 };

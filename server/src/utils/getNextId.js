@@ -1,20 +1,21 @@
 const Counter = require("../models/Counter");
 
 const PREFIX = {
+  diet: "DPL",
   admin: "ADM",
-  trainer: "TRN",
   staff: "STF",
   member: "MBR",
-  membershipplan: "MPL",
   workout: "WPL",
-  diet: "DPL",
+  trainer: "TRN",
+  transaction: "PTR",
+  membershipplan: "MPL",
 };
 
 async function getNextId(role) {
   const counter = await Counter.findByIdAndUpdate(
     role,
     { $inc: { seq: 1 } },
-    { new: true, upsert: true }
+    { new: true, upsert: true },
   );
 
   return `${PREFIX[role]}-${counter.seq.toString().padStart(3, "0")}`;

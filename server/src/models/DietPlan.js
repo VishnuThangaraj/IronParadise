@@ -30,13 +30,13 @@ const DietPlanSchema = new mongoose.Schema(
     sundayLunch: { type: String, required: true },
     sundayDinner: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-DietPlanSchema.pre("save", function () {
-  return getNextId("diet").then((id) => {
-    this.dietplanId = id;
-  });
+DietPlanSchema.pre("save", async function () {
+  if (this.isNew) {
+    this.dietPlanId = await getNextId("diet");
+  }
 });
 
 module.exports = mongoose.model("DietPlan", DietPlanSchema);

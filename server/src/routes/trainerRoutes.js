@@ -1,19 +1,16 @@
 const router = require("express").Router();
 const authenticateJWT = require("../middleware/authMiddleware");
 const {
-  fetchAllTrainers,
   registerTrainer,
+  fetchAllTrainers,
   fetchTrainerById,
-  fetchTrainerByUserId,
   deleteTrainerById,
-  fetchAllTrainersWithSalary,
+  updateTrainerById,
+  fetchTrainerByUserId,
 } = require("../controllers/trainerController");
 
 // Fetch All Trainers
 router.get("/", authenticateJWT(["admin"]), fetchAllTrainers);
-
-// Fetch Trainer Salary
-router.get("/payroll", authenticateJWT(["admin"]), fetchAllTrainersWithSalary);
 
 // Register Trainer
 router.post("/register", authenticateJWT(["admin"]), registerTrainer);
@@ -27,6 +24,9 @@ router.get(
   authenticateJWT(["admin"]),
   fetchTrainerByUserId,
 );
+
+// Update Trainer by ID
+router.put("/update/:trainerId", authenticateJWT(["admin"]), updateTrainerById);
 
 // Delete Trainer by ID
 router.delete(
