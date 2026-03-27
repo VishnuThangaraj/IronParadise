@@ -89,7 +89,7 @@ const AddTrainer = () => {
     }
   };
 
-  if (!counter || counter < 0) return <Loader />;
+  if (counter == null || counter < 0) return <Loader />;
 
   return (
     <div key="Trainers-Add">

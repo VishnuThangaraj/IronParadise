@@ -28,7 +28,7 @@ export const addNewTrainer = createAsyncThunk(
       const token = getState()?.auth?.token;
 
       const res = await axios.post(
-        "/auth/user/register",
+        "/trainer/register",
         { ...newTrainer },
         {
           headers: {

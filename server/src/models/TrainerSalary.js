@@ -7,13 +7,36 @@ const TrainerSalarySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    month: String,
-    salary: Number,
-    deductions: Number,
-    totalPayable: Number,
-    paymentStatus: String,
-    paidOn: Date,
-    pendingAmount: Number,
+    monthYear: {
+      type: String,
+      required: true,
+    },
+    salary: {
+      type: Number,
+      required: true,
+    },
+    deductions: {
+      type: Number,
+      default: 0,
+    },
+    totalPayable: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "partial"],
+      default: "pending",
+    },
+    paidOn: {
+      type: Date,
+      default: null,
+    },
+    pendingAmount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

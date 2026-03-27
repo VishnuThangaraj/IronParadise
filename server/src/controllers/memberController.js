@@ -1,6 +1,6 @@
 const Member = require("../models/Member");
 const Membership = require("../models/Membership");
-const MemberFitnessPlan = require("../models/MemberFitnessPlan");
+const FitnessPlan = require("../models/MemberFitnessPlan");
 
 const { sendMail } = require("../service/emailService");
 const renderTemplate = require("../service/templateEngine");
@@ -47,7 +47,7 @@ const registerMember = async (req, res) => {
     };
 
     const html = renderTemplate("layouts/base.hbs", {
-      body: renderTemplate("member/welcome.hbs", {
+      body: renderTemplate("member/welcomeMember.hbs", {
         member: memberResponse,
       }),
     });
@@ -148,28 +148,61 @@ const fetchMemberByMemberId = async (req, res) => {
 // Update Member by ID
 const updateMemberById = async (req, res) => {
   const memberId = req.params.id;
-  const { updatedData } = req.body;
-  console.log(req.body);
-  return;
+  const { member, membership, fitnessPlan } = req.body;
 
   try {
-    const member = await Member.findByIdAndUpdate(memberId, updatedData, {
-      new: true,
-      runValidators: true,
-    });
+    const [existingMember, existingMembership, existingFitnessPlan] =
+      await Promise.all([
+        Member.findOne({ memberId }),
+        Membership.findOne({ memberId }),
+        FitnessPlan.findOne({ memberId }),
+      ]);
 
-    if (!member) {
-      return res.status(404).json({ message: "Member not found" });
+    if (!existingMember || !existingMembership || !existingFitnessPlan) {
+      return res.status(404).json({
+        success: false,
+        message: !existingMember
+          ? "Member not found"
+          : !existingMembership
+            ? "Membership not found"
+            : "Fitness Plan not found",
+      });
     }
 
-    const memberResponse = member.toObject();
+    const [updatedMember, updatedMembership, updatedFitnessPlan] =
+      await Promise.all([
+        Member.findByIdAndUpdate(memberId, member, {
+          new: true,
+          runValidators: true,
+        }),
+        Membership.findByIdAndUpdate(existingMembership._id, membership, {
+          new: true,
+          runValidators: true,
+        }),
+        FitnessPlan.findByIdAndUpdate(existingFitnessPlan._id, fitnessPlan, {
+          new: true,
+          runValidators: true,
+        }),
+      ]);
 
-    res
-      .status(200)
-      .json({ message: "Member updated successfully", member: memberResponse });
+    if (!updatedMember || !updatedMembership || !updatedFitnessPlan) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Failed to update Member" });
+    }
+
+    const memberResponse = updatedMember.toObject();
+    delete memberResponse.password;
+
+    res.status(200).json({
+      success: true,
+      message: "Member updated successfully",
+      member: memberResponse,
+    });
   } catch (err) {
     res.status(500).json({
-      message: "Server error",
+      success: false,
+      message: "Failed to update Member",
       error: err.message,
     });
   }
@@ -179,6 +212,13 @@ const updateMemberById = async (req, res) => {
 const deleteMemberById = async (req, res) => {
   const memberId = req.params.id;
   try {
+    if (!memberId) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide member ID",
+      });
+    }
+
     const member = await Member.findByIdAndDelete(memberId);
 
     if (!member) {

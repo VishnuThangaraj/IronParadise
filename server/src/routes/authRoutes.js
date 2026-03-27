@@ -1,22 +1,26 @@
 const router = require("express").Router();
 const authenticateJWT = require("../middleware/authMiddleware");
-const userController = require("../controllers/userController");
+const {
+  userLogin,
+  userProfile,
+  registerUser,
+} = require("../controllers/userController");
 
 // User Login
-router.post("/user/login", userController.userLogin);
+router.post("/user/login", userLogin);
 
 // User Registration
 router.post(
   "/user/register",
-  authenticateJWT(["admin", "V06102002T"]),
-  userController.registerUser
+  // authenticateJWT(["admin", "V06102002T"]),
+  registerUser,
 );
 
 // Fetch Logged-in User Profile
 router.get(
   "/user/profile",
   authenticateJWT(["admin", "trainer", "staff", "V06102002T"]),
-  userController.userProfile
+  userProfile,
 );
 
 module.exports = router;
