@@ -38,7 +38,6 @@ const trainerSlice = createSlice({
       })
       .addCase(addNewTrainer.fulfilled, (state, action) => {
         state.loading = false;
-        state.counter += 1;
         state.trainers.push(action.payload);
       })
       .addCase(addNewTrainer.rejected, (state) => {

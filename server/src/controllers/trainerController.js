@@ -6,6 +6,9 @@ const TrainerTransaction = require("../models/TrainerTransaction");
 const { getById } = require("../queries/generalQueries");
 const { getAllTrainerQuery } = require("../queries/trainerQueries");
 
+const { sendMail } = require("../service/emailService");
+const renderTemplate = require("../service/templateEngine");
+
 // Fetch All Trainers
 const fetchAllTrainers = async (req, res) => {
   try {
@@ -88,16 +91,27 @@ const registerTrainer = async (req, res) => {
     });
 
     const { password: _, ...userResponse } = user.toObject();
-
+    userResponse._id = userResponse._id.toString();
+    console.log(userResponse);
     res.status(201).json({
       success: true,
       message: `Trainer registered successfully`,
-      user: userResponse,
+      trainer: userResponse,
     });
   } catch (err) {
-    res.status(500).json({
+    let errorMessage = "Failed to register trainer";
+
+    if (err.name === "ValidationError") {
+      errorMessage = Object.values(err.errors)
+        .map((val) => val.message)
+        .join(", ");
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
+
+    res.status(err.name === "ValidationError" ? 400 : 500).json({
       success: false,
-      message: "Failed to register trainer",
+      message: errorMessage,
       error: err.message,
     });
   }
