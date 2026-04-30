@@ -1,1 +1,0 @@
-db.trainersalaries.find();
