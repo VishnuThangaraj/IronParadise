@@ -1,16 +1,30 @@
+import uvicorn
 from os import getenv
 from dotenv import load_dotenv
 from fastapi import FastAPI
-import uvicorn
+from contextlib import asynccontextmanager
+from src.config.corsConfig import setup_cors
+from src.config.dbConfig import connect_db, close_db
 
 load_dotenv()
 
-app = FastAPI(title='Iron Paradise API')
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    #startup
+    await connect_db()
+    yield
+    #shutdown
+    await close_db()
+
+app = FastAPI(title="Iron Paradise API", lifespan=lifespan)
+
+# Apply CORS middleware
+setup_cors(app)
 
 @app.get('/')
 def root():
     return {
-        'message': 'Welcome to Iron Paradise API',
+        'message': 'IronParadise Server Running...',
         'version': '0.0.1',
     }
 
