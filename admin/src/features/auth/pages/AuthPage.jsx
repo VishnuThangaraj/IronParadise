@@ -1,31 +1,15 @@
-import { useState } from "react";
 import { Paper, Checkbox } from "@mui/material";
 
 import FormField from "@/shared/components/form/FormField";
 import ButtonPrimary from "@/shared/components/form/ButtonPrimary";
-import initialLoginState from "@/features/auth/state/initialLoginState";
 
 import authFields from "@/features/auth/constants/authFields";
-import loginRules from "@/features/auth/validation/loginRules";
-import { handleChangeValidation } from "@/shared/utils/formFieldValidation";
+import useLoginForm from "@/features/auth/hooks/useLoginForm";
 
 import styles from "@/features/auth/style/authForm.module.scss";
 
 const AuthPage = () => {
-  const [login, setLogin] = useState(initialLoginState);
-
-  const handleChange = (name, value) => {
-    console.log(login)
-    console.log(name)
-    const rules = loginRules[name];
-    if (!handleChangeValidation(value, rules)) return;
-
-    setLogin((prev) => {
-      const updated = { ...prev, [name]: value };
-
-      return updated;
-    });
-  };
+  const { login, handleChange, handleSubmit } = useLoginForm();
 
   return (
     <div
@@ -38,7 +22,8 @@ const AuthPage = () => {
 
       <Paper
         sx={{
-          p: { xs: 4, sm: 5 },
+          py: { xs: 4, sm: 5 },
+          px: { xs: 3, sm: 4 },
           borderRadius: 3,
         }}
         className="w-[90%] max-w-md sm:w-110"
@@ -54,7 +39,10 @@ const AuthPage = () => {
         <div className={"mt-7 flex flex-col gap-4"}>
           {authFields.map((field) => {
             return (
-              <div key={field.name} className={"flex flex-col items-start justify-center gap-2"}>
+              <div
+                key={field.name}
+                className={"flex flex-col items-start justify-center gap-2"}
+              >
                 <div className={"text-sm font-medium"}>{field.label}</div>
                 <FormField
                   field={field}
@@ -83,7 +71,7 @@ const AuthPage = () => {
           </div>
 
           <div className="w-full">
-            <ButtonPrimary className={"w-full"}>
+            <ButtonPrimary className={"w-full"} onClick={handleSubmit}>
               <span className="text-md font-semibold">Login</span>{" "}
             </ButtonPrimary>
           </div>
