@@ -10,7 +10,7 @@ const authFields = [
     label: "Password",
     name: "password",
     type: "password",
-    placeholder: "•••••••••••",
+    placeholder: "••••••••••••",
     size: 100,
   },
 ];

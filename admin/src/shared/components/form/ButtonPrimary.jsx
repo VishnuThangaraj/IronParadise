@@ -1,6 +1,10 @@
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { motion } from "motion/react";
+import { fadeUp } from "../../animations";
+
+const MotionButton = motion.create(Button);
 
 const ButtonPrimary = ({
   children,
@@ -24,7 +28,8 @@ const ButtonPrimary = ({
   };
 
   return (
-    <Button
+    <MotionButton
+      {...fadeUp}
       type="submit"
       variant={variant}
       size={size}
@@ -96,7 +101,7 @@ const ButtonPrimary = ({
           {loadingText}
         </span>
       </span>
-    </Button>
+    </MotionButton>
   );
 };
 
