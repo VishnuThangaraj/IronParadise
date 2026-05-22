@@ -1,6 +1,6 @@
 import { HiMiniExclamationTriangle } from "react-icons/hi2";
 
-import ContactAdminModal from "@/shared/modal/ContactAdminModal";
+import ContactAdminModal from "@/shared/components/ui/modal/ContactAdminModal";
 
 const LoginAttemptLimitModal = ({
   open,

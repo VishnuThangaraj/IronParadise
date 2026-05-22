@@ -26,3 +26,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, secret_key, algorithm="HS256")
     return encoded_jwt
 
+
+def decode_access_token(token: str) -> Optional[dict]:
+    secret_key = os.getenv("JWT_SECRET")
+    try:
+        return jwt.decode(token, secret_key, algorithms=["HS256"])
+    except jwt.PyJWTError:
+        return None
+
+

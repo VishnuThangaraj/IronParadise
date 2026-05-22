@@ -1,16 +1,63 @@
-import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import Loader from "@/shared/components/Loader";
+import { fetchAdmin } from "@/features/auth/redux/authThunks";
+import { selectToken, selectUser } from "@/features/auth/redux/authSelector";
+import { useConnectionMonitor } from "@/shared/services/connectionMonitor";
+
+import Loader from "@/shared/components/ui/Loader";
+import Footer from "@/shared/components/layout/footer/Footer";
+import Navbar from "@/shared/components/layout/navbar/Navbar";
+import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 
 const AuthPage = lazy(() => import("@/features/auth/pages/AuthPage"));
+const AdminDashboard = lazy(
+  () => import("@/features/dashboard/pages/AdminDashboard"),
+);
 
 const App = () => {
+  const dispatch = useDispatch();
+  const token = useSelector(selectToken);
+  const user = useSelector(selectUser);
+
+  // Background server connection check
+  useConnectionMonitor();
+
+  useEffect(() => {
+    if (token && !user) dispatch(fetchAdmin());
+  }, [token, user, dispatch]);
+
+  if (token && !user) {
+    return <Loader />;
+  }
+
+  if (!token) {
+    return (
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/authentication" element={<AuthPage />} />
+          <Route path="*" element={<Navigate to="/authentication" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
   return (
     <Suspense fallback={<Loader />}>
-      <Routes>
-        <Route path="/" element={<AuthPage />} />
-      </Routes>
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          <main className="flex-1 p-6">
+            <Routes>
+              <Route path="/" element={<AdminDashboard />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </div>
     </Suspense>
   );
 };

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 import loginRules from "@/features/auth/validation/loginRules";
-import { adminEmail } from "@/shared/config/appConfig";
+import { adminEmail } from "@/config/appConfig";
 import { loginAdmin } from "@/features/auth/redux/authThunks";
 import initialLoginState from "@/features/auth/state/initialLoginState";
 import {

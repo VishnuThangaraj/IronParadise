@@ -2,21 +2,8 @@ import { Modal, Box, Typography, IconButton, Divider } from "@mui/material";
 import { motion } from "motion/react";
 import { IoClose } from "react-icons/io5";
 
-import ButtonPrimary from "@/shared/components/form/ButtonPrimary";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  width: "90%",
-  maxWidth: 420,
-  bgcolor: "background.paper",
-  borderRadius: 3,
-  boxShadow:
-    "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-  outline: "none",
-  overflow: "hidden",
-};
+import ButtonPrimary from "@/shared/components/ui/form/button/ButtonPrimary";
+import { modalBaseStyle } from "@/shared/components/ui/modal/config/modalConfig";
 
 const ContactAdminModal = ({ open, onClose, title, children, onClick }) => {
   return (
@@ -33,7 +20,7 @@ const ContactAdminModal = ({ open, onClose, title, children, onClick }) => {
       }}
     >
       <Box
-        sx={modalStyle}
+        sx={modalBaseStyle}
         component={motion.div}
         initial={{ opacity: 0, scale: 0.95, y: "-40%", x: "-50%" }}
         animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}

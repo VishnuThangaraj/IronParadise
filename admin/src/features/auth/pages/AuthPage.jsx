@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 import { Paper, Checkbox } from "@mui/material";
 
 import { fadeUp, fadeIn } from "@/shared/animations";
-import FormField from "@/shared/components/form/FormField";
-import ButtonPrimary from "@/shared/components/form/ButtonPrimary";
+import FormField from "@/shared/components/ui/form/Input/FormField";
+import ButtonPrimary from "@/shared/components/ui/form/button/ButtonPrimary";
 
 import authFields from "@/features/auth/constants/authFields";
 import useLoginForm from "@/features/auth/hooks/useLoginForm";
