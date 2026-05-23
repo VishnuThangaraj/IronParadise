@@ -1,6 +1,17 @@
-from fastapi import APIRouter,Request
-from src.schemas.authSchemas import AdminRegisterRequest, AdminLoginRequest
-from src.controllers.authController import register_admin,login_admin,get_loggedin_admin
+from fastapi import APIRouter, Request
+from src.schemas.authSchemas import (
+    AdminRegisterRequest,
+    AdminLoginRequest,
+    AdminProfileUpdateRequest,
+    AdminPasswordChangeRequest,
+)
+from src.controllers.authController import (
+    register_admin,
+    login_admin,
+    get_loggedin_admin,
+    update_admin_profile,
+    update_admin_password,
+)
 
 router = APIRouter(prefix="/auth")
 
@@ -15,3 +26,11 @@ async def login(credentials: AdminLoginRequest):
 @router.get("/admin/profile")
 async def get_admin_profile(request: Request):
     return await get_loggedin_admin(request)
+
+@router.put("/admin/profile")
+async def update_profile(request: Request, data: AdminProfileUpdateRequest):
+    return await update_admin_profile(request, data)
+
+@router.put("/admin/password")
+async def update_password(request: Request, data: AdminPasswordChangeRequest):
+    return await update_admin_password(request, data)

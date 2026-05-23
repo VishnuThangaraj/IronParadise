@@ -15,6 +15,9 @@ const AuthPage = lazy(() => import("@/features/auth/pages/AuthPage"));
 const AdminDashboard = lazy(
   () => import("@/features/dashboard/pages/AdminDashboard"),
 );
+const AccountSettings = lazy(
+  () => import("@/features/account/pages/AccountSettings"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -51,8 +54,9 @@ const App = () => {
           <Navbar />
           <main className="flex-1 p-6">
             <Routes>
-              <Route path="/" element={<AdminDashboard />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/home" element={<AdminDashboard />} />
+              <Route path="/account/settings" element={<AccountSettings />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>
           </main>
           <Footer />

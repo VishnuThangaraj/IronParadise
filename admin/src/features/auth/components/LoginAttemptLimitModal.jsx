@@ -14,19 +14,19 @@ const LoginAttemptLimitModal = ({
       onClick={contactAdmin}
     >
       <div className="flex flex-col gap-4 text-sm mt-1 mb-2">
-        <div className="text-gray-600 leading-relaxed tracking-wide">
+        <div className="text-slate-300 leading-relaxed tracking-wide">
           We have detected more than{" "}
-          <span className="font-bold text-gray-800">{maxIncorrectAttempt}</span>{" "}
+          <span className="font-bold text-white">{maxIncorrectAttempt}</span>{" "}
           failed login attempts on your account.
         </div>
 
-        <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
-          <HiMiniExclamationTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+        <div className="flex items-center gap-3 rounded-xl border border-red-900/30 bg-red-950/20 p-4 text-red-300">
+          <HiMiniExclamationTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
 
           <p className="text-sm leading-6 text-justify">
             For your security, sign-in is temporarily locked. Please contact the
             administrator or{" "}
-            <span className="font-semibold animate-pulse">
+            <span className="font-semibold text-red-200 animate-pulse">
               try again in 24 hours
             </span>
             .

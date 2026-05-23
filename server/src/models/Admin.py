@@ -13,6 +13,9 @@ class Admin(Document):
     email:str
     password:str= Field(exclude=True)
     role: Optional[str] = Field(default="admin")
+    phone: Optional[str] = None
+    status: Optional[str] = Field(default="Active")
+    lastSession: Optional[datetime] = None
 
     createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
     updatedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
 import loginRules from "@/features/auth/validation/loginRules";

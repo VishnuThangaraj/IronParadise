@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
+
 import { motion } from "motion/react";
 
-import FooterStatus from "@/shared/components/layout/footer/FooterStatus";
-import FooterCredits from "@/shared/components/layout/footer/FooterCredits";
-import FooterCopyright from "@/shared/components/layout/footer/FooterCopyright";
+import FooterStatus from "@/shared/components/layout/footer/components/FooterStatus";
+import FooterCredits from "@/shared/components/layout/footer/components/FooterCredits";
+import FooterCopyright from "@/shared/components/layout/footer/components/FooterCopyright";
 
 import { selectIsOnline } from "@/shared/redux/serverStatus/serverStatusSelectors";
 

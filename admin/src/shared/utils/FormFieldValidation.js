@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 export const handleChangeValidation = (value, rules = {}) => {
   const { type, maxLength, min, max, pattern } = rules;
@@ -37,7 +37,7 @@ export const handleChangeValidation = (value, rules = {}) => {
 export const validateFields = (fields) => {
   for (const key in fields) {
     if (fields[key] === null || fields[key] === "") {
-      toast.warning("All Fields are required");
+      toast.error("All Fields are required");
       return false;
     }
   }

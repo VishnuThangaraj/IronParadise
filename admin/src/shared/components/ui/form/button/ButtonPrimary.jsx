@@ -40,15 +40,16 @@ const ButtonPrimary = ({
         color: "white",
         borderRadius: 2,
         textTransform: "none",
-        backgroundColor: "black",
         position: "relative",
         overflow: "hidden",
+        background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+        boxShadow: "0 4px 14px 0 rgba(99, 102, 241, 0.3)",
         transition:
           "background-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease",
         "&:hover": {
-          backgroundColor: "#222222",
+          background: "linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)",
           transform: "scale(1.02)",
-          boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+          boxShadow: "0 6px 20px rgba(99, 102, 241, 0.4)",
         },
         "&:active": {
           transform: "scale(0.98)",

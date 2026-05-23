@@ -1,5 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { loginAdmin, fetchAdmin } from "@/features/auth/redux/authThunks";
+import { updateAdminProfile } from "@/features/account/redux/accountThunks";
 
 const getStoredToken = () => {
     try {
@@ -48,6 +49,12 @@ const authSlice = createSlice({
             .addCase(fetchAdmin.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload;
+            })
+            .addCase(updateAdminProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                if (action.payload.user) {
+                    state.user = action.payload.user;
+                }
             })
             .addCase(fetchAdmin.rejected, (state) => {
                 state.user = null;
