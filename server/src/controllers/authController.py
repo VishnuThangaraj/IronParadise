@@ -26,7 +26,6 @@ async def register_admin(data: AdminRegisterRequest):
         )
 
     try:
-        print(data)
         admin = Admin(**data.model_dump())
         await admin.insert()
 

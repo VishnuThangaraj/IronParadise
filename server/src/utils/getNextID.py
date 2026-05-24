@@ -1,14 +1,14 @@
 from src.models.Counter import Counter
 
 PREFIX = {
-  "diet": "DPL",
+  "diet_plan": "DPL",
   "admin": "ADM",
   "staff": "STF",
   "member": "MBR",
-  "workout": "WPL",
+  "workout_plan": "WPL",
   "trainer": "TRN",
   "transaction": "PTR",
-  "membershipplan": "MPL",
+  "membership_plan": "MPL",
 }
 
 async def getNextID(collection_name: str) -> str:
