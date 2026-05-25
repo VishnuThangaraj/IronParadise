@@ -54,7 +54,7 @@ const onServerStart = async () => {
     const admins = await Admin.find();
     if (!admins || admins.length === 0) {
       const newUser = new Admin({
-        name: "IronParadise",
+        name: "IronParadise-Admin",
         email: process.env.ADMIN_USERNAME,
         gender: "male",
         password: process.env.ADMIN_PASSWORD,

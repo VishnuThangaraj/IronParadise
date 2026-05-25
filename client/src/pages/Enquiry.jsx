@@ -50,12 +50,12 @@ const Enquiry = () => {
     setEnquiryData({ ...enquiryData, [name]: value });
   };
 
-  const handleDateChange = (date, dateString) => {
-    setEnquiryData({ ...enquiryData, ["dob"]: dateString });
-  };
-
   const handleGenderChange = (event, newValue) => {
     setEnquiryData({ ...enquiryData, ["gender"]: newValue });
+  };
+
+  const handleDateChange = (date, dateString) => {
+    setEnquiryData({ ...enquiryData, ["dob"]: dateString });
   };
 
   const handleSubmit = async (e) => {
