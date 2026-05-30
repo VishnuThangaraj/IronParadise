@@ -1,6 +1,7 @@
+import os
+import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
-from beanie import PydanticObjectId
 
 from src.models.DietPlan import DietPlan
 from src.schemas.dietPlanSchemas import DietPlanRequest
@@ -43,17 +44,19 @@ async def fetch_all_diet_plans():
             detail="Failed to retrieve diet plans",
         )
 
+#Fetch single Diet Plan by ID
+async def fetch_diet_plan_by_id(id: str):
+    diet_plan = await DietPlan.find_one(DietPlan.planId == id)
+    if not diet_plan:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Diet Plan not found",
+        )
+    return diet_plan
+
 #Update Diet Plan
 async def update_diet_plan(id: str, data: DietPlanRequest):
-    try:
-        doc_id = PydanticObjectId(id)
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid ID format",
-        )
-    
-    diet_plan = await DietPlan.get(doc_id)
+    diet_plan = await DietPlan.find_one(DietPlan.planId == id)
     if not diet_plan:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -63,7 +66,7 @@ async def update_diet_plan(id: str, data: DietPlanRequest):
     if data.name != diet_plan.name:
         existing_dietPlan = await DietPlan.find_one(
             DietPlan.name == data.name,
-            DietPlan.id != doc_id
+            DietPlan.planId != id
         )
         if existing_dietPlan:
             raise HTTPException(
@@ -94,15 +97,7 @@ async def update_diet_plan(id: str, data: DietPlanRequest):
 
 #Delete Diet Plan
 async def delete_diet_plan(id: str):
-    try:
-        doc_id = PydanticObjectId(id)
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid ID format",
-        )
-        
-    diet_plan = await DietPlan.get(doc_id)
+    diet_plan = await DietPlan.find_one(DietPlan.planId == id)
     if not diet_plan:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -121,3 +116,19 @@ async def delete_diet_plan(id: str):
         )
 
 
+# Populate Diet Plan
+async def populate_diet_plan():    
+    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "dietplan.json")
+    with open(file_path, "r") as f:
+        diet_plans = json.load(f)
+
+    for diet_plan in diet_plans:
+        existing_dietPlan = await DietPlan.find_one(DietPlan.name == diet_plan["name"])
+        if existing_dietPlan:
+            continue
+        newDietPlan = DietPlan(**diet_plan)
+        await newDietPlan.insert()
+
+    return {
+        "message": "Diet Plan populated successfully"
+    }   

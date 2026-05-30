@@ -18,6 +18,14 @@ const AdminDashboard = lazy(
 const AccountSettings = lazy(
   () => import("@/features/account/pages/AccountSettings"),
 );
+const AddDietPlan = lazy(() => import("@/features/dietplan/pages/AddDietPlan"));
+const EditDietPlan = lazy(() => import("@/features/dietplan/pages/EditDietPlan"));
+const DietPlanList = lazy(
+  () => import("@/features/dietplan/pages/DietPlanList"),
+);
+const DietPlanDetails = lazy(
+  () => import("@/features/dietplan/pages/DietPlanDetails"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -57,6 +65,15 @@ const App = () => {
               <Route path="/home" element={<AdminDashboard />} />
               <Route path="/account/settings" element={<AccountSettings />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
+
+              {/* DietPlan */}
+              <Route path="/plan/diet/list" element={<DietPlanList />} />
+              <Route path="/plan/diet/add" element={<AddDietPlan />} />
+              <Route path="/plan/diet/edit/:dietPlanId" element={<EditDietPlan />} />
+              <Route
+                path="/plan/diet/details/:dietPlanId"
+                element={<DietPlanDetails />}
+              />
             </Routes>
           </main>
           <Footer />
