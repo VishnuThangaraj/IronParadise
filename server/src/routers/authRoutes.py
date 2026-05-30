@@ -33,4 +33,4 @@ async def update_profile(request: Request, data: AdminProfileUpdateRequest):
 
 @router.put("/admin/password")
 async def update_password(request: Request, data: AdminPasswordChangeRequest):
-    return await update_admin_password(request, data)
+    return await update_admin_password(request, data)
