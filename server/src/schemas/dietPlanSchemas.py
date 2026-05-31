@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field
 from typing import Optional
+from pydantic import BaseModel, Field
+
 from src.models.DietPlan import DayDiet
 
 class DietPlanRequest(BaseModel):

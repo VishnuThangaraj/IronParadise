@@ -1,0 +1,1868 @@
+[
+  {
+    "name": "Classic Push/Pull/Legs",
+    "goal": "Muscle Hypertrophy",
+    "description": "A 6-day split focusing on maximizing muscle growth through optimal volume and frequency.",
+    "monday": {
+      "focus": "Push",
+      "exercises": [
+        {
+          "name": "Barbell Bench Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": "Control the eccentric"
+        },
+        {
+          "name": "Overhead Press",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Triceps Pushdown",
+          "sets": 4,
+          "reps": "12-15",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Pull",
+      "exercises": [
+        {
+          "name": "Deadlift",
+          "sets": 4,
+          "reps": "5-8",
+          "rest": "120s",
+          "notes": "Neutral spine"
+        },
+        {
+          "name": "Lat Pulldown",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Curl",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Squat",
+          "sets": 4,
+          "reps": "6-8",
+          "rest": "120s",
+          "notes": ""
+        },
+        {
+          "name": "Leg Press",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Calf Raises",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Push",
+      "exercises": [
+        {
+          "name": "Incline Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Lateral Raises",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "45s",
+          "notes": ""
+        },
+        {
+          "name": "Overhead Triceps Extension",
+          "sets": 3,
+          "reps": "12-15",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Pull",
+      "exercises": [
+        {
+          "name": "Barbell Row",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Pull-ups",
+          "sets": 3,
+          "reps": "Failure",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Hammer Curls",
+          "sets": 3,
+          "reps": "12-15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Front Squat",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Walking Lunges",
+          "sets": 3,
+          "reps": "12-15/leg",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Leg Curl",
+          "sets": 3,
+          "reps": "12-15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "sunday": { "focus": "Active Recovery", "exercises": [] }
+  },
+  {
+    "name": "Beginner Full Body Routine",
+    "goal": "General Fitness & Foundation",
+    "description": "A simple but effective 3-day full body routine designed for beginners to build foundational strength.",
+    "monday": {
+      "focus": "Full Body A",
+      "exercises": [
+        {
+          "name": "Goblet Squats",
+          "sets": 3,
+          "reps": "12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Dumbbell Bench Press",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Lat Pulldown",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": { "focus": "Rest", "exercises": [] },
+    "wednesday": {
+      "focus": "Full Body B",
+      "exercises": [
+        {
+          "name": "Romanian Deadlift",
+          "sets": 3,
+          "reps": "12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Overhead Press",
+          "sets": 3,
+          "reps": "10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Seated Cable Row",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Full Body A",
+      "exercises": [
+        {
+          "name": "Goblet Squats",
+          "sets": 3,
+          "reps": "12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Dumbbell Bench Press",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Lat Pulldown",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Upper / Lower Strength Block",
+    "goal": "Max Strength & Power",
+    "description": "A 4-day heavy strength program emphasizing progressive overload on the main compound lifts.",
+    "monday": {
+      "focus": "Lower Body",
+      "exercises": [
+        {
+          "name": "Back Squat",
+          "sets": 5,
+          "reps": "3-5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Romanian Deadlift",
+          "sets": 3,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Upper Body",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 5,
+          "reps": "3-5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Row",
+          "sets": 4,
+          "reps": "6-8",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Lower Body",
+      "exercises": [
+        {
+          "name": "Front Squat",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Leg Press",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Upper Body",
+      "exercises": [
+        {
+          "name": "Overhead Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Lat Pulldown",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Arnold Split (Chest/Back, Shoulders/Arms, Legs)",
+    "goal": "Hypertrophy",
+    "description": "The classic Arnold split maximizing antagonist pairings for great pumps.",
+    "monday": {
+      "focus": "Chest & Back",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Pull-ups",
+          "sets": 4,
+          "reps": "Failure",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Shoulders & Arms",
+      "exercises": [
+        {
+          "name": "Overhead Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Curls",
+          "sets": 4,
+          "reps": "10",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Squats",
+          "sets": 4,
+          "reps": "8-12",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Leg Extensions",
+          "sets": 3,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Chest & Back",
+      "exercises": [
+        {
+          "name": "Incline DB Press",
+          "sets": 4,
+          "reps": "10",
+          "rest": "90s",
+          "notes": ""
+        },
+        { "name": "Rows", "sets": 4, "reps": "10", "rest": "90s", "notes": "" }
+      ]
+    },
+    "friday": {
+      "focus": "Shoulders & Arms",
+      "exercises": [
+        {
+          "name": "Lateral Raises",
+          "sets": 4,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Triceps Pushdown",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Leg Press",
+          "sets": 4,
+          "reps": "12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Calf Raises",
+          "sets": 4,
+          "reps": "20",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "5x5 Pure Strength",
+    "goal": "Max Strength",
+    "description": "A 3-day strength protocol for linear progression on the compound lifts.",
+    "monday": {
+      "focus": "Workout A",
+      "exercises": [
+        { "name": "Squat", "sets": 5, "reps": "5", "rest": "3m", "notes": "" },
+        {
+          "name": "Bench Press",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Row",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": { "focus": "Rest", "exercises": [] },
+    "wednesday": {
+      "focus": "Workout B",
+      "exercises": [
+        { "name": "Squat", "sets": 5, "reps": "5", "rest": "3m", "notes": "" },
+        {
+          "name": "Overhead Press",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Deadlift",
+          "sets": 1,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Workout A",
+      "exercises": [
+        { "name": "Squat", "sets": 5, "reps": "5", "rest": "3m", "notes": "" },
+        {
+          "name": "Bench Press",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Row",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Calisthenics Foundation",
+    "goal": "Bodyweight Mastery",
+    "description": "Mastering the fundamentals of bodyweight movement.",
+    "monday": {
+      "focus": "Push",
+      "exercises": [
+        {
+          "name": "Pushups",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Dips",
+          "sets": 3,
+          "reps": "8-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Pull",
+      "exercises": [
+        {
+          "name": "Pull-ups",
+          "sets": 4,
+          "reps": "Failure",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Inverted Rows",
+          "sets": 3,
+          "reps": "10-15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Core & Legs",
+      "exercises": [
+        {
+          "name": "Pistol Squat Progressions",
+          "sets": 4,
+          "reps": "5/leg",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "L-Sit Holds",
+          "sets": 3,
+          "reps": "20s",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Push",
+      "exercises": [
+        {
+          "name": "Pike Pushups",
+          "sets": 4,
+          "reps": "8-12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Diamond Pushups",
+          "sets": 3,
+          "reps": "10-15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Pull",
+      "exercises": [
+        {
+          "name": "Chin-ups",
+          "sets": 4,
+          "reps": "Failure",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Active Hangs",
+          "sets": 3,
+          "reps": "45s",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Jump Squats",
+          "sets": 4,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Walking Lunges",
+          "sets": 3,
+          "reps": "20",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Advanced Calisthenics Skills",
+    "goal": "Bodyweight Mastery",
+    "description": "Focusing on static holds, muscle ups, and front levers.",
+    "monday": {
+      "focus": "Planche & Push",
+      "exercises": [
+        {
+          "name": "Tuck Planche Holds",
+          "sets": 5,
+          "reps": "10s",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Handstand Pushups",
+          "sets": 4,
+          "reps": "5-8",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Front Lever & Pull",
+      "exercises": [
+        {
+          "name": "Front Lever Negatives",
+          "sets": 5,
+          "reps": "3",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Muscle-ups",
+          "sets": 4,
+          "reps": "3-5",
+          "rest": "120s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Mobility & Legs",
+      "exercises": [
+        {
+          "name": "Pistol Squats",
+          "sets": 4,
+          "reps": "8/leg",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Pancake Stretch",
+          "sets": 3,
+          "reps": "60s",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Planche & Push",
+      "exercises": [
+        {
+          "name": "Planche Leans",
+          "sets": 4,
+          "reps": "20s",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Deep Dips",
+          "sets": 4,
+          "reps": "12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Front Lever & Pull",
+      "exercises": [
+        {
+          "name": "Adv Tuck Front Lever",
+          "sets": 4,
+          "reps": "15s",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Weighted Pull-ups",
+          "sets": 4,
+          "reps": "5",
+          "rest": "120s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "5-Day Bro Split",
+    "goal": "Muscle Isolation",
+    "description": "Classic old school bodybuilding targeting one muscle group per day.",
+    "monday": {
+      "focus": "Chest",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Incline DB Press",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Back",
+      "exercises": [
+        {
+          "name": "Barbell Row",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Lat Pulldown",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Squats",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "120s",
+          "notes": ""
+        },
+        {
+          "name": "Leg Press",
+          "sets": 4,
+          "reps": "12-15",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Shoulders",
+      "exercises": [
+        {
+          "name": "Overhead Press",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Lateral Raises",
+          "sets": 5,
+          "reps": "15-20",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Arms",
+      "exercises": [
+        {
+          "name": "Barbell Curls",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Triceps Pushdown",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "4-Day Upper/Lower Split",
+    "goal": "Balanced Growth",
+    "description": "A well-rounded upper lower split for intermediate lifters.",
+    "monday": {
+      "focus": "Upper Body Strength",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 4,
+          "reps": "4-6",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Bent Over Row",
+          "sets": 4,
+          "reps": "4-6",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Lower Body Strength",
+      "exercises": [
+        {
+          "name": "Squat",
+          "sets": 4,
+          "reps": "4-6",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Romanian Deadlift",
+          "sets": 4,
+          "reps": "6-8",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Upper Body Hypertrophy",
+      "exercises": [
+        {
+          "name": "Incline DB Press",
+          "sets": 3,
+          "reps": "8-12",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Pull-ups",
+          "sets": 3,
+          "reps": "8-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Lower Body Hypertrophy",
+      "exercises": [
+        {
+          "name": "Leg Press",
+          "sets": 3,
+          "reps": "10-15",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Leg Curl",
+          "sets": 3,
+          "reps": "10-15",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Glute Focused Lower Body Program",
+    "goal": "Glute Hypertrophy",
+    "description": "Specialized program to maximize glute growth and lower body aesthetics.",
+    "monday": {
+      "focus": "Glute Heavy",
+      "exercises": [
+        {
+          "name": "Hip Thrusts",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "RDLs",
+          "sets": 3,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Upper Body",
+      "exercises": [
+        {
+          "name": "Lat Pulldown",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Seated DB Press",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Glute Volume",
+      "exercises": [
+        {
+          "name": "Bulgarian Split Squats",
+          "sets": 3,
+          "reps": "10/leg",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Glute Extensions",
+          "sets": 3,
+          "reps": "15-20",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Full Body Light",
+      "exercises": [
+        {
+          "name": "Goblet Squats",
+          "sets": 3,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Pushups",
+          "sets": 3,
+          "reps": "Failure",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Kettlebell Metcon",
+    "goal": "Conditioning",
+    "description": "High intensity metabolic conditioning using only kettlebells.",
+    "monday": {
+      "focus": "Swings & Core",
+      "exercises": [
+        {
+          "name": "KB Swings",
+          "sets": 10,
+          "reps": "20",
+          "rest": "30s",
+          "notes": ""
+        },
+        {
+          "name": "Turkish Get-ups",
+          "sets": 3,
+          "reps": "3/side",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": { "focus": "Rest", "exercises": [] },
+    "wednesday": {
+      "focus": "Snatch & Press",
+      "exercises": [
+        {
+          "name": "KB Snatch",
+          "sets": 5,
+          "reps": "10/arm",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "KB Overhead Press",
+          "sets": 5,
+          "reps": "8/arm",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Squat & Lunge",
+      "exercises": [
+        {
+          "name": "KB Goblet Squat",
+          "sets": 5,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "KB Walking Lunges",
+          "sets": 4,
+          "reps": "10/leg",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Dumbbell Only Home Workout",
+    "goal": "Home Fitness",
+    "description": "Requires only a pair of adjustable dumbbells.",
+    "monday": {
+      "focus": "Full Body A",
+      "exercises": [
+        {
+          "name": "DB Goblet Squat",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "DB Floor Press",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": { "focus": "Rest", "exercises": [] },
+    "wednesday": {
+      "focus": "Full Body B",
+      "exercises": [
+        {
+          "name": "DB RDL",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "DB Bent Over Row",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Full Body C",
+      "exercises": [
+        {
+          "name": "DB Reverse Lunges",
+          "sets": 4,
+          "reps": "10/leg",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "DB Overhead Press",
+          "sets": 4,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Powerbuilding Specialist",
+    "goal": "Strength & Size",
+    "description": "Blending powerlifting fundamentals with bodybuilding accessory work.",
+    "monday": {
+      "focus": "Squat & Lower",
+      "exercises": [
+        {
+          "name": "Low Bar Squat",
+          "sets": 4,
+          "reps": "3-5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Leg Press",
+          "sets": 4,
+          "reps": "10-12",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Bench & Upper",
+      "exercises": [
+        {
+          "name": "Pause Bench Press",
+          "sets": 4,
+          "reps": "3-5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Incline DB Press",
+          "sets": 4,
+          "reps": "10",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Deadlift & Back",
+      "exercises": [
+        {
+          "name": "Deadlift",
+          "sets": 3,
+          "reps": "3-5",
+          "rest": "4m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Row",
+          "sets": 4,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "OHP & Arms",
+      "exercises": [
+        {
+          "name": "Overhead Press",
+          "sets": 4,
+          "reps": "5",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Bicep Curls",
+          "sets": 3,
+          "reps": "12",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Cardio & Core Crusher",
+    "goal": "Endurance & Abs",
+    "description": "High volume cardio combined with daily intense core circuits.",
+    "monday": {
+      "focus": "LISS & Core",
+      "exercises": [
+        {
+          "name": "Jogging",
+          "sets": 1,
+          "reps": "45 mins",
+          "rest": "None",
+          "notes": "Zone 2"
+        },
+        {
+          "name": "Plank",
+          "sets": 4,
+          "reps": "60s",
+          "rest": "30s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "HIIT & Core",
+      "exercises": [
+        {
+          "name": "Sprint Intervals",
+          "sets": 10,
+          "reps": "30s sprint/30s rest",
+          "rest": "None",
+          "notes": ""
+        },
+        {
+          "name": "Russian Twists",
+          "sets": 4,
+          "reps": "30",
+          "rest": "30s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "LISS & Core",
+      "exercises": [
+        {
+          "name": "Cycling",
+          "sets": 1,
+          "reps": "60 mins",
+          "rest": "None",
+          "notes": ""
+        },
+        {
+          "name": "Leg Raises",
+          "sets": 4,
+          "reps": "20",
+          "rest": "30s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "HIIT & Core",
+      "exercises": [
+        {
+          "name": "Burpees Intervals",
+          "sets": 10,
+          "reps": "45s work/15s rest",
+          "rest": "None",
+          "notes": ""
+        },
+        {
+          "name": "Bicycle Crunches",
+          "sets": 4,
+          "reps": "40",
+          "rest": "30s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Long Run",
+      "exercises": [
+        {
+          "name": "Running",
+          "sets": 1,
+          "reps": "90 mins",
+          "rest": "None",
+          "notes": "Endurance pace"
+        }
+      ]
+    },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Functional Fitness Routine",
+    "goal": "Agility & Power",
+    "description": "CrossFit style functional training prioritizing athletic movement.",
+    "monday": {
+      "focus": "Metcon",
+      "exercises": [
+        {
+          "name": "Thrusters",
+          "sets": 5,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Pull-ups",
+          "sets": 5,
+          "reps": "10",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Strength",
+      "exercises": [
+        {
+          "name": "Power Cleans",
+          "sets": 5,
+          "reps": "3",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Front Squat",
+          "sets": 5,
+          "reps": "5",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Gymnastics",
+      "exercises": [
+        {
+          "name": "Handstand Walks",
+          "sets": 5,
+          "reps": "10m",
+          "rest": "90s",
+          "notes": ""
+        },
+        {
+          "name": "Toes to Bar",
+          "sets": 5,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Endurance WOD",
+      "exercises": [
+        {
+          "name": "Rowing",
+          "sets": 1,
+          "reps": "5000m",
+          "rest": "None",
+          "notes": "For time"
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Minimalist 2-Day Split",
+    "goal": "Time Saver",
+    "description": "Perfect for busy individuals who can only work out twice a week.",
+    "monday": {
+      "focus": "Full Body A",
+      "exercises": [
+        {
+          "name": "Squat",
+          "sets": 3,
+          "reps": "5-8",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Bench Press",
+          "sets": 3,
+          "reps": "5-8",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Row",
+          "sets": 3,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": { "focus": "Rest", "exercises": [] },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Full Body B",
+      "exercises": [
+        {
+          "name": "Deadlift",
+          "sets": 3,
+          "reps": "5-8",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Overhead Press",
+          "sets": 3,
+          "reps": "8-10",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Pull-ups",
+          "sets": 3,
+          "reps": "Failure",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": { "focus": "Rest", "exercises": [] },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Olympic Weightlifting Prep",
+    "goal": "Explosive Power",
+    "description": "Snatch and Clean & Jerk focus program.",
+    "monday": {
+      "focus": "Snatch",
+      "exercises": [
+        { "name": "Snatch", "sets": 5, "reps": "3", "rest": "3m", "notes": "" },
+        {
+          "name": "Overhead Squat",
+          "sets": 3,
+          "reps": "5",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Clean & Jerk",
+      "exercises": [
+        {
+          "name": "Clean & Jerk",
+          "sets": 5,
+          "reps": "3",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Front Squat",
+          "sets": 3,
+          "reps": "5",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": { "focus": "Rest", "exercises": [] },
+    "thursday": {
+      "focus": "Power Variants",
+      "exercises": [
+        {
+          "name": "Power Snatch",
+          "sets": 5,
+          "reps": "3",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Power Clean",
+          "sets": 5,
+          "reps": "3",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Squat & Pulls",
+      "exercises": [
+        {
+          "name": "Back Squat",
+          "sets": 5,
+          "reps": "5",
+          "rest": "3m",
+          "notes": ""
+        },
+        {
+          "name": "Clean Pulls",
+          "sets": 4,
+          "reps": "5",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Marathon Runner Cross-Training",
+    "goal": "Endurance Running",
+    "description": "Running focused with light strength work to prevent injuries.",
+    "monday": {
+      "focus": "Base Run",
+      "exercises": [
+        {
+          "name": "Running",
+          "sets": 1,
+          "reps": "60 mins",
+          "rest": "None",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Strength",
+      "exercises": [
+        {
+          "name": "Bulgarian Split Squats",
+          "sets": 3,
+          "reps": "12/leg",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Plank",
+          "sets": 3,
+          "reps": "60s",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Speed Work",
+      "exercises": [
+        {
+          "name": "Track Intervals",
+          "sets": 8,
+          "reps": "400m",
+          "rest": "90s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Tempo Run",
+      "exercises": [
+        {
+          "name": "Tempo Run",
+          "sets": 1,
+          "reps": "45 mins",
+          "rest": "None",
+          "notes": "Race pace"
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Long Run",
+      "exercises": [
+        {
+          "name": "Long Run",
+          "sets": 1,
+          "reps": "120+ mins",
+          "rest": "None",
+          "notes": "Easy pace"
+        }
+      ]
+    },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Posture Correction & Core",
+    "goal": "Mobility & Health",
+    "description": "Focus on back, core, and mobility to fix computer posture.",
+    "monday": {
+      "focus": "Back & Core",
+      "exercises": [
+        {
+          "name": "Face Pulls",
+          "sets": 4,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Bird Dogs",
+          "sets": 3,
+          "reps": "10/side",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Mobility",
+      "exercises": [
+        {
+          "name": "Thoracic Extensions",
+          "sets": 3,
+          "reps": "15",
+          "rest": "30s",
+          "notes": ""
+        },
+        {
+          "name": "Cat-Cow",
+          "sets": 3,
+          "reps": "15",
+          "rest": "30s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Back & Core",
+      "exercises": [
+        {
+          "name": "Band Pull-aparts",
+          "sets": 4,
+          "reps": "20",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Dead Bugs",
+          "sets": 3,
+          "reps": "12/side",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": {
+      "focus": "Mobility",
+      "exercises": [
+        {
+          "name": "Hip Flexor Stretch",
+          "sets": 3,
+          "reps": "60s/leg",
+          "rest": "None",
+          "notes": ""
+        },
+        {
+          "name": "Glute Bridges",
+          "sets": 4,
+          "reps": "15",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "friday": {
+      "focus": "Back & Core",
+      "exercises": [
+        { "name": "Rows", "sets": 4, "reps": "15", "rest": "60s", "notes": "" },
+        {
+          "name": "Plank",
+          "sets": 3,
+          "reps": "60s",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Resistance Band Travel Workout",
+    "goal": "On the Go",
+    "description": "A full workout program using only resistance bands.",
+    "monday": {
+      "focus": "Push",
+      "exercises": [
+        {
+          "name": "Band Chest Press",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "45s",
+          "notes": ""
+        },
+        {
+          "name": "Band Overhead Press",
+          "sets": 4,
+          "reps": "15",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Pull",
+      "exercises": [
+        {
+          "name": "Band Row",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "45s",
+          "notes": ""
+        },
+        {
+          "name": "Band Pull-aparts",
+          "sets": 4,
+          "reps": "20",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "wednesday": {
+      "focus": "Legs",
+      "exercises": [
+        {
+          "name": "Band Squats",
+          "sets": 4,
+          "reps": "20",
+          "rest": "45s",
+          "notes": ""
+        },
+        {
+          "name": "Band RDL",
+          "sets": 4,
+          "reps": "20",
+          "rest": "45s",
+          "notes": ""
+        }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Full Body",
+      "exercises": [
+        {
+          "name": "Band Thrusters",
+          "sets": 4,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Band Rows",
+          "sets": 4,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": { "focus": "Rest", "exercises": [] },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  },
+  {
+    "name": "Arm Specialization Block",
+    "goal": "Arm Growth",
+    "description": "Extra focus on biceps and triceps for lagging arms.",
+    "monday": {
+      "focus": "Heavy Arms",
+      "exercises": [
+        {
+          "name": "Close Grip Bench Press",
+          "sets": 4,
+          "reps": "6-8",
+          "rest": "2m",
+          "notes": ""
+        },
+        {
+          "name": "Barbell Curls",
+          "sets": 4,
+          "reps": "6-8",
+          "rest": "2m",
+          "notes": ""
+        }
+      ]
+    },
+    "tuesday": {
+      "focus": "Legs",
+      "exercises": [
+        { "name": "Squats", "sets": 4, "reps": "8", "rest": "2m", "notes": "" }
+      ]
+    },
+    "wednesday": {
+      "focus": "Chest & Back",
+      "exercises": [
+        {
+          "name": "Bench Press",
+          "sets": 3,
+          "reps": "10",
+          "rest": "90s",
+          "notes": ""
+        },
+        { "name": "Rows", "sets": 3, "reps": "10", "rest": "90s", "notes": "" }
+      ]
+    },
+    "thursday": { "focus": "Rest", "exercises": [] },
+    "friday": {
+      "focus": "Pump Arms",
+      "exercises": [
+        {
+          "name": "Triceps Pushdown",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "60s",
+          "notes": ""
+        },
+        {
+          "name": "Preacher Curls",
+          "sets": 4,
+          "reps": "15-20",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "saturday": {
+      "focus": "Shoulders",
+      "exercises": [
+        {
+          "name": "Lateral Raises",
+          "sets": 5,
+          "reps": "15",
+          "rest": "60s",
+          "notes": ""
+        }
+      ]
+    },
+    "sunday": { "focus": "Rest", "exercises": [] }
+  }
+]

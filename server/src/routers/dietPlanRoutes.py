@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Request
 
-from src.schemas.dietPlanSchemas import DietPlanRequest
 from src.models.DietPlan import DietPlan
+from src.schemas.dietPlanSchemas import DietPlanRequest
+from src.controllers.authController import get_loggedin_admin
 from src.controllers.dietPlanController import (
     create_diet_plan,
     fetch_all_diet_plans,
@@ -10,9 +11,8 @@ from src.controllers.dietPlanController import (
     delete_diet_plan,
     populate_diet_plan,
 )
-from src.controllers.authController import get_loggedin_admin
 
-router = APIRouter(prefix="/dietplan")
+router = APIRouter(prefix="/dietplan", tags=['Diet Plan'])
 
 @router.post("/create")
 async def create(request: Request, data: DietPlanRequest):

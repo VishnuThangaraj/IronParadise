@@ -1,6 +1,12 @@
 import { useNavigate } from "react-router-dom";
+
 import { motion } from "motion/react";
-import { LuArrowLeft, LuCalendarDays, LuFileText, LuPencil } from "react-icons/lu";
+import {
+  LuArrowLeft,
+  LuCalendarDays,
+  LuFileText,
+  LuPencil,
+} from "react-icons/lu";
 
 import useDietPlanDetails from "../hooks/useDietPlanDetails";
 import { days, meals } from "../constants/dietPlanFields";
@@ -44,7 +50,8 @@ const DietPlanDetails = () => {
               Diet Plan Details
             </h1>
             <p className="text-xs font-medium text-slate-500">
-              Overview of the customized daily meal plan and macronutrient breakdown.
+              Overview of the customized daily meal plan and macronutrient
+              breakdown.
             </p>
           </div>
         </div>
