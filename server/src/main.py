@@ -9,6 +9,7 @@ from src.config.dbConfig import connect_db, close_db
 
 from src.routers import authRoutes
 from src.routers import dietPlanRoutes
+from src.routers import workoutPlanRoutes
 
 load_dotenv()
 
@@ -35,6 +36,7 @@ def root():
 # Routes
 app.include_router(authRoutes.router)
 app.include_router(dietPlanRoutes.router)
+app.include_router(workoutPlanRoutes.router)
 
 if __name__ == "__main__":
     port = int(getenv("PORT"))

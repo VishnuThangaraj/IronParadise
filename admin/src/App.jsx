@@ -26,6 +26,10 @@ const DietPlanList = lazy(
 const DietPlanDetails = lazy(
   () => import("@/features/dietplan/pages/DietPlanDetails"),
 );
+const AddWorkoutPlan = lazy(() => import("@/features/workoutplan/pages/AddWorkoutPlan"));
+const EditWorkoutPlan = lazy(() => import("@/features/workoutplan/pages/EditWorkoutPlan"));
+const WorkoutPlanList = lazy(() => import("@/features/workoutplan/pages/WorkoutPlanList"));
+const WorkoutPlanDetails = lazy(() => import("@/features/workoutplan/pages/WorkoutPlanDetails"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -74,6 +78,12 @@ const App = () => {
                 path="/plan/diet/details/:dietPlanId"
                 element={<DietPlanDetails />}
               />
+
+              {/* WorkoutPlan */}
+              <Route path="/plan/workout/list" element={<WorkoutPlanList />} />
+              <Route path="/plan/workout/add" element={<AddWorkoutPlan />} />
+              <Route path="/plan/workout/edit/:workoutPlanId" element={<EditWorkoutPlan />} />
+              <Route path="/plan/workout/details/:workoutPlanId" element={<WorkoutPlanDetails />} />
             </Routes>
           </main>
           <Footer />
