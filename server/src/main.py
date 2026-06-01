@@ -8,6 +8,7 @@ from src.config.corsConfig import setup_cors
 from src.config.dbConfig import connect_db, close_db
 
 from src.routers import authRoutes
+from src.routers import trainerRoutes
 from src.routers import dietPlanRoutes
 from src.routers import workoutPlanRoutes
 
@@ -35,6 +36,7 @@ def root():
 
 # Routes
 app.include_router(authRoutes.router)
+app.include_router(trainerRoutes.router)
 app.include_router(dietPlanRoutes.router)
 app.include_router(workoutPlanRoutes.router)
 

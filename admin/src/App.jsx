@@ -19,17 +19,33 @@ const AccountSettings = lazy(
   () => import("@/features/account/pages/AccountSettings"),
 );
 const AddDietPlan = lazy(() => import("@/features/dietplan/pages/AddDietPlan"));
-const EditDietPlan = lazy(() => import("@/features/dietplan/pages/EditDietPlan"));
+const EditDietPlan = lazy(
+  () => import("@/features/dietplan/pages/EditDietPlan"),
+);
 const DietPlanList = lazy(
   () => import("@/features/dietplan/pages/DietPlanList"),
 );
 const DietPlanDetails = lazy(
   () => import("@/features/dietplan/pages/DietPlanDetails"),
 );
-const AddWorkoutPlan = lazy(() => import("@/features/workoutplan/pages/AddWorkoutPlan"));
-const EditWorkoutPlan = lazy(() => import("@/features/workoutplan/pages/EditWorkoutPlan"));
-const WorkoutPlanList = lazy(() => import("@/features/workoutplan/pages/WorkoutPlanList"));
-const WorkoutPlanDetails = lazy(() => import("@/features/workoutplan/pages/WorkoutPlanDetails"));
+const AddWorkoutPlan = lazy(
+  () => import("@/features/workoutplan/pages/AddWorkoutPlan"),
+);
+const EditWorkoutPlan = lazy(
+  () => import("@/features/workoutplan/pages/EditWorkoutPlan"),
+);
+const WorkoutPlanList = lazy(
+  () => import("@/features/workoutplan/pages/WorkoutPlanList"),
+);
+const WorkoutPlanDetails = lazy(
+  () => import("@/features/workoutplan/pages/WorkoutPlanDetails"),
+);
+const AddTrainer = lazy(() => import("@/features/trainer/pages/AddTrainer"));
+const EditTrainer = lazy(() => import("@/features/trainer/pages/EditTrainer"));
+const TrainerList = lazy(() => import("@/features/trainer/pages/TrainerList"));
+const TrainerDetails = lazy(
+  () => import("@/features/trainer/pages/TrainerDetails"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -70,10 +86,25 @@ const App = () => {
               <Route path="/account/settings" element={<AccountSettings />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
 
+              {/* Trainer */}
+              <Route path="/trainer/list" element={<TrainerList />} />
+              <Route path="/trainer/add" element={<AddTrainer />} />
+              <Route
+                path="/trainer/edit/:trainerId"
+                element={<EditTrainer />}
+              />
+              <Route
+                path="/trainer/details/:trainerId"
+                element={<TrainerDetails />}
+              />
+
               {/* DietPlan */}
               <Route path="/plan/diet/list" element={<DietPlanList />} />
               <Route path="/plan/diet/add" element={<AddDietPlan />} />
-              <Route path="/plan/diet/edit/:dietPlanId" element={<EditDietPlan />} />
+              <Route
+                path="/plan/diet/edit/:dietPlanId"
+                element={<EditDietPlan />}
+              />
               <Route
                 path="/plan/diet/details/:dietPlanId"
                 element={<DietPlanDetails />}
@@ -82,8 +113,14 @@ const App = () => {
               {/* WorkoutPlan */}
               <Route path="/plan/workout/list" element={<WorkoutPlanList />} />
               <Route path="/plan/workout/add" element={<AddWorkoutPlan />} />
-              <Route path="/plan/workout/edit/:workoutPlanId" element={<EditWorkoutPlan />} />
-              <Route path="/plan/workout/details/:workoutPlanId" element={<WorkoutPlanDetails />} />
+              <Route
+                path="/plan/workout/edit/:workoutPlanId"
+                element={<EditWorkoutPlan />}
+              />
+              <Route
+                path="/plan/workout/details/:workoutPlanId"
+                element={<WorkoutPlanDetails />}
+              />
             </Routes>
           </main>
           <Footer />

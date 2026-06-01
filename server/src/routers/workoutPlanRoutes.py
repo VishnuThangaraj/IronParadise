@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, status
 
 from src.models.WorkoutPlan import WorkoutPlan
 from src.schemas.workoutPlanSchemas import WorkoutPlanRequest
@@ -14,32 +14,32 @@ from src.controllers.workoutPlanController import (
 
 router = APIRouter(prefix="/workoutplan", tags=["Workout Plan"])
 
-@router.post("/create")
+@router.post("/create", status_code=status.HTTP_201_CREATED)
 async def create(request: Request, data: WorkoutPlanRequest):
     await get_loggedin_admin(request)
     return await create_workout_plan(data)
 
-@router.get("/all", response_model=list[WorkoutPlan])
+@router.get("/all", response_model=list[WorkoutPlan], status_code=status.HTTP_200_OK)
 async def get_all_workout_plans(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_workout_plans()
 
-@router.get("/populate")
+@router.get("/populate", status_code=status.HTTP_201_CREATED)
 async def populate(request: Request):
     await get_loggedin_admin(request)
     return await populate_workout_plan()
 
-@router.get("/{id}", response_model=WorkoutPlan)
+@router.get("/{id}", response_model=WorkoutPlan, status_code=status.HTTP_200_OK)
 async def get_workout_plan_by_id(request: Request, id: str):
     await get_loggedin_admin(request)
     return await fetch_workout_plan_by_id(id)
 
-@router.put("/update/{id}")
+@router.put("/update/{id}", status_code=status.HTTP_200_OK)
 async def update(request: Request, id: str, data: WorkoutPlanRequest):
     await get_loggedin_admin(request)
     return await update_workout_plan(id, data)
 
-@router.delete("/delete/{id}")
+@router.delete("/delete/{id}", status_code=status.HTTP_200_OK)
 async def delete(request: Request, id: str):
     await get_loggedin_admin(request)
     return await delete_workout_plan(id)

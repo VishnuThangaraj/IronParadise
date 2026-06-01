@@ -14,4 +14,3 @@ class DietPlanRequest(BaseModel):
     friday: Optional[DayDiet] = Field(default_factory=DayDiet)
     saturday: Optional[DayDiet] = Field(default_factory=DayDiet)
     sunday: Optional[DayDiet] = Field(default_factory=DayDiet)
-
