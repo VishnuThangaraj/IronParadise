@@ -5,6 +5,7 @@ from pymongo import IndexModel, ASCENDING
 from beanie import Document, before_event, Insert, Save
 
 from src.utils.getNextID import getNextID
+from src.models.TrainerSalary import TrainerSalary
 
 class Trainer(Document):
     trainerID: Optional[str] = Field(default=None)
@@ -21,6 +22,8 @@ class Trainer(Document):
     dob: Optional[datetime] = None
     joinDate: Optional[datetime] = Field(default_factory=datetime.utcnow)
     isWorking: Optional[bool] = True
+    salaryHistory: List[TrainerSalary] = Field(default_factory=list)
+    totalPendingAmount: float = Field(default=0.0)
     
     createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
     updatedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)

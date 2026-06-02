@@ -46,6 +46,9 @@ const TrainerList = lazy(() => import("@/features/trainer/pages/TrainerList"));
 const TrainerDetails = lazy(
   () => import("@/features/trainer/pages/TrainerDetails"),
 );
+const TrainerPayroll = lazy(
+  () => import("@/features/trainer/pages/TrainerPayroll"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
@@ -89,14 +92,9 @@ const App = () => {
               {/* Trainer */}
               <Route path="/trainer/list" element={<TrainerList />} />
               <Route path="/trainer/add" element={<AddTrainer />} />
-              <Route
-                path="/trainer/edit/:trainerId"
-                element={<EditTrainer />}
-              />
-              <Route
-                path="/trainer/details/:trainerId"
-                element={<TrainerDetails />}
-              />
+              <Route path="/trainer/edit/:id" element={<EditTrainer />} />
+              <Route path="/trainer/details/:id" element={<TrainerDetails />} />
+              <Route path="/trainer/payroll" element={<TrainerPayroll />} />
 
               {/* DietPlan */}
               <Route path="/plan/diet/list" element={<DietPlanList />} />

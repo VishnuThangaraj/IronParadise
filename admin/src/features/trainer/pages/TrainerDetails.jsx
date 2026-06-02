@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { LuArrowLeft, LuPencil, LuUser, LuMail, LuPhone, LuMapPin, LuBriefcase, LuClock, LuCalendar, LuBadgeDollar } from "react-icons/lu";
+import { LuArrowLeft, LuPencil, LuUser, LuMail, LuPhone, LuMapPin, LuBriefcase, LuClock, LuCalendar, LuBadgeDollarSign } from "react-icons/lu";
 import { format } from "date-fns";
 
 import useTrainerDetails from "../hooks/useTrainerDetails";
@@ -62,13 +62,22 @@ const TrainerDetails = () => {
           </div>
         </div>
 
-        <button
-          onClick={() => navigate(`/trainer/edit/${trainer.trainerID}`)}
-          className="flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl hover:bg-amber-100 transition-colors text-sm font-bold shadow-xs cursor-pointer"
-        >
-          <LuPencil className="w-4 h-4" />
-          Edit Trainer
-        </button>
+        <div className="flex gap-2.5">
+          <button
+            onClick={() => navigate(`/trainer/payroll?trainerID=${trainer.trainerID}`)}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors text-sm font-bold shadow-xs cursor-pointer"
+          >
+            <LuBadgeDollarSign className="w-4 h-4" />
+            Manage Salary
+          </button>
+          <button
+            onClick={() => navigate(`/trainer/edit/${trainer.trainerID}`)}
+            className="flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl hover:bg-amber-100 transition-colors text-sm font-bold shadow-xs cursor-pointer"
+          >
+            <LuPencil className="w-4 h-4" />
+            Edit Trainer
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] overflow-hidden">
@@ -151,11 +160,20 @@ const TrainerDetails = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <div className="flex items-center gap-2 text-slate-500">
-                    <LuBadgeDollar className="w-4 h-4" />
+                    <LuBadgeDollarSign className="w-4 h-4" />
                     <span>Salary</span>
                   </div>
                   <span className="font-semibold text-slate-800">
                     ${trainer.salary?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <LuBadgeDollarSign className="w-4 h-4" />
+                    <span>Pending Salary</span>
+                  </div>
+                  <span className={`font-semibold ${((trainer.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0)) > 0 ? "text-rose-500 font-bold" : "text-slate-800"}`}>
+                    ${((trainer.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">

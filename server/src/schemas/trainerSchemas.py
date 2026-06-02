@@ -17,3 +17,13 @@ class TrainerRequest(BaseModel):
     dob: Optional[datetime] = None
     joinDate: Optional[datetime] = Field(default_factory=datetime.utcnow)
     isWorking: Optional[bool] = True
+
+class TrainerSalaryRequest(BaseModel):
+    month: str
+    totalAmount: float
+    paidAmount: float
+    pendingAmount: float
+    paymentDate: Optional[datetime] = None
+    paymentMethod: Optional[str] = None
+    status: str = "Paid"
+    remarks: Optional[str] = None
