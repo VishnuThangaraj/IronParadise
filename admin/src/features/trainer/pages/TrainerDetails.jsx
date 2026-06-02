@@ -5,6 +5,63 @@ import { format } from "date-fns";
 import useTrainerDetails from "../hooks/useTrainerDetails";
 import Loader from "@/shared/components/ui/Loader";
 
+// Calculate trainer's outstanding balance, grouping by month to handle multiple partial payments
+// Defaults current and previous month to unpaid base salary if no transaction exists for them and it is not before their joinDate.
+const calculateTrainerOutstanding = (trainer) => {
+  if (!trainer) return 0;
+  const history = trainer.salaryHistory || [];
+  const monthData = {};
+  
+  // Initialize current and previous month defaults
+  const currentDate = new Date();
+  const currentMonthLabel = currentDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+  const prevDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+  const prevMonthLabel = prevDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+  
+  const joinDate = trainer.joinDate ? new Date(trainer.joinDate) : null;
+  
+  const isMonthBeforeJoin = (monthLabel, jd) => {
+    if (!jd) return false;
+    const [monthName, yearStr] = monthLabel.split(" ");
+    const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+    const year = parseInt(yearStr);
+    const monthDate = new Date(year, monthIndex, 1);
+    const joinMonthStart = new Date(jd.getFullYear(), jd.getMonth(), 1);
+    return monthDate < joinMonthStart;
+  };
+  
+  if (!isMonthBeforeJoin(currentMonthLabel, joinDate)) {
+    monthData[currentMonthLabel] = {
+      totalAmount: trainer.salary || 0,
+      paidAmount: 0,
+    };
+  }
+  if (!isMonthBeforeJoin(prevMonthLabel, joinDate)) {
+    monthData[prevMonthLabel] = {
+      totalAmount: trainer.salary || 0,
+      paidAmount: 0,
+    };
+  }
+  
+  history.forEach((r) => {
+    const m = r.month;
+    if (!m) return;
+    if (!monthData[m]) {
+      monthData[m] = {
+        totalAmount: Number(r.totalAmount) || trainer.salary || 0,
+        paidAmount: 0,
+      };
+    }
+    monthData[m].paidAmount += Number(r.paidAmount) || 0;
+    monthData[m].totalAmount = Math.max(monthData[m].totalAmount, Number(r.totalAmount) || 0);
+  });
+
+  return Object.values(monthData).reduce(
+    (sum, data) => sum + Math.max(0, data.totalAmount - data.paidAmount),
+    0
+  );
+};
+
 const TrainerDetails = () => {
   const navigate = useNavigate();
   const { trainer, isLoading } = useTrainerDetails();
@@ -172,8 +229,8 @@ const TrainerDetails = () => {
                     <LuBadgeDollarSign className="w-4 h-4" />
                     <span>Pending Salary</span>
                   </div>
-                  <span className={`font-semibold ${((trainer.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0)) > 0 ? "text-rose-500 font-bold" : "text-slate-800"}`}>
-                    ${((trainer.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <span className={`font-semibold ${calculateTrainerOutstanding(trainer) > 0 ? "text-rose-500 font-bold" : "text-slate-800"}`}>
+                    ${calculateTrainerOutstanding(trainer).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">

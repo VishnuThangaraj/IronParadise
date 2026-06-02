@@ -13,6 +13,7 @@ const useTrainerPayroll = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTrainers = useCallback(async () => {
+    await Promise.resolve();
     setIsLoading(true);
     try {
       const response = await api.get("trainer/all", {
@@ -31,7 +32,17 @@ const useTrainerPayroll = () => {
 
   useEffect(() => {
     if (token) {
-      fetchTrainers();
+      let active = true;
+      const load = async () => {
+        await Promise.resolve();
+        if (active) {
+          fetchTrainers();
+        }
+      };
+      load();
+      return () => {
+        active = false;
+      };
     }
   }, [token, fetchTrainers]);
 
@@ -161,6 +172,34 @@ const useTrainerPayroll = () => {
     [token, fetchTrainers]
   );
 
+  const bulkPayTrainers = useCallback(
+    async (bulkData) => {
+      setIsSubmitting(true);
+      try {
+        const response = await api.post(
+          "trainer/salary/bulk-pay",
+          bulkData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        toast.success(response.data?.message || "Bulk payroll processed successfully");
+        fetchTrainers();
+        return true;
+      } catch (err) {
+        const errorMsg =
+          err.response?.data?.detail || "Failed to process bulk payroll";
+        toast.error(errorMsg);
+        return false;
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [token, fetchTrainers]
+  );
+
   return {
     trainers,
     isLoading,
@@ -168,6 +207,7 @@ const useTrainerPayroll = () => {
     addSalaryRecord,
     updateSalaryRecord,
     deleteSalaryRecord,
+    bulkPayTrainers,
     refreshTrainers: fetchTrainers,
   };
 };

@@ -60,6 +60,15 @@ const TrainerPayoutModal = ({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {editingRecord && (
+            <div className="flex items-start gap-2.5 px-3.5 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-[11px] font-medium leading-relaxed">
+              <LuInfo className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                A payout record for this month already exists. Any changes made here will update the existing entry (e.g. to reflect a new cumulative paid amount).
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Select Instructor */}
             <div className="flex flex-col gap-1.5">
@@ -113,9 +122,8 @@ const TrainerPayoutModal = ({
                 min="0"
                 step="0.01"
                 value={formData.totalAmount}
-                onChange={(e) => handleInputChange("totalAmount", e.target.value)}
-                required
-                className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"
+                readOnly
+                className="px-3.5 py-2 text-xs font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded-xl outline-hidden cursor-not-allowed select-none"
               />
             </div>
 
@@ -127,12 +135,18 @@ const TrainerPayoutModal = ({
               <input
                 type="number"
                 min="0"
+                max={formData.totalAmount}
                 step="0.01"
                 value={formData.paidAmount}
                 onChange={(e) => handleInputChange("paidAmount", e.target.value)}
                 required
                 className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"
               />
+              {editingRecord && (
+                <span className="text-[9px] text-slate-400 font-semibold leading-none">
+                  Update to the new cumulative paid amount.
+                </span>
+              )}
             </div>
 
             {/* Pending Amount */}

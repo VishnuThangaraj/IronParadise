@@ -4,33 +4,92 @@ import { format } from "date-fns";
 import {
   LuPlus,
   LuBadgeDollarSign,
-  LuUser,
   LuCoins,
   LuTrash2,
   LuPencil,
-  LuInfo,
   LuCheck,
   LuShieldAlert,
-  LuX,
   LuHistory,
   LuUsers,
-  LuArrowLeft
+  LuArrowLeft,
 } from "react-icons/lu";
 import useTrainerPayroll from "../hooks/useTrainerPayroll";
 import Loader from "@/shared/components/ui/Loader";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import TrainerPayoutModal from "../components/TrainerPayoutModal";
+import TrainerBulkPayoutModal from "../components/TrainerBulkPayoutModal";
 
 // Generate month options (e.g. "June 2026")
 const getMonthOptions = () => {
   const options = [];
   const currentDate = new Date();
   for (let i = -12; i <= 6; i++) {
-    const d = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
+    const d = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + i,
+      1,
+    );
     const label = d.toLocaleString("en-US", { month: "long", year: "numeric" });
     options.push(label);
   }
   return options;
+};
+
+// Calculate trainer's outstanding balance, grouping by month to handle multiple partial payments
+// Defaults current and previous month to unpaid base salary if no transaction exists for them and it is not before their joinDate.
+const calculateTrainerOutstanding = (trainer) => {
+  if (!trainer) return 0;
+  const history = trainer.salaryHistory || [];
+  const monthData = {};
+  
+  // Initialize current and previous month defaults
+  const currentDate = new Date();
+  const currentMonthLabel = currentDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+  const prevDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+  const prevMonthLabel = prevDate.toLocaleString("en-US", { month: "long", year: "numeric" });
+  
+  const joinDate = trainer.joinDate ? new Date(trainer.joinDate) : null;
+  
+  const isMonthBeforeJoin = (monthLabel, jd) => {
+    if (!jd) return false;
+    const [monthName, yearStr] = monthLabel.split(" ");
+    const monthIndex = new Date(`${monthName} 1, 2000`).getMonth();
+    const year = parseInt(yearStr);
+    const monthDate = new Date(year, monthIndex, 1);
+    const joinMonthStart = new Date(jd.getFullYear(), jd.getMonth(), 1);
+    return monthDate < joinMonthStart;
+  };
+  
+  if (!isMonthBeforeJoin(currentMonthLabel, joinDate)) {
+    monthData[currentMonthLabel] = {
+      totalAmount: trainer.salary || 0,
+      paidAmount: 0,
+    };
+  }
+  if (!isMonthBeforeJoin(prevMonthLabel, joinDate)) {
+    monthData[prevMonthLabel] = {
+      totalAmount: trainer.salary || 0,
+      paidAmount: 0,
+    };
+  }
+  
+  history.forEach((r) => {
+    const m = r.month;
+    if (!m) return;
+    if (!monthData[m]) {
+      monthData[m] = {
+        totalAmount: Number(r.totalAmount) || trainer.salary || 0,
+        paidAmount: 0,
+      };
+    }
+    monthData[m].paidAmount += Number(r.paidAmount) || 0;
+    monthData[m].totalAmount = Math.max(monthData[m].totalAmount, Number(r.totalAmount) || 0);
+  });
+
+  return Object.values(monthData).reduce(
+    (sum, data) => sum + Math.max(0, data.totalAmount - data.paidAmount),
+    0
+  );
 };
 
 const initialFormState = (baseSalary = 0) => ({
@@ -54,28 +113,28 @@ const TrainerPayroll = () => {
     addSalaryRecord,
     updateSalaryRecord,
     deleteSalaryRecord,
+    bulkPayTrainers,
   } = useTrainerPayroll();
 
-  const [activeTab, setActiveTab] = useState("instructors"); // "instructors" or "ledgers"
+  const queryParams = useMemo(() => new URLSearchParams(window.location.search), []);
+  const trainerIDParam = queryParams.get("trainerID");
+
+  const [activeTab, setActiveTab] = useState(trainerIDParam ? "ledgers" : "instructors"); // "instructors" or "ledgers"
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null); // null means adding
   const [formData, setFormData] = useState(initialFormState(0));
-  const [filterTrainerID, setFilterTrainerID] = useState(""); // filter ledgers for specific trainer
+  const [filterTrainerID, setFilterTrainerID] = useState(trainerIDParam || ""); // filter ledgers for specific trainer
 
   const monthOptions = useMemo(() => getMonthOptions(), []);
 
-  // Handle deep link via query parameters on load
+  // Clean up URL parameters to keep it clean
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const trainerIDParam = queryParams.get("trainerID");
     if (trainerIDParam) {
-      setFilterTrainerID(trainerIDParam);
-      setActiveTab("ledgers");
-      // Clean up URL parameters to keep it clean
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [trainerIDParam]);
 
   // Flat list of all payouts across all trainers
   const allPayouts = useMemo(() => {
@@ -84,7 +143,7 @@ const TrainerPayroll = () => {
         ...record,
         trainerName: t.name,
         trainerSpecialization: t.specialization,
-      }))
+      })),
     );
   }, [trainers]);
 
@@ -95,10 +154,9 @@ const TrainerPayroll = () => {
     let totalPending = 0;
 
     trainers.forEach((t) => {
-      const tPending = (t.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0);
-      totalPending += tPending;
+      totalPending += calculateTrainerOutstanding(t);
       (t.salaryHistory || []).forEach((record) => {
-        totalPaid += record.paidAmount || 0;
+        totalPaid += Number(record.paidAmount) || 0;
       });
     });
 
@@ -113,7 +171,7 @@ const TrainerPayroll = () => {
       (t) =>
         t.name?.toLowerCase().includes(query) ||
         t.email?.toLowerCase().includes(query) ||
-        t.specialization?.toLowerCase().includes(query)
+        t.specialization?.toLowerCase().includes(query),
     );
   }, [trainers, searchQuery]);
 
@@ -135,7 +193,7 @@ const TrainerPayroll = () => {
         item.trainerName?.toLowerCase().includes(query) ||
         item.month?.toLowerCase().includes(query) ||
         item.status?.toLowerCase().includes(query) ||
-        item.paymentMethod?.toLowerCase().includes(query)
+        item.paymentMethod?.toLowerCase().includes(query),
     );
   }, [allPayouts, searchQuery, filterTrainerID]);
 
@@ -152,17 +210,40 @@ const TrainerPayroll = () => {
     setEditingRecord(null);
     const targetTrainer = rowTrainer || trainers[0];
     const defaultMonth = monthOptions[12]; // current month
-    setFormData({
-      trainerID: targetTrainer ? targetTrainer.trainerID : "",
-      month: defaultMonth,
-      totalAmount: targetTrainer ? targetTrainer.salary : 0,
-      paidAmount: targetTrainer ? targetTrainer.salary : 0,
-      pendingAmount: 0,
-      paymentDate: new Date().toISOString().split("T")[0],
-      paymentMethod: "Bank Transfer",
-      status: "Paid",
-      remarks: "",
-    });
+
+    // Check if there is already a record for this trainer and month
+    const existing = targetTrainer
+      ? (targetTrainer.salaryHistory || []).find((r) => r.month === defaultMonth)
+      : null;
+
+    if (existing) {
+      setEditingRecord(existing);
+      setFormData({
+        trainerID: targetTrainer.trainerID,
+        month: existing.month || defaultMonth,
+        totalAmount: existing.totalAmount ?? targetTrainer.salary ?? 0,
+        paidAmount: existing.paidAmount === 0 ? (existing.totalAmount ?? targetTrainer.salary ?? 0) : (existing.paidAmount ?? 0),
+        pendingAmount: existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
+        paymentDate: existing.paymentDate
+          ? new Date(existing.paymentDate).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
+        paymentMethod: existing.paymentMethod || "Bank Transfer",
+        status: existing.paidAmount === 0 ? "Paid" : (existing.status || "Paid"),
+        remarks: existing.remarks || "",
+      });
+    } else {
+      setFormData({
+        trainerID: targetTrainer ? targetTrainer.trainerID : "",
+        month: defaultMonth,
+        totalAmount: targetTrainer ? targetTrainer.salary : 0,
+        paidAmount: targetTrainer ? targetTrainer.salary : 0,
+        pendingAmount: 0,
+        paymentDate: new Date().toISOString().split("T")[0],
+        paymentMethod: "Bank Transfer",
+        status: "Paid",
+        remarks: "",
+      });
+    }
     setIsModalOpen(true);
   };
 
@@ -187,6 +268,36 @@ const TrainerPayroll = () => {
 
   // Handle inputs dynamically inside modal
   const handleInputChange = (field, value) => {
+    if (field === "trainerID" || field === "month") {
+      const nextTrainerID = field === "trainerID" ? value : formData.trainerID;
+      const nextMonth = field === "month" ? value : formData.month;
+
+      const foundTrainer = trainers.find((t) => t.trainerID === nextTrainerID);
+      const existing = foundTrainer
+        ? (foundTrainer.salaryHistory || []).find((r) => r.month === nextMonth)
+        : null;
+
+      if (existing) {
+        setEditingRecord(existing);
+        setFormData({
+          trainerID: nextTrainerID,
+          month: nextMonth,
+          totalAmount: existing.totalAmount ?? foundTrainer.salary ?? 0,
+          paidAmount: existing.paidAmount === 0 ? (existing.totalAmount ?? foundTrainer.salary ?? 0) : (existing.paidAmount ?? 0),
+          pendingAmount: existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
+          paymentDate: existing.paymentDate
+            ? new Date(existing.paymentDate).toISOString().split("T")[0]
+            : new Date().toISOString().split("T")[0],
+          paymentMethod: existing.paymentMethod || "Bank Transfer",
+          status: existing.paidAmount === 0 ? "Paid" : (existing.status || "Paid"),
+          remarks: existing.remarks || "",
+        });
+        return;
+      } else {
+        setEditingRecord(null);
+      }
+    }
+
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
 
@@ -200,9 +311,19 @@ const TrainerPayroll = () => {
       }
 
       // Auto-calculate pending balance & status
-      if (field === "totalAmount" || field === "paidAmount" || field === "trainerID") {
+      if (
+        field === "totalAmount" ||
+        field === "paidAmount" ||
+        field === "trainerID"
+      ) {
         const total = parseFloat(updated.totalAmount) || 0;
-        const paid = parseFloat(updated.paidAmount) || 0;
+        let paid = parseFloat(updated.paidAmount) || 0;
+
+        if (paid > total) {
+          paid = total;
+          updated.paidAmount = paid;
+        }
+
         const pending = Math.max(0, total - paid);
         updated.pendingAmount = pending;
 
@@ -227,25 +348,37 @@ const TrainerPayroll = () => {
       totalAmount: parseFloat(formData.totalAmount) || 0,
       paidAmount: parseFloat(formData.paidAmount) || 0,
       pendingAmount: parseFloat(formData.pendingAmount) || 0,
-      paymentDate: formData.paymentDate ? new Date(formData.paymentDate).toISOString() : null,
+      paymentDate: formData.paymentDate
+        ? new Date(formData.paymentDate).toISOString()
+        : null,
       paymentMethod: formData.paymentMethod,
       status: formData.status,
       remarks: formData.remarks,
     };
 
-    let success = false;
-    if (editingRecord) {
-      success = await updateSalaryRecord(
-        formData.trainerID,
-        editingRecord.salaryID,
-        payload
-      );
-    } else {
-      success = await addSalaryRecord(formData.trainerID, payload);
-    }
+    const success = editingRecord
+      ? await updateSalaryRecord(
+          formData.trainerID,
+          editingRecord.salaryID,
+          payload,
+        )
+      : await addSalaryRecord(formData.trainerID, payload);
 
     if (success) {
       setIsModalOpen(false);
+    }
+  };
+
+  const handleSubmitBulk = async (bulkFormData) => {
+    const payload = {
+      month: bulkFormData.month,
+      paymentDate: bulkFormData.paymentDate ? new Date(bulkFormData.paymentDate).toISOString() : null,
+      paymentMethod: bulkFormData.paymentMethod,
+      remarks: bulkFormData.remarks,
+    };
+    const success = await bulkPayTrainers(payload);
+    if (success) {
+      setIsBulkModalOpen(false);
     }
   };
 
@@ -279,7 +412,7 @@ const TrainerPayroll = () => {
       render: (row) => {
         const total = (row.salaryHistory || []).reduce(
           (sum, r) => sum + (r.paidAmount || 0),
-          0
+          0,
         );
         return (
           <span className="text-emerald-600 font-bold">
@@ -291,23 +424,25 @@ const TrainerPayroll = () => {
     {
       header: "Outstanding Balance",
       render: (row) => {
-        const pending = (row.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0);
+        const pending = calculateTrainerOutstanding(row);
         return (
-        <span
-          className={`font-bold ${
-            pending > 0 ? "text-rose-500" : "text-slate-400 font-semibold"
-          }`}
-        >
-          ${pending.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      )},
+          <span
+            className={`font-bold ${
+              pending > 0 ? "text-rose-500" : "text-slate-400 font-semibold"
+            }`}
+          >
+            $
+            {pending.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            })}
+          </span>
+        );
+      },
     },
     {
       header: "Status",
       render: (row) => {
-        const pending = (row.salaryHistory || []).reduce((sum, r) => sum + (r.pendingAmount || 0), 0);
+        const pending = calculateTrainerOutstanding(row);
         const paidCount = (row.salaryHistory || []).length;
         let label = "Fully Paid";
         let styles = "bg-green-50 text-green-700 border-green-200";
@@ -380,14 +515,19 @@ const TrainerPayroll = () => {
     {
       header: "Month",
       accessor: "month",
-      render: (row) => <span className="font-bold text-slate-700">{row.month}</span>,
+      render: (row) => (
+        <span className="font-bold text-slate-700">{row.month}</span>
+      ),
     },
     {
       header: "Total",
       accessor: "totalAmount",
       render: (row) => (
         <span className="text-slate-600 font-semibold">
-          ${row.totalAmount?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          $
+          {row.totalAmount?.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          })}
         </span>
       ),
     },
@@ -396,29 +536,38 @@ const TrainerPayroll = () => {
       accessor: "paidAmount",
       render: (row) => (
         <span className="text-emerald-600 font-bold">
-          ${row.paidAmount?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          $
+          {row.paidAmount?.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          })}
         </span>
       ),
     },
     {
       header: "Pending",
-      accessor: "pendingAmount",
-      render: (row) => (
+      render: (row) => {
+        const pending = Math.max(0, (Number(row.totalAmount) || 0) - (Number(row.paidAmount) || 0));
+        return (
         <span
           className={`font-semibold ${
-            row.pendingAmount > 0 ? "text-rose-500 font-bold" : "text-slate-400"
+            pending > 0 ? "text-rose-500 font-bold" : "text-slate-400"
           }`}
         >
-          ${row.pendingAmount?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          $
+          {pending.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          })}
         </span>
-      ),
+      )},
     },
     {
       header: "Payment Date",
       accessor: "paymentDate",
       render: (row) => (
         <span className="text-slate-500 font-medium text-[11px]">
-          {row.paymentDate ? format(new Date(row.paymentDate), "MMM dd, yyyy") : "N/A"}
+          {row.paymentDate
+            ? format(new Date(row.paymentDate), "MMM dd, yyyy")
+            : "N/A"}
         </span>
       ),
     },
@@ -475,13 +624,22 @@ const TrainerPayroll = () => {
   ];
 
   const globalAddButton = (
-    <button
-      onClick={() => handleOpenAddModal(null)}
-      className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-250 cursor-pointer"
-    >
-      <LuPlus className="w-3.5 h-3.5" />
-      <span>Record Payout</span>
-    </button>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => setIsBulkModalOpen(true)}
+        className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-705 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-250 cursor-pointer"
+      >
+        <LuCoins className="w-3.5 h-3.5" />
+        <span>Bulk Payout</span>
+      </button>
+      <button
+        onClick={() => handleOpenAddModal(null)}
+        className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-250 cursor-pointer"
+      >
+        <LuPlus className="w-3.5 h-3.5" />
+        <span>Record Payout</span>
+      </button>
+    </div>
   );
 
   return (
@@ -499,7 +657,8 @@ const TrainerPayroll = () => {
             Payroll Dashboard
           </h1>
           <p className="text-xs font-medium text-slate-500">
-            Gym instructor payroll, transactions history, and accounts settlement logs.
+            Gym instructor payroll, transactions history, and accounts
+            settlement logs.
           </p>
         </div>
       </div>
@@ -534,7 +693,8 @@ const TrainerPayroll = () => {
               Total Paid Out
             </span>
             <h3 className="text-xl font-bold text-slate-800 mt-0.5">
-              ${summaryStats.totalPaid?.toLocaleString(undefined, {
+              $
+              {summaryStats.totalPaid?.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
             </h3>
@@ -562,16 +722,21 @@ const TrainerPayroll = () => {
             </span>
             <h3
               className={`text-xl font-bold mt-0.5 ${
-                summaryStats.totalPending > 0 ? "text-rose-500 font-extrabold animate-pulse" : "text-slate-800"
+                summaryStats.totalPending > 0
+                  ? "text-rose-500 font-extrabold animate-pulse"
+                  : "text-slate-800"
               }`}
             >
-              ${summaryStats.totalPending?.toLocaleString(undefined, {
+              $
+              {summaryStats.totalPending?.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
             </h3>
             <span
               className={`text-[11px] font-semibold flex items-center gap-0.5 mt-1 ${
-                summaryStats.totalPending > 0 ? "text-rose-500" : "text-slate-400"
+                summaryStats.totalPending > 0
+                  ? "text-rose-500"
+                  : "text-slate-400"
               }`}
             >
               {summaryStats.totalPending > 0 ? (
@@ -679,6 +844,15 @@ const TrainerPayroll = () => {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         trainers={trainers}
+        monthOptions={monthOptions}
+      />
+
+      {/* Bulk Payout Modal */}
+      <TrainerBulkPayoutModal
+        isModalOpen={isBulkModalOpen}
+        setIsModalOpen={setIsBulkModalOpen}
+        isSubmitting={isSubmitting}
+        handleSubmitBulk={handleSubmitBulk}
         monthOptions={monthOptions}
       />
     </div>

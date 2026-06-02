@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, status
 
 from src.models.Trainer import Trainer
-from src.schemas.trainerSchemas import TrainerRequest, TrainerSalaryRequest
+from src.schemas.trainerSchemas import TrainerRequest, TrainerSalaryRequest, BulkTrainerSalaryRequest
 from src.controllers.authController import get_loggedin_admin
 from src.controllers.trainerController import (
     create_trainer,
@@ -12,7 +12,8 @@ from src.controllers.trainerController import (
     populate_trainer,
     add_trainer_salary,
     update_trainer_salary,
-    remove_trainer_salary
+    remove_trainer_salary,
+    bulk_pay_trainers
 )   
 
 router = APIRouter(prefix='/trainer', tags=['Trainer'])
@@ -63,4 +64,9 @@ async def update_salary(request: Request, id: str, salary_id: str, data: Trainer
 async def remove_salary(request: Request, id: str, salary_id: str):
     await get_loggedin_admin(request)
     return await remove_trainer_salary(id, salary_id)
+
+@router.post('/salary/bulk-pay', status_code=status.HTTP_201_CREATED)
+async def bulk_pay(request: Request, data: BulkTrainerSalaryRequest):
+    await get_loggedin_admin(request)
+    return await bulk_pay_trainers(data.model_dump())
 

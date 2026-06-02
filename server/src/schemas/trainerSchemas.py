@@ -27,3 +27,9 @@ class TrainerSalaryRequest(BaseModel):
     paymentMethod: Optional[str] = None
     status: str = "Paid"
     remarks: Optional[str] = None
+
+class BulkTrainerSalaryRequest(BaseModel):
+    month: str
+    paymentDate: Optional[datetime] = None
+    paymentMethod: Optional[str] = "Bank Transfer"
+    remarks: Optional[str] = None
