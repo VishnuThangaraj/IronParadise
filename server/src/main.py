@@ -11,6 +11,12 @@ from src.routers import authRoutes
 from src.routers import trainerRoutes
 from src.routers import dietPlanRoutes
 from src.routers import workoutPlanRoutes
+from src.routers import membershipPlanRoutes
+from src.routers import memberRoutes
+from src.routers import memberPlanRoutes
+from src.routers import memberMeasurementRoutes
+from src.routers import memberPaymentRoutes
+
 
 load_dotenv()
 
@@ -39,6 +45,12 @@ app.include_router(authRoutes.router)
 app.include_router(trainerRoutes.router)
 app.include_router(dietPlanRoutes.router)
 app.include_router(workoutPlanRoutes.router)
+app.include_router(membershipPlanRoutes.router)
+app.include_router(memberRoutes.router)
+app.include_router(memberPlanRoutes.router)
+app.include_router(memberMeasurementRoutes.router)
+app.include_router(memberPaymentRoutes.router)
+
 
 if __name__ == "__main__":
     port = int(getenv("PORT"))

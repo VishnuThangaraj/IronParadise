@@ -49,6 +49,25 @@ const TrainerDetails = lazy(
 const TrainerPayroll = lazy(
   () => import("@/features/trainer/pages/TrainerPayroll"),
 );
+const AddMembershipPlan = lazy(
+  () => import("@/features/membershipplan/pages/AddMembershipPlan"),
+);
+const EditMembershipPlan = lazy(
+  () => import("@/features/membershipplan/pages/EditMembershipPlan"),
+);
+const MembershipPlanList = lazy(
+  () => import("@/features/membershipplan/pages/MembershipPlanList"),
+);
+const MembershipPlanDetails = lazy(
+  () => import("@/features/membershipplan/pages/MembershipPlanDetails"),
+);
+
+const AddMember = lazy(() => import("@/features/member/pages/AddMember"));
+const EditMember = lazy(() => import("@/features/member/pages/EditMember"));
+const MemberList = lazy(() => import("@/features/member/pages/MemberList"));
+const MemberDetails = lazy(() => import("@/features/member/pages/MemberDetails"));
+const MembershipPaylist = lazy(() => import("@/features/payment/pages/MembershipPaylist"));
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -119,6 +138,21 @@ const App = () => {
                 path="/plan/workout/details/:workoutPlanId"
                 element={<WorkoutPlanDetails />}
               />
+
+              {/* Membership Plan */}
+              <Route path="/membership/list" element={<MembershipPlanList />} />
+              <Route path="/membership/add" element={<AddMembershipPlan />} />
+              <Route path="/membership/edit/:id" element={<EditMembershipPlan />} />
+              <Route path="/membership/details/:id" element={<MembershipPlanDetails />} />
+
+              {/* Member */}
+              <Route path="/member/list" element={<MemberList />} />
+              <Route path="/member/add" element={<AddMember />} />
+              <Route path="/member/edit/:id" element={<EditMember />} />
+              <Route path="/member/details/:id" element={<MemberDetails />} />
+
+              {/* Payment */}
+              <Route path="/payment" element={<MembershipPaylist />} />
             </Routes>
           </main>
           <Footer />

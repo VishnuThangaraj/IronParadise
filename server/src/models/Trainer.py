@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from pydantic import Field
 from datetime import datetime
+from typing import Optional, List
 from pymongo import IndexModel, ASCENDING
 from beanie import Document, before_event, Insert, Save
 

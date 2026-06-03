@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Box, Divider } from "@mui/material";
 import { LuX, LuInfo } from "react-icons/lu";
 
@@ -22,12 +22,6 @@ const TrainerBulkPayoutModal = ({
   const [formData, setFormData] = useState(
     initialFormState(monthOptions[12] || ""),
   );
-
-  useEffect(() => {
-    if (isModalOpen) {
-      setFormData(initialFormState(monthOptions[12] || ""));
-    }
-  }, [isModalOpen, monthOptions]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

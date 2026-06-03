@@ -96,15 +96,15 @@ export const AdminSidebarItems = [
         name: "Membership Plans",
 
         icon: LuCrown,
-        location: "/subscription",
+        location: "/membership",
         children: [
           {
             name: "Plans List",
-            location: "/subscription/list",
+            location: "/membership/list",
           },
           {
             name: "Add New Plan",
-            location: "/subscription/add",
+            location: "/membership/add",
           },
         ],
       },

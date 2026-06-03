@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Standard Monthly",
+    "duration": "1 Month",
+    "amount": 1500,
+    "description": "Access to all gym facilities and cardio zone.",
+    "status": "Active"
+  },
+  {
+    "name": "Quarterly Pro",
+    "duration": "3 Months",
+    "amount": 4000,
+    "description": "Access to all gym facilities, steam bath, and cardio zone.",
+    "status": "Active"
+  },
+  {
+    "name": "Half-Yearly Elite",
+    "duration": "6 Months",
+    "amount": 7500,
+    "description": "Full access to all facilities, steam bath, lockers, and 2 guest passes.",
+    "status": "Active"
+  },
+  {
+    "name": "Annual Paradise",
+    "duration": "1 Year",
+    "amount": 13000,
+    "description": "Ultimate access to all facilities, locker room, pool, 5 guest passes, and 1 personal trainer session per month.",
+    "status": "Active"
+  }
+]

@@ -41,15 +41,25 @@ const calculateTrainerOutstanding = (trainer) => {
   if (!trainer) return 0;
   const history = trainer.salaryHistory || [];
   const monthData = {};
-  
+
   // Initialize current and previous month defaults
   const currentDate = new Date();
-  const currentMonthLabel = currentDate.toLocaleString("en-US", { month: "long", year: "numeric" });
-  const prevDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-  const prevMonthLabel = prevDate.toLocaleString("en-US", { month: "long", year: "numeric" });
-  
+  const currentMonthLabel = currentDate.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  const prevDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() - 1,
+    1,
+  );
+  const prevMonthLabel = prevDate.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
   const joinDate = trainer.joinDate ? new Date(trainer.joinDate) : null;
-  
+
   const isMonthBeforeJoin = (monthLabel, jd) => {
     if (!jd) return false;
     const [monthName, yearStr] = monthLabel.split(" ");
@@ -59,7 +69,7 @@ const calculateTrainerOutstanding = (trainer) => {
     const joinMonthStart = new Date(jd.getFullYear(), jd.getMonth(), 1);
     return monthDate < joinMonthStart;
   };
-  
+
   if (!isMonthBeforeJoin(currentMonthLabel, joinDate)) {
     monthData[currentMonthLabel] = {
       totalAmount: trainer.salary || 0,
@@ -72,7 +82,7 @@ const calculateTrainerOutstanding = (trainer) => {
       paidAmount: 0,
     };
   }
-  
+
   history.forEach((r) => {
     const m = r.month;
     if (!m) return;
@@ -83,12 +93,15 @@ const calculateTrainerOutstanding = (trainer) => {
       };
     }
     monthData[m].paidAmount += Number(r.paidAmount) || 0;
-    monthData[m].totalAmount = Math.max(monthData[m].totalAmount, Number(r.totalAmount) || 0);
+    monthData[m].totalAmount = Math.max(
+      monthData[m].totalAmount,
+      Number(r.totalAmount) || 0,
+    );
   });
 
   return Object.values(monthData).reduce(
     (sum, data) => sum + Math.max(0, data.totalAmount - data.paidAmount),
-    0
+    0,
   );
 };
 
@@ -116,10 +129,15 @@ const TrainerPayroll = () => {
     bulkPayTrainers,
   } = useTrainerPayroll();
 
-  const queryParams = useMemo(() => new URLSearchParams(window.location.search), []);
+  const queryParams = useMemo(
+    () => new URLSearchParams(window.location.search),
+    [],
+  );
   const trainerIDParam = queryParams.get("trainerID");
 
-  const [activeTab, setActiveTab] = useState(trainerIDParam ? "ledgers" : "instructors"); // "instructors" or "ledgers"
+  const [activeTab, setActiveTab] = useState(
+    trainerIDParam ? "ledgers" : "instructors",
+  ); // "instructors" or "ledgers"
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
@@ -213,7 +231,9 @@ const TrainerPayroll = () => {
 
     // Check if there is already a record for this trainer and month
     const existing = targetTrainer
-      ? (targetTrainer.salaryHistory || []).find((r) => r.month === defaultMonth)
+      ? (targetTrainer.salaryHistory || []).find(
+          (r) => r.month === defaultMonth,
+        )
       : null;
 
     if (existing) {
@@ -222,13 +242,17 @@ const TrainerPayroll = () => {
         trainerID: targetTrainer.trainerID,
         month: existing.month || defaultMonth,
         totalAmount: existing.totalAmount ?? targetTrainer.salary ?? 0,
-        paidAmount: existing.paidAmount === 0 ? (existing.totalAmount ?? targetTrainer.salary ?? 0) : (existing.paidAmount ?? 0),
-        pendingAmount: existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
+        paidAmount:
+          existing.paidAmount === 0
+            ? (existing.totalAmount ?? targetTrainer.salary ?? 0)
+            : (existing.paidAmount ?? 0),
+        pendingAmount:
+          existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
         paymentDate: existing.paymentDate
           ? new Date(existing.paymentDate).toISOString().split("T")[0]
           : new Date().toISOString().split("T")[0],
         paymentMethod: existing.paymentMethod || "Bank Transfer",
-        status: existing.paidAmount === 0 ? "Paid" : (existing.status || "Paid"),
+        status: existing.paidAmount === 0 ? "Paid" : existing.status || "Paid",
         remarks: existing.remarks || "",
       });
     } else {
@@ -283,13 +307,18 @@ const TrainerPayroll = () => {
           trainerID: nextTrainerID,
           month: nextMonth,
           totalAmount: existing.totalAmount ?? foundTrainer.salary ?? 0,
-          paidAmount: existing.paidAmount === 0 ? (existing.totalAmount ?? foundTrainer.salary ?? 0) : (existing.paidAmount ?? 0),
-          pendingAmount: existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
+          paidAmount:
+            existing.paidAmount === 0
+              ? (existing.totalAmount ?? foundTrainer.salary ?? 0)
+              : (existing.paidAmount ?? 0),
+          pendingAmount:
+            existing.paidAmount === 0 ? 0 : (existing.pendingAmount ?? 0),
           paymentDate: existing.paymentDate
             ? new Date(existing.paymentDate).toISOString().split("T")[0]
             : new Date().toISOString().split("T")[0],
           paymentMethod: existing.paymentMethod || "Bank Transfer",
-          status: existing.paidAmount === 0 ? "Paid" : (existing.status || "Paid"),
+          status:
+            existing.paidAmount === 0 ? "Paid" : existing.status || "Paid",
           remarks: existing.remarks || "",
         });
         return;
@@ -372,7 +401,9 @@ const TrainerPayroll = () => {
   const handleSubmitBulk = async (bulkFormData) => {
     const payload = {
       month: bulkFormData.month,
-      paymentDate: bulkFormData.paymentDate ? new Date(bulkFormData.paymentDate).toISOString() : null,
+      paymentDate: bulkFormData.paymentDate
+        ? new Date(bulkFormData.paymentDate).toISOString()
+        : null,
       paymentMethod: bulkFormData.paymentMethod,
       remarks: bulkFormData.remarks,
     };
@@ -403,7 +434,7 @@ const TrainerPayroll = () => {
       accessor: "salary",
       render: (row) => (
         <span className="text-slate-600 font-semibold">
-          ${row.salary?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          ₹{row.salary?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
         </span>
       ),
     },
@@ -416,7 +447,7 @@ const TrainerPayroll = () => {
         );
         return (
           <span className="text-emerald-600 font-bold">
-            ${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            ₹{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </span>
         );
       },
@@ -431,7 +462,7 @@ const TrainerPayroll = () => {
               pending > 0 ? "text-rose-500" : "text-slate-400 font-semibold"
             }`}
           >
-            $
+            ₹
             {pending.toLocaleString(undefined, {
               minimumFractionDigits: 2,
             })}
@@ -524,7 +555,7 @@ const TrainerPayroll = () => {
       accessor: "totalAmount",
       render: (row) => (
         <span className="text-slate-600 font-semibold">
-          $
+          ₹
           {row.totalAmount?.toLocaleString(undefined, {
             minimumFractionDigits: 2,
           })}
@@ -536,7 +567,7 @@ const TrainerPayroll = () => {
       accessor: "paidAmount",
       render: (row) => (
         <span className="text-emerald-600 font-bold">
-          $
+          ₹
           {row.paidAmount?.toLocaleString(undefined, {
             minimumFractionDigits: 2,
           })}
@@ -546,19 +577,23 @@ const TrainerPayroll = () => {
     {
       header: "Pending",
       render: (row) => {
-        const pending = Math.max(0, (Number(row.totalAmount) || 0) - (Number(row.paidAmount) || 0));
+        const pending = Math.max(
+          0,
+          (Number(row.totalAmount) || 0) - (Number(row.paidAmount) || 0),
+        );
         return (
-        <span
-          className={`font-semibold ${
-            pending > 0 ? "text-rose-500 font-bold" : "text-slate-400"
-          }`}
-        >
-          $
-          {pending.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          })}
-        </span>
-      )},
+          <span
+            className={`font-semibold ${
+              pending > 0 ? "text-rose-500 font-bold" : "text-slate-400"
+            }`}
+          >
+            ₹
+            {pending.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            })}
+          </span>
+        );
+      },
     },
     {
       header: "Payment Date",
@@ -693,7 +728,7 @@ const TrainerPayroll = () => {
               Total Paid Out
             </span>
             <h3 className="text-xl font-bold text-slate-800 mt-0.5">
-              $
+              ₹
               {summaryStats.totalPaid?.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
@@ -727,7 +762,7 @@ const TrainerPayroll = () => {
                   : "text-slate-800"
               }`}
             >
-              $
+              ₹
               {summaryStats.totalPending?.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               })}
@@ -848,13 +883,15 @@ const TrainerPayroll = () => {
       />
 
       {/* Bulk Payout Modal */}
-      <TrainerBulkPayoutModal
-        isModalOpen={isBulkModalOpen}
-        setIsModalOpen={setIsBulkModalOpen}
-        isSubmitting={isSubmitting}
-        handleSubmitBulk={handleSubmitBulk}
-        monthOptions={monthOptions}
-      />
+      {isBulkModalOpen && (
+        <TrainerBulkPayoutModal
+          isModalOpen={isBulkModalOpen}
+          setIsModalOpen={setIsBulkModalOpen}
+          isSubmitting={isSubmitting}
+          handleSubmitBulk={handleSubmitBulk}
+          monthOptions={monthOptions}
+        />
+      )}
     </div>
   );
 };
