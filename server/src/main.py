@@ -18,6 +18,10 @@ from src.routers import memberPlanRoutes
 from src.routers import memberMeasurementRoutes
 from src.routers import memberPaymentRoutes
 from src.routers import eventRoutes
+from src.routers import attendanceRoutes
+from src.routers import kioskRoutes
+from src.routers import enquiryRoutes
+from src.routers import dashboardRoutes
 
 
 load_dotenv()
@@ -54,6 +58,10 @@ app.include_router(memberPlanRoutes.router)
 app.include_router(memberMeasurementRoutes.router)
 app.include_router(memberPaymentRoutes.router)
 app.include_router(eventRoutes.router)
+app.include_router(attendanceRoutes.router)
+app.include_router(kioskRoutes.router)
+app.include_router(enquiryRoutes.router)
+app.include_router(dashboardRoutes.router)
 
 
 if __name__ == "__main__":

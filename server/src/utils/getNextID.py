@@ -13,6 +13,7 @@ PREFIX = {
   "member_payment": "MPY",
   "trainer_salary": "TSL",
   "membership_plan": "MPL",
+  "enquiry": "ENQ",
 }
 
 async def getNextID(collection_name: str) -> str:

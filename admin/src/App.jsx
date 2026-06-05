@@ -69,6 +69,10 @@ const MemberDetails = lazy(() => import("@/features/member/pages/MemberDetails")
 const MembershipPaylist = lazy(() => import("@/features/payment/pages/MembershipPaylist"));
 const Messages = lazy(() => import("@/features/messages/pages/Messages"));
 const Events = lazy(() => import("@/features/event/pages/Events"));
+const Attendance = lazy(() => import("@/features/attendance/pages/Attendance"));
+const AttendanceKioskPage = lazy(() => import("@/features/attendance/pages/AttendanceKioskPage"));
+const EnquiryPage = lazy(() => import("@/features/enquiry/pages/EnquiryPage"));
+const EnquiriesList = lazy(() => import("@/features/enquiry/pages/EnquiriesList"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -91,6 +95,8 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/authentication" element={<AuthPage />} />
+          <Route path="/attendance-log" element={<AttendanceKioskPage />} />
+          <Route path="/enquiry" element={<EnquiryPage />} />
           <Route path="*" element={<Navigate to="/authentication" replace />} />
         </Routes>
       </Suspense>
@@ -107,6 +113,10 @@ const App = () => {
             <Routes>
               <Route path="/home" element={<AdminDashboard />} />
               <Route path="/account/settings" element={<AccountSettings />} />
+              <Route path="/attendance" element={<Attendance />} />
+              <Route path="/attendance-log" element={<AttendanceKioskPage />} />
+              <Route path="/enquiry" element={<EnquiryPage />} />
+              <Route path="/enquiry/list" element={<EnquiriesList />} />
               <Route path="*" element={<Navigate to="/home" replace />} />
 
               {/* Trainer */}

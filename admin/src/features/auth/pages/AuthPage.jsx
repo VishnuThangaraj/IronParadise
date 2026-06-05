@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { motion } from "motion/react";
 import { Paper, Checkbox } from "@mui/material";
@@ -6,6 +7,7 @@ import { Paper, Checkbox } from "@mui/material";
 import { fadeUp, fadeIn } from "@/shared/animations";
 import FormField from "@/shared/components/ui/form/Input/FormField";
 import ButtonPrimary from "@/shared/components/ui/form/button/ButtonPrimary";
+import { LuUsers, LuMessageSquare } from "react-icons/lu";
 
 import authFields from "@/features/auth/constants/authFields";
 import useLoginForm from "@/features/auth/hooks/useLoginForm";
@@ -35,9 +37,20 @@ const AuthPage = () => {
       {/* Dark overlay & blur blobs */}
       <div className="absolute inset-0 bg-linear-to-b from-slate-950/90 via-slate-950/85 to-indigo-950/90 pointer-events-none" />
 
-      {/* Decorative Neon Glow Blobs */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+      {/* Top right floating buttons */}
+      <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-3">
+        {/* Kiosk Mode Link */}
+        <Link to="/attendance-log" className="flex items-center gap-2 text-indigo-300 hover:text-white transition-colors bg-indigo-900/30 hover:bg-indigo-900/50 px-4 py-2 rounded-full border border-indigo-500/30 backdrop-blur-md shadow-lg shadow-indigo-900/20">
+          <LuUsers className="w-4 h-4" />
+          <span className="text-xs font-bold uppercase tracking-wider">Kiosk Mode</span>
+        </Link>
+        
+        {/* Enquiry Link */}
+        <Link to="/enquiry" className="flex items-center gap-2 text-emerald-300 hover:text-white transition-colors bg-emerald-900/30 hover:bg-emerald-900/50 px-4 py-2 rounded-full border border-emerald-500/30 backdrop-blur-md shadow-lg shadow-emerald-900/20">
+          <LuMessageSquare className="w-4 h-4" />
+          <span className="text-xs font-bold uppercase tracking-wider">Contact Us</span>
+        </Link>
+      </div>
 
       {/* Logo */}
       <motion.div
