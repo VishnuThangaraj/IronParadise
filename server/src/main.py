@@ -39,14 +39,14 @@ app = FastAPI(title="IronParadise API", lifespan=lifespan)
 # Apply CORS middleware
 setup_cors(app)
 
-@app.get('/')
+@app.api_route('/', methods=['GET', 'HEAD'])
 def root():
     return {
         'message': 'IronParadise Server Running...',
         'version': '0.0.1',
     }
 
-@app.get('/ping')
+@app.api_route('/ping', methods=['GET', 'HEAD'])
 def ping():
     return {"status": "ok", "message": "Pong"}
 
@@ -69,5 +69,5 @@ app.include_router(dashboardRoutes.router)
 
 
 if __name__ == "__main__":
-    port = int(getenv("PORT"))
-    uvicorn.run("src.main:app", host="localhost", port=port, reload=True)
+    port = int(getenv("PORT", 8000))
+    uvicorn.run("src.main:app", host="0.0.0.0", port=port, reload=True)
