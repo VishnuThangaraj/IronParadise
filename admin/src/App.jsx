@@ -67,7 +67,8 @@ const EditMember = lazy(() => import("@/features/member/pages/EditMember"));
 const MemberList = lazy(() => import("@/features/member/pages/MemberList"));
 const MemberDetails = lazy(() => import("@/features/member/pages/MemberDetails"));
 const MembershipPaylist = lazy(() => import("@/features/payment/pages/MembershipPaylist"));
-
+const Messages = lazy(() => import("@/features/messages/pages/Messages"));
+const Events = lazy(() => import("@/features/event/pages/Events"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -153,6 +154,12 @@ const App = () => {
 
               {/* Payment */}
               <Route path="/payment" element={<MembershipPaylist />} />
+
+              {/* Messages */}
+              <Route path="/message" element={<Messages />} />
+
+              {/* Events */}
+              <Route path="/events/view" element={<Events />} />
             </Routes>
           </main>
           <Footer />

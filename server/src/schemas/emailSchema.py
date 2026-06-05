@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import List
 
 class EmailRequest(BaseModel):
     to: EmailStr
@@ -11,3 +12,8 @@ class TrainerWelcomeRequest(BaseModel):
     mobile: str
     specialization: str
     shift_time: str
+
+class BulkEmailRequest(BaseModel):
+    recipients: List[EmailStr]
+    subject: str
+    body: str

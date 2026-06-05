@@ -1,0 +1,834 @@
+[
+  {
+    "name": "Summer CrossFit Kickoff",
+    "description": "Start the summer strong with our intense CrossFit workout session.",
+    "date": "2026-06-10T08:00:00",
+    "time": "08:00 AM",
+    "location": "Main CrossFit Arena",
+    "visibility": "all"
+  },
+  {
+    "name": "Yoga for Core Strength",
+    "description": "Focus on core stability and flexibility in this specialized yoga flow.",
+    "date": "2026-06-11T07:00:00",
+    "time": "07:00 AM",
+    "location": "Yoga Studio A",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer CPR Certification",
+    "description": "Mandatory bi-annual CPR and safety certification for all staff.",
+    "date": "2026-06-12T13:00:00",
+    "time": "01:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "VIP Nutrition Seminar",
+    "description": "Private nutritional consulting and meal planning seminar.",
+    "date": "2026-06-13T18:00:00",
+    "time": "06:00 PM",
+    "location": "VIP Lounge",
+    "visibility": "private"
+  },
+  {
+    "name": "Powerlifting Meet prep",
+    "description": "Prepare for upcoming powerlifting competitions. Squat, Bench, and Deadlift guidelines.",
+    "date": "2026-06-14T10:00:00",
+    "time": "10:00 AM",
+    "location": "Heavy Lifting Section",
+    "visibility": "all"
+  },
+  {
+    "name": "HIIT Endurance Challenge",
+    "description": "A high-intensity interval training session designed to push your cardio limits.",
+    "date": "2026-06-15T17:30:00",
+    "time": "05:30 PM",
+    "location": "HIIT Zone",
+    "visibility": "members"
+  },
+  {
+    "name": "Spin Marathon",
+    "description": "Two hours of non-stop cycling with dynamic music and lighting.",
+    "date": "2026-06-16T18:00:00",
+    "time": "06:00 PM",
+    "location": "Spin Studio",
+    "visibility": "all"
+  },
+  {
+    "name": "Kettlebell Fundamentals",
+    "description": "Master the kettlebell swing, clean, and snatch with proper form.",
+    "date": "2026-06-17T09:00:00",
+    "time": "09:00 AM",
+    "location": "Functional Area",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Alignment Meeting",
+    "description": "Monthly trainers meetup to align on client programs and gym targets.",
+    "date": "2026-06-18T12:00:00",
+    "time": "12:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Beginners Weightlifting Class",
+    "description": "Introduction to basic weight training movements and gym safety.",
+    "date": "2026-06-19T11:00:00",
+    "time": "11:00 AM",
+    "location": "Free Weights Area",
+    "visibility": "all"
+  },
+  {
+    "name": "Zumba Dance Party",
+    "description": "An energetic, fun dance fitness session with Latin beats.",
+    "date": "2026-06-20T19:00:00",
+    "time": "07:00 PM",
+    "location": "Main Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Pilates Core and Flexibility",
+    "description": "Improve your alignment, balance, and posture in this low-impact class.",
+    "date": "2026-06-21T08:30:00",
+    "time": "08:30 AM",
+    "location": "Yoga Studio A",
+    "visibility": "members"
+  },
+  {
+    "name": "Olympic Lifting Clinic",
+    "description": "Deep dive into clean & jerk and snatch mechanics.",
+    "date": "2026-06-22T10:00:00",
+    "time": "10:00 AM",
+    "location": "Platforms Area",
+    "visibility": "all"
+  },
+  {
+    "name": "Hydration and Recovery Class",
+    "description": "Learn the importance of hydration, sleep, and recovery methods.",
+    "date": "2026-06-23T16:00:00",
+    "time": "04:00 PM",
+    "location": "Cafe Lounge",
+    "visibility": "all"
+  },
+  {
+    "name": "Trainer Technique Review",
+    "description": "Peer review session for trainers on training progressions.",
+    "date": "2026-06-24T14:00:00",
+    "time": "02:00 PM",
+    "location": "VIP Lounge",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Outdoor Running Club",
+    "description": "Join our weekly outdoor 5k run followed by stretch sessions.",
+    "date": "2026-06-25T06:00:00",
+    "time": "06:00 AM",
+    "location": "Gym Entrance",
+    "visibility": "all"
+  },
+  {
+    "name": "Calisthenics Bodyweight Basics",
+    "description": "Learn pull-ups, push-ups, and core control using gymnastic rings.",
+    "date": "2026-06-26T17:00:00",
+    "time": "05:00 PM",
+    "location": "Functional Zone",
+    "visibility": "members"
+  },
+  {
+    "name": "Nutrition Mythbusting Panel",
+    "description": "Dietitians answer your questions about trending diets and supplements.",
+    "date": "2026-06-27T11:00:00",
+    "time": "11:00 AM",
+    "location": "Main Lounge",
+    "visibility": "all"
+  },
+  {
+    "name": "Fascial Release Workshop",
+    "description": "Use foam rollers and lacrosse balls to release muscle tension.",
+    "date": "2026-06-28T09:30:00",
+    "time": "09:30 AM",
+    "location": "Studio Room B",
+    "visibility": "members"
+  },
+  {
+    "name": "Private Sponsor Meetup",
+    "description": "Exclusive networking event for gym sponsors and partners.",
+    "date": "2026-06-29T19:30:00",
+    "time": "07:30 PM",
+    "location": "VIP Room",
+    "visibility": "private"
+  },
+  {
+    "name": "Active Recovery Stretch",
+    "description": "Low-intensity recovery and stretching session.",
+    "date": "2026-06-30T10:00:00",
+    "time": "10:00 AM",
+    "location": "Yoga Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "July CrossFit Open",
+    "description": "Our monthly CrossFit competition. Prizes for top male and female athletes.",
+    "date": "2026-07-02T08:00:00",
+    "time": "08:00 AM",
+    "location": "CrossFit Cage",
+    "visibility": "all"
+  },
+  {
+    "name": "Post-Workout Meal Prep",
+    "description": "Hands-on meal preparation class for high-protein gym diets.",
+    "date": "2026-07-04T12:00:00",
+    "time": "12:00 PM",
+    "location": "Gym Cafe",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Advanced Anatomy Class",
+    "description": "Specialized anatomy and injury prevention workshop for trainers.",
+    "date": "2026-07-05T13:00:00",
+    "time": "01:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Strength and Conditioning Meet",
+    "description": "Advanced training techniques using bands, chains, and velocity tracking.",
+    "date": "2026-07-06T18:00:00",
+    "time": "06:00 PM",
+    "location": "Athletic Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Core Pilates for Runners",
+    "description": "Pilates class targeting runner hip stability and core strength.",
+    "date": "2026-07-07T07:30:00",
+    "time": "07:30 AM",
+    "location": "Studio Room A",
+    "visibility": "members"
+  },
+  {
+    "name": "Spin and Core Fusion",
+    "description": "45 minutes of cycling followed by 15 minutes of intensive core work.",
+    "date": "2026-07-08T18:30:00",
+    "time": "06:30 PM",
+    "location": "Spin Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Bodybuilding Posing Workshop",
+    "description": "Learn the mandatory posing criteria for physique competitions.",
+    "date": "2026-07-10T16:00:00",
+    "time": "04:00 PM",
+    "location": "Mirror Studio",
+    "visibility": "all"
+  },
+  {
+    "name": "HIIT Tabata Madness",
+    "description": "Fast-paced 20/10 intervals that burn maximum calories.",
+    "date": "2026-07-11T17:00:00",
+    "time": "05:00 PM",
+    "location": "HIIT Room",
+    "visibility": "members"
+  },
+  {
+    "name": "Deadlift Mastery Clinic",
+    "description": "Break down sumo and conventional deadlift mechanics.",
+    "date": "2026-07-12T10:00:00",
+    "time": "10:00 AM",
+    "location": "Lifting Platform",
+    "visibility": "all"
+  },
+  {
+    "name": "Trainer Nutrition Coaching Cert",
+    "description": "In-house certification on basic client dietary advice.",
+    "date": "2026-07-13T12:00:00",
+    "time": "12:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Sunset Yoga Flow",
+    "description": "Relax and unwind with this peaceful sunset yoga class.",
+    "date": "2026-07-14T19:00:00",
+    "time": "07:00 PM",
+    "location": "Roof Deck",
+    "visibility": "all"
+  },
+  {
+    "name": "Barbell Club: The Bench Press",
+    "description": "Improve your bench press setup, leg drive, and bar path.",
+    "date": "2026-07-15T18:00:00",
+    "time": "06:00 PM",
+    "location": "Bench Section",
+    "visibility": "members"
+  },
+  {
+    "name": "Rowing Cardio Blast",
+    "description": "Cardio-intensive training focusing on the rowing ergometer.",
+    "date": "2026-07-16T08:00:00",
+    "time": "08:00 AM",
+    "location": "Cardio Deck",
+    "visibility": "members"
+  },
+  {
+    "name": "Private Board Audit Session",
+    "description": "Internal business review and strategic layout planning.",
+    "date": "2026-07-17T09:00:00",
+    "time": "09:00 AM",
+    "location": "VIP Lounge",
+    "visibility": "private"
+  },
+  {
+    "name": "Obstacle Course Prep",
+    "description": "Training for upcoming muddy runs and obstacle races.",
+    "date": "2026-07-18T10:00:00",
+    "time": "10:00 AM",
+    "location": "Functional Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Plyometrics for Power",
+    "description": "Jump training to develop explosive strength and vertical jump.",
+    "date": "2026-07-19T16:00:00",
+    "time": "04:00 PM",
+    "location": "Turf Track",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Feedback Round",
+    "description": "Quarterly trainer evaluations and sharing of training methodologies.",
+    "date": "2026-07-20T14:00:00",
+    "time": "02:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Agility and Footwork Clinic",
+    "description": "Ladder drills, cone work, and quick directional changes.",
+    "date": "2026-07-21T18:00:00",
+    "time": "06:00 PM",
+    "location": "Turf Area",
+    "visibility": "all"
+  },
+  {
+    "name": "Healthy Hearts Seminar",
+    "description": "Educational seminar about cardiovascular health and training heart rates.",
+    "date": "2026-07-22T17:00:00",
+    "time": "05:00 PM",
+    "location": "Lounge",
+    "visibility": "all"
+  },
+  {
+    "name": "Strongman Log Clean & Press",
+    "description": "Learn the basics of clean and pressing an actual log.",
+    "date": "2026-07-24T10:00:00",
+    "time": "10:00 AM",
+    "location": "Heavy Lifting Yard",
+    "visibility": "all"
+  },
+  {
+    "name": "Power Yoga for Flexibility",
+    "description": "Intense yoga flow focusing on deep hamstring and hip openers.",
+    "date": "2026-07-25T08:00:00",
+    "time": "08:00 AM",
+    "location": "Yoga Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "August CrossFit Challenge",
+    "description": "Our mid-summer CrossFit showcase event.",
+    "date": "2026-08-01T08:00:00",
+    "time": "08:00 AM",
+    "location": "CrossFit Arena",
+    "visibility": "all"
+  },
+  {
+    "name": "Supplements 101",
+    "description": "What supplements work? Let's analyze protein powders, creatine, and vitamins.",
+    "date": "2026-08-02T11:00:00",
+    "time": "11:00 AM",
+    "location": "Lounge",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Boxing Instruct Cert",
+    "description": "Introduction to pad holding and boxing mitt-work for trainers.",
+    "date": "2026-08-03T12:00:00",
+    "time": "12:00 PM",
+    "location": "Boxing Studio",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Boxing Basics for Fitness",
+    "description": "Learn boxing fundamentals, jabs, crosses, and movement.",
+    "date": "2026-08-04T18:00:00",
+    "time": "06:00 PM",
+    "location": "Boxing Studio",
+    "visibility": "all"
+  },
+  {
+    "name": "Mobility for Squat Depth",
+    "description": "Improve ankle and hip mobility to achieve a deeper squat position.",
+    "date": "2026-08-05T17:00:00",
+    "time": "05:00 PM",
+    "location": "Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "Vinyasa and Sound Bath",
+    "description": "Vinyasa flow combined with deep-healing crystal bowl sound therapy.",
+    "date": "2026-08-06T19:30:00",
+    "time": "07:30 PM",
+    "location": "Yoga Room A",
+    "visibility": "members"
+  },
+  {
+    "name": "Rowing Erg Race",
+    "description": "Compete in 1000m row races with virtual screen setups.",
+    "date": "2026-08-07T10:00:00",
+    "time": "10:00 AM",
+    "location": "Cardio Deck",
+    "visibility": "all"
+  },
+  {
+    "name": "Pre-Competition Prep Meeting",
+    "description": "Trainer alignment for upcoming autumn team competitions.",
+    "date": "2026-08-08T13:00:00",
+    "time": "01:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Olympic Clean and Jerk Mastery",
+    "description": "Advanced technical drill focusing on the Clean and Jerk catch position.",
+    "date": "2026-08-10T18:00:00",
+    "time": "06:00 PM",
+    "location": "Lifting Yard",
+    "visibility": "all"
+  },
+  {
+    "name": "Spin Intensity Intervals",
+    "description": "High-intensity bike sprints designed to build fast-twitch power.",
+    "date": "2026-08-11T07:00:00",
+    "time": "07:00 AM",
+    "location": "Spin Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Foam Rolling Mastery",
+    "description": "Guided foam rolling and mobility tutorial for optimal muscle health.",
+    "date": "2026-08-12T17:00:00",
+    "time": "05:00 PM",
+    "location": "Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "Private VIP Sponsor Session",
+    "description": "High-level personal coaching for premium sponsors.",
+    "date": "2026-08-14T09:00:00",
+    "time": "09:00 AM",
+    "location": "VIP Zone",
+    "visibility": "private"
+  },
+  {
+    "name": "Functional Training Workshop",
+    "description": "Learn multi-planar movements using bands, balls, and TRX.",
+    "date": "2026-08-15T10:00:00",
+    "time": "10:00 AM",
+    "location": "TRX Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Kettlebell Flow Class",
+    "description": "Continuous movements with kettlebells to improve muscular flow.",
+    "date": "2026-08-16T16:30:00",
+    "time": "04:30 PM",
+    "location": "Functional Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Gym Strategy Sync",
+    "description": "Planning fitness schedules for new trainers.",
+    "date": "2026-08-18T14:00:00",
+    "time": "02:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Core Strength Blitz",
+    "description": "30 minutes focused purely on abs, obliques, and lower back.",
+    "date": "2026-08-19T18:00:00",
+    "time": "06:00 PM",
+    "location": "Studio B",
+    "visibility": "all"
+  },
+  {
+    "name": "HIIT AMRAP Madness",
+    "description": "As many rounds as possible within 20 minutes of intense functional movements.",
+    "date": "2026-08-20T17:30:00",
+    "time": "05:30 PM",
+    "location": "HIIT Zone",
+    "visibility": "members"
+  },
+  {
+    "name": "Zumba Latin Heat",
+    "description": "Upbeat zumba dancing class with curated summer rhythms.",
+    "date": "2026-08-21T19:00:00",
+    "time": "07:00 PM",
+    "location": "Main Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Strongman Farmer's Walks",
+    "description": "Build massive grip and core strength with heavy frame carries.",
+    "date": "2026-08-22T10:00:00",
+    "time": "10:00 AM",
+    "location": "Heavy Yard",
+    "visibility": "all"
+  },
+  {
+    "name": "Fat Loss Science Seminar",
+    "description": "Break down calorie deficits, macro ratios, and NEAT.",
+    "date": "2026-08-24T18:00:00",
+    "time": "06:00 PM",
+    "location": "Main Lounge",
+    "visibility": "all"
+  },
+  {
+    "name": "Pilates Ring Target Flow",
+    "description": "Incorporate Pilates resistance rings to challenge deep stabilizer muscles.",
+    "date": "2026-08-25T08:30:00",
+    "time": "08:30 AM",
+    "location": "Studio A",
+    "visibility": "members"
+  },
+  {
+    "name": "September CrossFit Open",
+    "description": "Monthly CrossFit challenge with seasonal prize packs.",
+    "date": "2026-09-02T08:00:00",
+    "time": "08:00 AM",
+    "location": "CrossFit Cage",
+    "visibility": "all"
+  },
+  {
+    "name": "Pre-Workout Nutrition Info",
+    "description": "What to eat before heavy gym workouts to maximize energy.",
+    "date": "2026-09-03T17:00:00",
+    "time": "05:00 PM",
+    "location": "Cafe Lounge",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Rehab Protocols Cert",
+    "description": "Joint mechanics and rehabilitation coaching guidelines for trainers.",
+    "date": "2026-09-04T12:00:00",
+    "time": "12:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Barbell Club: The Squat",
+    "description": "Fix squat depth, bar placement, and knee paths.",
+    "date": "2026-09-05T10:00:00",
+    "time": "10:00 AM",
+    "location": "Squat Racks",
+    "visibility": "members"
+  },
+  {
+    "name": "Powerlifting Max Out Meet",
+    "description": "Informal gym competition to test your 1-rep maximum lift.",
+    "date": "2026-09-06T10:00:00",
+    "time": "10:00 AM",
+    "location": "Heavy Lifting Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "HIIT Circuit Cardio",
+    "description": "Fast-moving 45/15 circuits focusing on cardiorespiratory training.",
+    "date": "2026-09-07T18:00:00",
+    "time": "06:00 PM",
+    "location": "HIIT Room",
+    "visibility": "members"
+  },
+  {
+    "name": "Spin Rhythm Cycling",
+    "description": "Music-synchronized cardio spin class with dynamic lights.",
+    "date": "2026-09-08T18:30:00",
+    "time": "06:30 PM",
+    "location": "Spin Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "VIP Coaching Strategy Sync",
+    "description": "Internal session for corporate program integrations.",
+    "date": "2026-09-09T09:00:00",
+    "time": "09:00 AM",
+    "location": "VIP Lounge",
+    "visibility": "private"
+  },
+  {
+    "name": "Functional Core & Balance",
+    "description": "Stability ball, Bosu, and balance training protocols.",
+    "date": "2026-09-10T16:00:00",
+    "time": "04:00 PM",
+    "location": "TRX Studio",
+    "visibility": "all"
+  },
+  {
+    "name": "Deadlift Pulling Power Clinic",
+    "description": "Focusing on lower back protection and hip extensions during pulls.",
+    "date": "2026-09-11T18:00:00",
+    "time": "06:00 PM",
+    "location": "Heavy Yard",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Advanced Program Review",
+    "description": "Peer exchange on advanced periodization methodologies.",
+    "date": "2026-09-12T14:00:00",
+    "time": "02:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Kettlebell Conditioning Boost",
+    "description": "High-intensity circuits using multiple kettlebell sets.",
+    "date": "2026-09-13T10:00:00",
+    "time": "10:00 AM",
+    "location": "Functional Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Introduction to Yoga Astanga",
+    "description": "Traditional structured posture sequence yoga flow.",
+    "date": "2026-09-14T07:00:00",
+    "time": "07:00 AM",
+    "location": "Yoga Studio A",
+    "visibility": "members"
+  },
+  {
+    "name": "Bodyweight Calisthenics Adv",
+    "description": "Learn muscle-ups, handstands, and advanced balance holds.",
+    "date": "2026-09-15T18:00:00",
+    "time": "06:00 PM",
+    "location": "Calisthenics Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Running Performance Drills",
+    "description": "Track speed drills and stride form analysis.",
+    "date": "2026-09-16T17:30:00",
+    "time": "05:30 PM",
+    "location": "Running Loop",
+    "visibility": "members"
+  },
+  {
+    "name": "VIP Nutrition Masterclass",
+    "description": "In-depth class on micro-nutrient optimization and diet design.",
+    "date": "2026-09-17T19:00:00",
+    "time": "07:00 PM",
+    "location": "VIP Room",
+    "visibility": "private"
+  },
+  {
+    "name": "Zumba Carnival Dance",
+    "description": "High energy zumba classes with upbeat party themes.",
+    "date": "2026-09-18T19:00:00",
+    "time": "07:00 PM",
+    "location": "Main Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Agility and Cone Drills",
+    "description": "Interval exercises focusing on lateral speed and coordination.",
+    "date": "2026-09-19T10:00:00",
+    "time": "10:00 AM",
+    "location": "Turf Yard",
+    "visibility": "all"
+  },
+  {
+    "name": "Active Mobility Recovery",
+    "description": "Full-body stretching and static joint releases.",
+    "date": "2026-09-20T09:00:00",
+    "time": "09:00 AM",
+    "location": "Yoga Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "October CrossFit Open",
+    "description": "Welcome to autumn open CrossFit event.",
+    "date": "2026-10-02T08:00:00",
+    "time": "08:00 AM",
+    "location": "CrossFit Cage",
+    "visibility": "all"
+  },
+  {
+    "name": "Muscle Building Masterclass",
+    "description": "Hypertrophy science and mechanics of mechanical tension.",
+    "date": "2026-10-03T18:00:00",
+    "time": "06:00 PM",
+    "location": "Lounge",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Advanced CPR Update",
+    "description": "Safety drills and emergency preparedness protocols.",
+    "date": "2026-10-04T12:00:00",
+    "time": "12:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Squat Power & Depth Clinic",
+    "description": "Individual form review and corrective accessory lift suggestions.",
+    "date": "2026-10-05T18:00:00",
+    "time": "06:00 PM",
+    "location": "Squat Station",
+    "visibility": "members"
+  },
+  {
+    "name": "Barbell Bench Press Target",
+    "description": "Technique review class to build a stronger horizontal press.",
+    "date": "2026-10-06T18:30:00",
+    "time": "06:30 PM",
+    "location": "Bench Section",
+    "visibility": "all"
+  },
+  {
+    "name": "Spin Interval Endurance",
+    "description": "Long-distance climbing simulation in the spin studio.",
+    "date": "2026-10-07T19:00:00",
+    "time": "07:00 PM",
+    "location": "Spin Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "VIP Coaching Program Sync",
+    "description": "Trainer setup sync for corporate wellness programs.",
+    "date": "2026-10-08T09:00:00",
+    "time": "09:00 AM",
+    "location": "VIP Room",
+    "visibility": "private"
+  },
+  {
+    "name": "Olympic Lifting Snatch Clinic",
+    "description": "Snatch overhead lock position drills and drop squats.",
+    "date": "2026-10-09T18:00:00",
+    "time": "06:00 PM",
+    "location": "Lifting Yard",
+    "visibility": "all"
+  },
+  {
+    "name": "HIIT Kettlebell Cardio Combo",
+    "description": "HIIT intervals mixed with heavy functional kettlebell carries.",
+    "date": "2026-10-10T11:00:00",
+    "time": "11:00 AM",
+    "location": "HIIT Zone",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Nutrition Guidance",
+    "description": "Updated guidelines for macronutrient client advisory.",
+    "date": "2026-10-12T13:00:00",
+    "time": "01:00 PM",
+    "location": "Conference Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Yoga Vinyasa flow basics",
+    "description": "Structured basic movements for yogis of all levels.",
+    "date": "2026-10-13T07:30:00",
+    "time": "07:30 AM",
+    "location": "Yoga Studio A",
+    "visibility": "members"
+  },
+  {
+    "name": "TRX Functional Strength",
+    "description": "Improve core and joint stabilization with TRX suspended straps.",
+    "date": "2026-10-14T18:00:00",
+    "time": "06:00 PM",
+    "location": "TRX Zone",
+    "visibility": "all"
+  },
+  {
+    "name": "Foam Roll and Soft Tissue Care",
+    "description": "Self myofascial release tutorial using triggers and rollers.",
+    "date": "2026-10-15T17:00:00",
+    "time": "05:00 PM",
+    "location": "Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "VIP Corporate Board Seminar",
+    "description": "Executive posture care and physical fitness seminar.",
+    "date": "2026-10-16T15:00:00",
+    "time": "03:00 PM",
+    "location": "VIP Area",
+    "visibility": "private"
+  },
+  {
+    "name": "Boxing Drill Fitness Workout",
+    "description": "Cardio boxing session using heavy bags and agility steps.",
+    "date": "2026-10-17T10:00:00",
+    "time": "10:00 AM",
+    "location": "Boxing Cage",
+    "visibility": "all"
+  },
+  {
+    "name": "Calisthenics Front Lever Clinic",
+    "description": "Drills to build up to a solid calisthenics front lever.",
+    "date": "2026-10-18T16:00:00",
+    "time": "04:00 PM",
+    "location": "Calisthenics Area",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Development Seminar",
+    "description": "Advanced training techniques for muscle hypertrophy.",
+    "date": "2026-10-19T14:00:00",
+    "time": "02:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Active Recovery Dynamic Stretching",
+    "description": "Gentle dynamic stretching routines for muscular health.",
+    "date": "2026-10-20T09:00:00",
+    "time": "09:00 AM",
+    "location": "Yoga Studio B",
+    "visibility": "members"
+  },
+  {
+    "name": "November CrossFit Open",
+    "description": "High energy CrossFit competition event.",
+    "date": "2026-11-02T08:00:00",
+    "time": "08:00 AM",
+    "location": "CrossFit Cage",
+    "visibility": "all"
+  },
+  {
+    "name": "Zumba Cardio Extravaganza",
+    "description": "Winter workout zumba party with festive beats.",
+    "date": "2026-11-03T19:00:00",
+    "time": "07:00 PM",
+    "location": "Main Studio",
+    "visibility": "members"
+  },
+  {
+    "name": "Trainer Program Audit Sync",
+    "description": "Aligning final winter training program designs.",
+    "date": "2026-11-04T12:00:00",
+    "time": "12:00 PM",
+    "location": "Meeting Room",
+    "visibility": "trainer"
+  },
+  {
+    "name": "Active Hip Mobility Class",
+    "description": "Deep hip flexor stretching and mobility exercises.",
+    "date": "2026-11-05T18:00:00",
+    "time": "06:00 PM",
+    "location": "Studio B",
+    "visibility": "members"
+  }
+]

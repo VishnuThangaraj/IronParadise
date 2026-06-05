@@ -17,6 +17,7 @@ from src.routers import emailRoutes
 from src.routers import memberPlanRoutes
 from src.routers import memberMeasurementRoutes
 from src.routers import memberPaymentRoutes
+from src.routers import eventRoutes
 
 
 load_dotenv()
@@ -52,6 +53,7 @@ app.include_router(memberRoutes.router)
 app.include_router(memberPlanRoutes.router)
 app.include_router(memberMeasurementRoutes.router)
 app.include_router(memberPaymentRoutes.router)
+app.include_router(eventRoutes.router)
 
 
 if __name__ == "__main__":

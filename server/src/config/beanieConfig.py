@@ -8,6 +8,7 @@ from src.models.WorkoutPlan import WorkoutPlan
 from src.models.MembershipPlan import MembershipPlan
 from src.models.MemberPlans import MemberPlans
 from src.models.MemberMeasurement import MemberMeasurement
+from src.models.Events import Events
 
 async def setup_beanie(db):
-    await init_beanie(database=db, document_models=[Admin, Counter, DietPlan, WorkoutPlan, Trainer, Member, MembershipPlan, MemberPlans, MemberMeasurement])
+    await init_beanie(database=db, document_models=[Admin, Counter, DietPlan, WorkoutPlan, Trainer, Member, MembershipPlan, MemberPlans, MemberMeasurement, Events])

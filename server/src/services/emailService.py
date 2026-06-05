@@ -72,4 +72,64 @@ class EmailService:
             return {
                 "success": False,
                 "message": str(e)
-            }
+            }
+
+    @staticmethod
+    def _send_bulk_email_sync(recipients: list[str], subject: str, body: str, is_html: bool = True):
+        EmailConfig.validate()
+        
+        success_count = 0
+        try:
+            with smtplib.SMTP_SSL(
+                EmailConfig.SMTP_SERVER,
+                EmailConfig.SMTP_PORT
+            ) as smtp:
+
+                smtp.login(
+                    EmailConfig.EMAIL_USER,
+                    EmailConfig.EMAIL_PASSWORD
+                )
+                
+                for recipient in recipients:
+                    message = EmailMessage()
+                    message["Subject"] = subject
+                    message["From"] = EmailConfig.EMAIL_USER
+                    message["To"] = recipient
+                    
+                    if is_html:
+                        message.add_alternative(body, subtype="html")
+                    else:
+                        message.set_content(body)
+                        
+                    try:
+                        smtp.send_message(message)
+                        success_count += 1
+                    except Exception as e:
+                        print(f"ERROR: Failed to send email to {recipient}: {str(e)}")
+                        
+        except Exception as e:
+            print(f"ERROR: SMTP Connection failed during bulk send: {str(e)}")
+            return False
+            
+        print(f"INFO: Successfully sent {success_count}/{len(recipients)} bulk emails.")
+        return True
+
+    @staticmethod
+    async def send_bulk_email(
+        recipients: list[str],
+        subject: str,
+        body: str,
+        is_html: bool = True
+    ):
+        try:
+            await asyncio.to_thread(
+                EmailService._send_bulk_email_sync,
+                recipients,
+                subject,
+                body,
+                is_html
+            )
+            return {"success": True, "message": "Bulk emails queued successfully"}
+        except Exception as e:
+            print(f"Background Task Error (Bulk Email): {str(e)}")
+            return {"success": False, "message": str(e)}
