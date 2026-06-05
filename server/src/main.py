@@ -13,6 +13,7 @@ from src.routers import dietPlanRoutes
 from src.routers import workoutPlanRoutes
 from src.routers import membershipPlanRoutes
 from src.routers import memberRoutes
+from src.routers import emailRoutes
 from src.routers import memberPlanRoutes
 from src.routers import memberMeasurementRoutes
 from src.routers import memberPaymentRoutes
@@ -42,6 +43,7 @@ def root():
 
 # Routes
 app.include_router(authRoutes.router)
+app.include_router(emailRoutes.router)
 app.include_router(trainerRoutes.router)
 app.include_router(dietPlanRoutes.router)
 app.include_router(workoutPlanRoutes.router)

@@ -22,6 +22,14 @@ async def add_member_payment(id: str, data: dict):
     data['paymentID'] = await getNextID("member_payment")
     data['memberId'] = member.memberId
     
+    # Avoid duplicate payments for the same month/plan
+    plan_name = data.get('planName')
+    if any(p.planName == plan_name for p in member.paymentHistory):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Payment record for '{plan_name}' already exists for this member."
+        )
+    
     # Auto-calculate pendingAmount and status
     total = float(data.get('totalAmount', 0.0))
     paid = float(data.get('paidAmount', 0.0))
@@ -65,6 +73,15 @@ async def update_member_payment(id: str, payment_id: str, data: dict):
             detail="Payment record not found",
         )
     
+    # Check for duplicate planName if it's being updated
+    new_plan_name = data.get("planName")
+    if new_plan_name and new_plan_name != payment_record.planName:
+        if any(p.planName == new_plan_name for p in member.paymentHistory):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Payment record for '{new_plan_name}' already exists for this member."
+            )
+            
     for key, value in data.items():
         if hasattr(payment_record, key) and value is not None:
             setattr(payment_record, key, value)

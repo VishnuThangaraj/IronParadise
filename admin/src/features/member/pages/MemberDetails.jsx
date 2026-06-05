@@ -8,15 +8,11 @@ import {
   LuMail,
   LuPhone,
   LuMapPin,
-  LuCalendar,
   LuCrown,
   LuDumbbell,
   LuFolderHeart,
-  LuScale,
-  LuRuler,
   LuPlus,
   LuTrash2,
-  LuActivity,
 } from "react-icons/lu";
 
 import useMemberDetails from "../hooks/useMemberDetails";
@@ -73,7 +69,9 @@ const MemberDetails = () => {
         dietPlanId: memberPlans.dietPlanId || "",
         workoutPlanId: memberPlans.workoutPlanId || "",
         membershipStartDate: memberPlans.membershipStartDate
-          ? new Date(memberPlans.membershipStartDate).toISOString().split("T")[0]
+          ? new Date(memberPlans.membershipStartDate)
+              .toISOString()
+              .split("T")[0]
           : "",
         membershipEndDate: memberPlans.membershipEndDate
           ? new Date(memberPlans.membershipEndDate).toISOString().split("T")[0]
@@ -100,7 +98,9 @@ const MemberDetails = () => {
 
   const updateCalculatedEndDate = (membershipId, startDate) => {
     if (!membershipId || !startDate) return "";
-    const selectedPlan = membershipPlans.find((p) => p.membershipId === membershipId);
+    const selectedPlan = membershipPlans.find(
+      (p) => p.membershipId === membershipId,
+    );
     if (!selectedPlan || !selectedPlan.duration) return "";
 
     const date = new Date(startDate);
@@ -135,7 +135,8 @@ const MemberDetails = () => {
   };
 
   const handleMembershipChange = (newMembershipId) => {
-    const startDate = planForm.membershipStartDate || new Date().toISOString().split("T")[0];
+    const startDate =
+      planForm.membershipStartDate || new Date().toISOString().split("T")[0];
     const endDate = updateCalculatedEndDate(newMembershipId, startDate);
     setPlanForm((prev) => ({
       ...prev,
@@ -146,7 +147,10 @@ const MemberDetails = () => {
   };
 
   const handleStartDateChange = (newStartDate) => {
-    const endDate = updateCalculatedEndDate(planForm.membershipId, newStartDate);
+    const endDate = updateCalculatedEndDate(
+      planForm.membershipId,
+      newStartDate,
+    );
     setPlanForm((prev) => ({
       ...prev,
       membershipStartDate: newStartDate,
@@ -180,7 +184,7 @@ const MemberDetails = () => {
     e.preventDefault();
     const h = parseFloat(measureForm.height);
     const w = parseFloat(measureForm.weight);
-    
+
     // Auto-calculate BMI if height & weight exist
     let bmi = null;
     if (h && w) {
@@ -230,7 +234,9 @@ const MemberDetails = () => {
       <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500 font-montserrat">
         <LuUser className="w-12 h-12 mb-4 text-slate-300" />
         <h2 className="text-lg font-bold text-slate-700">Member Not Found</h2>
-        <p className="text-sm">The member you are looking for does not exist.</p>
+        <p className="text-sm">
+          The member you are looking for does not exist.
+        </p>
         <button
           onClick={() => navigate("/member/list")}
           className="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold shadow-md hover:bg-indigo-700 transition-colors cursor-pointer"
@@ -252,19 +258,32 @@ const MemberDetails = () => {
 
   // Find plan & trainer display names
   const assignedMembershipName = memberPlans?.membershipId
-    ? membershipPlans.find((p) => p.membershipId === memberPlans.membershipId)?.name || "Unknown Plan"
+    ? membershipPlans.find((p) => p.membershipId === memberPlans.membershipId)
+        ?.name || "Unknown Plan"
     : "Not Assigned";
 
   const assignedTrainerName = memberPlans?.trainerId
-    ? trainers.find((t) => t.trainerID === memberPlans.trainerId || t.trainerId === memberPlans.trainerId)?.name || "Unknown Trainer"
+    ? trainers.find(
+        (t) =>
+          t.trainerID === memberPlans.trainerId ||
+          t.trainerId === memberPlans.trainerId,
+      )?.name || "Unknown Trainer"
     : "Not Assigned";
 
   const assignedDietPlanName = memberPlans?.dietPlanId
-    ? dietPlans.find((d) => d.dietPlanId === memberPlans.dietPlanId || d.planId === memberPlans.dietPlanId)?.name || "Unknown Plan"
+    ? dietPlans.find(
+        (d) =>
+          d.dietPlanId === memberPlans.dietPlanId ||
+          d.planId === memberPlans.dietPlanId,
+      )?.name || "Unknown Plan"
     : "Not Assigned";
 
   const assignedWorkoutPlanName = memberPlans?.workoutPlanId
-    ? workoutPlans.find((w) => w.workoutPlanId === memberPlans.workoutPlanId || w.planId === memberPlans.workoutPlanId)?.name || "Unknown Plan"
+    ? workoutPlans.find(
+        (w) =>
+          w.workoutPlanId === memberPlans.workoutPlanId ||
+          w.planId === memberPlans.workoutPlanId,
+      )?.name || "Unknown Plan"
     : "Not Assigned";
 
   return (
@@ -298,7 +317,6 @@ const MemberDetails = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         {/* PROFILE CARD */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] overflow-hidden flex flex-col justify-between">
           <div>
@@ -324,7 +342,9 @@ const MemberDetails = () => {
             </div>
 
             <div className="pt-12 pb-6 px-6">
-              <h2 className="text-lg font-bold text-slate-800">{member.name}</h2>
+              <h2 className="text-lg font-bold text-slate-800">
+                {member.name}
+              </h2>
               <p className="text-xs font-semibold text-indigo-600 uppercase tracking-wide mt-0.5">
                 ID: {member.memberId}
               </p>
@@ -332,7 +352,9 @@ const MemberDetails = () => {
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-3 text-slate-600">
                   <LuMail className="w-4 h-4 text-slate-400" />
-                  <span className="text-xs font-medium truncate">{member.email}</span>
+                  <span className="text-xs font-medium truncate">
+                    {member.email}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600">
                   <LuPhone className="w-4 h-4 text-slate-400" />
@@ -355,11 +377,15 @@ const MemberDetails = () => {
             </div>
             <div className="flex justify-between text-[11px] font-medium text-slate-500">
               <span>DOB:</span>
-              <span className="font-bold text-slate-700">{formatDate(member.dob)}</span>
+              <span className="font-bold text-slate-700">
+                {formatDate(member.dob)}
+              </span>
             </div>
             <div className="flex justify-between text-[11px] font-medium text-slate-500">
               <span>Member Since:</span>
-              <span className="font-bold text-slate-700">{formatDate(member.joinDate)}</span>
+              <span className="font-bold text-slate-700">
+                {formatDate(member.joinDate)}
+              </span>
             </div>
           </div>
         </div>
@@ -381,18 +407,22 @@ const MemberDetails = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-              
               {/* Membership Plan */}
               <div className="flex items-start gap-3.5 p-3.5 bg-slate-50 rounded-xl border border-slate-100/80">
                 <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg shrink-0">
                   <LuCrown className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Membership Plan</p>
-                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">{assignedMembershipName}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Membership Plan
+                  </p>
+                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">
+                    {assignedMembershipName}
+                  </p>
                   {memberPlans?.membershipStartDate && (
                     <p className="text-[9px] text-slate-400 mt-1">
-                      {formatDate(memberPlans.membershipStartDate)} to {formatDate(memberPlans.membershipEndDate)}
+                      {formatDate(memberPlans.membershipStartDate)} to{" "}
+                      {formatDate(memberPlans.membershipEndDate)}
                     </p>
                   )}
                 </div>
@@ -404,8 +434,12 @@ const MemberDetails = () => {
                   <LuUser className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assigned Trainer</p>
-                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">{assignedTrainerName}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Assigned Trainer
+                  </p>
+                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">
+                    {assignedTrainerName}
+                  </p>
                 </div>
               </div>
 
@@ -415,8 +449,12 @@ const MemberDetails = () => {
                   <LuFolderHeart className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Diet Plan</p>
-                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">{assignedDietPlanName}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Diet Plan
+                  </p>
+                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">
+                    {assignedDietPlanName}
+                  </p>
                 </div>
               </div>
 
@@ -426,20 +464,32 @@ const MemberDetails = () => {
                   <LuDumbbell className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Workout Plan</p>
-                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">{assignedWorkoutPlanName}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Workout Plan
+                  </p>
+                  <p className="font-bold text-slate-700 text-xs mt-0.5 truncate">
+                    {assignedWorkoutPlanName}
+                  </p>
                 </div>
               </div>
-
             </div>
           </div>
 
           <div className="border-t border-slate-100 pt-5 mt-6 flex justify-between items-center text-[10px] text-slate-400">
-            <span>Last plan update: {memberPlans?.updatedAt ? formatDate(memberPlans.updatedAt) : "Never"}</span>
-            <span>Created: {memberPlans?.createdAt ? formatDate(memberPlans.createdAt) : "N/A"}</span>
+            <span>
+              Last plan update:{" "}
+              {memberPlans?.updatedAt
+                ? formatDate(memberPlans.updatedAt)
+                : "Never"}
+            </span>
+            <span>
+              Created:{" "}
+              {memberPlans?.createdAt
+                ? formatDate(memberPlans.createdAt)
+                : "N/A"}
+            </span>
           </div>
         </div>
-
       </div>
 
       {/* PHYSICAL MEASUREMENTS HISTORY SECTION */}
@@ -477,28 +527,48 @@ const MemberDetails = () => {
             <tbody>
               {measurements.length === 0 ? (
                 <tr>
-                  <td colSpan="10" className="py-8 text-center text-xs font-semibold text-slate-400">
+                  <td
+                    colSpan="10"
+                    className="py-8 text-center text-xs font-semibold text-slate-400"
+                  >
                     No physical measurements recorded yet.
                   </td>
                 </tr>
               ) : (
                 measurements.map((m) => (
-                  <tr key={m.date} className="border-b border-slate-100 hover:bg-slate-50/40 transition-colors text-xs font-medium text-slate-600">
-                    <td className="py-3.5 px-4 font-bold text-slate-800">{formatDate(m.date)}</td>
+                  <tr
+                    key={m.date}
+                    className="border-b border-slate-100 hover:bg-slate-50/40 transition-colors text-xs font-medium text-slate-600"
+                  >
+                    <td className="py-3.5 px-4 font-bold text-slate-800">
+                      {formatDate(m.date)}
+                    </td>
                     <td className="py-3.5 px-3">{m.height || "-"}</td>
-                    <td className="py-3.5 px-3 font-semibold text-slate-700">{m.weight || "-"}</td>
+                    <td className="py-3.5 px-3 font-semibold text-slate-700">
+                      {m.weight || "-"}
+                    </td>
                     <td className="py-3.5 px-3">
                       {m.bmi ? (
-                        <span className={`px-2 py-0.5 rounded-sm font-bold text-[10px] ${
-                          m.bmi < 18.5 ? "text-amber-700 bg-amber-50" :
-                          m.bmi < 25 ? "text-emerald-700 bg-emerald-50" :
-                          m.bmi < 30 ? "text-amber-700 bg-amber-50" : "text-rose-700 bg-rose-50"
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-sm font-bold text-[10px] ${
+                            m.bmi < 18.5
+                              ? "text-amber-700 bg-amber-50"
+                              : m.bmi < 25
+                                ? "text-emerald-700 bg-emerald-50"
+                                : m.bmi < 30
+                                  ? "text-amber-700 bg-amber-50"
+                                  : "text-rose-700 bg-rose-50"
+                          }`}
+                        >
                           {m.bmi}
                         </span>
-                      ) : "-"}
+                      ) : (
+                        "-"
+                      )}
                     </td>
-                    <td className="py-3.5 px-3">{m.bodyFat ? `${m.bodyFat}%` : "-"}</td>
+                    <td className="py-3.5 px-3">
+                      {m.bodyFat ? `${m.bodyFat}%` : "-"}
+                    </td>
                     <td className="py-3.5 px-3">{m.chest || "-"}</td>
                     <td className="py-3.5 px-3">{m.arms || "-"}</td>
                     <td className="py-3.5 px-3">{m.waist || "-"}</td>
@@ -524,14 +594,17 @@ const MemberDetails = () => {
       {isPlanModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 animate-fade-in">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto font-montserrat">
-            <h3 className="text-base font-bold text-slate-800 mb-4">Manage Member Plan & Trainer Assignments</h3>
-            
+            <h3 className="text-base font-bold text-slate-800 mb-4">
+              Manage Member Plan & Trainer Assignments
+            </h3>
+
             <form onSubmit={handlePlanSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
                 {/* Membership Plan Select */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Membership Plan</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Membership Plan
+                  </label>
                   <select
                     value={planForm.membershipId}
                     onChange={(e) => handleMembershipChange(e.target.value)}
@@ -548,10 +621,14 @@ const MemberDetails = () => {
 
                 {/* Trainer Select */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Personal Trainer</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Personal Trainer
+                  </label>
                   <select
                     value={planForm.trainerId}
-                    onChange={(e) => setPlanForm({ ...planForm, trainerId: e.target.value })}
+                    onChange={(e) =>
+                      setPlanForm({ ...planForm, trainerId: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all"
                   >
                     <option value="">Select Trainer</option>
@@ -568,10 +645,14 @@ const MemberDetails = () => {
 
                 {/* Diet Plan Select */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Diet Plan</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Diet Plan
+                  </label>
                   <select
                     value={planForm.dietPlanId}
-                    onChange={(e) => setPlanForm({ ...planForm, dietPlanId: e.target.value })}
+                    onChange={(e) =>
+                      setPlanForm({ ...planForm, dietPlanId: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all"
                   >
                     <option value="">Select Diet Plan</option>
@@ -588,10 +669,17 @@ const MemberDetails = () => {
 
                 {/* Workout Plan Select */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Workout Plan</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Workout Plan
+                  </label>
                   <select
                     value={planForm.workoutPlanId}
-                    onChange={(e) => setPlanForm({ ...planForm, workoutPlanId: e.target.value })}
+                    onChange={(e) =>
+                      setPlanForm({
+                        ...planForm,
+                        workoutPlanId: e.target.value,
+                      })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all"
                   >
                     <option value="">Select Workout Plan</option>
@@ -608,7 +696,9 @@ const MemberDetails = () => {
 
                 {/* Start Date */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Membership Start Date</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Membership Start Date
+                  </label>
                   <input
                     type="date"
                     value={planForm.membershipStartDate}
@@ -619,15 +709,21 @@ const MemberDetails = () => {
 
                 {/* End Date */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Membership End Date</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Membership End Date
+                  </label>
                   <input
                     type="date"
                     value={planForm.membershipEndDate}
-                    onChange={(e) => setPlanForm({ ...planForm, membershipEndDate: e.target.value })}
+                    onChange={(e) =>
+                      setPlanForm({
+                        ...planForm,
+                        membershipEndDate: e.target.value,
+                      })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all"
                   />
                 </div>
-
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
@@ -655,7 +751,9 @@ const MemberDetails = () => {
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 animate-fade-in">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto font-montserrat">
             <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
-              <h3 className="text-base font-bold text-slate-800">Log Daily Physical Metrics</h3>
+              <h3 className="text-base font-bold text-slate-800">
+                Log Daily Physical Metrics
+              </h3>
               {liveBmi && (
                 <span className="text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg">
                   BMI Estimate: <span className="text-sm">{liveBmi}</span>
@@ -665,117 +763,150 @@ const MemberDetails = () => {
 
             <form onSubmit={handleMeasureSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
                 {/* Date */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Log Date *</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Log Date *
+                  </label>
                   <input
                     type="date"
                     required
                     value={measureForm.date}
-                    onChange={(e) => setMeasureForm({ ...measureForm, date: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, date: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Weight */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Weight (kg)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Weight (kg)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 72.5"
                     value={measureForm.weight}
-                    onChange={(e) => setMeasureForm({ ...measureForm, weight: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, weight: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Height */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Height (cm)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Height (cm)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 178"
                     value={measureForm.height}
-                    onChange={(e) => setMeasureForm({ ...measureForm, height: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, height: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Body Fat */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Body Fat (%)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Body Fat (%)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 14.5"
                     value={measureForm.bodyFat}
-                    onChange={(e) => setMeasureForm({ ...measureForm, bodyFat: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({
+                        ...measureForm,
+                        bodyFat: e.target.value,
+                      })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Chest */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Chest (inches)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Chest (inches)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 40"
                     value={measureForm.chest}
-                    onChange={(e) => setMeasureForm({ ...measureForm, chest: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, chest: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Arms */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Arms (inches)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Arms (inches)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 15.2"
                     value={measureForm.arms}
-                    onChange={(e) => setMeasureForm({ ...measureForm, arms: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, arms: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Waist */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Waist (inches)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Waist (inches)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 32"
                     value={measureForm.waist}
-                    onChange={(e) => setMeasureForm({ ...measureForm, waist: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, waist: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
 
                 {/* Thighs */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Thighs (inches)</label>
+                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                    Thighs (inches)
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     placeholder="e.g. 22.4"
                     value={measureForm.thighs}
-                    onChange={(e) => setMeasureForm({ ...measureForm, thighs: e.target.value })}
+                    onChange={(e) =>
+                      setMeasureForm({ ...measureForm, thighs: e.target.value })
+                    }
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white"
                   />
                 </div>
-
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">

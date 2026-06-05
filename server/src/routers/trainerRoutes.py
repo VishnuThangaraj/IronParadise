@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, BackgroundTasks
 
 from src.models.Trainer import Trainer
 from src.schemas.trainerSchemas import TrainerRequest, TrainerSalaryRequest, BulkTrainerSalaryRequest
 from src.controllers.authController import get_loggedin_admin
+from src.services.emailService import EmailService
+from src.template.trainer.trainerWelcome import TrainerTemplate
 from src.controllers.trainerController import (
     create_trainer,
     fetch_all_trainers,
@@ -19,9 +21,26 @@ from src.controllers.trainerController import (
 router = APIRouter(prefix='/trainer', tags=['Trainer'])
 
 @router.post('/create', status_code=status.HTTP_201_CREATED)
-async def register_trainer(request: Request, data: TrainerRequest):
+async def register_trainer(request: Request, data: TrainerRequest, background_tasks: BackgroundTasks):
     await get_loggedin_admin(request)
-    return await create_trainer(data)
+    response = await create_trainer(data)
+    
+    email_data = TrainerTemplate.welcome(
+        trainer_name=data.name,
+        email=data.email,
+        specialization=data.specialization,
+        shift_time=data.shiftTime,
+        mobile=data.mobile
+    )
+
+    background_tasks.add_task(
+        EmailService.send_email,
+        data.email,
+        email_data["subject"],
+        email_data["body"]
+    )
+    
+    return response
 
 @router.get('/all', status_code=status.HTTP_200_OK)
 async def get_all_trainers(request: Request):
@@ -69,4 +88,4 @@ async def remove_salary(request: Request, id: str, salary_id: str):
 async def bulk_pay(request: Request, data: BulkTrainerSalaryRequest):
     await get_loggedin_admin(request)
     return await bulk_pay_trainers(data.model_dump())
-
+

@@ -10,6 +10,7 @@ const useMembershipPaylist = () => {
   const token = useSelector(selectToken);
   const [members, setMembers] = useState([]);
   const [membershipPlans, setMembershipPlans] = useState([]);
+  const [assignedPlans, setAssignedPlans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,6 +30,13 @@ const useMembershipPaylist = () => {
         },
       });
       setMembershipPlans(plansResponse.data || []);
+
+      const assignedResponse = await api.get("member-plans/all", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAssignedPlans(assignedResponse.data || []);
     } catch (err) {
       const errorMsg = err.response?.data?.detail || "Failed to load members or plans";
       toast.error(errorMsg);
@@ -200,6 +208,7 @@ const useMembershipPaylist = () => {
   return {
     members,
     membershipPlans,
+    assignedPlans,
     isLoading,
     isSubmitting,
     addPaymentRecord,

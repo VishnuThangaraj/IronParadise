@@ -50,6 +50,7 @@ const MembershipPaylist = () => {
   const {
     members,
     membershipPlans,
+    assignedPlans,
     isLoading,
     isSubmitting,
     addPaymentRecord,
@@ -141,12 +142,26 @@ const MembershipPaylist = () => {
     setEditingRecord(null);
     const defaultMonth = monthOptions[12]; // current month
 
+    let initialPlanId = "";
+    let initialAmount = 0;
+
+    if (rowMember) {
+      const assignedPlan = assignedPlans.find((p) => p.memberId === rowMember.memberId);
+      if (assignedPlan && assignedPlan.membershipId) {
+        initialPlanId = assignedPlan.membershipId;
+        const found = membershipPlans.find((p) => p.membershipId === assignedPlan.membershipId);
+        if (found) {
+          initialAmount = found.amount || 0;
+        }
+      }
+    }
+
     setFormData({
       memberId: rowMember ? rowMember.memberId : "",
-      membershipPlanId: "",
+      membershipPlanId: initialPlanId,
       month: defaultMonth,
-      totalAmount: 0,
-      paidAmount: 0,
+      totalAmount: initialAmount,
+      paidAmount: initialAmount,
       pendingAmount: 0,
       paymentDate: new Date().toISOString().split("T")[0],
       paymentMethod: "UPI",
@@ -196,7 +211,25 @@ const MembershipPaylist = () => {
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
 
-      // Autofill price if membership plan selected
+      // If member changes, auto-select assigned plan if one exists
+      if (field === "memberId") {
+        const assignedPlan = assignedPlans.find((p) => p.memberId === value);
+        if (assignedPlan && assignedPlan.membershipId) {
+          updated.membershipPlanId = assignedPlan.membershipId;
+          // Autofill price
+          const found = membershipPlans.find((p) => p.membershipId === assignedPlan.membershipId);
+          if (found) {
+            updated.totalAmount = found.amount || 0;
+            updated.paidAmount = found.amount || 0;
+          }
+        } else {
+          updated.membershipPlanId = "";
+          updated.totalAmount = 0;
+          updated.paidAmount = 0;
+        }
+      }
+
+      // Autofill price if membership plan selected manually
       if (field === "membershipPlanId") {
         const found = membershipPlans.find((p) => p.membershipId === value);
         if (found) {
@@ -206,7 +239,7 @@ const MembershipPaylist = () => {
       }
 
       // Recalculate pending & status
-      if (field === "totalAmount" || field === "paidAmount" || field === "membershipPlanId") {
+      if (field === "totalAmount" || field === "paidAmount" || field === "membershipPlanId" || field === "memberId") {
         const total = parseFloat(updated.totalAmount) || 0;
         let paid = parseFloat(updated.paidAmount) || 0;
 
@@ -699,6 +732,7 @@ const MembershipPaylist = () => {
         handleSubmit={handleSubmit}
         members={members}
         membershipPlans={membershipPlans}
+        assignedPlans={assignedPlans}
         monthOptions={monthOptions}
       />
 

@@ -43,6 +43,16 @@ async def fetch_member_plans(member_id: str):
         )
     return plan
 
+async def fetch_all_member_plans():
+    try:
+        plans = await MemberPlans.find().to_list(length=None)
+        return plans
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve member plans"
+        )
+
 async def remove_member_plans(member_id: str):
     plan = await MemberPlans.find_one(MemberPlans.memberId == member_id)
     if not plan:

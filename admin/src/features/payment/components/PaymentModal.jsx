@@ -15,6 +15,7 @@ const PaymentModal = ({
   handleSubmit,
   members,
   membershipPlans,
+  assignedPlans,
   monthOptions,
 }) => {
   return (
@@ -101,8 +102,8 @@ const PaymentModal = ({
                 value={formData.membershipPlanId}
                 onChange={(e) => handleInputChange("membershipPlanId", e.target.value)}
                 required
-                disabled={Boolean(editingRecord)}
-                className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 cursor-pointer"
+                disabled={Boolean(editingRecord) || Boolean(assignedPlans?.find(p => p.memberId === formData.memberId)?.membershipId)}
+                className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <option value="" disabled>Select Plan</option>
                 {membershipPlans.map((p) => (
