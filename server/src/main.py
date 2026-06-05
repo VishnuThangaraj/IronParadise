@@ -46,6 +46,10 @@ def root():
         'version': '0.0.1',
     }
 
+@app.get('/ping')
+def ping():
+    return {"status": "ok", "message": "Pong"}
+
 # Routes
 app.include_router(authRoutes.router)
 app.include_router(emailRoutes.router)
