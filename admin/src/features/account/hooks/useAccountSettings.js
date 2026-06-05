@@ -12,7 +12,7 @@ import {
   initialPasswordState,
   initialProfileState,
 } from "../state/initialAccountState";
-import { handleChangeValidation } from "@/shared/utils/formFieldValidation";
+import { handleChangeValidation } from "@/shared/utils/FormFieldValidation";
 
 const useAccountSettings = () => {
   const dispatch = useDispatch();

@@ -11,7 +11,7 @@ import initialLoginState from "@/features/auth/state/initialLoginState";
 import {
   handleChangeValidation,
   validateFields,
-} from "@/shared/utils/formFieldValidation";
+} from "@/shared/utils/FormFieldValidation";
 
 const maxIncorrectAttempt = 10;
 
