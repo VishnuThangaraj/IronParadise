@@ -5,12 +5,15 @@ import { motion } from "motion/react";
 import { Paper, Checkbox } from "@mui/material";
 
 import { fadeUp, fadeIn } from "@/shared/animations";
+
+import { LuUsers, LuMessageSquare } from "react-icons/lu";
 import FormField from "@/shared/components/ui/form/Input/FormField";
 import ButtonPrimary from "@/shared/components/ui/form/button/ButtonPrimary";
-import { LuUsers, LuMessageSquare } from "react-icons/lu";
 
 import authFields from "@/features/auth/constants/authFields";
 import useLoginForm from "@/features/auth/hooks/useLoginForm";
+import { authFormField } from "@/features/auth/styles/authStyles";
+import { authPageAnimation } from "@/features/auth/animation/authPage";
 import { selectAuthLoading } from "@/features/auth/redux/authSelector";
 import LoginAttemptLimitModal from "@/features/auth/components/LoginAttemptLimitModal";
 
@@ -40,15 +43,25 @@ const AuthPage = () => {
       {/* Top right floating buttons */}
       <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-3">
         {/* Kiosk Mode Link */}
-        <Link to="/attendance-log" className="flex items-center gap-2 text-indigo-300 hover:text-white transition-colors bg-indigo-900/30 hover:bg-indigo-900/50 px-4 py-2 rounded-full border border-indigo-500/30 backdrop-blur-md shadow-lg shadow-indigo-900/20">
+        <Link
+          to="/attendance-log"
+          className="flex items-center gap-2 text-indigo-300 hover:text-white transition-colors bg-indigo-900/30 hover:bg-indigo-900/50 px-4 py-2 rounded-full border border-indigo-500/30 backdrop-blur-md shadow-lg shadow-indigo-900/20"
+        >
           <LuUsers className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">Kiosk Mode</span>
+          <span className="text-xs font-bold uppercase tracking-wider">
+            Kiosk Mode
+          </span>
         </Link>
-        
+
         {/* Enquiry Link */}
-        <Link to="/enquiry" className="flex items-center gap-2 text-emerald-300 hover:text-white transition-colors bg-emerald-900/30 hover:bg-emerald-900/50 px-4 py-2 rounded-full border border-emerald-500/30 backdrop-blur-md shadow-lg shadow-emerald-900/20">
+        <Link
+          to="/enquiry"
+          className="flex items-center gap-2 text-emerald-300 hover:text-white transition-colors bg-emerald-900/30 hover:bg-emerald-900/50 px-4 py-2 rounded-full border border-emerald-500/30 backdrop-blur-md shadow-lg shadow-emerald-900/20"
+        >
           <LuMessageSquare className="w-4 h-4" />
-          <span className="text-xs font-bold uppercase tracking-wider">Contact Us</span>
+          <span className="text-xs font-bold uppercase tracking-wider">
+            Contact Us
+          </span>
         </Link>
       </div>
 
@@ -68,16 +81,7 @@ const AuthPage = () => {
       <MotionPaper
         {...fadeUp}
         transition={{ ...fadeUp.transition, delay: 0.2 }}
-        sx={{
-          py: { xs: 4, sm: 5 },
-          px: { xs: 3, sm: 4 },
-          borderRadius: "20px",
-          bgcolor: "rgba(15, 23, 42, 0.85)",
-          backdropFilter: "blur(24px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow:
-            "0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
-        }}
+        sx={authPageAnimation}
         className="w-[90%] max-w-md sm:w-110 relative z-10"
         elevation={0}
       >
@@ -108,27 +112,7 @@ const AuthPage = () => {
                     formSize={"small"}
                     value={login[field.name] ?? ""}
                     onChange={handleChange}
-                    fieldStyle={{
-                      "& .MuiOutlinedInput-root": {
-                        color: "white",
-                        backgroundColor: "rgba(15, 23, 42, 0.45)",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "rgba(255, 255, 255, 0.1)",
-                          transition: "border-color 0.2s ease",
-                        },
-                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "rgba(255, 255, 255, 0.25) !important",
-                        },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "#6366f1 !important",
-                          borderWidth: "2px",
-                        },
-                      },
-                      "& .MuiInputBase-input::placeholder": {
-                        color: "rgba(255, 255, 255, 0.4)",
-                        opacity: 1,
-                      },
-                    }}
+                    fieldStyle={authFormField}
                   />
                 </div>
               );
