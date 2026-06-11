@@ -7,7 +7,6 @@ router = APIRouter(prefix="/enquiry", tags=["Enquiry"])
 
 @router.post("/submit", status_code=status.HTTP_201_CREATED)
 async def create_enquiry(request: Request, data: EnquiryCreate):
-    # Public endpoint, no auth required
     return await submit_enquiry(data)
 
 @router.get("/all", status_code=status.HTTP_200_OK)

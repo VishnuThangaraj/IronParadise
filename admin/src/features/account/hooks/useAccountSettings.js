@@ -1,46 +1,54 @@
+import toast from "react-hot-toast";
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
 
 import { selectCurrentUser } from "@/features/auth/redux/authSelector";
 import {
   updateAdminProfile,
   updateAdminPassword,
-} from "../redux/accountThunks";
-import accountRules from "../validation/accountRules";
+} from "@/features/account/redux/accountThunks";
+import accountRules from "@/features/account/validation/accountRules";
 import {
   initialPasswordState,
   initialProfileState,
-} from "../state/initialAccountState";
+} from "@/features/account/state/initialAccountState";
 import { handleChangeValidation } from "@/shared/utils/FormFieldValidation";
+
+export const getInitials = (name) => {
+  if (!name) return "VT";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+};
 
 const useAccountSettings = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
 
-  const [profile, setProfile] = useState(() => {
-    if (user) {
-      return {
-        name: user.name || "",
-        email: user.email || "",
-        phone: user.phone || "",
-      };
-    }
-    return initialProfileState;
-  });
+  const [profile, setProfile] = useState(() =>
+    user
+      ? {
+          name: user.name || "",
+          email: user.email || "",
+          phone: user.phone || "",
+        }
+      : initialProfileState,
+  );
   const [prevUser, setPrevUser] = useState(user);
 
   if (user !== prevUser) {
     setPrevUser(user);
-    if (user) {
-      setProfile({
-        name: user.name || "",
-        email: user.email || "",
-        phone: user.phone || "",
-      });
-    } else {
-      setProfile(initialProfileState);
-    }
+    setProfile(
+      user
+        ? {
+            name: user.name || "",
+            email: user.email || "",
+            phone: user.phone || "",
+          }
+        : initialProfileState,
+    );
   }
 
   const [password, setPassword] = useState(initialPasswordState);
@@ -120,15 +128,6 @@ const useAccountSettings = () => {
     },
     [password, dispatch],
   );
-
-  const getInitials = useCallback((name) => {
-    if (!name) return "VT";
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  }, []);
 
   return {
     profile,

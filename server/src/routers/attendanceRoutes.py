@@ -48,7 +48,6 @@ async def get_attendance_logs(
         date=date, month=month, userType=userType, userId=userId, skip=skip, limit=limit
     )
 
-
 @router.get("/summary", status_code=status.HTTP_200_OK)
 async def get_attendance_summary(request: Request):
     await get_loggedin_admin(request)

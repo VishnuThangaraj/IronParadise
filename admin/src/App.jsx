@@ -61,25 +61,31 @@ const MembershipPlanList = lazy(
 const MembershipPlanDetails = lazy(
   () => import("@/features/membershipplan/pages/MembershipPlanDetails"),
 );
-
+const Events = lazy(() => import("@/features/event/pages/Events"));
+const Messages = lazy(() => import("@/features/messages/pages/Messages"));
 const AddMember = lazy(() => import("@/features/member/pages/AddMember"));
 const EditMember = lazy(() => import("@/features/member/pages/EditMember"));
 const MemberList = lazy(() => import("@/features/member/pages/MemberList"));
-const MemberDetails = lazy(() => import("@/features/member/pages/MemberDetails"));
-const MembershipPaylist = lazy(() => import("@/features/payment/pages/MembershipPaylist"));
-const Messages = lazy(() => import("@/features/messages/pages/Messages"));
-const Events = lazy(() => import("@/features/event/pages/Events"));
-const Attendance = lazy(() => import("@/features/attendance/pages/Attendance"));
-const AttendanceKioskPage = lazy(() => import("@/features/attendance/pages/AttendanceKioskPage"));
 const EnquiryPage = lazy(() => import("@/features/enquiry/pages/EnquiryPage"));
-const EnquiriesList = lazy(() => import("@/features/enquiry/pages/EnquiriesList"));
+const Attendance = lazy(() => import("@/features/attendance/pages/Attendance"));
+const MemberDetails = lazy(
+  () => import("@/features/member/pages/MemberDetails"),
+);
+const EnquiriesList = lazy(
+  () => import("@/features/enquiry/pages/EnquiriesList"),
+);
+const MembershipPaylist = lazy(
+  () => import("@/features/payment/pages/MembershipPaylist"),
+);
+const AttendanceKioskPage = lazy(
+  () => import("@/features/attendance/pages/AttendanceKioskPage"),
+);
 
 const App = () => {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const user = useSelector(selectUser);
 
-  // Background server connection check
   useConnectionMonitor();
 
   useEffect(() => {
@@ -105,9 +111,9 @@ const App = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex bg-gray-50 min-h-screen">
         <Sidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex flex-col flex-1">
           <Navbar />
           <main className="flex-1 p-6">
             <Routes>
@@ -153,8 +159,14 @@ const App = () => {
               {/* Membership Plan */}
               <Route path="/membership/list" element={<MembershipPlanList />} />
               <Route path="/membership/add" element={<AddMembershipPlan />} />
-              <Route path="/membership/edit/:id" element={<EditMembershipPlan />} />
-              <Route path="/membership/details/:id" element={<MembershipPlanDetails />} />
+              <Route
+                path="/membership/edit/:id"
+                element={<EditMembershipPlan />}
+              />
+              <Route
+                path="/membership/details/:id"
+                element={<MembershipPlanDetails />}
+              />
 
               {/* Member */}
               <Route path="/member/list" element={<MemberList />} />

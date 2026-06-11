@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isOnline: true,
+  isOnline: false,
 };
 
 const serverStatusSlice = createSlice({
