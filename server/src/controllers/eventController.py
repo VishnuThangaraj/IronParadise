@@ -1,5 +1,3 @@
-import os
-import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 from datetime import datetime
@@ -112,29 +110,4 @@ async def delete_event(id: str):
             detail=f"Failed to delete event: {str(e)}",
         )
 
-# Populate Events
-async def populate_events():
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "event.json")
-    try:
-        with open(file_path, "r") as f:
-            events_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        events_data = []
 
-    count = 0
-    for event in events_data:
-        # Avoid duplicating same event on same date
-        event_date = datetime.fromisoformat(event["date"])
-        existing_event = await Events.find_one(Events.name == event["name"], Events.date == event_date)
-        if existing_event:
-            continue
-        
-        event["date"] = event_date
-        new_event = Events(**event)
-        await new_event.insert()
-        count += 1
-
-    return {
-        "success": True,
-        "message": f"Events populated successfully. Added {count} new events."
-    }

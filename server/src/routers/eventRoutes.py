@@ -10,7 +10,6 @@ from src.controllers.eventController import (
     fetch_event_by_id,
     update_event,
     delete_event,
-    populate_events
 )
 
 router = APIRouter(prefix='/event', tags=['Event'])
@@ -19,11 +18,6 @@ router = APIRouter(prefix='/event', tags=['Event'])
 async def register_event(request: Request, data: EventsRequest):
     await get_loggedin_admin(request)
     return await create_event(data)
-
-@router.get('/populate', status_code=status.HTTP_201_CREATED)
-async def populate_events_route(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_events()
 
 @router.get('/all', status_code=status.HTTP_200_OK)
 async def get_all_events(

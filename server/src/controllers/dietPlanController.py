@@ -1,5 +1,3 @@
-import os
-import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
@@ -115,20 +113,4 @@ async def delete_diet_plan(id: str):
             detail=f"Failed to delete diet plan: {str(e)}",
         )
 
-
-# Populate Diet Plan
-async def populate_diet_plan():    
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "dietplan.json")
-    with open(file_path, "r") as f:
-        diet_plans = json.load(f)
-
-    for diet_plan in diet_plans:
-        existing_dietPlan = await DietPlan.find_one(DietPlan.name == diet_plan["name"])
-        if existing_dietPlan:
-            continue
-        newDietPlan = DietPlan(**diet_plan)
-        await newDietPlan.insert()
-
-    return {
-        "message": "Diet Plan populated successfully"
-    }   
+

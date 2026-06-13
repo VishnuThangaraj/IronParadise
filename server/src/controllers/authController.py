@@ -109,39 +109,8 @@ async def get_loggedin_admin(request: Request):
 
 # Update Admin Profile
 async def update_admin_profile(request: Request, data: AdminProfileUpdateRequest):
-    auth_header = request.headers.get("Authorization")
-
-    if not auth_header:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No token provided",
-        )
-
-    if auth_header.startswith("Bearer "):
-        token = auth_header.split(" ")[1]
-    else:
-        token = auth_header
-
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-        )
-
-    email = payload.get("sub")
-    if not email:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token payload",
-        )
-
-    admin = await Admin.find_one(Admin.email == email)
-    if not admin:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Admin not found",
-        )
+    auth_result = await get_loggedin_admin(request)
+    admin = auth_result["user"]
 
     if data.email != admin.email:
         existing = await Admin.find_one(Admin.email == data.email)
@@ -163,45 +132,8 @@ async def update_admin_profile(request: Request, data: AdminProfileUpdateRequest
 
 # Update Admin Password
 async def update_admin_password(request: Request, data: AdminPasswordChangeRequest):
-    auth_header = request.headers.get("Authorization")
-
-    # Password Update Restriction
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="Developer Restricted this Action.",
-    )
-
-    if not auth_header:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No token provided",
-        )
-
-    if auth_header.startswith("Bearer "):
-        token = auth_header.split(" ")[1]
-    else:
-        token = auth_header
-
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-        )
-
-    email = payload.get("sub")
-    if not email:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token payload",
-        )
-
-    admin = await Admin.find_one(Admin.email == email)
-    if not admin:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Admin not found",
-        )
+    auth_result = await get_loggedin_admin(request)
+    admin = auth_result["user"]
 
     if not verify_password(data.current, admin.password):
         raise HTTPException(

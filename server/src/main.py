@@ -22,6 +22,7 @@ from src.routers import attendanceRoutes
 from src.routers import kioskRoutes
 from src.routers import enquiryRoutes
 from src.routers import dashboardRoutes
+from src.routers import fitnessRoutes
 
 
 load_dotenv()
@@ -66,8 +67,9 @@ app.include_router(attendanceRoutes.router)
 app.include_router(kioskRoutes.router)
 app.include_router(enquiryRoutes.router)
 app.include_router(dashboardRoutes.router)
+app.include_router(fitnessRoutes.router)
 
 
 if __name__ == "__main__":
     port = int(getenv("PORT", 8000))
-    uvicorn.run("src.main:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run("src.main:app", host="0.0.0.0", port=port, reload=False)

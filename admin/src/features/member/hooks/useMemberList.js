@@ -68,24 +68,6 @@ const useMemberList = () => {
     [token]
   );
 
-  const populateMembers = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await api.get("member/populate", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success(response.data?.message || "Members seeded successfully!");
-      fetchMembers();
-    } catch (err) {
-      const errorMsg = err.response?.data?.detail || "Failed to seed members";
-      toast.error(errorMsg);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token, fetchMembers]);
-
   useEffect(() => {
     if (token) {
       const timer = setTimeout(() => {
@@ -113,7 +95,6 @@ const useMemberList = () => {
     searchQuery,
     setSearchQuery,
     deleteMember,
-    populateMembers,
     refreshMembers: fetchMembers,
   };
 };

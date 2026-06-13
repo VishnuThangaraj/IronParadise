@@ -9,7 +9,6 @@ from src.controllers.attendanceController import (
     fetch_user_status,
     fetch_attendance_logs,
     fetch_attendance_summary,
-    populate_attendance,
 )
 
 router = APIRouter(prefix="/attendance", tags=["Attendance"])
@@ -52,9 +51,3 @@ async def get_attendance_logs(
 async def get_attendance_summary(request: Request):
     await get_loggedin_admin(request)
     return await fetch_attendance_summary()
-
-
-@router.get("/populate", status_code=status.HTTP_201_CREATED)
-async def populate(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_attendance()

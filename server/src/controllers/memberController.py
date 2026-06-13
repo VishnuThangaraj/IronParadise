@@ -1,5 +1,3 @@
-import os
-import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
@@ -122,20 +120,3 @@ async def delete_member(id: str):
             detail=f"Failed to delete member: {str(e)}",
         )
 
-#Populate Member
-async def populate_member():    
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "member.json")
-    with open(file_path, "r") as f:
-        members = json.load(f)
-
-    for member_data in members:
-        existing_member = await Member.find_one(Member.email == member_data["email"])
-        if existing_member:
-            continue
-            
-        newMember = Member(**member_data)
-        await newMember.insert()
-
-    return {
-        "message": "Members populated successfully"
-    }

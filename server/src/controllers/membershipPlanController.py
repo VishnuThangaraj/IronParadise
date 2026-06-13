@@ -1,5 +1,3 @@
-import os
-import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
@@ -115,22 +113,3 @@ async def delete_membership_plan(id: str):
             detail=f"Failed to delete membership plan: {str(e)}",
         )
 
-# Populate Membership Plans
-async def populate_membership_plan():    
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "membershipPlan.json")
-    try:
-        with open(file_path, "r") as f:
-            plans = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        plans = []
-
-    for plan in plans:
-        existing_plan = await MembershipPlan.find_one(MembershipPlan.name == plan["name"])
-        if existing_plan:
-            continue
-        newPlan = MembershipPlan(**plan)
-        await newPlan.insert()
-
-    return {
-        "message": "Membership Plans populated successfully"
-    }   

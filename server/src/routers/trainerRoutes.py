@@ -11,7 +11,6 @@ from src.controllers.trainerController import (
     fetch_trainer_by_id,
     update_trainer,
     delete_trainer,
-    populate_trainer,
     add_trainer_salary,
     update_trainer_salary,
     remove_trainer_salary,
@@ -46,11 +45,6 @@ async def register_trainer(request: Request, data: TrainerRequest, background_ta
 async def get_all_trainers(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_trainers()
-
-@router.get('/populate', status_code=status.HTTP_201_CREATED)
-async def populate_trainers(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_trainer()
 
 @router.get('/{id}', status_code=status.HTTP_200_OK)
 async def get_trainer_by_id(request: Request, id: str):

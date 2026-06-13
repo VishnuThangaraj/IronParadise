@@ -11,8 +11,7 @@ import {
   LuUser, 
   LuDumbbell, 
   LuFlame, 
-  LuActivity,
-  LuDatabase
+  LuActivity
 } from "react-icons/lu";
 
 import api from "@/service/api";
@@ -46,26 +45,7 @@ const Attendance = () => {
     return today.toISOString().slice(0, 7); // YYYY-MM
   });
 
-  const [isPopulating, setIsPopulating] = useState(false);
 
-  // Function to populate logs
-  const handlePopulateLogs = async () => {
-    if (!token) return;
-    setIsPopulating(true);
-    try {
-      const res = await api.get("attendance/populate", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success(res.data?.message || "Attendance logs seeded successfully!");
-      fetchSummary();
-      fetchLogs();
-    } catch (err) {
-      const errMsg = err.response?.data?.detail || "Failed to seed logs";
-      toast.error(errMsg);
-    } finally {
-      setIsPopulating(false);
-    }
-  };
 
   // Fetch all members and trainers for search
   const fetchUsers = useCallback(async () => {
@@ -249,14 +229,6 @@ const Attendance = () => {
             Scan cards, register entries/exits, and track live occupancy in real-time.
           </p>
         </div>
-        <button
-          onClick={handlePopulateLogs}
-          disabled={isPopulating}
-          className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-all duration-250 cursor-pointer self-start sm:self-auto"
-        >
-          <LuDatabase className="w-3.5 h-3.5" />
-          <span>{isPopulating ? "Seeding..." : "Populate Logs"}</span>
-        </button>
       </div>
 
       {/* Dashboard Summary Row */}

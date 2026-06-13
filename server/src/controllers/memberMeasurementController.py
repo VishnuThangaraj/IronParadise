@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from src.models.MemberMeasurement import MemberMeasurement, DailyMeasurement
 from src.schemas.memberMeasurementSchemas import DailyMeasurementRequest
+from src.models.Member import Member
 
 async def add_measurement(data: DailyMeasurementRequest):
     try:
@@ -20,9 +21,13 @@ async def add_measurement(data: DailyMeasurementRequest):
             thighs=data.thighs
         )
         
+        # Resolve relationship
+        member_doc = await Member.find_one(Member.memberId == data.memberId)
+        
         if not measurement_doc:
             measurement_doc = MemberMeasurement(
                 memberId=data.memberId,
+                member=member_doc,
                 measurements=[daily_record]
             )
             await measurement_doc.insert()
@@ -37,6 +42,7 @@ async def add_measurement(data: DailyMeasurementRequest):
             else:
                 measurement_doc.measurements.append(daily_record)
             
+            measurement_doc.member = member_doc
             await measurement_doc.save()
             
         return {
@@ -51,7 +57,8 @@ async def add_measurement(data: DailyMeasurementRequest):
 
 async def fetch_member_measurements(member_id: str):
     measurement_doc = await MemberMeasurement.find_one(
-        MemberMeasurement.memberId == member_id
+        MemberMeasurement.memberId == member_id,
+        fetch_links=True
     )
     if not measurement_doc:
         return {"memberId": member_id, "measurements": []}

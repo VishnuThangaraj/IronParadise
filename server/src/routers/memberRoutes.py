@@ -8,8 +8,7 @@ from src.controllers.memberController import (
     fetch_all_members,
     fetch_member_by_id,
     update_member,
-    delete_member,
-    populate_member
+    delete_member
 )   
 
 router = APIRouter(prefix='/member', tags=['Member'])
@@ -23,11 +22,6 @@ async def register_member(request: Request, data: MemberRequest):
 async def get_all_members(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_members()
-
-@router.get('/populate', status_code=status.HTTP_201_CREATED)
-async def populate_members(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_member()
 
 @router.get('/{id}', status_code=status.HTTP_200_OK)
 async def get_member_by_id(request: Request, id: str):

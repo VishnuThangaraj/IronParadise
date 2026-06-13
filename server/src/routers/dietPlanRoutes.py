@@ -9,7 +9,6 @@ from src.controllers.dietPlanController import (
     fetch_diet_plan_by_id,
     update_diet_plan,
     delete_diet_plan,
-    populate_diet_plan,
 )
 
 router = APIRouter(prefix="/dietplan", tags=['Diet Plan'])
@@ -23,11 +22,6 @@ async def create(request: Request, data: DietPlanRequest):
 async def get_all_diet_plans(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_diet_plans()
-
-@router.get("/populate", status_code=status.HTTP_201_CREATED)
-async def populate(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_diet_plan()
 
 @router.get("/{id}", response_model=DietPlan, status_code=status.HTTP_200_OK)
 async def get_diet_plan_by_id(request: Request, id: str):

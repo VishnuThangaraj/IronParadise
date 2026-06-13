@@ -9,7 +9,6 @@ from src.controllers.membershipPlanController import (
     fetch_membership_plan_by_id,
     update_membership_plan,
     delete_membership_plan,
-    populate_membership_plan,
 )
 
 router = APIRouter(prefix="/membership", tags=['Membership Plan'])
@@ -23,11 +22,6 @@ async def create(request: Request, data: MembershipPlanRequest):
 async def get_all_membership_plans(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_membership_plans()
-
-@router.get("/populate", status_code=status.HTTP_201_CREATED)
-async def populate(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_membership_plan()
 
 @router.get("/{id}", response_model=MembershipPlan, status_code=status.HTTP_200_OK)
 async def get_membership_plan_by_id(request: Request, id: str):

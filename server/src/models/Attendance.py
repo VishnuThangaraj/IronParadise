@@ -1,9 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from datetime import datetime
-from beanie import Document, before_event, Save
+from beanie import Document, Link, before_event, Save
 from pydantic import BaseModel, Field
 from pymongo import IndexModel, ASCENDING
 
+from src.models.Member import Member
+from src.models.Trainer import Trainer
 
 class AttendanceRecord(BaseModel):
     checkIn: datetime = Field(default_factory=datetime.utcnow)
@@ -13,6 +15,7 @@ class AttendanceRecord(BaseModel):
 class Attendance(Document):
     userId: str  # References memberId or trainerID
     userType: str  # 'member' or 'trainer'
+    user: Optional[Union[Link[Member], Link[Trainer]]] = None
     userName: str  # Cached for display optimization
     date: datetime  # UTC midnight representing the day
     status: str = "checked-in"  # "checked-in" or "checked-out"

@@ -1,5 +1,3 @@
-import os
-import json
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
@@ -118,26 +116,4 @@ async def delete_workout_plan(id: str):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete workout plan: {str(e)}"
         )
-
-#Populate Workout plan
-async def populate_workout_plan():
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "workoutPlan.json")
-    try:
-        with open(file_path, "r") as f:
-            workout_plans = json.load(f)
-            
-        for plan in workout_plans:
-            existing_plan = await WorkoutPlan.find_one(WorkoutPlan.name == plan["name"])
-            if existing_plan:
-                continue
-            newPlan = WorkoutPlan(**plan)
-            await newPlan.insert()
-
-        return {
-            "message": "Workout Plan populated successfully"
-        }
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to populate workout plans: {str(e)}"
-        )
+

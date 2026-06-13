@@ -9,7 +9,6 @@ from src.controllers.workoutPlanController import (
     fetch_workout_plan_by_id,
     update_workout_plan,
     delete_workout_plan,
-    populate_workout_plan,
 )
 
 router = APIRouter(prefix="/workoutplan", tags=["Workout Plan"])
@@ -23,11 +22,6 @@ async def create(request: Request, data: WorkoutPlanRequest):
 async def get_all_workout_plans(request: Request):
     await get_loggedin_admin(request)
     return await fetch_all_workout_plans()
-
-@router.get("/populate", status_code=status.HTTP_201_CREATED)
-async def populate(request: Request):
-    await get_loggedin_admin(request)
-    return await populate_workout_plan()
 
 @router.get("/{id}", response_model=WorkoutPlan, status_code=status.HTTP_200_OK)
 async def get_workout_plan_by_id(request: Request, id: str):

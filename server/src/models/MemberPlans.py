@@ -2,9 +2,14 @@ from pydantic import Field
 from typing import Optional
 from datetime import datetime
 from pymongo import IndexModel, ASCENDING
-from beanie import Document, before_event, Insert, Save
+from beanie import Document, Link, before_event, Insert, Save
 
 from src.utils.getNextID import getNextID
+from src.models.Member import Member
+from src.models.MembershipPlan import MembershipPlan
+from src.models.DietPlan import DietPlan
+from src.models.WorkoutPlan import WorkoutPlan
+from src.models.Trainer import Trainer
 
 class MemberPlans(Document):
     memberPlanId: Optional[str] = Field(default=None)
@@ -13,6 +18,12 @@ class MemberPlans(Document):
     dietPlanId: Optional[str] = None
     workoutPlanId: Optional[str] = None
     trainerId: Optional[str] = None
+
+    member: Optional[Link[Member]] = None
+    membership: Optional[Link[MembershipPlan]] = None
+    dietPlan: Optional[Link[DietPlan]] = None
+    workoutPlan: Optional[Link[WorkoutPlan]] = None
+    trainer: Optional[Link[Trainer]] = None
     
     membershipStartDate: Optional[datetime] = None
     membershipEndDate: Optional[datetime] = None

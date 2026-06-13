@@ -1,4 +1,3 @@
-from h11._abnf import status_code
 import os
 import json
 from fastapi import HTTPException, status
@@ -125,80 +124,6 @@ async def delete_trainer(id: str):
             detail=f"Failed to delete trainer: {str(e)}",
         )
 
-
-#Populate Trainer
-async def populate_trainer():    
-    import random
-    from datetime import datetime
-    from src.models.TrainerSalary import TrainerSalary
-    from src.utils.getNextID import getNextID
-    
-    file_path = os.path.join(os.path.dirname(__file__), "..", "data", "trainer.json")
-    with open(file_path, "r") as f:
-        trainers = json.load(f)
-
-    salary_file = os.path.join(os.path.dirname(__file__), "..", "data", "trainerSalary.json")
-    try:
-        with open(salary_file, "r") as f:
-            salary_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        salary_data = {}
-
-    months = [
-        "May 2026", "April 2026", "March 2026", "February 2026", "January 2026",
-        "December 2025", "November 2025", "October 2025", "September 2025", "August 2025", "July 2025", "June 2025"
-    ]
-
-    for trainer in trainers:
-        existing_trainer = await Trainer.find_one(Trainer.email == trainer["email"])
-        if existing_trainer:
-            continue
-            
-        newTrainer = Trainer(**trainer)
-        await newTrainer.insert()
-        
-        email = trainer["email"]
-        salary = trainer.get("salary", 3000.0)
-        
-        # Generate 12 months history if not present
-        if email not in salary_data:
-            history = []
-            for month in months:
-                is_paid = random.random() > 0.15
-                paid = salary if is_paid else salary / 2
-                pending = 0.0 if is_paid else salary / 2
-                
-                salary_id = await getNextID("trainer_salary")
-                
-                history.append({
-                    "salaryID": salary_id,
-                    "trainerID": newTrainer.trainerID,
-                    "month": month,
-                    "totalAmount": salary,
-                    "paidAmount": paid,
-                    "pendingAmount": pending,
-                    "paymentDate": datetime.utcnow().isoformat() + "Z",
-                    "paymentMethod": random.choice(["Bank Transfer", "Cash"]),
-                    "status": "Paid" if is_paid else "Partially Paid",
-                    "remarks": "Auto-populated monthly salary"
-                })
-            salary_data[email] = history
-            
-            # Attach the salary history to the Trainer document
-            trainer_history = [TrainerSalary(**record) for record in history]
-            total_pending = sum(record.pendingAmount for record in trainer_history)
-            
-            newTrainer.salaryHistory = trainer_history
-            newTrainer.totalPendingAmount = total_pending
-            await newTrainer.save()
-            
-    # Write back the generated history to the JSON file
-    with open(salary_file, "w") as f:
-        json.dump(salary_data, f, indent=2)
-
-    return {
-        "message": "Trainers and 10+ months salary history populated successfully"
-    }
 
 # --- Salary Management ---
 

@@ -1,5 +1,3 @@
-import os
-import json
 from typing import Optional
 from datetime import datetime
 from fastapi import HTTPException, status
@@ -50,6 +48,7 @@ async def check_in(data: AttendanceActionRequest):
         # Append to existing daily document
         last_attendance.records.append(AttendanceRecord(checkIn=now))
         last_attendance.status = "checked-in"
+        last_attendance.user = user
         await last_attendance.save()
         return {
             "message": f"{data.userType.capitalize()} checked in successfully",
@@ -60,6 +59,7 @@ async def check_in(data: AttendanceActionRequest):
         new_attendance = Attendance(
             userId=data.userId,
             userType=data.userType,
+            user=user,
             userName=user_name,
             date=today,
             status="checked-in",
@@ -104,7 +104,8 @@ async def check_out(data: AttendanceActionRequest):
 
 async def fetch_user_status(userId: str):
     last_attendance = await Attendance.find(
-        Attendance.userId == userId
+        Attendance.userId == userId,
+        fetch_links=True
     ).sort(-Attendance.date).first_or_none()
 
     if not last_attendance:
@@ -155,9 +156,9 @@ async def fetch_attendance_logs(
 
     try:
         if month:
-            logs = await Attendance.find(query).sort(-Attendance.date).to_list(length=None)
+            logs = await Attendance.find(query, fetch_links=True).sort(-Attendance.date).to_list(length=None)
         else:
-            logs = await Attendance.find(query).sort(-Attendance.date).skip(skip).limit(limit).to_list(length=None)
+            logs = await Attendance.find(query, fetch_links=True).sort(-Attendance.date).skip(skip).limit(limit).to_list(length=None)
         return logs
     except Exception as e:
         raise HTTPException(
@@ -188,45 +189,6 @@ async def fetch_attendance_summary():
         "totalCheckInsToday": total_check_ins_today,
         "averageDurationMinutes": round(avg_duration, 1)
     }
-
-
-async def populate_attendance():
-    try:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(current_dir, "..", "data", "attendance.json")
-        with open(json_path, "r") as file:
-            data = json.load(file)
-
-        await Attendance.delete_all()
-
-        docs = []
-        for d in data:
-            date_obj = datetime.strptime(d["date"], "%Y-%m-%dT%H:%M:%SZ")
-            records = []
-            for r in d.get("records", []):
-                cin = datetime.strptime(r["checkIn"], "%Y-%m-%dT%H:%M:%SZ")
-                cout = None
-                if r.get("checkOut"):
-                    cout = datetime.strptime(r["checkOut"], "%Y-%m-%dT%H:%M:%SZ")
-                records.append(AttendanceRecord(checkIn=cin, checkOut=cout))
-            
-            docs.append(Attendance(
-                userId=d["userId"],
-                userType=d["userType"],
-                userName=d["userName"],
-                date=date_obj,
-                status=d["status"],
-                records=records,
-                totalMinutes=d.get("totalMinutes", 0.0)
-            ))
-        
-        await Attendance.insert_many(docs)
-        return {"message": "Attendance logs populated successfully", "count": len(docs)}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
 
 
 async def fetch_kiosk_users():
