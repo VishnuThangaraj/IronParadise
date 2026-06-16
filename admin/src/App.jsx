@@ -167,7 +167,6 @@ const App = () => {
                 path="/membership/details/:id"
                 element={<MembershipPlanDetails />}
               />
-
               {/* Member */}
               <Route path="/member/list" element={<MemberList />} />
               <Route path="/member/add" element={<AddMember />} />

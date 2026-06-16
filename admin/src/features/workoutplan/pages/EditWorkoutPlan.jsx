@@ -38,20 +38,20 @@ const EditWorkoutPlan = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-12 font-montserrat">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 mx-auto pb-12 max-w-6xl font-montserrat">
+      <div className="flex sm:flex-row flex-col justify-between sm:items-center gap-4">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/plan/workout/list")}
-            className="p-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors duration-250 cursor-pointer shadow-xs"
+            className="bg-white hover:bg-slate-50 shadow-xs p-2 border border-slate-200 rounded-xl transition-colors duration-250 cursor-pointer"
           >
             <LuArrowLeft className="w-4 h-4 text-slate-600" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold bg-linear-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent">
+            <h1 className="bg-clip-text bg-linear-to-r from-slate-800 to-indigo-900 font-bold text-transparent text-2xl">
               Edit Workout Plan
             </h1>
-            <p className="text-xs font-medium text-slate-500">
+            <p className="font-medium text-slate-500 text-xs">
               Update your customized weekly workout routine.
             </p>
           </div>
@@ -61,7 +61,7 @@ const EditWorkoutPlan = () => {
           <button
             type="button"
             onClick={() => navigate("/plan/workout/list")}
-            className="px-5 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl transition-all duration-250 cursor-pointer bg-white"
+            className="bg-white hover:bg-slate-50 px-5 py-2 border border-slate-200 rounded-xl font-bold text-slate-700 text-xs transition-all duration-250 cursor-pointer"
           >
             Cancel
           </button>
@@ -69,15 +69,15 @@ const EditWorkoutPlan = () => {
             onClick={handleSubmit}
             loading={isSubmitting}
             loadingText="Updating Plan..."
-            className="px-5 py-2 text-xs font-bold rounded-xl shadow-md cursor-pointer"
+            className="shadow-md px-5 py-2 rounded-xl font-bold text-xs cursor-pointer"
           >
             Update Plan
           </ButtonPrimary>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-6">
+      <div className="gap-6 grid grid-cols-1 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-1">
           <WorkoutPlanInfo
             workoutPlan={workoutPlan}
             onChange={handleMetadataChange}
@@ -89,7 +89,7 @@ const EditWorkoutPlan = () => {
           />
         </div>
 
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <DaySelector
             days={days}
             activeDay={activeDay}
@@ -105,12 +105,12 @@ const EditWorkoutPlan = () => {
           >
             <div className="flex items-center gap-2 px-1">
               <LuCalendarDays className="w-4 h-4 text-indigo-500" />
-              <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <h3 className="font-bold text-slate-700 text-xs uppercase tracking-wider">
                 Exercises for {capitalize(activeDay)}
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
+            <div className="gap-6 grid grid-cols-1">
               <ExerciseCard
                 exercises={workoutPlan[activeDay]?.exercises || []}
                 onAddExercise={(item) => addExercise(activeDay, item)}

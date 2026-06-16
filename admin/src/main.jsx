@@ -8,6 +8,7 @@ import { store } from "@/app/store";
 import AppToaster from "@/shared/components/ui/AppToaster";
 
 import "@/index.css";
+import "@/shared/styles/_global.scss";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
