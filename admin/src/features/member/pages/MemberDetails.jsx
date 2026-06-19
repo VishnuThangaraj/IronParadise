@@ -13,10 +13,14 @@ import {
   LuFolderHeart,
   LuPlus,
   LuTrash2,
+  LuSparkles,
+  LuEye,
 } from "react-icons/lu";
 
 import useMemberDetails from "../hooks/useMemberDetails";
 import Loader from "@/shared/components/ui/Loader";
+import AIFitnessPlanModal from "../components/AIFitnessPlanModal";
+import AIFitnessPlanViewerModal from "../components/AIFitnessPlanViewerModal";
 
 const MemberDetails = () => {
   const navigate = useNavigate();
@@ -29,6 +33,10 @@ const MemberDetails = () => {
     dietPlans,
     workoutPlans,
     isLoading,
+    isAILoading,
+    isGeneratingPlan,
+    aiFitnessPlan,
+    generateAIFitnessPlan,
     assignPlans,
     addMeasurement,
     deleteMeasurement,
@@ -37,6 +45,8 @@ const MemberDetails = () => {
   // Modal states
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [isMeasureModalOpen, setIsMeasureModalOpen] = useState(false);
+  const [isAIGenerateModalOpen, setIsAIGenerateModalOpen] = useState(false);
+  const [isAIViewerModalOpen, setIsAIViewerModalOpen] = useState(false);
 
   // Form states for Plan Assignment
   const [planForm, setPlanForm] = useState({
@@ -207,6 +217,14 @@ const MemberDetails = () => {
     const success = await addMeasurement(payload);
     if (success) {
       setIsMeasureModalOpen(false);
+    }
+  };
+
+  const handleAIGenerate = async (payload) => {
+    const success = await generateAIFitnessPlan(payload);
+    if (success) {
+      setIsAIGenerateModalOpen(false);
+      setIsAIViewerModalOpen(true);
     }
   };
 
@@ -489,6 +507,66 @@ const MemberDetails = () => {
                 : "N/A"}
             </span>
           </div>
+        </div>
+      </div>
+
+      {/* AI FITNESS PLAN SECTION */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-[0_4px_20px_-4px_rgba(15,23,42,0.05)] p-6">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <span className="w-1.5 h-4.5 bg-purple-500 rounded-full"></span>
+            AI Personalized Fitness Plan
+          </h3>
+          <button
+            onClick={() => setIsAIGenerateModalOpen(true)}
+            className="flex items-center gap-1.5 text-xs font-bold bg-purple-50 text-purple-600 hover:bg-purple-100 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer border border-purple-200 shadow-xs"
+          >
+            <LuSparkles className="w-3.5 h-3.5" />
+            <span>{aiFitnessPlan ? "Regenerate Plan" : "Generate Plan"}</span>
+          </button>
+        </div>
+
+        <div className="mt-6">
+          {isAILoading ? (
+            <div className="flex justify-center py-8"><Loader /></div>
+          ) : aiFitnessPlan ? (
+            <div className="bg-gradient-to-r from-slate-50 to-indigo-50/30 rounded-xl p-5 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Latest AI Generation</p>
+                <div className="flex items-center flex-wrap gap-2 mt-1">
+                  <h4 className="text-base font-bold text-slate-800">
+                    {Math.round(aiFitnessPlan.fitness_metrics.calories)} kcal / day
+                  </h4>
+                  <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-md capitalize">
+                    {aiFitnessPlan.diet_plan.dietary_preference} Diet
+                  </span>
+                  <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] font-bold rounded-md">
+                    {aiFitnessPlan.workout_plan.routine_name}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-2 font-medium">
+                  Includes full meal breakdowns, grocery list, and weekly workout schedule.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsAIViewerModalOpen(true)}
+                className="flex items-center justify-center gap-2 bg-white border border-slate-200 hover:border-indigo-300 hover:shadow-sm px-5 py-2.5 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer shrink-0"
+              >
+                <LuEye className="w-4 h-4 text-indigo-500" />
+                View Full Plan
+              </button>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 bg-purple-50 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                <LuSparkles className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-bold text-slate-700">No AI Plan Generated Yet</p>
+              <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                Use our AI Coach to automatically generate a highly personalized diet and workout plan based on the member's metrics.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -928,6 +1006,23 @@ const MemberDetails = () => {
           </div>
         </div>
       )}
+
+      {/* AI MODALS */}
+      <AIFitnessPlanModal
+        isOpen={isAIGenerateModalOpen}
+        onClose={() => setIsAIGenerateModalOpen(false)}
+        member={member}
+        latestMeasurement={measurements.length > 0 ? measurements[0] : null}
+        onGenerate={handleAIGenerate}
+        isGenerating={isGeneratingPlan}
+        existingPlan={aiFitnessPlan}
+      />
+
+      <AIFitnessPlanViewerModal
+        isOpen={isAIViewerModalOpen}
+        onClose={() => setIsAIViewerModalOpen(false)}
+        plan={aiFitnessPlan}
+      />
     </div>
   );
 };

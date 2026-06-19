@@ -1,24 +1,35 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 import logging
 from src.schemas.fitnessPlanSchemas import FitnessPlanGenerationRequest, FitnessPlanResponse
 from src.models.FitnessPlan import FitnessPlan
 from src.ai.generators.fitness_generator import FitnessPlanGenerator
+from src.controllers.authController import get_loggedin_admin
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/fitness", tags=["Fitness Coach"])
+router = APIRouter(prefix="/fitness", tags=["Fitness Coach"])
+
+import httpx
+from pydantic import ValidationError
 
 @router.post("/generate-plan", response_model=FitnessPlanResponse, status_code=status.HTTP_201_CREATED)
-async def generate_plan(payload: FitnessPlanGenerationRequest):
+async def generate_plan(request: Request, payload: FitnessPlanGenerationRequest):
     logger.info(f"Received API request to generate fitness plan for member {payload.memberId}")
+    await get_loggedin_admin(request)
     try:
         generator = FitnessPlanGenerator()
         plan = await generator.generate_and_save(payload)
-        return plan
-    except ValueError as e:
+        return plan 
+    except (ValueError, ValidationError) as e:
         logger.warning(f"Validation or calculation constraint error: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
+        )
+    except httpx.HTTPError as e:
+        logger.error(f"Ollama/HTTP error during plan generation: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="The local AI provider timed out or is currently unavailable. Please verify that Ollama is running."
         )
     except Exception as e:
         logger.error(f"Unexpected error during plan generation: {e}", exc_info=True)

@@ -11,6 +11,7 @@ const useAttendanceKiosk = () => {
   const [selectedUserRecord, setSelectedUserRecord] = useState(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [showMeasurementModal, setShowMeasurementModal] = useState(false);
 
   const fetchUsers = useCallback(async () => {
     setIsPageLoading(true);
@@ -80,6 +81,11 @@ const useAttendanceKiosk = () => {
       await api.post("kiosk/check-out", payload);
       toast.success(`Have a great day, ${selectedUser.name}!`);
       fetchSelectedUserStatus(selectedUser.id);
+      
+      // Trigger measurement modal for members on checkout
+      if (selectedUser.type === "member") {
+        setShowMeasurementModal(true);
+      }
     } catch (err) {
       toast.error(err.response?.data?.detail || "Failed to check out");
     } finally {
@@ -92,6 +98,25 @@ const useAttendanceKiosk = () => {
     setSearchQuery("");
     setSelectedUserStatus("absent");
     setSelectedUserRecord(null);
+  };
+
+  const handleSaveMeasurement = async (measurementData) => {
+    if (!selectedUser) return;
+    try {
+      const payload = {
+        memberId: selectedUser.id,
+        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+        weight: measurementData.weight ? parseFloat(measurementData.weight) : null,
+        bodyFat: measurementData.bodyFat ? parseFloat(measurementData.bodyFat) : null,
+        waist: measurementData.waist ? parseFloat(measurementData.waist) : null,
+      };
+      await api.post("kiosk/measurement", payload);
+      toast.success("Daily stats saved successfully!");
+      setShowMeasurementModal(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save measurements");
+    }
   };
 
   return {
@@ -108,7 +133,10 @@ const useAttendanceKiosk = () => {
     handleCheckIn,
     handleCheckOut,
     clearSelection,
-    fetchSelectedUserStatus
+    fetchSelectedUserStatus,
+    showMeasurementModal,
+    setShowMeasurementModal,
+    handleSaveMeasurement
   };
 };
 

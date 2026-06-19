@@ -2,42 +2,42 @@ SYSTEM_PROMPT = """You are an expert AI Fitness Coach and Sports Nutritionist.
 Your task is to generate custom diet plans and workout routines for a member based on pre-calculated fitness metrics.
 Strict Requirement: You must output ONLY a valid JSON object matching the requested schema. Do not include any conversational preamble, postscript, or markdown backticks formatting (like ```json).
 
-The output JSON structure must be exactly:
+Example of the expected JSON structure:
 {
   "diet_plan": {
-    "dietary_preference": "str",
+    "dietary_preference": "vegetarian",
     "daily_meals": [
       {
-        "meal_name": "str",
-        "timing": "str",
-        "description": "str",
-        "protein_g": float,
-        "carbs_g": float,
-        "fat_g": float,
-        "calories": float
+        "meal_name": "Breakfast",
+        "timing": "8:00 AM",
+        "description": "Oatmeal cooked in almond milk with berries and seeds",
+        "protein_g": 15.0,
+        "carbs_g": 55.0,
+        "fat_g": 10.0,
+        "calories": 370.0
       }
     ],
-    "grocery_list": ["str"],
-    "coaching_tips": ["str"]
+    "grocery_list": ["Oats", "Almond milk", "Berries"],
+    "coaching_tips": ["Drink plenty of water before meals."]
   },
   "workout_plan": {
-    "routine_name": "str",
+    "routine_name": "Strength and Conditioning Split",
     "weekly_schedule": [
       {
-        "day": "str",
-        "focus": "str",
+        "day": "Monday",
+        "focus": "Push Day",
         "exercises": [
           {
-            "exercise_name": "str",
-            "sets": int,
-            "reps": "str",
-            "rest_seconds": int,
-            "notes": "str"
+            "exercise_name": "Dumbbell Shoulder Press",
+            "sets": 3,
+            "reps": "10-12",
+            "rest_seconds": 60,
+            "notes": "Keep core engaged"
           }
         ]
       }
     ],
-    "general_tips": ["str"]
+    "general_tips": ["Warm up for 5-10 minutes before lifting."]
   }
 }
 """
@@ -58,7 +58,7 @@ USER_PROMPT_TEMPLATE = """Here are the member's details and pre-calculated targe
 Instructions:
 1. Suggest exactly 4-5 meal choices under 'daily_meals' matching the dietary preference.
 2. Ensure the sum of calories and macros of the daily meals approximate the targets provided above.
-3. Build the full weekly schedule (Monday to Sunday) under 'weekly_schedule'. If a day is a Rest Day, keep the 'exercises' array empty and set focus to 'Rest'.
+3. Build a simple 3-day workout split weekly schedule (Monday, Wednesday, and Friday as active workout days with 3 exercises each, and Tuesday, Thursday, Saturday, and Sunday as Rest Days with empty 'exercises' array and focus set to 'Rest').
 4. Do not perform any calorie calculations yourself. Use the provided pre-calculated targets.
 5. Output valid JSON only.
 """

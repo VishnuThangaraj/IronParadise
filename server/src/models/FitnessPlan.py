@@ -15,6 +15,16 @@ class FitnessPlan(Document):
     fitness_metrics: FitnessMetricsSchema
     diet_plan: DietPlanSchema
     workout_plan: WorkoutPlanSchema
+    
+    # Request parameters stored to pre-populate form on regenerate
+    age: Optional[int] = Field(default=None)
+    gender: Optional[str] = Field(default=None)
+    weight: Optional[float] = Field(default=None)
+    height: Optional[float] = Field(default=None)
+    activity_level: Optional[str] = Field(default=None)
+    goal: Optional[str] = Field(default=None)
+    dietary_preference: Optional[str] = Field(default=None)
+
     createdAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
     updatedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
 

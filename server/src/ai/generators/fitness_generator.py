@@ -56,18 +56,45 @@ class FitnessPlanGenerator:
         # 4. Clean & Validate response
         diet_plan, workout_plan = validate_ai_response(raw_response)
         
+        if not diet_plan.dietary_preference or diet_plan.dietary_preference.strip().lower() in ["none", "null"]:
+            diet_plan.dietary_preference = request.dietary_preference
+            
         # Resolve relationship
         member_doc = await Member.find_one(Member.memberId == request.memberId)
 
-        # 5. Construct document model and insert in MongoDB via Beanie
-        plan = FitnessPlan(
-            memberId=request.memberId,
-            member=member_doc,
-            fitness_metrics=metrics,
-            diet_plan=diet_plan,
-            workout_plan=workout_plan
-        )
-        await plan.insert()
-        
-        logger.info(f"Successfully generated and saved fitness plan {plan.planId} for member {request.memberId}")
+        # 5. Construct or update document model and save to MongoDB via Beanie
+        existing_plan = await FitnessPlan.find_one(FitnessPlan.memberId == request.memberId)
+        if existing_plan:
+            existing_plan.member = member_doc
+            existing_plan.fitness_metrics = metrics
+            existing_plan.diet_plan = diet_plan
+            existing_plan.workout_plan = workout_plan
+            existing_plan.age = request.age
+            existing_plan.gender = request.gender
+            existing_plan.weight = request.weight
+            existing_plan.height = request.height
+            existing_plan.activity_level = request.activity_level
+            existing_plan.goal = request.goal
+            existing_plan.dietary_preference = request.dietary_preference
+            await existing_plan.save()
+            plan = existing_plan
+            logger.info(f"Successfully updated and saved fitness plan {plan.planId} for member {request.memberId}")
+        else:
+            plan = FitnessPlan(
+                memberId=request.memberId,
+                member=member_doc,
+                fitness_metrics=metrics,
+                diet_plan=diet_plan,
+                workout_plan=workout_plan,
+                age=request.age,
+                gender=request.gender,
+                weight=request.weight,
+                height=request.height,
+                activity_level=request.activity_level,
+                goal=request.goal,
+                dietary_preference=request.dietary_preference
+            )
+            await plan.insert()
+            logger.info(f"Successfully generated and created new fitness plan {plan.planId} for member {request.memberId}")
+            
         return plan

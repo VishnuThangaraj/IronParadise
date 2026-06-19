@@ -24,6 +24,11 @@ const useMemberDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPlansLoading, setIsPlansLoading] = useState(false);
   const [isMeasurementsLoading, setIsMeasurementsLoading] = useState(false);
+  
+  // AI Plan states
+  const [aiFitnessPlan, setAiFitnessPlan] = useState(null);
+  const [isAILoading, setIsAILoading] = useState(false);
+  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
   const fetchMember = useCallback(async () => {
     try {
@@ -102,6 +107,26 @@ const useMemberDetails = () => {
     }
   }, [token]);
 
+  const fetchAIFitnessPlan = useCallback(async () => {
+    setIsAILoading(true);
+    try {
+      const response = await api.get(`fitness/plan/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAiFitnessPlan(response.data);
+    } catch (err) {
+      if (err.response?.status === 404) {
+        setAiFitnessPlan(null);
+      } else {
+        toast.error("Failed to load AI fitness plan");
+      }
+    } finally {
+      setIsAILoading(false);
+    }
+  }, [id, token]);
+
   const loadAllData = useCallback(async () => {
     setIsLoading(true);
     await Promise.all([
@@ -109,9 +134,10 @@ const useMemberDetails = () => {
       fetchMemberPlans(),
       fetchMeasurements(),
       fetchOptions(),
+      fetchAIFitnessPlan(),
     ]);
     setIsLoading(false);
-  }, [fetchMember, fetchMemberPlans, fetchMeasurements, fetchOptions]);
+  }, [fetchMember, fetchMemberPlans, fetchMeasurements, fetchOptions, fetchAIFitnessPlan]);
 
   useEffect(() => {
     if (token && id) {
@@ -194,6 +220,26 @@ const useMemberDetails = () => {
     }
   };
 
+  const generateAIFitnessPlan = async (payload) => {
+    setIsGeneratingPlan(true);
+    try {
+      const response = await api.post("fitness/generate-plan", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("AI Fitness Plan generated successfully!");
+      setAiFitnessPlan(response.data);
+      return true;
+    } catch (err) {
+      const errMsg = err.response?.data?.detail || "Failed to generate AI plan";
+      toast.error(errMsg);
+      return false;
+    } finally {
+      setIsGeneratingPlan(false);
+    }
+  };
+
   return {
     member,
     memberPlans,
@@ -202,13 +248,17 @@ const useMemberDetails = () => {
     trainers,
     dietPlans,
     workoutPlans,
+    aiFitnessPlan,
     isLoading,
     isPlansLoading,
     isMeasurementsLoading,
+    isAILoading,
+    isGeneratingPlan,
     assignPlans,
     removePlans,
     addMeasurement,
     deleteMeasurement,
+    generateAIFitnessPlan,
     refreshAllData: loadAllData,
   };
 };

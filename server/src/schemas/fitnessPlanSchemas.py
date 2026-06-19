@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Any
 from pydantic import BaseModel, Field, field_validator
+from beanie import PydanticObjectId
 
 class FitnessPlanGenerationRequest(BaseModel):
     memberId: str = Field(..., description="The ID of the member requesting the plan")
@@ -71,7 +72,7 @@ class MealPlanItem(BaseModel):
 
 
 class DietPlanSchema(BaseModel):
-    dietary_preference: str = Field(..., description="The diet type, matching request")
+    dietary_preference: Optional[str] = Field(default="none", description="The diet type, matching request")
     daily_meals: List[MealPlanItem] = Field(..., description="List of meals for a representative day")
     grocery_list: List[str] = Field(..., description="Recommended grocery items to purchase")
     coaching_tips: List[str] = Field(..., description="Nutrition coaching advice aligned with calculations")
@@ -82,7 +83,7 @@ class ExerciseItem(BaseModel):
     sets: int = Field(..., ge=1, description="Number of sets")
     reps: str = Field(..., description="Number of reps or duration, e.g. '10-12', '15', '30s'")
     rest_seconds: int = Field(..., ge=0, description="Rest period between sets in seconds")
-    notes: Optional[str] = Field(None, description="Execution cues or instructions")
+    notes: str = Field("", description="Execution cues or instructions")
 
 
 class DayWorkout(BaseModel):
@@ -100,12 +101,22 @@ class WorkoutPlanSchema(BaseModel):
 # --- Complete Plan persistence and API output ---
 
 class FitnessPlanResponse(BaseModel):
-    id: Optional[str] = Field(None, alias="_id", description="The MongoDB identifier")
+    id: Optional[PydanticObjectId] = Field(None, alias="_id", description="The MongoDB identifier")
     memberId: str = Field(..., description="The member ID this plan belongs to")
-    member: Optional[dict] = None
+    member: Optional[Any] = None
     fitness_metrics: FitnessMetricsSchema = Field(..., description="Calculated engine metrics")
     diet_plan: DietPlanSchema = Field(..., description="The AI-generated and validated diet plan")
     workout_plan: WorkoutPlanSchema = Field(..., description="The AI-generated and validated workout plan")
+    
+    # Optional original parameters for frontend regeneration pre-population
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    weight: Optional[float] = None
+    height: Optional[float] = None
+    activity_level: Optional[str] = None
+    goal: Optional[str] = None
+    dietary_preference: Optional[str] = None
+
     created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
 
     class Config:
