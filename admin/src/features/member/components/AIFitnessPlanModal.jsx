@@ -84,6 +84,12 @@ const AIFitnessPlanModal = ({ isOpen, onClose, member, latestMeasurement, onGene
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+            <p className="text-[11px] text-purple-700 font-medium">
+              <strong className="font-bold">Note:</strong> Generating an AI plan will make it the active plan, overriding any manually assigned diet and workout plans.
+            </p>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Weight (kg)</label>

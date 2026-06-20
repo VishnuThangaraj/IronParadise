@@ -8,5 +8,6 @@ class MemberPlansRequest(BaseModel):
     dietPlanId: Optional[str] = None
     workoutPlanId: Optional[str] = None
     trainerId: Optional[str] = None
+    activePlanType: Optional[str] = "manual"
     membershipStartDate: Optional[datetime] = None
     membershipEndDate: Optional[datetime] = None

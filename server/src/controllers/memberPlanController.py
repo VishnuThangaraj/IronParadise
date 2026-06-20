@@ -32,6 +32,8 @@ async def assign_member_plans(data: MemberPlansRequest):
             existing_plan.trainer = trainer_doc
             existing_plan.dietPlan = diet_doc
             existing_plan.workoutPlan = workout_doc
+            if data.dietPlanId or data.workoutPlanId:
+                existing_plan.activePlanType = "manual"
 
             await existing_plan.save()
             return {
@@ -46,7 +48,8 @@ async def assign_member_plans(data: MemberPlansRequest):
                 membership=membership_doc,
                 trainer=trainer_doc,
                 dietPlan=diet_doc,
-                workoutPlan=workout_doc
+                workoutPlan=workout_doc,
+                activePlanType="manual" if (data.dietPlanId or data.workoutPlanId) else "manual"
             )
             await new_plan.insert()
             return {

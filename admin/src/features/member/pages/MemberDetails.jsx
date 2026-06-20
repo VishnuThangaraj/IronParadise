@@ -37,6 +37,8 @@ const MemberDetails = () => {
     isGeneratingPlan,
     aiFitnessPlan,
     generateAIFitnessPlan,
+    confirmAIFitnessPlan,
+    isConfirmingPlan,
     assignPlans,
     addMeasurement,
     deleteMeasurement,
@@ -415,6 +417,12 @@ const MemberDetails = () => {
               <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                 <span className="w-1.5 h-4.5 bg-indigo-500 rounded-full"></span>
                 Assigned Plans & Trainer
+                {memberPlans?.activePlanType === 'manual' && (
+                  <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">ACTIVE</span>
+                )}
+                {memberPlans?.activePlanType === 'ai' && (
+                  <span className="ml-2 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">INACTIVE</span>
+                )}
               </h3>
               <button
                 onClick={openPlanModal}
@@ -516,6 +524,12 @@ const MemberDetails = () => {
           <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
             <span className="w-1.5 h-4.5 bg-purple-500 rounded-full"></span>
             AI Personalized Fitness Plan
+            {memberPlans?.activePlanType === 'ai' && (
+              <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full">ACTIVE</span>
+            )}
+            {memberPlans?.activePlanType === 'manual' && (
+              <span className="ml-2 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full">INACTIVE</span>
+            )}
           </h3>
           <button
             onClick={() => setIsAIGenerateModalOpen(true)}
@@ -675,6 +689,12 @@ const MemberDetails = () => {
             <h3 className="text-base font-bold text-slate-800 mb-4">
               Manage Member Plan & Trainer Assignments
             </h3>
+            
+            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-[11px] text-amber-700 font-medium">
+                <strong className="font-bold">Note:</strong> Assigning a manual Diet or Workout plan will make it the active plan, overriding the member's AI-generated plan (if any).
+              </p>
+            </div>
 
             <form onSubmit={handlePlanSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

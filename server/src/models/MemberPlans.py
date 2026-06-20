@@ -18,6 +18,7 @@ class MemberPlans(Document):
     dietPlanId: Optional[str] = None
     workoutPlanId: Optional[str] = None
     trainerId: Optional[str] = None
+    activePlanType: str = Field(default="manual", description="Indicates the active plan source: 'manual' or 'ai'")
 
     member: Optional[Link[Member]] = None
     membership: Optional[Link[MembershipPlan]] = None

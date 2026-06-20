@@ -240,6 +240,29 @@ const useMemberDetails = () => {
     }
   };
 
+  const [isConfirmingPlan, setIsConfirmingPlan] = useState(false);
+
+  const confirmAIFitnessPlan = async () => {
+    setIsConfirmingPlan(true);
+    try {
+      const response = await api.post(`fitness/confirm-plan/${id}`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response.data?.message || "AI Plan confirmed and assigned successfully!");
+      fetchMemberPlans();
+      fetchOptions();
+      return true;
+    } catch (err) {
+      const errMsg = err.response?.data?.detail || "Failed to confirm AI plan";
+      toast.error(errMsg);
+      return false;
+    } finally {
+      setIsConfirmingPlan(false);
+    }
+  };
+
   return {
     member,
     memberPlans,
@@ -259,6 +282,8 @@ const useMemberDetails = () => {
     addMeasurement,
     deleteMeasurement,
     generateAIFitnessPlan,
+    confirmAIFitnessPlan,
+    isConfirmingPlan,
     refreshAllData: loadAllData,
   };
 };

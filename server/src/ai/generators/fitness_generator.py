@@ -97,4 +97,18 @@ class FitnessPlanGenerator:
             await plan.insert()
             logger.info(f"Successfully generated and created new fitness plan {plan.planId} for member {request.memberId}")
             
+        # 6. Set activePlanType to AI in MemberPlans
+        from src.models.MemberPlans import MemberPlans
+        member_plans = await MemberPlans.find_one(MemberPlans.memberId == request.memberId)
+        if member_plans:
+            member_plans.activePlanType = "ai"
+            await member_plans.save()
+        else:
+            new_member_plan = MemberPlans(
+                memberId=request.memberId,
+                member=member_doc,
+                activePlanType="ai"
+            )
+            await new_member_plan.insert()
+
         return plan
