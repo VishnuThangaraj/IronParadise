@@ -8,10 +8,13 @@ export const useClock = () => {
     const updateTime = () => {
       const now = new Date();
       setTimeString(
-        now.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        now
+          .toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })
+          .toUpperCase(),
       );
       setDateString(
         now.toLocaleDateString([], {

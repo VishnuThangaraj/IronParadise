@@ -14,6 +14,7 @@ const ButtonPrimary = ({
   sx = {},
   loading = false,
   loadingText = "Adding...",
+  animate = true,
   onClick,
   ...props
 }) => {
@@ -29,7 +30,7 @@ const ButtonPrimary = ({
 
   return (
     <MotionButton
-      {...fadeUp}
+      {...(animate ? fadeUp : {})}
       type="submit"
       variant={variant}
       size={size}

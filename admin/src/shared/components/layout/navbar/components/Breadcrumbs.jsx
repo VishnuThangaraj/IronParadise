@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 const Breadcrumbs = ({ breadcrumbs, navigate }) => {
   return (
     <div className="flex flex-col justify-center">
-      <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 tracking-wide">
+      <div className="flex items-center gap-1 font-semibold text-[11px] text-slate-400 tracking-wide">
         <span
-          className="cursor-pointer hover:text-indigo-600 transition-colors"
+          className="hover-text-gradient-primary bg-left hover:bg-right cursor-pointer"
           onClick={() => navigate("/")}
         >
           Iron Paradise
@@ -15,10 +15,10 @@ const Breadcrumbs = ({ breadcrumbs, navigate }) => {
             <span>/</span>
             <span
               onClick={() => navigate(crumb.path)}
-              className={`hover:text-indigo-600 transition-colors ${
+              className={`${
                 idx === breadcrumbs.length - 1
-                  ? "text-indigo-600 font-bold"
-                  : "cursor-pointer"
+                  ? "text-gradient-primary-color font-bold"
+                  : "cursor-pointer hover-text-gradient-primary bg-left hover:bg-right"
               }`}
             >
               {crumb.name}
@@ -26,7 +26,7 @@ const Breadcrumbs = ({ breadcrumbs, navigate }) => {
           </span>
         ))}
       </div>
-      <h1 className="text-lg font-bold text-slate-800 font-montserrat mt-0.5">
+      <h1 className="mt-0.5 font-montserrat font-bold text-slate-800 text-lg">
         {breadcrumbs[breadcrumbs.length - 1]?.name || "Dashboard"}
       </h1>
     </div>
@@ -38,7 +38,7 @@ Breadcrumbs.propTypes = {
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       path: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   navigate: PropTypes.func.isRequired,
 };

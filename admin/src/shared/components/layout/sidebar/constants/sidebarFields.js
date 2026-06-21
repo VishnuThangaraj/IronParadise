@@ -1,9 +1,9 @@
-import { FaHouseChimney, FaUserGroup } from "react-icons/fa6";
-import { TbCalendarUser } from "react-icons/tb";
-import { LuCalendarCheck, LuFolderHeart, LuCrown } from "react-icons/lu";
-import { CiMoneyCheck1 } from "react-icons/ci";
-import { PiChatsBold } from "react-icons/pi";
 import { FaDumbbell } from "react-icons/fa";
+import { PiChatsBold } from "react-icons/pi";
+import { CiMoneyCheck1 } from "react-icons/ci";
+import { TbCalendarUser } from "react-icons/tb";
+import { FaHouseChimney, FaUserGroup } from "react-icons/fa6";
+import { LuCalendarCheck, LuFolderHeart, LuCrown } from "react-icons/lu";
 
 export const AdminSidebarItems = [
   {

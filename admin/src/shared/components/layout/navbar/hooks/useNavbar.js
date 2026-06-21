@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "@/features/auth/redux/authSlice";
 import { selectCurrentUser } from "@/features/auth/redux/authSelector";
 import { AdminSidebarItems } from "@/shared/components/layout/sidebar/constants/sidebarFields";
 
-// Function to generate initials
+// generate initials
 const getInitials = (name) => {
   if (!name) return "VT";
   const parts = name.split(" ");
@@ -16,10 +16,10 @@ const getInitials = (name) => {
   return name.slice(0, 2).toUpperCase();
 };
 
-// Function to get active breadcrumbs
+//  active breadcrumbs
 const getBreadcrumbs = (pathname) => {
   if (pathname === "/" || pathname === "/home") {
-    return [{ name: "Dashboard", path: "/" }];
+    return [{ name: "Dashboard", path: "/home" }];
   }
 
   const paths = [];
@@ -28,7 +28,10 @@ const getBreadcrumbs = (pathname) => {
   for (const section of AdminSidebarItems) {
     for (const item of section.items) {
       if (item.location === pathname) {
-        paths.push({ name: item.name, path: item.location });
+        paths.push({
+          name: item.name,
+          path: item.children ? item.children[0].location : item.location,
+        });
         found = true;
         break;
       }
@@ -37,7 +40,7 @@ const getBreadcrumbs = (pathname) => {
           (child) => child.location === pathname,
         );
         if (childMatch) {
-          paths.push({ name: item.name, path: item.location });
+          paths.push({ name: item.name, path: item.children[0].location });
           paths.push({ name: childMatch.name, path: childMatch.location });
           found = true;
           break;
@@ -47,17 +50,31 @@ const getBreadcrumbs = (pathname) => {
     if (found) break;
   }
 
-  if (paths.length === 0) {
+  if (!found) {
     const segments = pathname.split("/").filter(Boolean);
     segments.forEach((seg, index) => {
-      const path = "/" + segments.slice(0, index + 1).join("/");
+      const currentPath = "/" + segments.slice(0, index + 1).join("/");
+      let targetPath = currentPath;
+      let matchedName = null;
+
+      for (const section of AdminSidebarItems) {
+        for (const item of section.items) {
+          if (item.location === currentPath) {
+            if (item.children) targetPath = item.children[0].location;
+            matchedName = item.name;
+          }
+        }
+      }
+
       const name =
+        matchedName ||
         seg.charAt(0).toUpperCase() +
-        seg
-          .slice(1)
-          .replace(/-/g, " ")
-          .replace(/view|list|add/g, (m) => ` ${m}`);
-      paths.push({ name, path });
+          seg
+            .slice(1)
+            .replace(/-/g, " ")
+            .replace(/view|list|add/g, (m) => ` ${m}`);
+
+      paths.push({ name, path: targetPath });
     });
   }
 
@@ -70,7 +87,6 @@ export const useNavbar = () => {
   const location = useLocation();
   const user = useSelector(selectCurrentUser);
 
-  // States
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -78,12 +94,11 @@ export const useNavbar = () => {
   const [unreadCount, setUnreadCount] = useState(3);
   const [focusedSearchIndex, setFocusedSearchIndex] = useState(0);
 
-  // Refs
   const notificationRef = useRef(null);
   const profileRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  // Keyboard shortcut for search (Ctrl + K / Cmd + K)
+  // handle keyboard inputs
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -95,7 +110,6 @@ export const useNavbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Click outside listener for dropdowns
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -112,7 +126,6 @@ export const useNavbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-focus search input when search modal opens
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       setTimeout(() => searchInputRef.current.focus(), 100);
@@ -126,7 +139,7 @@ export const useNavbar = () => {
     dispatch(logout());
   };
 
-  // Dynamic search list derived from Sidebar items configuration
+  // Dynamic search list derived from Sidebar items
   const searchItems = [];
   AdminSidebarItems.forEach((section) => {
     section.items.forEach((item) => {
@@ -161,7 +174,6 @@ export const useNavbar = () => {
     navigate(path);
   };
 
-  // Key navigation inside search command palette
   const handleSearchKeyDown = (e) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
