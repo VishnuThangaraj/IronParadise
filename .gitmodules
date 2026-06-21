@@ -1,0 +1,3 @@
+[submodule "packages/ironparadise-mern"]
+	path = packages/ironparadise-mern
+	url = https://github.com/VishnuThangaraj/IronParadise-MERN.git
