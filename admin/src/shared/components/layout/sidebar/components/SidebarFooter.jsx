@@ -13,7 +13,7 @@ const SidebarFooter = ({ isCollapsed }) => {
           exit={{ opacity: 0 }}
           className="text-[10px] font-bold text-slate-500 tracking-widest font-mono uppercase"
         >
-          IRON PARADISE {appVersion}
+          ADMIN PANEL {appVersion}
         </motion.div>
       ) : (
         <span className="text-[10px] font-extrabold text-slate-500 font-mono">

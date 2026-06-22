@@ -33,7 +33,7 @@ const SidebarSubmenu = ({
   };
 
   return (
-    <div className="relative group">
+    <div className="group relative">
       {/* Parent Row Button */}
       <div
         onClick={handleParentClick}
@@ -51,7 +51,7 @@ const SidebarSubmenu = ({
           <div
             className={`flex items-center justify-center w-8.5 h-8.5 rounded-lg transition-colors duration-300 ${
               isParentActive
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
+                ? "bg-gradient-primary-color text-white shadow-md shadow-indigo-600/20"
                 : "bg-slate-800/40 text-slate-400 group-hover/row:text-white"
             }`}
           >
@@ -62,7 +62,7 @@ const SidebarSubmenu = ({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              className="whitespace-nowrap text-[13.5px] font-semibold tracking-wide"
+              className="font-semibold text-[13.5px] tracking-wide whitespace-nowrap"
             >
               {item.name}
             </motion.span>
@@ -85,7 +85,7 @@ const SidebarSubmenu = ({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden pl-5 ml-4 mt-1 border-l border-slate-800/80 space-y-1"
+            className="space-y-1 mt-1 ml-4 pl-5 border-slate-800/80 border-l overflow-hidden"
           >
             {item.children.map((child) => {
               const isChildActive =
@@ -118,8 +118,8 @@ const SidebarSubmenu = ({
 
       {/* Collapsed Hover Dropdown Popover */}
       {isCollapsed && (
-        <div className="absolute left-full top-0 ml-3 w-52 rounded-xl bg-slate-950 border border-slate-800/80 p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 origin-left group-hover:scale-100 z-50">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2.5 py-1 mb-1 border-b border-slate-800/60">
+        <div className="invisible group-hover:visible top-0 left-full z-50 absolute bg-slate-950 opacity-0 group-hover:opacity-100 shadow-2xl ml-3 p-2 border border-slate-800/80 rounded-xl w-52 scale-95 group-hover:scale-100 origin-left transition-all duration-300 transform">
+          <div className="mb-1 px-2.5 py-1 border-slate-800/60 border-b font-bold text-[10px] text-slate-400 uppercase tracking-widest">
             {item.name}
           </div>
           <div className="space-y-0.5">

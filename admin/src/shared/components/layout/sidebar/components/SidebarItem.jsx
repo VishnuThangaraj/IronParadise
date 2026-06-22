@@ -7,10 +7,16 @@ export const SidebarIcon = ({ icon, className = "w-5 h-5" }) => {
   if (!icon) return null;
   if (typeof icon === "string") {
     const lower = icon.toLowerCase();
-    if (lower.includes("envelope") || lower.includes("mail") || lower.includes("message")) {
+    if (
+      lower.includes("envelope") ||
+      lower.includes("mail") ||
+      lower.includes("message")
+    ) {
       return <LuMail className={className} />;
     }
-    return <i className={`${icon} ${className} flex items-center justify-center`} />;
+    return (
+      <i className={`${icon} ${className} flex items-center justify-center`} />
+    );
   }
   const IconComponent = icon;
   return <IconComponent className={className} />;
@@ -27,14 +33,14 @@ const SidebarItem = ({ item, isCollapsed, pathname }) => {
     (item.location !== "/" && pathname.startsWith(item.location + "/"));
 
   return (
-    <div className="relative group">
+    <div className="group relative">
       <NavLink
         to={item.location}
         className={({ isActive: linkActive }) => {
           const currentActive = linkActive || isActive;
           return `flex items-center gap-3.5 p-3 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden ${
             currentActive
-              ? "bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-600/25 font-semibold"
+              ? "bg-gradient-primary-color text-white shadow-md shadow-indigo-600/25 font-semibold"
               : "text-slate-400 hover:text-white hover:bg-white/5"
           }`;
         }}
@@ -58,7 +64,7 @@ const SidebarItem = ({ item, isCollapsed, pathname }) => {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              className="whitespace-nowrap text-[13.5px] font-semibold tracking-wide"
+              className="font-semibold text-[13.5px] tracking-wide whitespace-nowrap"
             >
               {item.name}
             </motion.span>
@@ -68,7 +74,7 @@ const SidebarItem = ({ item, isCollapsed, pathname }) => {
 
       {/* Collapsed Tooltip */}
       {isCollapsed && (
-        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800/80 text-[10px] font-bold text-slate-200 whitespace-nowrap shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform scale-95 origin-left group-hover:scale-100 z-50">
+        <div className="invisible group-hover:visible top-1/2 left-full z-50 absolute bg-slate-950 opacity-0 group-hover:opacity-100 shadow-md ml-3 px-2.5 py-1.5 border border-slate-800/80 rounded-lg font-bold text-[10px] text-slate-200 whitespace-nowrap scale-95 group-hover:scale-100 origin-left transition-all -translate-y-1/2 duration-200 transform">
           {item.name}
         </div>
       )}

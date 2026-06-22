@@ -1,9 +1,15 @@
-import { FaDumbbell } from "react-icons/fa";
-import { PiChatsBold } from "react-icons/pi";
-import { CiMoneyCheck1 } from "react-icons/ci";
-import { TbCalendarUser } from "react-icons/tb";
-import { FaHouseChimney, FaUserGroup } from "react-icons/fa6";
-import { LuCalendarCheck, LuFolderHeart, LuCrown } from "react-icons/lu";
+import {
+  LuHouse,
+  LuUserCheck,
+  LuCalendarCheck,
+  LuMessageSquare,
+  LuDumbbell,
+  LuUsers,
+  LuFolderHeart,
+  LuCrown,
+  LuCreditCard,
+  LuMail,
+} from "react-icons/lu";
 
 export const AdminSidebarItems = [
   {
@@ -13,12 +19,12 @@ export const AdminSidebarItems = [
       {
         name: "Dashboard",
         location: "/home",
-        icon: FaHouseChimney,
+        icon: LuHouse,
       },
       {
         name: "Attendance",
         location: "/attendance",
-        icon: TbCalendarUser,
+        icon: LuUserCheck,
       },
       {
         name: "Events",
@@ -33,11 +39,11 @@ export const AdminSidebarItems = [
       {
         name: "Enquires",
         location: "/enquiry/list",
-        icon: PiChatsBold,
+        icon: LuMessageSquare,
       },
       {
         name: "Trainers",
-        icon: FaDumbbell,
+        icon: LuDumbbell,
         location: "/trainer",
         children: [
           {
@@ -56,7 +62,7 @@ export const AdminSidebarItems = [
       },
       {
         name: "Members",
-        icon: FaUserGroup,
+        icon: LuUsers,
         location: "/member",
         children: [
           {
@@ -110,12 +116,12 @@ export const AdminSidebarItems = [
       },
       {
         name: "Membership Paylist",
-        icon: CiMoneyCheck1,
+        icon: LuCreditCard,
         location: "/payment",
       },
       {
         name: "Messages",
-        icon: "fa-duotone fa-light fa-envelopes",
+        icon: LuMail,
         location: "/message",
       },
     ],
