@@ -42,13 +42,13 @@ Navigate to the `admin` directory and install the Node dependencies:
 
 ```bash
 cd admin
-npm install
+pnpm install
 ```
 
 Start the development server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ---

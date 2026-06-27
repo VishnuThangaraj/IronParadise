@@ -2,9 +2,7 @@ const year = new Date().getFullYear();
 
 const FooterCopyright = () => {
   return (
-    <div className="text-gray-400">
-      &copy; {year} All rights reserved.
-    </div>
+    <div className="text-gray-500">&copy; {year} All rights reserved.</div>
   );
 };
 

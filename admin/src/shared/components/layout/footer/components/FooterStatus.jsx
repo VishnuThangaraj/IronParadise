@@ -1,10 +1,10 @@
-import { motion } from "motion/react";
 import PropTypes from "prop-types";
+import { motion } from "motion/react";
 
 const FooterStatus = ({ isOnline }) => {
   return (
     <div className="flex items-center gap-2">
-      <span className="relative flex h-2 w-2">
+      <span className="relative flex w-2 h-2">
         <motion.span
           key={isOnline ? "ping-online" : "ping-offline"}
           initial={{ scale: 0.8, opacity: 0 }}
@@ -26,7 +26,7 @@ const FooterStatus = ({ isOnline }) => {
         transition={{ duration: 0.2 }}
         className="text-gray-600"
       >
-        Iron Paradise Admin Portal {isOnline ? "(Online)" : "(Offline)"}
+        IronParadise {isOnline ? "(Online)" : "(Offline)"}
       </motion.span>
     </div>
   );

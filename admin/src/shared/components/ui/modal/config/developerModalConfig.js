@@ -29,7 +29,7 @@ export const getInTouch = [
   {
     title: "Curriculum Vitae",
     description: `Download Resume (PDF)`,
-    url: "#",
+    url: "https://drive.google.com/file/d/1kE5kVnEXOy_2VAt63l62lIQoosuh0nX9/view?usp=sharing",
     icon: IoDocumentTextOutline,
     color: "emerald",
   },
@@ -50,7 +50,7 @@ export const devSocials = [
   },
   {
     title: "Portfolio",
-    url: "https://github.com/Vashishth-Teli",
+    url: "https://vishnuthangaraj.vercel.app/",
     icon: IoGlobeOutline,
     color: "blue",
   },

@@ -1,13 +1,16 @@
 FROM node:20-alpine
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Install dependencies
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Copy project files
 COPY . .
@@ -16,4 +19,4 @@ COPY . .
 EXPOSE 5151
 
 # Start development server
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["pnpm", "run", "dev", "--host"]

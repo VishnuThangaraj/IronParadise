@@ -52,15 +52,15 @@ const DeveloperContactModal = ({ open, onClose }) => {
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {/* Banner*/}
-        <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 h-24 relative overflow-hidden flex items-center justify-between px-6">
+        <div className="relative flex justify-between items-center bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 px-6 h-24 overflow-hidden">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size[14px_24px] pointer-events-none"></div>
-          <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest z-10">
+          <span className="z-10 font-bold text-[10px] text-white/80 uppercase tracking-widest">
             Developer Card
           </span>
         </div>
         {/* Profile Avatar */}
-        <div className="relative flex flex-col items-center px-6 -mt-10 pb-4">
-          <div className="w-20 h-20 rounded-full border-4 border-white bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md overflow-hidden select-none">
+        <div className="relative flex flex-col items-center -mt-10 px-6 pb-4">
+          <div className="flex justify-center items-center shadow-md border-4 border-white rounded-full w-20 h-20 overflow-hidden text-gradient-primary-color select-none">
             {!imgError ? (
               <img
                 src={developerImageURL}
@@ -69,26 +69,26 @@ const DeveloperContactModal = ({ open, onClose }) => {
                 onError={() => setImgError(true)}
               />
             ) : (
-              <span className="text-white font-extrabold text-2xl tracking-wider">
+              <span className="font-extrabold text-white text-2xl tracking-wider">
                 {getInitials(adminName)}
               </span>
             )}
           </div>
 
-          <Typography variant="h6" className="text-gray-800 font-bold mt-2.5">
+          <Typography variant="h6" className="mt-2.5 font-bold text-gray-800">
             {adminName}
           </Typography>
 
-          <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-widest mt-1">
+          <span className="mt-1 font-bold text-[9px] text-gradient-primary-color uppercase tracking-widest">
             Full Stack Developer • Data Analyst • AI Enthusiast
           </span>
 
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2">
             {devSkills.map((item, index) => {
               return (
                 <span
                   key={`dev-skill-${index}`}
-                  className="my-2 bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full text-[10px] font-semibold"
+                  className="bg-indigo-50 my-2 px-2.5 py-0.5 rounded-full font-semibold text-[10px] text-indigo-700"
                 >
                   {item}
                 </span>
@@ -96,7 +96,7 @@ const DeveloperContactModal = ({ open, onClose }) => {
             })}
           </div>
 
-          <div className="text-gray-500 text-sm my-1 leading-relaxed text-justify">
+          <div className="my-1 text-gray-500 text-sm text-justify leading-relaxed">
             {devDescription}
           </div>
         </div>
@@ -141,14 +141,14 @@ const DeveloperContactModal = ({ open, onClose }) => {
                   >
                     {item.title}
                   </div>
-                  <div className="text-xs font-semibold text-gray-700 mt-0.5 normal-case tracking-wide">
+                  <div className="mt-0.5 font-semibold text-gray-700 text-xs normal-case tracking-wide">
                     {item.description}
                   </div>
                 </div>
                 <div
                   className={`text-gray-300 ${theme.arrowHover} transition-colors duration-300 text-right pr-0.5`}
                 >
-                  <FaAngleRight className="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <FaAngleRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 duration-300 transform" />
                 </div>
               </a>
             );
