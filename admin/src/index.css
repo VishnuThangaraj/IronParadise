@@ -31,4 +31,7 @@
   .bg-gradient-primary-color {
     background: linear-gradient(to right, #4f46e5, #9333ea);
   }
+  .bg-gradient-primary-color:hover {
+    background: linear-gradient(to right, #4338ca, #7e22ce);
+  }
 }

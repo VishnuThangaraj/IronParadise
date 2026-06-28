@@ -3,6 +3,11 @@ import toast, { Toaster, ToastIcon, resolveValue } from "react-hot-toast";
 import { LuCheck, LuX } from "react-icons/lu";
 import { IoWarningOutline, IoInformationCircleOutline } from "react-icons/io5";
 
+// Extend toast to support warning and info types
+toast.warn = (message, options) => toast(message, { ...options, customType: "warning" });
+toast.warning = toast.warn;
+toast.info = (message, options) => toast(message, { ...options, customType: "info" });
+
 const toastVariants = {
   error: {
     color: "bg-rose-500",
@@ -26,7 +31,8 @@ const AppToaster = () => {
   return (
     <Toaster position="top-right">
       {(t) => {
-        const variant = toastVariants[t.type];
+        const type = t.customType || t.type;
+        const variant = toastVariants[type];
         const Icon = variant?.Icon;
 
         return (

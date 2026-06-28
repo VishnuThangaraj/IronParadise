@@ -35,7 +35,7 @@ const ButtonPrimary = ({
       variant={variant}
       size={size}
       onClick={handleClick}
-      className={`shadow-md ${className}`}
+      className={`shadow-md bg-gradient-primary-color ${className}`}
       sx={{
         px: 3,
         color: "white",
@@ -43,12 +43,10 @@ const ButtonPrimary = ({
         textTransform: "none",
         position: "relative",
         overflow: "hidden",
-        background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
         boxShadow: "0 4px 14px 0 rgba(99, 102, 241, 0.3)",
         transition:
           "background-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease",
         "&:hover": {
-          background: "linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)",
           transform: "scale(1.02)",
           boxShadow: "0 6px 20px rgba(99, 102, 241, 0.4)",
         },
@@ -64,7 +62,7 @@ const ButtonPrimary = ({
       disabled={loading}
       {...props}
     >
-      {/* Content layer — fades out when loading */}
+      {/* Content layer */}
       <span
         style={{
           display: "inline-flex",
@@ -79,7 +77,7 @@ const ButtonPrimary = ({
         {children}
       </span>
 
-      {/* Loading layer — fades in when loading */}
+      {/* Loading layer */}
       <span
         style={{
           position: "absolute",

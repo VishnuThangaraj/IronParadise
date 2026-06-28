@@ -1,5 +1,6 @@
-import { Modal, Box, Typography, IconButton, Divider } from "@mui/material";
 import { motion } from "motion/react";
+import { Modal, Box, Typography, IconButton, Divider } from "@mui/material";
+
 import { IoClose } from "react-icons/io5";
 
 import ButtonPrimary from "@/shared/components/ui/form/button/ButtonPrimary";
@@ -39,7 +40,7 @@ const ContactAdminModal = ({ open, onClose, title, children, onClick }) => {
           <Typography
             variant="h6"
             fontWeight="bold"
-            className="text-transparent bg-clip-text bg-linear-to-r from-white via-slate-100 to-indigo-200"
+            className="bg-clip-text bg-linear-to-r from-white via-slate-100 to-indigo-200 text-transparent"
           >
             {title}
           </Typography>
@@ -60,9 +61,9 @@ const ContactAdminModal = ({ open, onClose, title, children, onClick }) => {
         <div className="px-6 py-3 text-slate-300 text-sm leading-relaxed">
           {children}
         </div>
-        <div className="px-6 text-slate-300 text-sm leading-relaxed pb-7">
+        <div className="px-6 pb-7 text-slate-300 text-sm leading-relaxed">
           <ButtonPrimary className={"w-full"} onClick={onClick}>
-            <span className="text-md font-semibold">Contact Admin</span>{" "}
+            <span className="font-semibold text-md">Contact Admin</span>{" "}
           </ButtonPrimary>
         </div>
       </Box>
