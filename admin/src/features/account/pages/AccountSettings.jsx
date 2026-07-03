@@ -63,7 +63,9 @@ const AccountSettings = () => {
           <div className="w-full space-y-2.5 mt-6 text-left text-xs text-slate-600">
             <div className="flex items-center gap-2.5 hover:text-indigo-600 transition-colors duration-200">
               <LuMail className="w-4 h-4 text-slate-400 shrink-0" />
-              <span className="truncate">{user?.email || "No email provided"}</span>
+              <span className="truncate">
+                {user?.email || "No email provided"}
+              </span>
             </div>
             <div className="flex items-center gap-2.5 hover:text-indigo-600 transition-colors duration-200">
               <LuPhone className="w-4 h-4 text-slate-400 shrink-0" />
@@ -75,7 +77,9 @@ const AccountSettings = () => {
 
           <div className="w-full space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-500">Account Status</span>
+              <span className="font-semibold text-slate-500">
+                Account Status
+              </span>
               <span
                 className={`font-bold px-2 py-0.5 rounded-md ${
                   user?.status === "Active" || !user?.status
@@ -215,8 +219,8 @@ const AccountSettings = () => {
                   </label>
                   <input
                     type="password"
-                    name="new"
-                    value={password.new}
+                    name="newPassword"
+                    value={password.newPassword}
                     onChange={handlePasswordChange}
                     placeholder="••••••••"
                     className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-hidden focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200"

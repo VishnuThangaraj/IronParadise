@@ -16,11 +16,11 @@ export const updateAdminProfile = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const response = await updateProfile(profileData, token);
-      return response; // Expected payload: { message: "...", user: admin_data }
+      return response;
     } catch (error) {
       return rejectWithValue(extractError(error, "Failed to update profile"));
     }
-  }
+  },
 );
 
 // Update Password Thunk
@@ -30,9 +30,9 @@ export const updateAdminPassword = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const response = await updatePassword(passwordData, token);
-      return response; // Expected payload: { message: "..." }
+      return response;
     } catch (error) {
       return rejectWithValue(extractError(error, "Failed to change password"));
     }
-  }
+  },
 );

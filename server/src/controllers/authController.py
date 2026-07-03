@@ -141,7 +141,13 @@ async def update_admin_password(request: Request, data: AdminPasswordChangeReque
             detail="Incorrect current password",
         )
 
-    admin.password = hash_password(data.new)
+    if data.current == data.newPassword:
+        raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="New password cannot be the same as the current password",
+                    )
+
+    admin.password = hash_password(data.newPassword)
     await admin.save()
 
     return {

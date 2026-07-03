@@ -19,12 +19,12 @@ export const updateProfile = async ({ name, email, phone }, token) => {
 };
 
 // Update Admin Password
-export const updatePassword = async ({ current, new: newPassword }, token) => {
+export const updatePassword = async ({ current, newPassword }, token) => {
   const res = await axios.put(
     "auth/admin/password",
     {
       current,
-      new: newPassword,
+      newPassword,
     },
     {
       headers: {

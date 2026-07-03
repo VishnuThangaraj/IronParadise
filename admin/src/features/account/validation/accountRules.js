@@ -15,7 +15,7 @@ const accountRules = {
     type: "string",
     minLength: 6,
   },
-  new: {
+  newPassword: {
     type: "string",
     minLength: 6,
   },

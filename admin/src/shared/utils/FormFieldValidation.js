@@ -37,7 +37,7 @@ export const handleChangeValidation = (value, rules = {}) => {
 export const validateFields = (fields) => {
   for (const key in fields) {
     if (fields[key] === null || fields[key] === "") {
-      toast.warn("All Fields are required");
+      toast.warn("Please fill in all the fields");
       return false;
     }
   }

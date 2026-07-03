@@ -1,6 +1,6 @@
 export const initialPasswordState = {
   current: "",
-  new: "",
+  newPassword: "",
   confirm: "",
 };
 

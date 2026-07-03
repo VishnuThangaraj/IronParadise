@@ -9,10 +9,13 @@ import {
 } from "@/features/account/redux/accountThunks";
 import accountRules from "@/features/account/validation/accountRules";
 import {
-  initialPasswordState,
   initialProfileState,
+  initialPasswordState,
 } from "@/features/account/state/initialAccountState";
-import { handleChangeValidation } from "@/shared/utils/FormFieldValidation";
+import {
+  validateFields,
+  handleChangeValidation,
+} from "@/shared/utils/FormFieldValidation";
 
 export const getInitials = (name) => {
   if (!name) return "VT";
@@ -79,7 +82,7 @@ const useAccountSettings = () => {
     async (e) => {
       e.preventDefault();
       if (!profile.name || !profile.email) {
-        toast.error("Name and Email are required");
+        toast.warn("Name and Email are required");
         return;
       }
       setIsUpdatingProfile(true);
@@ -98,26 +101,32 @@ const useAccountSettings = () => {
   const handlePasswordSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      if (!password.current || !password.new || !password.confirm) {
-        toast.error("Please fill in all password fields");
-        return;
-      }
-      if (password.new !== password.confirm) {
+
+      if (!validateFields({ ...password })) return;
+
+      const { current, newPassword, confirm } = password;
+      console.log(current, newPassword, confirm);
+
+      if (newPassword !== confirm) {
         toast.error("New passwords do not match");
         return;
       }
-      if (password.new.length < 6) {
+
+      if (newPassword.length < 6) {
         toast.error("Password must be at least 6 characters");
         return;
       }
+
       setIsUpdatingPassword(true);
+
       try {
         await dispatch(
           updateAdminPassword({
-            current: password.current,
-            new: password.new,
+            current,
+            newPassword,
           }),
         ).unwrap();
+
         toast.success("Password changed successfully!");
         setPassword(initialPasswordState);
       } catch (error) {

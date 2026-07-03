@@ -19,5 +19,5 @@ class AdminProfileUpdateRequest(BaseModel):
 
 class AdminPasswordChangeRequest(BaseModel):
     current: str
-    new: str
+    newPassword: str
 
