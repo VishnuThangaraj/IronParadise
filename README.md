@@ -1,4 +1,4 @@
-# IronParadise Gym Dashboard V1.2.1
+# IronParadise Gym Dashboard V2.0.0
 
 A comprehensive Gym Management Dashboard featuring an admin portal built with React/Vite and a backend API powered by FastAPI and MongoDB.
 
