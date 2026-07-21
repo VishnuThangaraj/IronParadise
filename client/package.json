@@ -1,5 +1,5 @@
 {
-  "name": "admin",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,9 +13,9 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.2.0",
-    "@mui/x-date-pickers": "^9.8.0",
+    "@mui/x-date-pickers": "^9.10.0",
     "@reduxjs/toolkit": "^2.12.0",
-    "@tailwindcss/vite": "^4.3.2",
+    "@tailwindcss/vite": "^4.3.3",
     "axios": "^1.18.1",
     "dayjs": "^1.11.21",
     "js-cookie": "^3.0.8",
@@ -26,7 +26,7 @@
     "react-redux": "^9.3.0",
     "sweetalert2": "^11.26.25",
     "sweetalert2-react-content": "^5.1.2",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -38,8 +38,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
-    "prettier": "^3.9.4",
-    "prettier-plugin-tailwindcss": "^0.8.0",
+    "prettier": "^3.9.5",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "sass": "^1.101.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",

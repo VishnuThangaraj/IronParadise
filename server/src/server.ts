@@ -1,14 +1,20 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import corsOptions from "./config/corsConfig.js";
 import express, { type Express, type Request, type Response } from "express";
+
+import connectDB from "./config/dbConfig.js";
+import corsOptions from "./config/corsConfig.js";
 
 dotenv.config();
 
+// Database
+connectDB();
+
 const app: Express = express();
 
-app.use(cors(corsOptions));
+// Middleware
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
