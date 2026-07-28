@@ -15,6 +15,8 @@ function required(name: string): string {
 const env = {
   PORT: Number(process.env.PORT) || 5000,
 
+  PROJECT_VERSION: required("PROJECT_VERSION"),
+
   CLIENT_ORIGIN: required("CLIENT_ORIGIN"),
 
   MONGO_URI: required("MONGO_URI"),

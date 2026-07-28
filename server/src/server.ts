@@ -1,6 +1,6 @@
 import app from "./app.js";
 import env from "./config/env.js";
-import connectDB from "./config/db.js";
+import connectDB from "./config/database.js";
 
 async function bootstrap() {
   try {
@@ -11,7 +11,6 @@ async function bootstrap() {
     });
   } catch (error) {
     console.error("Failed to start server");
-
     console.error(error);
 
     process.exit(1);
