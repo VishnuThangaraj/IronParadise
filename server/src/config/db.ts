@@ -1,12 +1,9 @@
-import dotenv from "dotenv";
 import mongoose from "mongoose";
-
-dotenv.config();
+import env from "./env.js";
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI as string);
-    console.log(conn.connection);
+    const conn = await mongoose.connect(env.MONGO_URI as string);
     console.log(
       `MongoDB Connected: ${conn.connection.host} ${conn.connection.port}`,
     );

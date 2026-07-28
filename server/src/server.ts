@@ -1,27 +1,21 @@
-import cors from "cors";
-import dotenv from "dotenv";
-import express, { type Express, type Request, type Response } from "express";
+import app from "./app.js";
+import env from "./config/env.js";
+import connectDB from "./config/db.js";
 
-import connectDB from "./config/dbConfig.js";
-import corsOptions from "./config/corsConfig.js";
+async function bootstrap() {
+  try {
+    await connectDB();
 
-dotenv.config();
+    app.listen(env.PORT, () => {
+      console.log(`Server running on >> http://localhost:${env.PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server");
 
-// Database
-connectDB();
+    console.error(error);
 
-const app: Express = express();
+    process.exit(1);
+  }
+}
 
-// Middleware
-app.use(express.json());
-app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("IronParadise Server Running...");
-});
-
-const PORT: number = Number(process.env.PORT) || 6969;
-app.listen(PORT, () => {
-  console.log(`Server running on PORT >> ${PORT} <<`);
-});
+bootstrap();
