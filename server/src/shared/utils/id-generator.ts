@@ -18,7 +18,7 @@ export async function generateId(role: Role): Promise<string> {
     },
     {
       upsert: true,
-      new: true,
+      returnDocument: "after",
     },
   );
 

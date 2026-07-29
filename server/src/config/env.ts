@@ -23,7 +23,12 @@ const env = {
 
   JWT_SECRET: required("JWT_SECRET"),
 
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "7d",
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "1d",
+
+  JWT_REFRESH_SECRET:
+    process.env.JWT_REFRESH_SECRET ?? process.env.JWT_SECRET + "_refresh",
+
+  JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? "7d",
 };
 
 export default env;

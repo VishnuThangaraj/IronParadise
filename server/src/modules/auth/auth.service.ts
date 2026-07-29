@@ -4,10 +4,18 @@ import CredentialModel from "../../shared/models/credential.model.js";
 import AppError from "../../shared/errors/AppError.js";
 
 import { hashPassword, comparePassword } from "../../shared/utils/password.js";
-import { generateToken } from "../../shared/utils/jwt.js";
+import {
+  generateAuthTokens,
+  verifyRefreshToken,
+  type JwtPayload,
+} from "../../shared/utils/jwt.js";
 import type { Role } from "../../shared/types/roles.js";
 import type mongoose from "mongoose";
-import type { LoginInput, RegisterInput } from "./auth.types.js";
+import type {
+  LoginInput,
+  RegisterInput,
+  RefreshTokenInput,
+} from "./auth.validator.js";
 
 class AuthService {
   // Register credentials
@@ -28,7 +36,7 @@ class AuthService {
       passwordHash,
     };
 
-    const created = session 
+    const created = session
       ? await CredentialModel.create([doc], { session })
       : await CredentialModel.create([doc]);
 
@@ -70,14 +78,55 @@ class AuthService {
       role = user.role;
     }
 
-    const token = generateToken({
+    const tokens = generateAuthTokens({
       userId: credential.userId,
       role: role as Role,
     });
 
     return {
-      token,
+      tokens,
+      token: tokens.accessToken,
       user,
+    };
+  }
+
+  // Refresh Token
+  async refreshToken(data: RefreshTokenInput) {
+    let payload: JwtPayload;
+
+    try {
+      payload = verifyRefreshToken(data.refreshToken);
+    } catch {
+      throw new AppError("Invalid or expired refresh token", 401);
+    }
+
+    const credential = await CredentialModel.findOne({
+      userId: payload.userId,
+    });
+
+    if (!credential) {
+      throw new AppError("User not found", 401);
+    }
+
+    let role = "";
+
+    if (credential.userType === "admin") {
+      const user = await AdminModel.findOne({ adminId: payload.userId });
+
+      if (!user || !user.isActive) {
+        throw new AppError("Account is disabled or no longer exists", 403);
+      }
+
+      role = user.role;
+    }
+
+    const tokens = generateAuthTokens({
+      userId: credential.userId,
+      role: role as Role,
+    });
+
+    return {
+      tokens,
     };
   }
 }
