@@ -10,3 +10,19 @@ $nav-search-width: 350px;
 $box-shadow-color: rgba(0, 0, 0, 0.1);
 $box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 $box-shadow-mini: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+:root {
+  --background: #f4f4f5;
+  --overlay-gradient: linear-gradient(
+    90deg,
+    #6765f1 0%,
+    #7a5ff3 50%,
+    #9e57f6 100%
+  );
+  --overlay-gradient-dark: radial-gradient(
+    circle at bottom center,
+    #4b437e 0%,
+    #2c2c4f 40%,
+    #1b2036 100%
+  );
+}

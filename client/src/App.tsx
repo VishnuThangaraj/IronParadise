@@ -1,13 +1,13 @@
-import { lazy } from "react"
+import { lazy } from "react";
 
-const AuthPage = lazy(() => import('@/features/auth/pages/AuthPage'));
+const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 
 const App = () => {
   return (
     <div>
-      <AuthPage/>
+      <AuthPage />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
