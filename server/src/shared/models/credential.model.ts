@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import type { InferSchemaType } from "mongoose";
+import { uppercase } from "zod";
 
 const credentialSchema = new Schema(
   {
@@ -8,6 +9,7 @@ const credentialSchema = new Schema(
       required: true,
       unique: true,
       trim: true,
+      uppercase: true,
     },
     userType: {
       type: String,

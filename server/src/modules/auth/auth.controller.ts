@@ -25,8 +25,18 @@ class AuthController {
     }
   }
 
-  async profile(req: Request, res: Response) {
-    sendResponse(res, 200, "Current user", req.user);
+  async profile(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.user?.userId) {
+        return sendResponse(res, 401, "Authentication required");
+      }
+
+      const user = await AuthService.getProfile(req.user.userId);
+
+      sendResponse(res, 200, "Current user", user);
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

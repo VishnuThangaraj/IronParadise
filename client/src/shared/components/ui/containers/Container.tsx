@@ -20,7 +20,7 @@ const Container = ({
 
   return (
     <div
-      className={`w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 rounded-3xl flex ${variantStyles} ${className}`}
+      className={`w-[calc(100%-2rem)] sm:w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 rounded-3xl flex ${variantStyles} ${className}`}
     >
       {children}
     </div>

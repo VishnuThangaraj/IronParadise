@@ -21,10 +21,13 @@ class AdminService {
     const existingDoc = await AdminModel.findOne({ $or: duplicateCheck });
     if (existingDoc) {
       if (existingDoc.email.toLowerCase() === emailLower) {
-        throw new AppError("Email already exists", 409);
+        throw new AppError("Email's already in use — try another one", 409);
       }
       if (data.phone && existingDoc.phone === data.phone.trim()) {
-        throw new AppError("Phone number already exists", 409);
+        throw new AppError(
+          "Phone number's already in use — try another one",
+          409,
+        );
       }
     }
 
@@ -50,7 +53,7 @@ class AdminService {
       );
 
       if (!admin) {
-        throw new AppError("Failed to create admin account", 500);
+        throw new AppError("Couldn't create admin account — try again", 500);
       }
 
       await AuthService.register(
@@ -152,7 +155,9 @@ class AdminService {
         {
           $or: [
             { adminId },
-            ...(mongoose.Types.ObjectId.isValid(adminId) ? [{ _id: adminId }] : []),
+            ...(mongoose.Types.ObjectId.isValid(adminId)
+              ? [{ _id: adminId }]
+              : []),
           ],
         },
         { session },
@@ -180,4 +185,3 @@ class AdminService {
 }
 
 export default new AdminService();
-

@@ -25,9 +25,10 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        const response = await api.post("/auth/refresh-token", {
-          refreshToken,
-        });
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/auth/refresh-token`,
+          { refreshToken },
+        );
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
           response.data.data.tokens;
@@ -42,7 +43,7 @@ api.interceptors.response.use(
         console.error("Refresh token failed", refreshError);
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        window.location.href = "/authenticate";
         return Promise.reject(refreshError);
       }
     }

@@ -3,6 +3,8 @@ import env from "./env.js";
 
 const allowedOrigins = [env.CLIENT_ORIGIN];
 
+console.log(`CORS configured for Client Origin >> ${env.CLIENT_ORIGIN}`);
+
 const corsOptions: CorsOptions = {
   origin: (
     origin: string | undefined,
@@ -13,7 +15,7 @@ const corsOptions: CorsOptions = {
       return;
     }
 
-    callback(new Error("Not allowed by CORS"));
+    callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,

@@ -1,6 +1,8 @@
+import { type InitialLoginState } from "../state/initialLoginState";
+
 export interface AuthField {
   label: string;
-  name: string;
+  name: keyof InitialLoginState;
   type: string;
   placeholder: string;
   size?: number;
@@ -11,7 +13,7 @@ const authFields: AuthField[] = [
     label: "User ID",
     name: "userId",
     type: "text",
-    placeholder: "Enter your User ID",
+    placeholder: "ADM-00X / TRN-00X",
     size: 100,
   },
   {

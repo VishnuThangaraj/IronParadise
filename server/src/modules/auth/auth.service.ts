@@ -85,7 +85,6 @@ class AuthService {
 
     return {
       tokens,
-      token: tokens.accessToken,
       user,
     };
   }
@@ -128,6 +127,27 @@ class AuthService {
     return {
       tokens,
     };
+  }
+
+  // Get Profile
+  async getProfile(userId: string) {
+    const credential = await CredentialModel.findOne({ userId });
+
+    if (!credential) {
+      throw new AppError("User not found", 404);
+    }
+
+    let user: any = null;
+
+    if (credential.userType === "admin") {
+      user = await AdminModel.findOne({ adminId: userId });
+    }
+
+    if (!user) {
+      throw new AppError("User profile not found", 404);
+    }
+
+    return user;
   }
 }
 
