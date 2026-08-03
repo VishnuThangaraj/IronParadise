@@ -1,5 +1,5 @@
-import type { Request, Response, NextFunction } from "express";
 import type { HydratedDocument } from "mongoose";
+import type { Request, Response, NextFunction } from "express";
 
 import MembershipPlanService from "./membership-plan.service.js";
 import type { MembershipPlan } from "./membership-plan.model.js";

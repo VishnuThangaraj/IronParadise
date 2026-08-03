@@ -2,8 +2,9 @@ import CounterModel from "../models/counter.model.js";
 
 const PREFIX = {
   admin: "ADM",
-  trainer: "TRN",
   member: "MBR",
+  trainer: "TRN",
+  dietPlan: "DPL",
   membershipPlan: "MPL",
 } as const;
 

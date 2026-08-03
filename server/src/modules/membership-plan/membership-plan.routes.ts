@@ -25,7 +25,7 @@ router.post(
 router.get(
   "/",
   authenticate,
-  authorize("admin", "trainer"),
+  authorize("admin", "trainer", "member"),
   MembershipPlanController.fetchAllMembershipPlan,
 );
 
@@ -33,7 +33,7 @@ router.get(
 router.get(
   "/:membershipPlanId",
   authenticate,
-  authorize("admin", "trainer"),
+  authorize("admin", "trainer", "member"),
   MembershipPlanController.getMembershipPlanById,
 );
 

@@ -3,12 +3,12 @@ import mongoose, { type HydratedDocument } from "mongoose";
 import MembershipPlanModel, {
   type MembershipPlan,
 } from "./membership-plan.model.js";
-import { generateId } from "../../shared/utils/id-generator.js";
-import AppError from "../../shared/errors/AppError.js";
 import type {
   CreateMembershipPlanInput,
   UpdateMembershipPlanInput,
 } from "./membership-plan.validator.js";
+import AppError from "../../shared/errors/AppError.js";
+import { generateId } from "../../shared/utils/id-generator.js";
 
 class MembershipPlanService {
   // Create Membership Plan
@@ -94,8 +94,7 @@ class MembershipPlanService {
     if (data.planName) {
       const newPlanNameTrimmed = data.planName.trim();
       if (
-        newPlanNameTrimmed.toLowerCase() !==
-        existingPlan.planName.toLowerCase()
+        newPlanNameTrimmed.toLowerCase() !== existingPlan.planName.toLowerCase()
       ) {
         const duplicate = await MembershipPlanModel.findOne({
           _id: { $ne: existingPlan._id },
@@ -145,4 +144,3 @@ class MembershipPlanService {
 }
 
 export default new MembershipPlanService();
-
