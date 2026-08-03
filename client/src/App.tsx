@@ -14,8 +14,12 @@ import Navbar from "@/shared/components/layout/navbar/Navbar";
 import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
+const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
+
+import { useConnectionMoniter } from "@/shared/service/connectionMoniter";
 
 const App = () => {
+  useConnectionMoniter();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const token = useSelector(selectAccessToken);
@@ -45,13 +49,15 @@ const App = () => {
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <Navbar />
-          <main className="flex-1 p-6"></main>
+          <main className="flex-1 p-6">
+            <Routes>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </main>
           <Footer />
         </div>
       </div>
-      {/* <Routes>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes> */}
     </Suspense>
   );
 };
