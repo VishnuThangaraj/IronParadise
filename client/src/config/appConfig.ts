@@ -5,7 +5,7 @@ export interface AppConfig {
   developerGithubURL: string;
 }
 
-export const appVersion: string = "1.0.0";
+export const appVersion: string = "V3.1.0";
 export const developerName: string = "Vishnu Thangaraj";
 export const developerEmail: string = "vishnuthangaraj@hotmail.com";
 export const developerGithubURL: string = "https://github.com/VishnuThangaraj";
