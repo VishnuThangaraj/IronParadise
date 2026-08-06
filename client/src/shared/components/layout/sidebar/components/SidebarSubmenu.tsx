@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { LuChevronDown } from "react-icons/lu";
 import type { SidebarItemType } from "../constants/sidebarFields";
@@ -15,17 +15,12 @@ const SidebarSubmenu = ({ item, isCollapsed }: SidebarSubmenuProps) => {
       location.pathname.startsWith(child.location),
     ) ?? false;
 
-  const [isOpen, setIsOpen] = useState(isAnyChildActive);
-
-  useEffect(() => {
-    if (isCollapsed) {
-      setIsOpen(false);
-    }
-  }, [isCollapsed]);
+  const [isUserOpen, setIsUserOpen] = useState(isAnyChildActive);
+  const isOpen = isCollapsed ? false : isUserOpen;
 
   const toggleSubmenu = () => {
     if (!isCollapsed) {
-      setIsOpen(!isOpen);
+      setIsUserOpen(!isOpen);
     }
   };
 
@@ -60,7 +55,7 @@ const SidebarSubmenu = ({ item, isCollapsed }: SidebarSubmenuProps) => {
 
         {!isCollapsed && (
           <>
-            <span className="ml-4 text-[15px] font-medium whitespace-nowrap flex-1 text-left transition-colors duration-300">
+            <span className="ml-4 text-[13px] font-medium whitespace-nowrap flex-1 text-left transition-colors duration-300">
               {item.name}
             </span>
             <span
