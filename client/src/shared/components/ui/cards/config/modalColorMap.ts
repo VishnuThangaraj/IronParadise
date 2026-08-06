@@ -22,9 +22,9 @@ export const contactColorMap = {
   },
 };
 
-export const getContactTheme = (item, index) => {
-  if (item && item.color && contactColorMap[item.color]) {
-    return contactColorMap[item.color];
+export const getContactTheme = (item: { color?: string } | any, index: number) => {
+  if (item && item.color && item.color in contactColorMap) {
+    return contactColorMap[item.color as keyof typeof contactColorMap];
   }
 
   const themes = [
@@ -35,7 +35,7 @@ export const getContactTheme = (item, index) => {
   return themes[index % themes.length];
 };
 
-export const socialThemes = {
+export const socialThemes: Record<string, string> = {
   GitHub:
     "hover:bg-slate-900 hover:text-white hover:border-slate-900 hover:shadow-slate-900/30",
   LinkedIn:

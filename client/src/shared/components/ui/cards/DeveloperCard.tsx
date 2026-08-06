@@ -13,7 +13,12 @@ import {
 import { getContactTheme, socialThemes } from "./config/modalColorMap";
 import { getInitials } from "@/shared/hooks/getInitials";
 
-const DeveloperCard = ({ open, onClose }) => {
+interface DeveloperCardProps {
+  open: boolean;
+  onClose?: () => void;
+}
+
+const DeveloperCard = ({ open, onClose }: DeveloperCardProps) => {
   const [imgError, setImgError] = useState(false);
 
   return (
