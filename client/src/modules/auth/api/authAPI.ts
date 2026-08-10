@@ -9,7 +9,7 @@ export const login = async ({
   userId,
   password,
 }: LoginRequest): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>("/api/auth/login", {
+  const response = await api.post<LoginResponse>("/api/auth/", {
     userId,
     password,
   });
@@ -19,6 +19,6 @@ export const login = async ({
 
 // Profile
 export const getProfile = async (): Promise<ProfileResponse> => {
-  const response = await api.get<ProfileResponse>("/api/auth/profile");
+  const response = await api.get<ProfileResponse>("/api/auth/");
   return response.data;
 };

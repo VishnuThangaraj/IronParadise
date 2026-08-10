@@ -31,7 +31,7 @@ export const GeneralSidebarItems: SidebarItemType[] = [
   },
   {
     name: "Events",
-    location: "/events/view",
+    location: "/events",
     icon: LuCalendarCheck,
   },
 ];
@@ -49,7 +49,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
     children: [
       {
         name: "Trainers List",
-        location: "/trainer/list",
+        location: "/trainer",
       },
       {
         name: "Trainers Payroll",
@@ -68,7 +68,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
     children: [
       {
         name: "Members List",
-        location: "/member/list",
+        location: "/member",
       },
       {
         name: "Add New Member",
@@ -83,7 +83,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
     children: [
       {
         name: "Diet Plans List",
-        location: "/plan/diet/list",
+        location: "/plan/diet",
       },
       {
         name: "Add Diet Plans",
@@ -91,7 +91,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
       },
       {
         name: "Workout Plans List",
-        location: "/plan/workout/list",
+        location: "/plan/workout",
       },
       {
         name: "Add Workout Plans",
@@ -106,7 +106,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
     children: [
       {
         name: "Plans List",
-        location: "/membership/list",
+        location: "/membership",
       },
       {
         name: "Add New Plan",

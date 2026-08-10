@@ -8,7 +8,7 @@ import { validate } from "../../shared/middlewares/validate.middleware.js";
 
 const router: Router = Router();
 
-router.post("/login", validate(loginSchema), AuthController.login);
+router.post("/", validate(loginSchema), AuthController.login);
 
 router.post(
   "/refresh-token",
@@ -16,6 +16,6 @@ router.post(
   AuthController.refreshToken,
 );
 
-router.get("/profile", authenticate, AuthController.profile);
+router.get("/", authenticate, AuthController.profile);
 
 export default router;
