@@ -14,9 +14,13 @@ class DietPlanService {
     data: CreateDietPlanInput,
   ): Promise<HydratedDocument<DietPlan>> {
     const planNameTrimmed = data.planName.trim();
+    const escapedPlanName = planNameTrimmed.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&",
+    );
 
     const existingPlan = await DietPlanModel.findOne({
-      planName: { $regex: new RegExp(`^${planNameTrimmed}$`, "i") },
+      planName: { $regex: new RegExp(`^${escapedPlanName}$`, "i") },
     });
 
     if (existingPlan) {
@@ -72,7 +76,7 @@ class DietPlanService {
   }
 
   // Get Diet Plan by Id
-  public async getDietPlanbyId(
+  public async getDietPlanById(
     planId: string,
   ): Promise<HydratedDocument<DietPlan>> {
     const plan = await DietPlanModel.findOne({
@@ -94,16 +98,20 @@ class DietPlanService {
     planId: string,
     data: UpdateDietPlanInput,
   ): Promise<HydratedDocument<DietPlan>> {
-    const existingPlan = await this.getDietPlanbyId(planId);
+    const existingPlan = await this.getDietPlanById(planId);
 
     if (data.planName) {
       const newPlanNameTrimmed = data.planName.trim();
       if (
         newPlanNameTrimmed.toLowerCase() !== existingPlan.planName.toLowerCase()
       ) {
+        const escapedNewPlanName = newPlanNameTrimmed.replace(
+          /[.*+?^${}()|[\]\\]/g,
+          "\\$&",
+        );
         const duplicate = await DietPlanModel.findOne({
           _id: { $ne: existingPlan._id },
-          planName: { $regex: new RegExp(`^${newPlanNameTrimmed}$`, "i") },
+          planName: { $regex: new RegExp(`^${escapedNewPlanName}$`, "i") },
         });
 
         if (duplicate) {

@@ -9,7 +9,7 @@ const mealItemSchema = new Schema(
     carbs: { type: Number, default: null },
     fat: { type: Number, default: null },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const dayDietSchema = new Schema(
@@ -19,7 +19,7 @@ const dayDietSchema = new Schema(
     dinner: { type: [mealItemSchema], default: [] },
     snacks: { type: [mealItemSchema], default: [] },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const dietPlanSchema = new Schema(
@@ -29,6 +29,7 @@ const dietPlanSchema = new Schema(
       required: true,
       unique: true,
       uppercase: true,
+      trim: true,
     },
     planName: {
       type: String,
@@ -54,7 +55,7 @@ const dietPlanSchema = new Schema(
     sunday: { type: dayDietSchema, default: () => ({}) },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export type DietPlan = InferSchemaType<typeof dietPlanSchema>;

@@ -16,9 +16,13 @@ class MembershipPlanService {
     data: CreateMembershipPlanInput,
   ): Promise<HydratedDocument<MembershipPlan>> {
     const planNameTrimmed = data.planName.trim();
+    const escapedPlanName = planNameTrimmed.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&",
+    );
 
     const existingPlan = await MembershipPlanModel.findOne({
-      planName: { $regex: new RegExp(`^${planNameTrimmed}$`, "i") },
+      planName: { $regex: new RegExp(`^${escapedPlanName}$`, "i") },
     });
 
     if (existingPlan) {
@@ -96,9 +100,13 @@ class MembershipPlanService {
       if (
         newPlanNameTrimmed.toLowerCase() !== existingPlan.planName.toLowerCase()
       ) {
+        const escapedNewPlanName = newPlanNameTrimmed.replace(
+          /[.*+?^${}()|[\]\\]/g,
+          "\\$&",
+        );
         const duplicate = await MembershipPlanModel.findOne({
           _id: { $ne: existingPlan._id },
-          planName: { $regex: new RegExp(`^${newPlanNameTrimmed}$`, "i") },
+          planName: { $regex: new RegExp(`^${escapedNewPlanName}$`, "i") },
         });
 
         if (duplicate) {

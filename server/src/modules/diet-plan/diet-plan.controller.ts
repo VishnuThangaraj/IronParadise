@@ -7,6 +7,7 @@ import type { DietPlan } from "./diet-plan.model.js";
 import { sendResponse } from "../../shared/utils/response.js";
 
 class DietPlanController {
+  // create diet plan
   public async createDietPlan(
     req: Request,
     res: Response,
@@ -15,12 +16,13 @@ class DietPlanController {
     try {
       const dietPlan: HydratedDocument<DietPlan> =
         await DietPlanService.createDietPlan(req.body);
-      sendResponse(res, 201, "Diet Plan created successfully", dietPlan);
+      sendResponse(res, 201, "Diet plan created successfully", dietPlan);
     } catch (error) {
       next(error);
     }
   }
 
+  // fetch all diet plans
   public async fetchAllDietPlan(
     req: Request,
     res: Response,
@@ -35,6 +37,7 @@ class DietPlanController {
     }
   }
 
+  // fetch diet plan by id
   public async getDietPlanById(
     req: Request,
     res: Response,
@@ -43,7 +46,7 @@ class DietPlanController {
     try {
       const { dietPlanId } = req.params;
       const dietPlan: HydratedDocument<DietPlan> =
-        await DietPlanService.getDietPlanbyId(dietPlanId as string);
+        await DietPlanService.getDietPlanById(dietPlanId as string);
 
       sendResponse(res, 200, "Diet plan fetched successfully", dietPlan);
     } catch (error) {
@@ -51,6 +54,7 @@ class DietPlanController {
     }
   }
 
+  // update diet plan
   public async updateDietPlan(
     req: Request,
     res: Response,
@@ -66,6 +70,7 @@ class DietPlanController {
     }
   }
 
+  // delete diet plan
   public async deleteDietPlan(
     req: Request,
     res: Response,

@@ -5,6 +5,7 @@ const PREFIX = {
   member: "MBR",
   trainer: "TRN",
   dietPlan: "DPL",
+  workoutPlan: "WPL",
   membershipPlan: "MPL",
 } as const;
 

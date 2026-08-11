@@ -7,6 +7,7 @@ const membershipPlanSchema = new Schema(
       required: true,
       unique: true,
       uppercase: true,
+      trim: true,
     },
     planName: {
       type: String,

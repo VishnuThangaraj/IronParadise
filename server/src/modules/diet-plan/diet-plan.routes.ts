@@ -38,7 +38,7 @@ router.get(
 router.patch(
   "/:dietPlanId",
   authenticate,
-  authorize("admin"),
+  authorize("admin", "trainer"),
   validate(dietPlanUpdateSchema),
   DietPlanController.updateDietPlan,
 );
@@ -47,7 +47,7 @@ router.patch(
 router.delete(
   "/:dietPlanId",
   authenticate,
-  authorize("admin"),
+  authorize("admin", "trainer"),
   DietPlanController.deleteDietPlan,
 );
 

@@ -6,6 +6,7 @@ const counterSchema = new Schema(
     _id: {
       type: String,
       required: true,
+      trim: true,
     },
     sequence: {
       type: Number,
