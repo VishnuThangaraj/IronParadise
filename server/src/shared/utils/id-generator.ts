@@ -6,7 +6,9 @@ const PREFIX = {
   trainer: "TRN",
   dietPlan: "DPL",
   workoutPlan: "WPL",
+  memberReceipt: "MPR",
   membershipPlan: "MPL",
+  trainerReceipt: "TPR",
 } as const;
 
 export type Role = keyof typeof PREFIX;
