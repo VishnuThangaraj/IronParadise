@@ -1,21 +1,22 @@
-import AdminModel from "../admin/admin.model.js";
+import type mongoose from "mongoose";
+
+import UserModel from "../user/user.model.js";
 import CredentialModel from "../../shared/models/credential.model.js";
 
 import AppError from "../../shared/errors/AppError.js";
 
-import { hashPassword, comparePassword } from "../../shared/utils/password.js";
+import type {
+  LoginInput,
+  RegisterInput,
+  RefreshTokenInput,
+} from "./auth.validator.js";
 import {
   generateAuthTokens,
   verifyRefreshToken,
   type JwtPayload,
 } from "../../shared/utils/jwt.js";
 import type { Role } from "../../shared/types/roles.js";
-import type mongoose from "mongoose";
-import type {
-  LoginInput,
-  RegisterInput,
-  RefreshTokenInput,
-} from "./auth.validator.js";
+import { hashPassword, comparePassword } from "../../shared/utils/password.js";
 
 class AuthService {
   // Register credentials
@@ -53,6 +54,16 @@ class AuthService {
       throw new AppError("Invalid credentials", 401);
     }
 
+    const user = await UserModel.findOne({ userId: data.userId });
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    if (!user.isActive) {
+      throw new AppError("Account is inactive — login disabled", 403);
+    }
+
     const validPassword = await comparePassword(
       data.password,
       credential.passwordHash,
@@ -62,25 +73,9 @@ class AuthService {
       throw new AppError("Invalid credentials", 401);
     }
 
-    let user: any = null;
-    let role = "";
-
-    if (credential.userType === "admin") {
-      user = await AdminModel.findOne({ adminId: data.userId });
-
-      if (!user) {
-        throw new AppError("User not found", 404);
-      }
-      if (!user.isActive) {
-        throw new AppError("Account is disabled", 403);
-      }
-
-      role = user.role;
-    }
-
     const tokens = generateAuthTokens({
       userId: credential.userId,
-      role: role as Role,
+      role: user.role as Role,
     });
 
     return {
@@ -107,21 +102,15 @@ class AuthService {
       throw new AppError("User not found", 401);
     }
 
-    let role = "";
+    const user = await UserModel.findOne({ userId: payload.userId });
 
-    if (credential.userType === "admin") {
-      const user = await AdminModel.findOne({ adminId: payload.userId });
-
-      if (!user || !user.isActive) {
-        throw new AppError("Account is disabled or no longer exists", 403);
-      }
-
-      role = user.role;
+    if (!user || !user.isActive) {
+      throw new AppError("Account is disabled or no longer exists", 403);
     }
 
     const tokens = generateAuthTokens({
       userId: credential.userId,
-      role: role as Role,
+      role: user.role as Role,
     });
 
     return {
@@ -131,17 +120,7 @@ class AuthService {
 
   // Get Profile
   async getProfile(userId: string) {
-    const credential = await CredentialModel.findOne({ userId });
-
-    if (!credential) {
-      throw new AppError("User not found", 404);
-    }
-
-    let user: any = null;
-
-    if (credential.userType === "admin") {
-      user = await AdminModel.findOne({ adminId: userId });
-    }
+    const user = await UserModel.findOne({ userId });
 
     if (!user) {
       throw new AppError("User profile not found", 404);

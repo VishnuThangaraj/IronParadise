@@ -1,37 +1,69 @@
 import { Router } from "express";
 
 import AdminController from "./admin.controller.js";
-import { adminSchema, adminUpdateSchema } from "./admin.validator.js";
+
+import { createAdminSchema, updateAdminSchema } from "./admin.validator.js";
 
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import { authenticate } from "../../shared/middlewares/auth.middleware.js";
 import { authorize } from "../../shared/middlewares/authorize.middleware.js";
+import { checkPermission } from "../../shared/middlewares/permission.middleware.js";
 
 const router: Router = Router();
 
-// Create Admin
+// Create admin (Admin role & "admins" permission required)
 router.post(
   "/",
   authenticate,
   authorize("admin"),
-  validate(adminSchema),
+  checkPermission("admins"),
+  validate(createAdminSchema),
   AdminController.createAdmin,
 );
 
-// Update Admin
-router.patch(
-  "/:adminId",
+// Fetch all admins (Admin role & "admins" permission required)
+router.get(
+  "/",
   authenticate,
   authorize("admin"),
-  validate(adminUpdateSchema),
+  checkPermission("admins"),
+  AdminController.getAllAdmins,
+);
+
+// Fetch admin by ID (Admin role & "admins" permission required)
+router.get(
+  "/:id",
+  authenticate,
+  authorize("admin"),
+  checkPermission("admins"),
+  AdminController.getAdminById,
+);
+
+// Update admin (Admin role & "admins" permission required)
+router.patch(
+  "/:id",
+  authenticate,
+  authorize("admin"),
+  checkPermission("admins"),
+  validate(updateAdminSchema),
   AdminController.updateAdmin,
 );
 
-// Delete Admin
+// Permanently delete admin (Admin role & "admins" permission required)
 router.delete(
-  "/:adminId",
+  "/:id/permanent",
   authenticate,
   authorize("admin"),
+  checkPermission("admins"),
+  AdminController.hardDeleteAdmin,
+);
+
+// Delete admin / Soft delete (Admin role & "admins" permission required)
+router.delete(
+  "/:id",
+  authenticate,
+  authorize("admin"),
+  checkPermission("admins"),
   AdminController.deleteAdmin,
 );
 

@@ -1,6 +1,5 @@
-import { Schema, model } from "mongoose";
-import type { InferSchemaType } from "mongoose";
-import { uppercase } from "zod";
+import { Schema, model, type InferSchemaType } from "mongoose";
+
 
 const credentialSchema = new Schema(
   {

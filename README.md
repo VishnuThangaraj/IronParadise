@@ -116,3 +116,35 @@ pnpm dev
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
+
+
+Member
+ ├── personal details
+ ├── contact details
+ ├── emergency contact
+ └── status
+
+MemberAssignment
+ ├── member_id
+ ├── membership/plan
+ ├── start_date
+ ├── end_date
+ ├── diet_plan_id
+ ├── trainer_id
+ └── status
+
+MemberPayment
+ ├── member_id
+ ├── assignment_id
+ ├── amount_due
+ ├── due_date
+ └── status
+
+PaymentReceipt
+ ├── payment_id
+ ├── amount_paid
+ ├── payment_date
+ ├── payment_method
+ ├── reference_number
+ ├── remarks
+ └── created_by
