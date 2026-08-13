@@ -13,6 +13,7 @@ import { generateId } from "../../shared/utils/id-generator.js";
 
 export type CreateUserData = CreateUserInput & {
   userId?: string;
+  password?: string;
   isActive?: boolean;
 };
 
@@ -23,7 +24,7 @@ class UserService {
   public async createUser(
     data: CreateUserData,
     session?: mongoose.ClientSession,
-  ): Promise<HydratedDocument<User>> {
+  ): Promise<any> {
     const emailLower = data.email.toLowerCase().trim();
     const duplicateCheck: any[] = [{ email: emailLower }];
 
@@ -77,25 +78,29 @@ class UserService {
       throw new AppError("Couldn't create user record", 500);
     }
 
-    if (data.password) {
-      try {
-        await AuthService.register(
-          {
-            userId,
-            userType: role,
-            password: data.password,
-          },
-          session || null,
-        );
-      } catch (error) {
-        if (!session) {
-          await UserModel.findByIdAndDelete(user._id);
-        }
-        throw error;
+    const random3Number = Math.floor(100 + Math.random() * 900);
+    const password = data.password || `${userId}@${random3Number}`;
+
+    try {
+      await AuthService.register(
+        {
+          userId,
+          userType: role,
+          password,
+        },
+        session || null,
+      );
+    } catch (error) {
+      if (!session) {
+        await UserModel.findByIdAndDelete(user._id);
       }
+      throw error;
     }
 
-    return user;
+    return {
+      ...user.toObject(),
+      password,
+    };
   }
 
   // fetch all user

@@ -115,7 +115,7 @@ class TrainerDetailsService {
     return updatedTrainerDetails;
   }
 
-  // delete trainer details (soft delete - set employment status to inactive)
+  // delete trainer details (soft delete)
   public async deleteTrainerDetails(
     userId: string,
     session?: mongoose.ClientSession,

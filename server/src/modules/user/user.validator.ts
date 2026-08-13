@@ -5,12 +5,8 @@ export const emergencyContactSchema = z.object({
     .string()
     .min(1, "Emergency contact name's missing — add one")
     .max(100, "Emergency contact name's too long — keep it under 100"),
-  phone: z
-    .string()
-    .min(1, "Emergency contact phone's missing — add one"),
-  relation: z
-    .string()
-    .min(1, "Emergency contact relation's missing — add one"),
+  phone: z.string().min(1, "Emergency contact phone's missing — add one"),
+  relation: z.string().min(1, "Emergency contact relation's missing — add one"),
 });
 
 export const permissionEnum = z.enum([
@@ -31,7 +27,6 @@ export const userSchema = z.object({
     .max(100, "Name's too long — keep it under 100"),
   email: z.email("Hmm, check that email again"),
   dob: z.coerce.date().optional(),
-  password: z.string().min(8, "Password's too short — make it 8+ characters"),
   profileImage: z.string().optional(),
   gender: z.enum(["male", "female", "other"], {
     message: "Pick a gender real quick",
@@ -43,14 +38,11 @@ export const userSchema = z.object({
   emergencyContact: emergencyContactSchema.optional(),
 });
 
-export const userUpdateSchema = userSchema
-  .omit({ password: true })
-  .partial()
-  .extend({
-    isActive: z
-      .boolean({ message: "Status looks off — pick active or inactive" })
-      .optional(),
-  });
+export const userUpdateSchema = userSchema.partial().extend({
+  isActive: z
+    .boolean({ message: "Status looks off — pick active or inactive" })
+    .optional(),
+});
 
 export type CreateUserInput = z.infer<typeof userSchema>;
 export type UpdateUserInput = z.infer<typeof userUpdateSchema>;

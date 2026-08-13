@@ -4,6 +4,7 @@ import UserService, {
   type CreateUserData,
   type UpdateUserData,
 } from "../user/user.service.js";
+
 import AppError from "../../shared/errors/AppError.js";
 
 class AdminService {
