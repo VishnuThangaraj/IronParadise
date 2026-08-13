@@ -1,14 +1,16 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
+export type ButtonVariant = "primary" | "secondary" | "blue" | "green" | "empty";
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
-  variant?: "primary" | "secondary" | "blue" | "green";
+  variant?: ButtonVariant;
   type?: "submit" | "button";
   className?: string;
 }
 
 const primaryStyles =
-  "font-bold text-white bg-linear-to-r from-indigo-600 via-violet-600 to-purple-500 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-400 shadow-md shadow-indigo-500/25 dark:shadow-lg dark:shadow-indigo-500/40 ";
+  "font-bold text-white bg-linear-to-r from-indigo-600 via-violet-600 to-purple-500 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-400 shadow-md shadow-indigo-500/25 dark:shadow-lg dark:shadow-indigo-500/40";
 
 const secondaryStyles =
   "font-bold text-slate-700 dark:text-slate-200 bg-white/50 dark:bg-white/5 hover:bg-white/70 dark:hover:bg-white/10 border border-slate-200 dark:border-white/15 backdrop-blur-md shadow-sm";
@@ -19,6 +21,16 @@ const blueStyles =
 const greenStyles =
   "font-bold text-emerald-600 dark:text-emerald-400 bg-white/50 dark:bg-emerald-500/10 hover:bg-emerald-50/70 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 backdrop-blur-md shadow-sm";
 
+const emptyStyles = "";
+
+const variantStylesMap: Record<ButtonVariant, string> = {
+  primary: primaryStyles,
+  secondary: secondaryStyles,
+  blue: blueStyles,
+  green: greenStyles,
+  empty: emptyStyles,
+};
+
 const Button = ({
   children,
   variant = "primary",
@@ -26,14 +38,7 @@ const Button = ({
   type = "button",
   ...props
 }: ButtonProps) => {
-  const variantStyles =
-    variant === "primary"
-      ? primaryStyles
-      : variant === "secondary"
-        ? secondaryStyles
-        : variant === "blue"
-          ? blueStyles
-          : greenStyles;
+  const variantStyles = variantStylesMap[variant] ?? variantStylesMap.primary;
 
   return (
     <button
@@ -47,3 +52,4 @@ const Button = ({
 };
 
 export default Button;
+

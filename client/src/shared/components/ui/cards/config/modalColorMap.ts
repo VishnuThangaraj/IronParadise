@@ -22,7 +22,7 @@ export const contactColorMap = {
   },
 };
 
-export const getContactTheme = (item: { color?: string } | any, index: number) => {
+export const getContactTheme = (item: { color?: string } | null | undefined, index: number) => {
   if (item && item.color && item.color in contactColorMap) {
     return contactColorMap[item.color as keyof typeof contactColorMap];
   }
