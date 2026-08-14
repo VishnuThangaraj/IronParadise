@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "@mui/material";
 import { LuLogOut } from "react-icons/lu";
 
-import { logout } from "@/modules/auth/redux/authSlice";
+import { logout } from "@/modules/auth/redux/auth.slice";
 import { useToast } from "@/shared/components/ui/toast";
 
 export interface LogoutModalProps {

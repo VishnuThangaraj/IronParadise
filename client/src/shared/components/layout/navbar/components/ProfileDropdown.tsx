@@ -1,10 +1,11 @@
 import { LuChevronDown, LuSettings, LuLogOut } from "react-icons/lu";
 import { AnimatePresence, motion } from "motion/react";
 import type { User } from "@/modules/auth/types/user.types";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 
 export interface ProfileDropdownProps {
   user: User | null;
+  profileRef: RefObject<HTMLDivElement | null>;
   userInitials: string;
   isProfileOpen: boolean;
   setIsProfileOpen: Dispatch<SetStateAction<boolean>>;
@@ -13,13 +14,14 @@ export interface ProfileDropdownProps {
 
 const ProfileDropdown = ({
   user,
+  profileRef,
   userInitials,
   isProfileOpen,
   setIsProfileOpen,
   handleOpenLogoutModal,
 }: ProfileDropdownProps) => {
   return (
-    <div className="relative">
+    <div className="relative" ref={profileRef}>
       <button
         onClick={() => setIsProfileOpen(!isProfileOpen)}
         className="flex items-center gap-2 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer transition-all duration-200 text-slate-800 dark:text-slate-100 shadow-xs"

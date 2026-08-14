@@ -43,7 +43,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={`w-full px-6 py-2 rounded-xl transition-all duration-300 ease-out cursor-pointer active:scale-[0.98] flex items-center justify-center ${variantStyles} ${className}`}
+      className={`px-6 py-2 rounded-xl transition-all duration-300 ease-out cursor-pointer active:scale-[0.98] flex items-center justify-center ${variantStyles} ${className}`}
       {...props}
     >
       {children}
@@ -52,4 +52,3 @@ const Button = ({
 };
 
 export default Button;
-

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { loginUser, fetchUserProfile } from "./authThunks";
+import { loginUser, fetchUserProfile } from "./auth.thunks";
 import { type User } from "../types/user.types";
 import { type LoginResponse } from "../types/login.types";
 import { type ProfileResponse } from "../types/profile.types";

@@ -5,8 +5,8 @@ import { type AppDispatch } from "@/app/store";
 import {
   selectUser,
   selectAccessToken,
-} from "@/modules/auth/redux/authSelector";
-import { fetchUserProfile } from "@/modules/auth/redux/authThunks";
+} from "@/modules/auth/redux/auth.selector";
+import { fetchUserProfile } from "@/modules/auth/redux/auth.thunks";
 
 import Loader from "@/shared/components/ui/feedback/Loader";
 import Footer from "@/shared/components/layout/footer/Footer";
@@ -15,6 +15,11 @@ import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
+
+// Membership Plan
+const MembershipPlanList = lazy(
+  () => import("@/modules/membership-plan/pages/MembershipPlanList"),
+);
 
 import { useConnectionMoniter } from "@/shared/service/connectionMoniter";
 
@@ -49,9 +54,13 @@ const App = () => {
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <Navbar />
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 px-10">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
+
+              {/* Membership Plan */}
+              <Route path="/membership" element={<MembershipPlanList />} />
+
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </main>

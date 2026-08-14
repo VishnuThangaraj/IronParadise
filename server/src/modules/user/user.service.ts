@@ -13,7 +13,7 @@ import { generateId } from "../../shared/utils/id-generator.js";
 
 export type CreateUserData = CreateUserInput & {
   userId?: string;
-  password?: string;
+  password?: string;  
   isActive?: boolean;
 };
 

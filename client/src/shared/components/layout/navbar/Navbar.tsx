@@ -12,13 +12,19 @@ import SearchModal from "./components/SearchModal";
 const Navbar = () => {
   const {
     user,
+    profileRef,
+    searchQuery,
     userInitials,
     isSearchOpen,
     isProfileOpen,
+    setSearchQuery,
+    searchInputRef,
     setIsSearchOpen,
     setIsProfileOpen,
     isLogoutModalOpen,
+    focusedSearchIndex,
     setIsLogoutModalOpen,
+    setFocusedSearchIndex,
     handleOpenLogoutModal,
   } = useNavbar();
 
@@ -54,6 +60,7 @@ const Navbar = () => {
 
         <ProfileDropdown
           user={user}
+          profileRef={profileRef}
           userInitials={userInitials}
           isProfileOpen={isProfileOpen}
           setIsProfileOpen={setIsProfileOpen}
@@ -62,7 +69,20 @@ const Navbar = () => {
       </div>
 
       {/* Page Search Modal */}
-      {isSearchOpen && <SearchModal />}
+      {/* {isSearchOpen && (
+        <SearchModal
+          searchQuery={searchQuery}
+          isSearchOpen={isSearchOpen}
+          setSearchQuery={setSearchQuery}
+          setIsSearchOpen={setIsSearchOpen}
+          focusedSearchIndex={focusedSearchIndex}
+          setFocusedSearchIndex={setFocusedSearchIndex}
+          searchInputRef={searchInputRef}
+          // handleSearchKeyDown,
+          // filteredSearchItems,
+          // handleSearchNavigation,
+        />
+      )} */}
 
       {/* Logout Confirmation */}
       {isLogoutModalOpen && (

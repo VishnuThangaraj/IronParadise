@@ -1,22 +1,23 @@
 import { useState } from "react";
-import { loginBg } from "@/modules/auth/assets";
 import { FiSun, FiMoon, FiUsers, FiMessageSquare } from "react-icons/fi";
-import { useTheme } from "@/shared/hooks/useTheme";
 
+import { loginBg } from "@/modules/auth/assets";
 import logoDark from "@/shared/assets/images/logo-dark.webp";
 import logoWhite from "@/shared/assets/images/logo-white.webp";
+
+import { useTheme } from "@/shared/hooks/useTheme";
 import { useNavigation } from "@/shared/hooks/useNavigation";
 
 import { Checkbox } from "@mui/material";
 import Input from "@/shared/components/ui/forms/Input";
 import FormField from "@/shared/components/ui/forms/FormField";
-import useLogin from "@/modules/auth/hooks/useLogin";
+import useLogin from "@/modules/auth/hooks/use-login";
 
 import Button from "@/shared/components/ui/buttons/Button";
 import HeaderButton from "@/shared/components/ui/buttons/HeaderButton";
 import Container from "@/shared/components/ui/containers/Container";
 import { developerGithubURL } from "@/config/appConfig";
-import authFields, { type AuthField } from "../constants/authFields";
+import authFields, { type AuthField } from "../constants/auth.fields";
 
 const AuthPage = () => {
   const [rememberPassword, setRememberPassword] = useState(false);
@@ -144,7 +145,7 @@ const AuthPage = () => {
                 <Button
                   type="submit"
                   variant="primary"
-                  className="font-semibold text-sm"
+                  className="w-full font-semibold text-sm"
                 >
                   Sign in
                 </Button>

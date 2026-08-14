@@ -1,15 +1,15 @@
 import { useState, useCallback, type ChangeEvent } from "react";
 import { useDispatch } from "react-redux";
 import { type AppDispatch } from "@/app/store";
-import { loginUser } from "@/modules/auth/redux/authThunks";
+import { loginUser } from "@/modules/auth/redux/auth.thunks";
 import initialLoginState, {
   type InitialLoginState,
-} from "@/modules/auth/state/initialLoginState";
+} from "@/modules/auth/state/initial-login-state";
 import {
   validateFields,
   handleChangeValidation,
 } from "@/shared/utils/validation";
-import loginRules from "@/modules/auth/validation/loginRules";
+import loginRules from "@/modules/auth/validation/login.rules";
 import { useToast } from "@/shared/components/ui/toast";
 
 import { LOGIN_ATTEMPT_COOKIE_KEY } from "@/modules/auth/constants/login.constants";

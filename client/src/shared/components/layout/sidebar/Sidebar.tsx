@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectUser } from "@/modules/auth/redux/authSelector";
+import { selectUser } from "@/modules/auth/redux/auth.selector";
 import SidebarFooter from "@/shared/components/layout/sidebar/components/SidebarFooter";
 import SidebarHeader from "@/shared/components/layout/sidebar/components/SidebarHeader";
 import SidebarItems from "@/shared/components/layout/sidebar/components/SidebarItems";

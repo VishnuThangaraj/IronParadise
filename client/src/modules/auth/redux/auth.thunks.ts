@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { login, getProfile } from "../api/authAPI";
+import { login, getProfile } from "../api/auth.api";
 import { type LoginRequest, type LoginResponse } from "../types/login.types";
 import { type ProfileResponse } from "../types/profile.types";
 import { isAxiosError } from "axios";
@@ -13,7 +13,7 @@ export const loginUser = createAsyncThunk<
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await login(credentials);
-      
+
       const tokens = response.data?.tokens;
       if (tokens?.accessToken) {
         localStorage.setItem("accessToken", tokens.accessToken);
@@ -21,7 +21,7 @@ export const loginUser = createAsyncThunk<
       if (tokens?.refreshToken) {
         localStorage.setItem("refreshToken", tokens.refreshToken);
       }
-      
+
       return response;
     } catch (err: unknown) {
       if (isAxiosError(err) && err.response?.data?.message) {

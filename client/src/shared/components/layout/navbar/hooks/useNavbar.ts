@@ -1,17 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { getInitials } from "@/shared/hooks/getInitials";
 import type { User } from "@/modules/auth/types/user.types";
-import { selectUser } from "@/modules/auth/redux/authSelector";
+import { selectUser } from "@/modules/auth/redux/auth.selector";
 
 const useNavbar = () => {
   const user: User | null = useSelector(selectUser);
   const userInitials: string = getInitials((user?.fullName as string) ?? "");
 
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // Profile
+  const profileRef = useRef(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // Search Modal
+  const searchInputRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [focusedSearchIndex, setFocusedSearchIndex] = useState(0);
 
   // Keyboard shortcut for search (Ctrl + K / Cmd + K)
   useEffect(() => {
@@ -29,15 +36,33 @@ const useNavbar = () => {
     setIsLogoutModalOpen(true);
   };
 
+  // Click outside listener for profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return {
     user,
+    profileRef,
+    searchQuery,
     userInitials,
     isSearchOpen,
     isProfileOpen,
+    searchInputRef,
+    setSearchQuery,
     setIsSearchOpen,
     setIsProfileOpen,
     isLogoutModalOpen,
+    focusedSearchIndex,
     setIsLogoutModalOpen,
+    setFocusedSearchIndex,
     handleOpenLogoutModal,
   };
 };

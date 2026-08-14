@@ -1,4 +1,4 @@
-import { type InitialLoginState } from "../state/initialLoginState";
+import { type InitialLoginState } from "../state/initial-login-state";
 
 export interface AuthField {
   label: string;
