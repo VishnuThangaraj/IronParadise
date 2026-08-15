@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "@/shared/components/ui/buttons/Button";
@@ -6,11 +5,20 @@ import PageHeader from "@/shared/components/ui/page/PageHeader";
 import SearchBar from "@/shared/components/ui/search/SearchBar";
 import DataTable from "@/shared/components/ui/table/DataTable";
 
-import { membershipPlanColumns } from "../constants/membershipPlanColumns";
-import type { MembershipPlan } from "../types/membership-plan.types";
+import { membershipPlanColumns } from "../constants/membership-plan.columns";
+import useMembershipPlan from "../hooks/use-membership-plan";
+import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
+import MembershipPlanGrid from "../components/MembershipPlanGrid";
 
 const MembershipPlanList = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const {
+    viewMode,
+    setViewMode,
+    searchQuery,
+    setSearchQuery,
+    membershipPlans,
+    loading,
+  } = useMembershipPlan();
 
   // const initialRows: MembershipPlan[] = [
   //   {
@@ -52,21 +60,38 @@ const MembershipPlanList = () => {
         description="Manage your gym's membership plans and pricing."
       />
       <div className="flex justify-between items-center align-middle">
-        <SearchBar
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onClear={() => setSearchQuery("")}
-          placeholder="Search plans by name or duration..."
-        />
+        <div>
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onClear={() => setSearchQuery("")}
+            placeholder="Search plans by name or duration..."
+          />
+        </div>
+        <div className="flex justify-between gap-6">
+          {/* View Mode */}
+          <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
 
-        <Button variant="primary" className="font-semibold text-sm px-4!">
-          <div className="flex justify-between items-center gap-2">
-            <FiPlus /> <span>Add Plan</span>
-          </div>
-        </Button>
+          <Button variant="primary" className="font-semibold text-sm px-4!">
+            <div className="flex justify-between items-center gap-2">
+              <FiPlus /> <span>Add Plan</span>
+            </div>
+          </Button>
+        </div>
       </div>
       <div>
-        {/* <DataTable rows={filteredRows} columns={membershipPlanColumns} /> */}
+        {viewMode === "grid" ? (
+          <div>
+            <MembershipPlanGrid loading={loading} rows={membershipPlans} />
+          </div>
+        ) : (
+          <DataTable
+            loading={loading}
+            rows={membershipPlans}
+            columns={membershipPlanColumns}
+            getRowId={(row) => row.membershipPlanId}
+          />
+        )}
       </div>
     </div>
   );

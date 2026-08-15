@@ -2,8 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { login, getProfile } from "../api/auth.api";
 import { type LoginRequest, type LoginResponse } from "../types/login.types";
 import { type ProfileResponse } from "../types/profile.types";
-import { isAxiosError } from "axios";
+import { getErrorMessage } from "@/shared/utils/error-handler";
 
+// login user
 export const loginUser = createAsyncThunk<
   LoginResponse,
   LoginRequest,
@@ -24,17 +25,12 @@ export const loginUser = createAsyncThunk<
 
       return response;
     } catch (err: unknown) {
-      if (isAxiosError(err) && err.response?.data?.message) {
-        return rejectWithValue(err.response.data.message as string);
-      }
-      if (err instanceof Error) {
-        return rejectWithValue(err.message);
-      }
-      return rejectWithValue("Login failed");
+      return rejectWithValue(getErrorMessage(err, "Login failed"));
     }
   }
 );
 
+// fetch user profile
 export const fetchUserProfile = createAsyncThunk<
   ProfileResponse,
   void,
@@ -46,13 +42,8 @@ export const fetchUserProfile = createAsyncThunk<
       const response = await getProfile();
       return response;
     } catch (err: unknown) {
-      if (isAxiosError(err) && err.response?.data?.message) {
-        return rejectWithValue(err.response.data.message as string);
-      }
-      if (err instanceof Error) {
-        return rejectWithValue(err.message);
-      }
-      return rejectWithValue("Failed to fetch profile");
+      return rejectWithValue(getErrorMessage(err, "Failed to fetch profile"));
     }
   }
 );
+
