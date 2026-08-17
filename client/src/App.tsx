@@ -20,6 +20,9 @@ const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const MembershipPlanList = lazy(
   () => import("@/modules/membership-plan/pages/MembershipPlanList"),
 );
+const AddMembershipPlan = lazy(
+  () => import("@/modules/membership-plan/pages/AddMembershipPlan"),
+);
 
 import { useConnectionMoniter } from "@/shared/service/connectionMoniter";
 
@@ -60,6 +63,7 @@ const App = () => {
 
               {/* Membership Plan */}
               <Route path="/membership" element={<MembershipPlanList />} />
+              <Route path="/membership/add" element={<AddMembershipPlan />} />
 
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>

@@ -17,6 +17,8 @@ const MembershipPlanList = () => {
     searchQuery,
     setSearchQuery,
     membershipPlans,
+    handleDeletePlan,
+    handleNavigateToEdit,
     loading,
   } = useMembershipPlan();
 
@@ -82,7 +84,12 @@ const MembershipPlanList = () => {
       <div>
         {viewMode === "grid" ? (
           <div>
-            <MembershipPlanGrid loading={loading} rows={membershipPlans} />
+            <MembershipPlanGrid
+              loading={loading}
+              rows={membershipPlans}
+              editPlan={handleNavigateToEdit}
+              deletePlan={handleDeletePlan}
+            />
           </div>
         ) : (
           <DataTable

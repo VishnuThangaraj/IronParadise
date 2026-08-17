@@ -13,7 +13,7 @@ export interface TooltipProps {
 const Tooltip = ({
   title,
   children,
-  position = "bottom",
+  position = "top",
   className = "",
   delay = 150,
   showArrow = true,
@@ -75,7 +75,7 @@ const Tooltip = ({
 
   return (
     <div
-      className="relative inline-flex items-center"
+      className={`relative inline-flex items-center ${isVisible ? "z-50" : ""}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onFocus={handleMouseEnter}
@@ -89,7 +89,7 @@ const Tooltip = ({
             animate={animationVariants[position].animate}
             exit={animationVariants[position].exit}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className={`absolute z-50 pointer-events-none whitespace-nowrap ${positionStyles[position]} ${className}`}
+            className={`absolute z-[999] pointer-events-none whitespace-nowrap ${positionStyles[position]} ${className}`}
           >
             {/* Main Tooltip Body */}
             <div className="px-3 py-1.5 text-[11.5px] font-semibold text-slate-700 dark:text-slate-100 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-xl shadow-lg shadow-slate-900/10 dark:shadow-black/70 flex items-center gap-1.5">

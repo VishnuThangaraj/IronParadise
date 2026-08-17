@@ -14,7 +14,7 @@ export const membershipPlanColumns: GridColDef<MembershipPlan>[] = [
       <div className="flex justify-between align-middle items-center gap-3">
         <div
           className={`w-8 h-8 rounded-full ${getDeterministicGradient(
-            params.row?._id || params.row?.membershipPlanId || params.value
+            params.row?._id || params.row?.membershipPlanId || params.value,
           )} flex items-center justify-center text-white shadow-xs`}
         >
           <LuCrown className="w-4 h-4" />
@@ -108,5 +108,3 @@ export const membershipPlanColumns: GridColDef<MembershipPlan>[] = [
     ),
   },
 ];
-
-
