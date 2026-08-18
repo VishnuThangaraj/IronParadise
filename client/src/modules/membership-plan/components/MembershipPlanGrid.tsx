@@ -12,12 +12,14 @@ export interface MembershipPlanGridProps {
   loading?: boolean;
   editPlan: (planId: string) => void;
   deletePlan: (planId: string) => void;
+  viewPlan: (planId: string) => void;
 }
 
 const MembershipPlanGrid = ({
   rows,
   loading,
   editPlan,
+  viewPlan,
   deletePlan,
 }: MembershipPlanGridProps) => {
   return (
@@ -126,6 +128,8 @@ const MembershipPlanGrid = ({
                 className="flex-1 font-semibold"
                 loading={loading}
                 variant="transparent"
+                onClick={() => viewPlan(row.membershipPlanId as string)}
+                aria-label="View Plan"
               >
                 <LuEye size={15} className="shrink-0" />
                 <span>View Details</span>

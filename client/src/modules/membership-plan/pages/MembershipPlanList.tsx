@@ -12,14 +12,16 @@ import MembershipPlanGrid from "../components/MembershipPlanGrid";
 
 const MembershipPlanList = () => {
   const {
+    loading,
     viewMode,
     setViewMode,
     searchQuery,
     setSearchQuery,
     membershipPlans,
     handleDeletePlan,
+    handleNavigateToAdd,
     handleNavigateToEdit,
-    loading,
+    handleNavigateToView,
   } = useMembershipPlan();
 
   // const initialRows: MembershipPlan[] = [
@@ -74,7 +76,12 @@ const MembershipPlanList = () => {
           {/* View Mode */}
           <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
 
-          <Button variant="primary" className="font-semibold text-sm px-4!">
+          <Button
+            variant="primary"
+            className="font-semibold text-sm px-4!"
+            onClick={handleNavigateToAdd}
+            aria-label="Add Membership Plan"
+          >
             <div className="flex justify-between items-center gap-2">
               <FiPlus /> <span>Add Plan</span>
             </div>
@@ -87,8 +94,9 @@ const MembershipPlanList = () => {
             <MembershipPlanGrid
               loading={loading}
               rows={membershipPlans}
-              editPlan={handleNavigateToEdit}
               deletePlan={handleDeletePlan}
+              editPlan={handleNavigateToEdit}
+              viewPlan={handleNavigateToView}
             />
           </div>
         ) : (

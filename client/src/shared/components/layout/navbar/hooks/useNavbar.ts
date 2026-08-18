@@ -10,12 +10,12 @@ const useNavbar = () => {
   const userInitials: string = getInitials((user?.fullName as string) ?? "");
 
   // Profile
-  const profileRef = useRef(null);
+  const profileRef = useRef<HTMLDivElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   // Search Modal
-  const searchInputRef = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [focusedSearchIndex, setFocusedSearchIndex] = useState(0);
@@ -39,7 +39,7 @@ const useNavbar = () => {
   // Click outside listener for profile dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
         setIsProfileOpen(false);
       }
     };

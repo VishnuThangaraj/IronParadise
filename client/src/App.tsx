@@ -20,8 +20,11 @@ const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const MembershipPlanList = lazy(
   () => import("@/modules/membership-plan/pages/MembershipPlanList"),
 );
-const AddMembershipPlan = lazy(
-  () => import("@/modules/membership-plan/pages/AddMembershipPlan"),
+const MembershipPlanForm = lazy(
+  () => import("@/modules/membership-plan/pages/MembershipPlanForm"),
+);
+const MembershipPlanDetails = lazy(
+  () => import("@/modules/membership-plan/pages/MembershipPlanDetails"),
 );
 
 import { useConnectionMoniter } from "@/shared/service/connectionMoniter";
@@ -53,22 +56,32 @@ const App = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <div className="flex min-h-screen">
+      <div className="flex h-screen overflow-hidden">
         <Sidebar />
-        <div className="flex flex-col flex-1 overflow-auto">
+        <div className="flex flex-col flex-1 h-screen overflow-hidden">
           <Navbar />
-          <main className="flex-1 p-6 px-10">
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
+          <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
+            <main className="flex-1 p-6 px-10">
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
 
-              {/* Membership Plan */}
-              <Route path="/membership" element={<MembershipPlanList />} />
-              <Route path="/membership/add" element={<AddMembershipPlan />} />
+                {/* Membership Plan */}
+                <Route path="/membership" element={<MembershipPlanList />} />
+                <Route path="/membership/add" element={<MembershipPlanForm />} />
+                <Route
+                  path="/membership/edit/:planId"
+                  element={<MembershipPlanForm />}
+                />
+                <Route
+                  path="/membership/:planId"
+                  element={<MembershipPlanDetails />}
+                />
 
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </main>
-          <Footer />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </div>
       </div>
     </Suspense>
