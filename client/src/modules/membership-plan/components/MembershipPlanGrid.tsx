@@ -30,7 +30,7 @@ const MembershipPlanGrid = ({
           <Container
             variant="secondary"
             key={`MPL-GRID-${index}`}
-            className="flex-col justify-between p-6! gap-4 rounded-2xl! group hover:border-indigo-500/40 dark:hover:border-indigo-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 dark:hover:shadow-black/40 hover:-translate-y-0.5"
+            className="flex-col justify-between p-6! gap-4 rounded-2xl! group hover:z-30 hover:border-indigo-500/40 dark:hover:border-indigo-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 dark:hover:shadow-black/40 hover:-translate-y-0.5"
           >
             {/* Top Content */}
             <div className="flex flex-col gap-4">
@@ -106,7 +106,7 @@ const MembershipPlanGrid = ({
                         }
                         position="top"
                       >
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100/90 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/15 cursor-help shrink-0 hover:bg-slate-200/80 dark:hover:bg-white/20 transition-colors">
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/15 cursor-help shrink-0 hover:bg-slate-200/80 dark:hover:bg-white/20 transition-colors leading-none">
                           +{planFeaturesLength - 1} more
                         </span>
                       </Tooltip>

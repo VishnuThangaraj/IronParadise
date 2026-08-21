@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "@/shared/components/ui/buttons/Button";
@@ -5,10 +6,13 @@ import PageHeader from "@/shared/components/ui/page/PageHeader";
 import SearchBar from "@/shared/components/ui/search/SearchBar";
 import DataTable from "@/shared/components/ui/table/DataTable";
 
-import { membershipPlanColumns } from "../constants/membership-plan.columns";
+import { getMembershipPlanColumns } from "../constants/membership-plan.columns";
 import useMembershipPlan from "../hooks/use-membership-plan";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 import MembershipPlanGrid from "../components/MembershipPlanGrid";
+import Container from "@/shared/components/ui/containers/Container";
+import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
+import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 
 const MembershipPlanList = () => {
   const {
@@ -16,46 +20,30 @@ const MembershipPlanList = () => {
     viewMode,
     setViewMode,
     searchQuery,
+    filteredRows,
     setSearchQuery,
-    membershipPlans,
-    handleDeletePlan,
     handleNavigateToAdd,
     handleNavigateToEdit,
     handleNavigateToView,
   } = useMembershipPlan();
 
-  // const initialRows: MembershipPlan[] = [
-  //   {
-  //     id: "1",
-  //     name: "Monthly Pass",
-  //     duration: "1 Month",
-  //     price: 29.99,
-  //     description: "Full access to gym equipment and locker rooms.",
-  //     status: "Active",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Quarterly Starter",
-  //     duration: "3 Months",
-  //     price: 79.99,
-  //     description: "Includes 1 free personal trainer consultation.",
-  //     status: "Active",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Annual VIP",
-  //     duration: "12 Months",
-  //     price: 299.99,
-  //     description: "Unlimited access, spa, sauna, and free group classes.",
-  //     status: "Active",
-  //   },
-  // ];
+  const {
+    isDeleting,
+    openDeletePlanModal,
+    setOpenDeletePlanModal,
+    handleDeletePlanClick,
+    handleDeletePlan,
+  } = useMembershipPlanDelete();
 
-  // const filteredRows = initialRows.filter(
-  //   (plan) =>
-  //     plan.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     plan.duration.toLowerCase().includes(searchQuery.toLowerCase()),
-  // );
+  const columns = useMemo(
+    () =>
+      getMembershipPlanColumns({
+        onView: handleNavigateToView,
+        onEdit: handleNavigateToEdit,
+        onDelete: handleDeletePlanClick,
+      }),
+    [handleNavigateToView, handleNavigateToEdit, handleDeletePlanClick],
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -93,21 +81,37 @@ const MembershipPlanList = () => {
           <div>
             <MembershipPlanGrid
               loading={loading}
-              rows={membershipPlans}
-              deletePlan={handleDeletePlan}
+              rows={filteredRows}
+              deletePlan={handleDeletePlanClick}
               editPlan={handleNavigateToEdit}
               viewPlan={handleNavigateToView}
             />
           </div>
         ) : (
-          <DataTable
-            loading={loading}
-            rows={membershipPlans}
-            columns={membershipPlanColumns}
-            getRowId={(row) => row.membershipPlanId}
-          />
+          <Container
+            variant="secondary"
+            className="w-full! max-w-full! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+          >
+            <DataTable
+              loading={loading}
+              rows={filteredRows}
+              columns={columns}
+              getRowId={(row) => row.membershipPlanId}
+              className="border-none! rounded-none! shadow-none! bg-transparent!"
+            />
+          </Container>
         )}
       </div>
+
+      {/* Plan Deletion Confirmation Modal */}
+      <DeleteModal
+        open={openDeletePlanModal}
+        loading={isDeleting}
+        onClose={() => setOpenDeletePlanModal(false)}
+        onConfirm={handleDeletePlan}
+        title="Delete Membership Plan"
+        content="Are you sure you want to delete this membership plan? This action cannot be undone."
+      />
     </div>
   );
 };

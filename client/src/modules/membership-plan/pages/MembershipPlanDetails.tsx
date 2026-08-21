@@ -27,12 +27,13 @@ const MembershipPlanDetails = () => {
   const { planId } = useParams<{ planId: string }>();
   const { navigate } = useNavigation();
   const {
-    currentMembershipPlan,
     loading,
+    formatDate,
     handleFetchPlanById,
-    handleDeletePlan,
     handleNavigateToEdit,
+    currentMembershipPlan,
   } = useMembershipPlan();
+
 
   useEffect(() => {
     if (
@@ -44,21 +45,6 @@ const MembershipPlanDetails = () => {
       handleFetchPlanById(planId);
     }
   }, [planId, currentMembershipPlan, handleFetchPlanById]);
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    try {
-      return new Date(dateString).toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   const monthlyEquivalent =
     currentMembershipPlan && currentMembershipPlan.durationMonths > 0
@@ -110,9 +96,9 @@ const MembershipPlanDetails = () => {
                 <Button
                   variant="red"
                   size="sm"
-                  onClick={() =>
-                    handleDeletePlan(currentMembershipPlan.membershipPlanId)
-                  }
+                  // onClick={() =>
+                  //   handleDeletePlan(currentMembershipPlan.membershipPlanId)
+                  // }
                   aria-label="Delete Plan"
                 >
                   <LuTrash2 size={15} />
@@ -127,7 +113,7 @@ const MembershipPlanDetails = () => {
       {loading && !currentMembershipPlan ? (
         <Container
           variant="secondary"
-          className="rounded-3xl! p-12 flex flex-col items-center justify-center gap-4 min-h-[360px]"
+          className="rounded-3xl! p-12 flex flex-col items-center justify-center gap-4 min-h-90"
         >
           <div className="w-10 h-10 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -137,7 +123,7 @@ const MembershipPlanDetails = () => {
       ) : !currentMembershipPlan ? (
         <Container
           variant="secondary"
-          className="rounded-3xl! p-12 flex flex-col items-center justify-center text-center gap-4 min-h-[360px]"
+          className="rounded-3xl! p-12 flex flex-col items-center justify-center text-center gap-4 min-h-90"
         >
           <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
             <LuTag size={32} />
@@ -169,7 +155,7 @@ const MembershipPlanDetails = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-slate-200/80 dark:border-white/10">
             <div className="flex items-center gap-4 sm:gap-5">
               <div
-                className={`w-16 h-16 sm:w-20 sm:h-20 rounded-3xl ${getDeterministicGradient(
+                className={`w-13 h-13 sm:w-17 sm:h-17  rounded-3xl ${getDeterministicGradient(
                   currentMembershipPlan._id ||
                     currentMembershipPlan.membershipPlanId,
                 )} flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 shrink-0`}
@@ -178,7 +164,7 @@ const MembershipPlanDetails = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
                     {currentMembershipPlan.planName}
                   </h2>
                   <Chip
@@ -205,18 +191,13 @@ const MembershipPlanDetails = () => {
               <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Total Plan Cost
               </div>
-              <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 ₹
                 {Number(currentMembershipPlan.price).toLocaleString("en-IN", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </div>
-              {monthlyEquivalent && (
-                <div className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-                  ₹{monthlyEquivalent} / month
-                </div>
-              )}
             </div>
           </div>
 
@@ -243,24 +224,27 @@ const MembershipPlanDetails = () => {
               </div>
             </div>
 
-            {/* Price Card */}
+            {/* Effective Rate Card */}
             <div className="flex items-center gap-4 p-5 rounded-2xl bg-white/40 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-sm">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                 <LuIndianRupee size={24} />
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  Pricing
+                  Effective Rate
                 </span>
                 <span className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                  ₹
-                  {Number(currentMembershipPlan.price).toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  {monthlyEquivalent
+                    ? `₹${monthlyEquivalent}`
+                    : `₹${Number(currentMembershipPlan.price).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    {" "}/ mo
+                  </span>
                 </span>
                 <span className="text-xs text-slate-400 dark:text-slate-500">
-                  One-time subscription fee
+                  {currentMembershipPlan.durationMonths > 1
+                    ? `Calculated across ${currentMembershipPlan.durationMonths} months`
+                    : "Standard monthly billing"}
                 </span>
               </div>
             </div>
@@ -271,7 +255,7 @@ const MembershipPlanDetails = () => {
                 className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
                   currentMembershipPlan.isActive
                     ? "bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-                    : "bg-slate-500/10 dark:bg-slate-500/20 text-slate-500 dark:text-slate-400"
+                    : "bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400"
                 }`}
               >
                 <LuShieldCheck size={24} />

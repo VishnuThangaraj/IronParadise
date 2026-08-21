@@ -137,7 +137,7 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
           sx={{
             border: "none",
             fontFamily: "inherit",
-            backgroundColor: isDark ? "rgba(15, 23, 42, 0.7)" : "#ffffff",
+            backgroundColor: "transparent",
             color: isDark ? "#f8fafc" : "#1e293b",
 
             // Hide column separator lines
@@ -174,7 +174,9 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
                 : "1px solid rgba(241, 245, 249, 0.8)",
               transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
               borderLeft: "3px solid transparent",
+              position: "relative",
               "&:hover": {
+                zIndex: 20,
                 backgroundColor: isDark
                   ? "rgba(30, 41, 59, 0.7)"
                   : "rgba(241, 245, 249, 0.9)",
@@ -186,6 +188,7 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
                   : "rgba(238, 242, 255, 0.85)",
                 borderLeftColor: isDark ? "#6366f1" : "#4f46e5",
                 "&:hover": {
+                  zIndex: 20,
                   backgroundColor: isDark
                     ? "rgba(49, 46, 129, 0.65)"
                     : "rgba(224, 231, 255, 0.95)",
@@ -201,8 +204,10 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
               color: isDark ? "#f1f5f9" : "#1e293b",
               display: "flex",
               alignItems: "center",
+              overflow: "hidden",
               "&:focus, &:focus-within": {
                 outline: "none",
+                zIndex: 20,
               },
             },
 

@@ -30,7 +30,7 @@ const Sidebar = () => {
   return (
     <aside
       className={`flex flex-col h-screen sticky top-0 bg-linear-to-b from-slate-950 via-slate-900 to-indigo-950 border-r border-slate-800/80 text-slate-300 transition-all duration-300 ease-in-out shrink-0 z-50 ${
-        isCollapsed ? "w-20" : "w-66"
+        isCollapsed ? "w-20" : "w-60"
       }`}
     >
       <SidebarHeader

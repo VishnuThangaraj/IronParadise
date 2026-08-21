@@ -1,4 +1,10 @@
-import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 import type { AppDispatch } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,25 +51,47 @@ const useMembershipPlan = (
     dispatch(fetchMembershipPlans());
   }, [dispatch]);
 
-  // Handle Membership plan Edit button Click
-  const handleNavigateToEdit = (planId: string) => {
+  // Table Filteration
+  const filteredRows = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return membershipPlans;
+
+    return membershipPlans.filter((plan) => {
+      const nameMatch = plan.planName?.toLowerCase().includes(query);
+      const idMatch = plan.membershipPlanId?.toLowerCase().includes(query);
+      const durationMatch =
+        String(plan.durationMonths).includes(query) ||
+        `${plan.durationMonths} month`.includes(query);
+      const priceMatch = String(plan.price).includes(query);
+      const featuresMatch = plan.features?.some((feature) =>
+        feature.toLowerCase().includes(query),
+      );
+
+      return (
+        nameMatch || idMatch || durationMatch || priceMatch || featuresMatch
+      );
+    });
+  }, [membershipPlans, searchQuery]);
+
+  // Fetch current Membership Plan with PlanId
+  const fetchMembershipPlanWithPlanId = (planId: string) => {
     if (
       !currentMembershipPlan ||
       currentMembershipPlan?.membershipPlanId !== planId
     ) {
       dispatch(fetchMembershipPlanById(planId));
     }
+  };
+
+  // Handle Membership plan Edit button Click
+  const handleNavigateToEdit = (planId: string) => {
+    fetchMembershipPlanWithPlanId(planId);
     navigate(`/membership/edit/${planId.toLowerCase()}`);
   };
 
   // Handle View Membership Plan button click
   const handleNavigateToView = (planId: string) => {
-    if (
-      !currentMembershipPlan ||
-      currentMembershipPlan?.membershipPlanId !== planId
-    ) {
-      dispatch(fetchMembershipPlanById(planId));
-    }
+    fetchMembershipPlanWithPlanId(planId);
     navigate(`/membership/${planId.toLowerCase()}`);
   };
 
@@ -222,9 +250,20 @@ const useMembershipPlan = (
     }
   };
 
-  // Handle Membership Plan delete
-  const handleDeletePlan = async (_planId: string) => {
-    // const deleteConfirmation = await
+  // format date
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return dateString;
+    }
   };
 
   return {
@@ -234,11 +273,12 @@ const useMembershipPlan = (
     setViewMode,
     searchQuery,
     setSearchQuery,
-    membershipPlans,
+    filteredRows,
     currentMembershipPlan,
     formData,
     setFormData,
     featureInput,
+    formatDate,
     setFeatureInput,
     isSubmitting,
     handleInputChange,
@@ -246,11 +286,11 @@ const useMembershipPlan = (
     handleFeatureKeyDown,
     handleRemoveFeature,
     handleSubmitPlan,
-    handleDeletePlan,
     handleNavigateToAdd,
     handleNavigateToEdit,
     handleNavigateToView,
     handleFetchPlanById,
+    fetchMembershipPlanWithPlanId,
   };
 };
 

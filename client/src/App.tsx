@@ -56,7 +56,7 @@ const App = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen overflow-hidden bg-slate-200/60 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
         <Sidebar />
         <div className="flex flex-col flex-1 h-screen overflow-hidden">
           <Navbar />
