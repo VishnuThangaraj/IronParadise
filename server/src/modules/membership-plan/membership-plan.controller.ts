@@ -111,6 +111,29 @@ class MembershipPlanController {
       next(error);
     }
   }
+
+  public async deleteMembershipPlanPermanently(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { membershipPlanId } = req.params;
+      const membershipPlan: HydratedDocument<MembershipPlan> =
+        await MembershipPlanService.deleteMembershipPlanPermanently(
+          membershipPlanId as string,
+        );
+      sendResponse(
+        res,
+        200,
+        "Membership Plan permanently deleted successfully",
+        membershipPlan,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new MembershipPlanController();
+

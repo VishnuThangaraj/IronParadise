@@ -149,6 +149,25 @@ class MembershipPlanService {
 
     return plan;
   }
+
+  // Delete Membership Plan Permanently (Hard Delete)
+  public async deleteMembershipPlanPermanently(
+    planId: string,
+  ): Promise<HydratedDocument<MembershipPlan>> {
+    const plan = await MembershipPlanModel.findOneAndDelete({
+      $or: [
+        { membershipPlanId: planId },
+        ...(mongoose.Types.ObjectId.isValid(planId) ? [{ _id: planId }] : []),
+      ],
+    });
+
+    if (!plan) {
+      throw new AppError("Membership plan not found", 404);
+    }
+
+    return plan;
+  }
 }
 
 export default new MembershipPlanService();
+

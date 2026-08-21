@@ -46,7 +46,15 @@ router.patch(
   MembershipPlanController.updateMembershipPlan,
 );
 
-// Delete Membership Plan
+// Delete Membership Plan (Permanent Delete)
+router.delete(
+  "/:membershipPlanId/permanent",
+  authenticate,
+  authorize("admin"),
+  MembershipPlanController.deleteMembershipPlanPermanently,
+);
+
+// Delete Membership Plan (Soft Delete)
 router.delete(
   "/:membershipPlanId",
   authenticate,
@@ -55,3 +63,4 @@ router.delete(
 );
 
 export default router;
+
