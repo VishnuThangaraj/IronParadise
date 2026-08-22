@@ -2,9 +2,11 @@
   "compilerOptions": {
     "module": "nodenext",
     "target": "esnext",
+    "allowJs": true,
     "types": [],
 
     // Other Outputs
+    "outDir": "./dist",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
