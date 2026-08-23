@@ -297,7 +297,7 @@ const MembershipPlanForm = () => {
   const {
     currentMembershipPlan,
     loading: planLoading,
-    handleFetchPlanById,
+    fetchMembershipPlanWithPlanId,
   } = useMembershipPlan();
 
   useEffect(() => {
@@ -308,9 +308,14 @@ const MembershipPlanForm = () => {
         currentMembershipPlan.membershipPlanId.toLowerCase() !==
           planId.toLowerCase())
     ) {
-      handleFetchPlanById(planId);
+      fetchMembershipPlanWithPlanId(planId);
     }
-  }, [isEditMode, planId, currentMembershipPlan, handleFetchPlanById]);
+  }, [
+    isEditMode,
+    planId,
+    currentMembershipPlan,
+    fetchMembershipPlanWithPlanId,
+  ]);
 
   const initialData: MembershipPlanFormState =
     isEditMode && currentMembershipPlan

@@ -22,6 +22,7 @@ import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import { useNavigation } from "@/shared/hooks/useNavigation";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 import useMembershipPlan from "../hooks/use-membership-plan";
+import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
 
 const MembershipPlanDetails = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -29,11 +30,11 @@ const MembershipPlanDetails = () => {
   const {
     loading,
     formatDate,
-    handleFetchPlanById,
     handleNavigateToEdit,
     currentMembershipPlan,
+    fetchMembershipPlanWithPlanId,
   } = useMembershipPlan();
-
+  const { handleDeletePlanClick } = useMembershipPlanDelete();
 
   useEffect(() => {
     if (
@@ -42,9 +43,9 @@ const MembershipPlanDetails = () => {
         currentMembershipPlan.membershipPlanId.toLowerCase() !==
           planId.toLowerCase())
     ) {
-      handleFetchPlanById(planId);
+      fetchMembershipPlanWithPlanId(planId);
     }
-  }, [planId, currentMembershipPlan, handleFetchPlanById]);
+  }, [planId, currentMembershipPlan, fetchMembershipPlanWithPlanId]);
 
   const monthlyEquivalent =
     currentMembershipPlan && currentMembershipPlan.durationMonths > 0
@@ -96,9 +97,11 @@ const MembershipPlanDetails = () => {
                 <Button
                   variant="red"
                   size="sm"
-                  // onClick={() =>
-                  //   handleDeletePlan(currentMembershipPlan.membershipPlanId)
-                  // }
+                  onClick={() =>
+                    handleDeletePlanClick(
+                      currentMembershipPlan.membershipPlanId,
+                    )
+                  }
                   aria-label="Delete Plan"
                 >
                   <LuTrash2 size={15} />
@@ -238,7 +241,8 @@ const MembershipPlanDetails = () => {
                     ? `₹${monthlyEquivalent}`
                     : `₹${Number(currentMembershipPlan.price).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    {" "}/ mo
+                    {" "}
+                    / mo
                   </span>
                 </span>
                 <span className="text-xs text-slate-400 dark:text-slate-500">

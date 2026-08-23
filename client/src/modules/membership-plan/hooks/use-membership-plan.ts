@@ -25,6 +25,7 @@ import { useToast } from "@/shared/components/ui/toast";
 import initialMembershipPlanState, {
   type MembershipPlanFormState,
 } from "../state/initial-membership-plan.state";
+import { formatDate } from "@/shared/utils/formatDate";
 
 const useMembershipPlan = (
   initialData: MembershipPlanFormState = initialMembershipPlanState,
@@ -93,11 +94,6 @@ const useMembershipPlan = (
   const handleNavigateToView = (planId: string) => {
     fetchMembershipPlanWithPlanId(planId);
     navigate(`/membership/${planId.toLowerCase()}`);
-  };
-
-  // Handle fetch membership plan by id
-  const handleFetchPlanById = (planId: string) => {
-    dispatch(fetchMembershipPlanById(planId));
   };
 
   // handle add membership plan button click
@@ -250,22 +246,6 @@ const useMembershipPlan = (
     }
   };
 
-  // format date
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    try {
-      return new Date(dateString).toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
   return {
     error,
     loading,
@@ -289,7 +269,6 @@ const useMembershipPlan = (
     handleNavigateToAdd,
     handleNavigateToEdit,
     handleNavigateToView,
-    handleFetchPlanById,
     fetchMembershipPlanWithPlanId,
   };
 };

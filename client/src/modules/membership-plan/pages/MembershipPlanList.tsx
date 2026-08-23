@@ -13,6 +13,7 @@ import MembershipPlanGrid from "../components/MembershipPlanGrid";
 import Container from "@/shared/components/ui/containers/Container";
 import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
+import MembershipPlanKPI from "../components/MembershipPlanKPI";
 
 const MembershipPlanList = () => {
   const {
@@ -51,6 +52,8 @@ const MembershipPlanList = () => {
         title="Membership Plan"
         description="Manage your gym's membership plans and pricing."
       />
+      {/* KPI */}
+      <MembershipPlanKPI />
       <div className="flex justify-between items-center align-middle">
         <div>
           <SearchBar
