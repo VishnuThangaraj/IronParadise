@@ -1,12 +1,5 @@
-import type { ReactNode } from "react";
-import KPICard, { type KPICardProps } from "./KPICard";
-
-export interface KPIGridProps {
-  children?: ReactNode;
-  items?: KPICardProps[];
-  columns?: 1 | 2 | 3 | 4 | 5;
-  className?: string;
-}
+import KPICard from "./KPICard";
+import type { KPIGridProps } from "./types/kpi.types";
 
 const columnClassesMap: Record<number, string> = {
   1: "grid-cols-1",
