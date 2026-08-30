@@ -79,7 +79,7 @@ const MembershipPlanList = () => {
       <MembershipPlanKPI />
       <Container
         variant="secondary"
-        className="w-full! max-w-full! mx-0! flex justify-between items-center p-4! sm:p-5! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
+        className="w-full! max-w-full! mx-0! flex justify-between items-center p-3.5! sm:p-3! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
       >
         <div>
           <SearchBar

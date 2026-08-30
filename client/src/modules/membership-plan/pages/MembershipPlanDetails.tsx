@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/app/store";
 import {
   LuArrowLeft,
   LuCalendar,
@@ -23,29 +25,45 @@ import { useNavigation } from "@/shared/hooks/useNavigation";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 import useMembershipPlan from "../hooks/use-membership-plan";
 import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
+import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
+import { fetchMembershipPlanById } from "../redux/membership-plan.thunks";
 
 const MembershipPlanDetails = () => {
   const { planId } = useParams<{ planId: string }>();
+  const dispatch = useDispatch<AppDispatch>();
   const { navigate } = useNavigation();
   const {
     loading,
     formatDate,
     handleNavigateToEdit,
     currentMembershipPlan,
-    fetchMembershipPlanWithPlanId,
   } = useMembershipPlan();
-  const { handleDeletePlanClick } = useMembershipPlanDelete();
+  const {
+    isDeleting,
+    handleDeletePlan,
+    openDeletePlanModal,
+    handleDeletePlanClick,
+    setOpenDeletePlanModal,
+  } = useMembershipPlanDelete();
+
+  const fetchedPlanIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (
-      planId &&
-      (!currentMembershipPlan ||
-        currentMembershipPlan.membershipPlanId.toLowerCase() !==
-          planId.toLowerCase())
-    ) {
-      fetchMembershipPlanWithPlanId(planId);
+    if (planId && fetchedPlanIdRef.current !== planId) {
+      const matchesCurrent =
+        currentMembershipPlan &&
+        (currentMembershipPlan.membershipPlanId.toLowerCase() ===
+          planId.toLowerCase() ||
+          currentMembershipPlan._id.toLowerCase() === planId.toLowerCase());
+
+      if (!matchesCurrent) {
+        fetchedPlanIdRef.current = planId;
+        dispatch(fetchMembershipPlanById(planId));
+      } else {
+        fetchedPlanIdRef.current = planId;
+      }
     }
-  }, [planId, currentMembershipPlan, fetchMembershipPlanWithPlanId]);
+  }, [planId, currentMembershipPlan, dispatch]);
 
   const monthlyEquivalent =
     currentMembershipPlan && currentMembershipPlan.durationMonths > 0
@@ -100,6 +118,7 @@ const MembershipPlanDetails = () => {
                   onClick={() =>
                     handleDeletePlanClick(
                       currentMembershipPlan.membershipPlanId,
+                      true,
                     )
                   }
                   aria-label="Delete Plan"
@@ -116,7 +135,7 @@ const MembershipPlanDetails = () => {
       {loading && !currentMembershipPlan ? (
         <Container
           variant="secondary"
-          className="rounded-3xl! p-12 flex flex-col items-center justify-center gap-4 min-h-90"
+          className="w-full! max-w-full! mx-0! rounded-3xl! p-12 flex flex-col items-center justify-center gap-4 min-h-90"
         >
           <div className="w-10 h-10 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -126,7 +145,7 @@ const MembershipPlanDetails = () => {
       ) : !currentMembershipPlan ? (
         <Container
           variant="secondary"
-          className="rounded-3xl! p-12 flex flex-col items-center justify-center text-center gap-4 min-h-90"
+          className="w-full! max-w-full! mx-0! rounded-3xl! p-12 flex flex-col items-center justify-center text-center gap-4 min-h-90"
         >
           <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
             <LuTag size={32} />
@@ -152,7 +171,7 @@ const MembershipPlanDetails = () => {
       ) : (
         <Container
           variant="secondary"
-          className="rounded-3xl! flex flex-col gap-8 p-6 sm:p-8 md:p-10 shadow-xl"
+          className="w-full! max-w-full! mx-0! rounded-3xl! flex flex-col gap-8 p-6 sm:p-8 md:p-10 shadow-xl"
         >
           {/* Hero Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-slate-200/80 dark:border-white/10">
@@ -352,6 +371,16 @@ const MembershipPlanDetails = () => {
           </div>
         </Container>
       )}
+
+      {/* Plan Deletion Confirmation Modal */}
+      <DeleteModal
+        open={openDeletePlanModal}
+        loading={isDeleting}
+        onClose={() => setOpenDeletePlanModal(false)}
+        onConfirm={handleDeletePlan}
+        title="Delete Membership Plan"
+        content="Are you sure you want to delete this membership plan? This action cannot be undone."
+      />
     </div>
   );
 };

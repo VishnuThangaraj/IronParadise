@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/app/store";
 import {
   LuArrowLeft,
   LuCheck,
@@ -28,6 +30,7 @@ import useMembershipPlan from "../hooks/use-membership-plan";
 import initialMembershipPlanState, {
   type MembershipPlanFormState,
 } from "../state/initial-membership-plan.state";
+import { fetchMembershipPlanById } from "../redux/membership-plan.thunks";
 
 interface MembershipPlanFormInnerProps {
   initialData: MembershipPlanFormState;
@@ -292,30 +295,32 @@ const MembershipPlanFormInner = ({
 const MembershipPlanForm = () => {
   const { planId } = useParams<{ planId: string }>();
   const isEditMode = Boolean(planId);
+  const dispatch = useDispatch<AppDispatch>();
   const { navigate } = useNavigation();
 
   const {
     currentMembershipPlan,
     loading: planLoading,
-    fetchMembershipPlanWithPlanId,
   } = useMembershipPlan();
 
+  const fetchedPlanIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (
-      isEditMode &&
-      planId &&
-      (!currentMembershipPlan ||
-        currentMembershipPlan.membershipPlanId.toLowerCase() !==
-          planId.toLowerCase())
-    ) {
-      fetchMembershipPlanWithPlanId(planId);
+    if (isEditMode && planId && fetchedPlanIdRef.current !== planId) {
+      const matchesCurrent =
+        currentMembershipPlan &&
+        (currentMembershipPlan.membershipPlanId.toLowerCase() ===
+          planId.toLowerCase() ||
+          currentMembershipPlan._id.toLowerCase() === planId.toLowerCase());
+
+      if (!matchesCurrent) {
+        fetchedPlanIdRef.current = planId;
+        dispatch(fetchMembershipPlanById(planId));
+      } else {
+        fetchedPlanIdRef.current = planId;
+      }
     }
-  }, [
-    isEditMode,
-    planId,
-    currentMembershipPlan,
-    fetchMembershipPlanWithPlanId,
-  ]);
+  }, [isEditMode, planId, currentMembershipPlan, dispatch]);
 
   const initialData: MembershipPlanFormState =
     isEditMode && currentMembershipPlan
@@ -345,13 +350,7 @@ const MembershipPlanForm = () => {
         <Button
           variant="secondary"
           size="sm"
-          onClick={() =>
-            navigate(
-              isEditMode && planId
-                ? `/membership/${planId.toLowerCase()}`
-                : "/membership",
-            )
-          }
+          onClick={() => navigate(-1)}
           aria-label="Back"
         >
           <LuArrowLeft size={16} />
