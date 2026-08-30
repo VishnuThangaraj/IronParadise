@@ -15,10 +15,9 @@ export const getMembershipPlanColumns = (
   actions?: MembershipPlanColumnActions,
 ): GridColDef<MembershipPlan>[] => [
   {
-    field: "planName",
-    headerName: "Plan Name",
-    flex: 1.5,
-    minWidth: 200,
+    field: "membershipPlanId",
+    headerName: "Plan ID",
+    flex:1,
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <div
@@ -28,6 +27,19 @@ export const getMembershipPlanColumns = (
         >
           <LuCrown className="w-4 h-4" />
         </div>
+        <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1">
+          {params.value}
+        </span>
+      </div>
+    ),
+  },
+  {
+    field: "planName",
+    headerName: "Plan Name",
+    flex: 1.5,
+    minWidth: 200,
+    renderCell: (params) => (
+      <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1">
           {params.value}
         </span>
@@ -52,7 +64,8 @@ export const getMembershipPlanColumns = (
     minWidth: 120,
     renderCell: (params) => (
       <span className="font-bold text-slate-900 dark:text-slate-100">
-        ₹{Number(params.value).toLocaleString("en-IN", {
+        ₹
+        {Number(params.value).toLocaleString("en-IN", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}
@@ -115,8 +128,7 @@ export const getMembershipPlanColumns = (
     flex: 1,
     minWidth: 120,
     renderCell: (params) => {
-      const isActive =
-        params.row?.isActive ?? params.value === "Active";
+      const isActive = params.row?.isActive ?? params.value === "Active";
       return (
         <span
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
@@ -191,4 +203,3 @@ export const getMembershipPlanColumns = (
 ];
 
 export const membershipPlanColumns = getMembershipPlanColumns();
-

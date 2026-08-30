@@ -8,7 +8,7 @@ export interface PageHeaderProps {
 
 const PageHeader = ({ children, title, description }: PageHeaderProps) => {
   return (
-    <div>
+    <div className="flex justify-between gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="font-bold text-3xl text-zinc-900 dark:text-zinc-100">
           {title}
@@ -17,7 +17,7 @@ const PageHeader = ({ children, title, description }: PageHeaderProps) => {
           {description}
         </p>
       </div>
-      <div className="flex justify-center">{children}</div>
+      <div className="flex justify-center align-middle items-center">{children}</div>
     </div>
   );
 };

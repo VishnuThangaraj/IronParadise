@@ -44,7 +44,10 @@ const SelectDropdown = ({
   }, []);
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div
+      className={`relative inline-block text-left ${isOpen ? "z-50" : "z-10"}`}
+      ref={dropdownRef}
+    >
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -72,7 +75,7 @@ const SelectDropdown = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800/90 rounded-2xl shadow-xl p-1.5 z-50 backdrop-blur-xl origin-top-right text-slate-800 dark:text-slate-100 space-y-0.5"
+            className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800/90 rounded-2xl shadow-xl p-1.5 z-950 backdrop-blur-xl origin-top-right text-slate-800 dark:text-slate-100 space-y-0.5"
           >
             {options.map((option) => {
               const isSelected = option.value === value;

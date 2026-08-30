@@ -36,6 +36,7 @@ const useMembershipPlan = (
 
   const [viewMode, setViewMode] = useState("list");
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const error = useSelector(selectMembershipPlanError);
   const loading = useSelector(selectMembershipPlanLoading);
@@ -54,10 +55,18 @@ const useMembershipPlan = (
 
   // Table Filteration
   const filteredRows = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return membershipPlans;
+    let result = membershipPlans;
 
-    return membershipPlans.filter((plan) => {
+    if (statusFilter === "active") {
+      result = result.filter((plan) => plan.isActive);
+    } else if (statusFilter === "inactive") {
+      result = result.filter((plan) => !plan.isActive);
+    }
+
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return result;
+
+    return result.filter((plan) => {
       const nameMatch = plan.planName?.toLowerCase().includes(query);
       const idMatch = plan.membershipPlanId?.toLowerCase().includes(query);
       const durationMatch =
@@ -72,7 +81,7 @@ const useMembershipPlan = (
         nameMatch || idMatch || durationMatch || priceMatch || featuresMatch
       );
     });
-  }, [membershipPlans, searchQuery]);
+  }, [membershipPlans, searchQuery, statusFilter]);
 
   // Fetch current Membership Plan with PlanId
   const fetchMembershipPlanWithPlanId = (planId: string) => {
@@ -246,6 +255,14 @@ const useMembershipPlan = (
     }
   };
 
+  // handle membership plan status filter
+  const handleActiveStatusFilter = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const activeStatus = event?.target?.value || "all";
+    setStatusFilter(activeStatus);
+  };
+
   return {
     error,
     loading,
@@ -253,6 +270,8 @@ const useMembershipPlan = (
     setViewMode,
     searchQuery,
     setSearchQuery,
+    statusFilter,
+    setStatusFilter,
     filteredRows,
     currentMembershipPlan,
     formData,
@@ -269,6 +288,7 @@ const useMembershipPlan = (
     handleNavigateToAdd,
     handleNavigateToEdit,
     handleNavigateToView,
+    handleActiveStatusFilter,
     fetchMembershipPlanWithPlanId,
   };
 };

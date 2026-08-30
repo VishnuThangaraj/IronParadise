@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
+import { LuFilter } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
@@ -14,6 +15,13 @@ import Container from "@/shared/components/ui/containers/Container";
 import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 import MembershipPlanKPI from "../components/MembershipPlanKPI";
+import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
+
+const statusFilterOptions = [
+  { value: "all", label: "All Statuses" },
+  { value: "active", label: "Active Plans" },
+  { value: "inactive", label: "Inactive Plans" },
+];
 
 const MembershipPlanList = () => {
   const {
@@ -21,6 +29,8 @@ const MembershipPlanList = () => {
     viewMode,
     setViewMode,
     searchQuery,
+    statusFilter,
+    setStatusFilter,
     filteredRows,
     setSearchQuery,
     handleNavigateToAdd,
@@ -51,22 +61,8 @@ const MembershipPlanList = () => {
       <PageHeader
         title="Membership Plan"
         description="Manage your gym's membership plans and pricing."
-      />
-      {/* KPI */}
-      <MembershipPlanKPI />
-      <div className="flex justify-between items-center align-middle">
-        <div>
-          <SearchBar
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClear={() => setSearchQuery("")}
-            placeholder="Search plans by name or duration..."
-          />
-        </div>
-        <div className="flex justify-between gap-6">
-          {/* View Mode */}
-          <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
-
+      >
+        <div className="justify-center align-center">
           <Button
             variant="primary"
             className="font-semibold text-sm px-4!"
@@ -78,8 +74,34 @@ const MembershipPlanList = () => {
             </div>
           </Button>
         </div>
-      </div>
-      <div>
+      </PageHeader>
+      {/* KPI */}
+      <MembershipPlanKPI />
+      <Container
+        variant="secondary"
+        className="w-full! max-w-full! mx-0! flex justify-between items-center p-4! sm:p-5! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
+      >
+        <div>
+          <SearchBar
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onClear={() => setSearchQuery("")}
+            placeholder="Search plans by name or duration..."
+          />
+        </div>
+        <div className="flex justify-between gap-6 items-center">
+          {/* View Mode */}
+          <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
+          {/* Filters */}
+          <SelectDropdown
+            options={statusFilterOptions}
+            value={statusFilter}
+            onChange={setStatusFilter}
+            icon={<LuFilter className="w-4 h-4" />}
+          />
+        </div>
+      </Container>
+      <div className="relative z-0">
         {viewMode === "grid" ? (
           <div>
             <MembershipPlanGrid
