@@ -2,6 +2,9 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 export type ButtonVariant =
   | "primary"
+  | "primary-light"
+  | "primary-outlined"
+  | "primary-outline"
   | "secondary"
   | "tertiary"
   | "transparent"
@@ -25,6 +28,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const primaryStyles =
   "font-bold text-white bg-linear-to-r from-indigo-600 via-violet-600 to-purple-500 hover:from-indigo-500 hover:via-violet-500 hover:to-purple-400 shadow-md shadow-indigo-500/25 dark:shadow-lg dark:shadow-indigo-500/40";
+
+const primaryLightStyles =
+  "font-bold text-indigo-700 dark:text-indigo-300 bg-linear-to-r from-indigo-50/90 via-violet-50/90 to-purple-50/90 hover:from-indigo-100/90 hover:via-violet-100/90 hover:to-purple-100/90 dark:from-indigo-950/50 dark:via-violet-950/50 dark:to-purple-950/50 dark:hover:from-indigo-900/60 dark:hover:via-violet-900/60 dark:hover:to-purple-900/60 border border-indigo-200/80 dark:border-indigo-500/30 backdrop-blur-md shadow-xs shadow-indigo-500/10";
+
+const primaryOutlinedStyles =
+  "font-bold text-indigo-600 dark:text-indigo-400 bg-white/40 dark:bg-indigo-500/10 hover:bg-indigo-50/90 dark:hover:bg-indigo-500/20 border border-indigo-600/80 dark:border-indigo-400/80 backdrop-blur-md shadow-xs shadow-indigo-500/10";
 
 const secondaryStyles =
   "font-bold text-slate-700 dark:text-slate-200 bg-white/50 dark:bg-white/5 hover:bg-white/70 dark:hover:bg-white/10 border border-slate-200 dark:border-white/15 backdrop-blur-md shadow-sm";
@@ -54,6 +63,9 @@ const emptyStyles = "";
 
 const variantStylesMap: Record<ButtonVariant, string> = {
   primary: primaryStyles,
+  "primary-light": primaryLightStyles,
+  "primary-outlined": primaryOutlinedStyles,
+  "primary-outline": primaryOutlinedStyles,
   secondary: secondaryStyles,
   tertiary: tertiaryStyles,
   transparent: transparentStyles,

@@ -160,7 +160,7 @@ const MembershipPlanDetails = () => {
             </p>
           </div>
           <Button
-            variant="primary"
+            variant="primary-light"
             size="sm"
             onClick={() => navigate("/membership")}
           >
