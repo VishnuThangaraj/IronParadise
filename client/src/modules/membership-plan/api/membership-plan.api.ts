@@ -51,7 +51,9 @@ export const updateMembershipPlan = async (
 export const deleteMembershipPlan = async (
   membershipPlanId: string,
 ): Promise<SingleMembershipPlanResponse> => {
-  const response = await api.delete(`/api/membership-plan/${membershipPlanId}`);
+  const response = await api.delete<SingleMembershipPlanResponse>(
+    `/api/membership-plan/${membershipPlanId}`,
+  );
   return response.data;
 };
 
@@ -59,7 +61,7 @@ export const deleteMembershipPlan = async (
 export const deleteMembershipPlanPermanently = async (
   membershipPlanId: string,
 ): Promise<SingleMembershipPlanResponse> => {
-  const response = await api.delete(
+  const response = await api.delete<SingleMembershipPlanResponse>(
     `/api/membership-plan/${membershipPlanId}/permanent`,
   );
   return response.data;

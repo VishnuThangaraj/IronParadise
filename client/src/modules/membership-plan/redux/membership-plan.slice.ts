@@ -1,4 +1,5 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isPending, type PayloadAction } from "@reduxjs/toolkit";
+
 import {
   fetchMembershipPlans,
   fetchMembershipPlanById,
@@ -41,10 +42,6 @@ const membershipPlanSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetch All Plans
-      .addCase(fetchMembershipPlans.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         fetchMembershipPlans.fulfilled,
         (state, action: PayloadAction<MembershipPlanResponse>) => {
@@ -58,10 +55,6 @@ const membershipPlanSlice = createSlice({
       })
 
       // Fetch Plan By ID
-      .addCase(fetchMembershipPlanById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         fetchMembershipPlanById.fulfilled,
         (state, action: PayloadAction<SingleMembershipPlanResponse>) => {
@@ -75,10 +68,6 @@ const membershipPlanSlice = createSlice({
       })
 
       // Create Plan
-      .addCase(createMembershipPlan.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         createMembershipPlan.fulfilled,
         (state, action: PayloadAction<SingleMembershipPlanResponse>) => {
@@ -92,10 +81,6 @@ const membershipPlanSlice = createSlice({
       })
 
       // Update Plan
-      .addCase(updateMembershipPlan.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         updateMembershipPlan.fulfilled,
         (state, action: PayloadAction<SingleMembershipPlanResponse>) => {
@@ -123,10 +108,6 @@ const membershipPlanSlice = createSlice({
       })
 
       // Delete Plan (Soft Delete)
-      .addCase(deleteMembershipPlan.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         deleteMembershipPlan.fulfilled,
         (state, action: PayloadAction<SingleMembershipPlanResponse>) => {
@@ -154,10 +135,6 @@ const membershipPlanSlice = createSlice({
       })
 
       // Permanent Delete Plan
-      .addCase(deleteMembershipPlanPermanently.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
       .addCase(
         deleteMembershipPlanPermanently.fulfilled,
         (state, action: PayloadAction<SingleMembershipPlanResponse>) => {
@@ -182,11 +159,26 @@ const membershipPlanSlice = createSlice({
         state.loading = false;
         state.error =
           action.payload || "Failed to permanently delete membership plan";
-      });
+      })
+
+      // Common matcher for all pending thunk states
+      .addMatcher(
+        isPending(
+          fetchMembershipPlans,
+          fetchMembershipPlanById,
+          createMembershipPlan,
+          updateMembershipPlan,
+          deleteMembershipPlan,
+          deleteMembershipPlanPermanently,
+        ),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        },
+      );
   },
 });
 
 export const { setCurrentPlan, clearMembershipPlanError } =
   membershipPlanSlice.actions;
 export default membershipPlanSlice.reducer;
-

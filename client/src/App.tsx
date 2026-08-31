@@ -16,6 +16,11 @@ import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 
+// Diet Plan
+const DietPlanList = lazy(
+  () => import("@/modules/diet-plan/pages/DietPlanList"),
+);
+
 // Membership Plan
 const MembershipPlanList = lazy(
   () => import("@/modules/membership-plan/pages/MembershipPlanList"),
@@ -65,9 +70,15 @@ const App = () => {
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
 
+                {/* Diet Plan */}
+                <Route path="/plan/diet" element={<DietPlanList />} />
+
                 {/* Membership Plan */}
                 <Route path="/membership" element={<MembershipPlanList />} />
-                <Route path="/membership/add" element={<MembershipPlanForm />} />
+                <Route
+                  path="/membership/add"
+                  element={<MembershipPlanForm />}
+                />
                 <Route
                   path="/membership/edit/:planId"
                   element={<MembershipPlanForm />}
@@ -77,7 +88,10 @@ const App = () => {
                   element={<MembershipPlanDetails />}
                 />
 
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                <Route
+                  path="*"
+                  element={<Navigate to="/dashboard" replace />}
+                />
               </Routes>
             </main>
             <Footer />

@@ -1,4 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getErrorMessage } from "@/shared/utils/error-handler";
+
 import {
   getMembershipPlans,
   getMembershipPlanById,
@@ -13,7 +15,6 @@ import {
   type SingleMembershipPlanResponse,
   type UpdateMembershipPlanRequest,
 } from "../types/membership-plan.types";
-import { getErrorMessage } from "@/shared/utils/error-handler";
 
 // fetch all membership plans
 export const fetchMembershipPlans = createAsyncThunk<
@@ -123,4 +124,3 @@ export const deleteMembershipPlanPermanently = createAsyncThunk<
     }
   },
 );
-
