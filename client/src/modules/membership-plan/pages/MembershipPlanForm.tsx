@@ -347,15 +347,18 @@ const MembershipPlanForm = () => {
               : "Create a new membership tier and configure its pricing and perks."
           }
         />
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate(-1)}
-          aria-label="Back"
-        >
-          <LuArrowLeft size={16} />
-          <span>{isEditMode ? "Back to Details" : "Back to Plans"}</span>
-        </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              if (isEditMode) navigate(-1)
+                else navigate('/membership')
+            }}
+            aria-label="Back"
+          >
+            <LuArrowLeft size={16} />
+            <span>{isEditMode ? "Back to Plan" : "View all Plans"}</span>
+          </Button>
       </div>
 
       {/* Loading state in edit mode */}

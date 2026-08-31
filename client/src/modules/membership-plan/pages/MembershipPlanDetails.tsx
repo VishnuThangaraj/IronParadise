@@ -87,15 +87,7 @@ const MembershipPlanDetails = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate("/membership")}
-            aria-label="Back to Plans"
-          >
-            <LuArrowLeft size={16} />
-            <span>Back to Plans</span>
-          </Button>
+
 
           {currentMembershipPlan && (
             <>
@@ -108,7 +100,7 @@ const MembershipPlanDetails = () => {
                   }
                   aria-label="Edit Plan"
                 >
-                  <LuPencil size={15} />
+                  <LuPencil size={15} /> Edit
                 </Button>
               </Tooltip>
               <Tooltip title="Delete this plan">
