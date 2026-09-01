@@ -3,19 +3,19 @@ import { FiPlus } from "react-icons/fi";
 import { LuFilter } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
+import DataTable from "@/shared/components/ui/table/DataTable";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
 import SearchBar from "@/shared/components/ui/search/SearchBar";
-import DataTable from "@/shared/components/ui/table/DataTable";
-
-import { getMembershipPlanColumns } from "../constants/membership-plan.columns";
-import useMembershipPlan from "../hooks/use-membership-plan";
-import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
-import MembershipPlanGrid from "../components/MembershipPlanGrid";
-import Container from "@/shared/components/ui/containers/Container";
-import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
-import MembershipPlanKPI from "../components/MembershipPlanKPI";
+import Container from "@/shared/components/ui/containers/Container";
 import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
+import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
+
+import useMembershipPlan from "@/modules/membership-plan/hooks/use-membership-plan";
+import MembershipPlanKPI from "@/modules/membership-plan/components/MembershipPlanKPI";
+import MembershipPlanGrid from "@/modules/membership-plan/components/MembershipPlanGrid";
+import useMembershipPlanDelete from "@/modules/membership-plan/hooks/use-membership-plan.delete";
+import { getMembershipPlanColumns } from "@/modules/membership-plan/constants/membership-plan.columns";
 
 const statusFilterOptions = [
   { value: "all", label: "All Statuses" },
@@ -101,6 +101,8 @@ const MembershipPlanList = () => {
           />
         </div>
       </Container>
+
+      {/* Data Table */}
       <div className="relative z-0">
         {viewMode === "grid" ? (
           <div>

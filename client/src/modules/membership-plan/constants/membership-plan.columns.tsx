@@ -1,9 +1,11 @@
-import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 import type { GridColDef } from "@mui/x-data-grid";
-import type { MembershipPlan } from "../types/membership-plan.types";
+
 import { LuCrown } from "react-icons/lu";
-import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
+import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
+
 import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
+import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
+import type { MembershipPlan } from "@/modules/membership-plan/types/membership-plan.types";
 
 export interface MembershipPlanColumnActions {
   onView?: (planId: string) => void;
@@ -17,7 +19,7 @@ export const getMembershipPlanColumns = (
   {
     field: "membershipPlanId",
     headerName: "Plan ID",
-    flex:1,
+    flex: 1,
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <div
