@@ -1,24 +1,30 @@
 import mongoose from "mongoose";
 import connectDB from "../config/database.js";
 import MembershipPlanModel from "../modules/membership-plan/membership-plan.model.js";
+import DietPlanModel from "../modules/diet-plan/diet-plan.model.js";
 import CounterModel from "../shared/models/counter.model.js";
 import { membershipPlans } from "./data/membership-plan.js";
+import { dietPlans } from "./data/diet-plan.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
  */
 async function syncCounterSequence(
   counterId: string,
-  data: Array<{ membershipPlanId: string }>,
+  data: Array<Record<string, any>>,
+  idKey: string,
 ): Promise<number> {
   let maxSequence = 0;
 
   for (const item of data) {
-    const match = item.membershipPlanId.match(/\d+$/);
-    if (match) {
-      const sequenceNum = parseInt(match[0], 10);
-      if (sequenceNum > maxSequence) {
-        maxSequence = sequenceNum;
+    const idVal = item[idKey];
+    if (typeof idVal === "string") {
+      const match = idVal.match(/\d+$/);
+      if (match) {
+        const sequenceNum = parseInt(match[0], 10);
+        if (sequenceNum > maxSequence) {
+          maxSequence = sequenceNum;
+        }
       }
     }
   }
@@ -46,9 +52,26 @@ async function seedMembershipPlans(): Promise<void> {
   await MembershipPlanModel.insertMany(membershipPlans);
   console.log(`[SUCCESS] Inserted ${membershipPlans.length} Membership Plans.`);
 
-  const maxSeq = await syncCounterSequence("membershipPlan", membershipPlans);
+  const maxSeq = await syncCounterSequence("membershipPlan", membershipPlans, "membershipPlanId");
   const nextId = `MPL-${String(maxSeq + 1).padStart(3, "0")}`;
   console.log(`[INFO] Synchronized counter 'membershipPlan' to sequence ${maxSeq}. Next ID: ${nextId}`);
+}
+
+/**
+ * Seeds diet plans and updates the corresponding auto-increment counter.
+ */
+async function seedDietPlans(): Promise<void> {
+  console.log(`[INFO] Seeding Diet Plans (${dietPlans.length} records)...`);
+
+  await DietPlanModel.deleteMany({});
+  console.log("[INFO] Cleared existing Diet Plans collection.");
+
+  await DietPlanModel.insertMany(dietPlans);
+  console.log(`[SUCCESS] Inserted ${dietPlans.length} Diet Plans.`);
+
+  const maxSeq = await syncCounterSequence("dietPlan", dietPlans, "dietPlanId");
+  const nextId = `DPL-${String(maxSeq + 1).padStart(3, "0")}`;
+  console.log(`[INFO] Synchronized counter 'dietPlan' to sequence ${maxSeq}. Next ID: ${nextId}`);
 }
 
 /**
@@ -62,6 +85,7 @@ async function runSeed(): Promise<void> {
     await connectDB();
 
     await seedMembershipPlans();
+    await seedDietPlans();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);
