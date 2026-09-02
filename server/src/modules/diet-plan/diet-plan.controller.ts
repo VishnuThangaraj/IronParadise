@@ -70,7 +70,7 @@ class DietPlanController {
     }
   }
 
-  // delete diet plan
+  // delete diet plan (soft delete)
   public async deleteDietPlan(
     req: Request,
     res: Response,
@@ -80,6 +80,22 @@ class DietPlanController {
       const { dietPlanId } = req.params;
       const dietPlan: HydratedDocument<DietPlan> =
         await DietPlanService.deleteDietPlan(dietPlanId as string);
+      sendResponse(res, 200, "Diet plan deleted successfully", dietPlan);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // delete diet plan permanently (hard delete)
+  public async deleteDietPlanPermanently(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { dietPlanId } = req.params;
+      const dietPlan: HydratedDocument<DietPlan> =
+        await DietPlanService.deleteDietPlanPermanently(dietPlanId as string);
       sendResponse(res, 200, "Diet plan deleted successfully", dietPlan);
     } catch (error) {
       next(error);

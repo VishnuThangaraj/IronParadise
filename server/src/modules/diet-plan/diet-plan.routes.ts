@@ -43,12 +43,20 @@ router.patch(
   DietPlanController.updateDietPlan,
 );
 
-// Delete Diet Plan
+// Delete Diet Plan (soft delete)
 router.delete(
   "/:dietPlanId",
   authenticate,
   authorize("admin", "trainer"),
   DietPlanController.deleteDietPlan,
+);
+
+// Delete Diet plan (hard delete)
+router.delete(
+  "/:dietPlanId/permanent",
+  authenticate,
+  authorize("admin", "trainer"),
+  DietPlanController.deleteDietPlanPermanently
 );
 
 export default router;

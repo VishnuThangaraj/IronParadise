@@ -154,6 +154,24 @@ class DietPlanService {
 
     return plan;
   }
+
+  // Delete diet plan permanently (hard delete)
+  public async deleteDietPlanPermanently(
+    planId: string,
+  ): Promise<HydratedDocument<DietPlan>> {
+    const plan = await DietPlanModel.findOneAndDelete({
+      $or: [
+        { dietPlanId: planId },
+        ...(mongoose.Types.ObjectId.isValid(planId) ? [{ _id: planId }] : []),
+      ],
+    });
+
+    if (!plan) {
+      throw new AppError("Diet plan not found", 404);
+    }
+
+    return plan;
+  }
 }
 
 export default new DietPlanService();
