@@ -41,7 +41,7 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
 
   // Form State
   const [formData, setFormData] = useState<DietPlanFormState>(initialData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDietPlans());
@@ -127,7 +127,7 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
     setFormData,
     handleInputChange,
     currentDietPlan,
-    isSubmitting,
+    // isSubmitting,
     handleNavigateToAdd,
     handleNavigateToView,
     fetchDietPlanWithPlanId,

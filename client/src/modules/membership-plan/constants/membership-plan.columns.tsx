@@ -127,7 +127,7 @@ export const getMembershipPlanColumns = (
   {
     field: "status",
     headerName: "Status",
-    flex: 1,
+    flex: 0.5,
     minWidth: 120,
     renderCell: (params) => {
       const isActive = params.row?.isActive ?? params.value === "Active";

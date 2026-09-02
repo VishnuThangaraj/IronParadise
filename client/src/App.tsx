@@ -20,6 +20,12 @@ const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const DietPlanList = lazy(
   () => import("@/modules/diet-plan/pages/DietPlanList"),
 );
+const DietPlanForm = lazy(
+  () => import("@/modules/diet-plan/pages/DietPlanForm"),
+);
+const DietPlanDetails = lazy(
+  () => import("@/modules/diet-plan/pages/DietPlanDetails"),
+);
 
 // Membership Plan
 const MembershipPlanList = lazy(
@@ -72,6 +78,15 @@ const App = () => {
 
                 {/* Diet Plan */}
                 <Route path="/plan/diet" element={<DietPlanList />} />
+                <Route path="/plan/diet/add" element={<DietPlanForm />} />
+                <Route
+                  path="/plan/diet/edit/:planId"
+                  element={<DietPlanForm />}
+                />
+                <Route
+                  path="/plan/diet/:planId"
+                  element={<DietPlanDetails />}
+                />
 
                 {/* Membership Plan */}
                 <Route path="/membership" element={<MembershipPlanList />} />

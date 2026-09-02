@@ -1,11 +1,12 @@
 import { LuCrown, LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
 
-import type { MembershipPlan } from "../types/membership-plan.types";
-import Button from "@/shared/components/ui/buttons/Button";
-import Container from "@/shared/components/ui/containers/Container";
-import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
-import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 import Chip from "@/shared/components/ui/chip/Chip";
+import Button from "@/shared/components/ui/buttons/Button";
+import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
+import Container from "@/shared/components/ui/containers/Container";
+import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
+
+import type { MembershipPlan } from "@/modules/membership-plan/types/membership-plan.types";
 
 export interface MembershipPlanGridProps {
   rows: MembershipPlan[];

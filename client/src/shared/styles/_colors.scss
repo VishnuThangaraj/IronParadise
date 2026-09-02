@@ -1,1 +1,13 @@
 $primary-background: #f4f4f5;
+
+.primary-text {
+  background: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.primary-text:hover {
+  background: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
+}

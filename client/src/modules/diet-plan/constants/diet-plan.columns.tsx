@@ -1,6 +1,6 @@
 import type { GridColDef } from "@mui/x-data-grid";
 
-import { LuCrown } from "react-icons/lu";
+import { LuUtensils } from "react-icons/lu";
 import { FiEdit2, FiTrash2, FiEye } from "react-icons/fi";
 
 import { DietPlan } from "../types/diet-plan.types";
@@ -19,7 +19,7 @@ export const getDietPlanColumns = (
   {
     field: "dietPlanId",
     headerName: "Plan ID",
-    flex: 1,
+    flex: 0.8,
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <div
@@ -27,7 +27,7 @@ export const getDietPlanColumns = (
             params.row?._id || params.row?.dietPlanId || params.value,
           )} flex items-center justify-center text-white shadow-xs shrink-0`}
         >
-          <LuCrown className="w-4 h-4" />
+          <LuUtensils className="w-4 h-4" />
         </div>
         <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1">
           {params.value}
@@ -42,7 +42,7 @@ export const getDietPlanColumns = (
     minWidth: 200,
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
-        <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1">
+        <span className="font-medium text-slate-700 dark:text-slate-300  truncate min-w-0 flex-1">
           {params.value}
         </span>
       </div>
@@ -64,40 +64,15 @@ export const getDietPlanColumns = (
   {
     field: "description",
     headerName: "Description",
-    flex: 1.5,
+    flex: 2,
     minWidth: 200,
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
-        <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1">
+        <span className="font-medium text-slate-700 dark:text-slate-300 truncate min-w-0 flex-1">
           {params.value}
         </span>
       </div>
     ),
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    flex: 1,
-    minWidth: 120,
-    renderCell: (params) => {
-      const isActive = params.row?.isActive ?? params.value === "Active";
-      return (
-        <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-            isActive
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-              : "bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20"
-          }`}
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              isActive ? "bg-emerald-500" : "bg-slate-400"
-            }`}
-          />
-          {isActive ? "Active" : "Inactive"}
-        </span>
-      );
-    },
   },
   {
     field: "actions",

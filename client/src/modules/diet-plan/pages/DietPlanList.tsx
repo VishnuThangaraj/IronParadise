@@ -14,6 +14,7 @@ import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeTogg
 import useDietPlan from "@/modules/diet-plan/hooks/use-diet-plan";
 import useDietPlanDelete from "@/modules/diet-plan/hooks/use-diet-plan.delete";
 import { getDietPlanColumns } from "@/modules/diet-plan/constants/diet-plan.columns";
+import DietPlanGrid from "../components/DietPlanGrid";
 
 const statusFilterOptions = [
   { value: "all", label: "All Statuses" },
@@ -102,14 +103,13 @@ const DietPlanList = () => {
       <div className="relative z-0">
         {viewMode === "grid" ? (
           <div>
-            {/* <MembershipPlanGrid
+            <DietPlanGrid
               loading={loading}
               rows={filteredRows}
               deletePlan={handleDeletePlanClick}
               editPlan={handleNavigateToEdit}
               viewPlan={handleNavigateToView}
-            /> */}
-            <div>grid view</div>
+            />
           </div>
         ) : (
           <Container
