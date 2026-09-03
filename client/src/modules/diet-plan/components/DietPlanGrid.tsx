@@ -54,8 +54,8 @@ const DietPlanGrid = ({
                     {row.planName}
                   </div>
                   <div className="flex items-center gap-1 mt-0.5">
-                    <LuTarget className="w-3 h-3 text-slate-400" />
-                    <div className="text-[10px] primary-text font-bold uppercase tracking-wider">
+                    <LuTarget className="w-3 h-3 text-slate-400 shrink-0" />
+                    <div className="text-[10px] primary-text font-bold uppercase tracking-wider truncate">
                       {row.goal}
                     </div>
                   </div>

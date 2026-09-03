@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@/shared/hooks/useNavigation";
 // import { useToast } from "@/shared/components/ui/toast";
 
-// import { formatDate } from "@/shared/utils/formatDate";
+import { formatDate } from "@/shared/utils/formatDate";
 
 import {
   DietPlanFormState,
@@ -24,6 +24,9 @@ import {
   selectDietPlans,
 } from "../redux/diet-plan.selector";
 import { fetchDietPlanById, fetchDietPlans } from "../redux/diet-plan.thunks";
+import weekDays, {
+  WeekDay,
+} from "@/shared/components/ui/date/constants/week-days";
 
 const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
   const { navigate } = useNavigation();
@@ -38,6 +41,8 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
   const dietPlans = useSelector(selectDietPlans);
   const loading = useSelector(selectDietPlanLoading);
   const currentDietPlan = useSelector(selectCurrentDietPlan);
+
+  const [activeDay, setActiveDay] = useState<WeekDay>("monday");
 
   // Form State
   const [formData, setFormData] = useState<DietPlanFormState>(initialData);
@@ -125,7 +130,10 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
     filteredRows,
     formData,
     setFormData,
+    activeDay,
+    formatDate,
     handleInputChange,
+    setActiveDay,
     currentDietPlan,
     // isSubmitting,
     handleNavigateToAdd,

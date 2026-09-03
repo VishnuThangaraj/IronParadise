@@ -12,9 +12,9 @@ import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 
 import useDietPlan from "@/modules/diet-plan/hooks/use-diet-plan";
+import DietPlanGrid from "@/modules/diet-plan/components/DietPlanGrid";
 import useDietPlanDelete from "@/modules/diet-plan/hooks/use-diet-plan.delete";
 import { getDietPlanColumns } from "@/modules/diet-plan/constants/diet-plan.columns";
-import DietPlanGrid from "../components/DietPlanGrid";
 
 const statusFilterOptions = [
   { value: "all", label: "All Statuses" },

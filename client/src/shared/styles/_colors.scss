@@ -1,13 +1,45 @@
 $primary-background: #f4f4f5;
 
-.primary-text {
-  background: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+.text-primary {
+  background-image: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  display: inline-block;
 }
 
-.primary-text:hover {
-  background: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
+.text-primary:hover {
+  background-image: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* SVG icons support when text-primary is applied to or wraps an SVG */
+svg.text-primary,
+.text-primary svg {
+  background-image: none;
+  -webkit-text-fill-color: initial;
+  background-clip: border-box;
+  -webkit-background-clip: border-box;
+  color: #4f46e5;
+  stroke: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  transition: color 0.2s ease;
+}
+
+svg.text-primary:hover,
+.text-primary:hover svg {
+  color: #6366f1;
+}
+
+:where(.dark, .dark *) svg.text-primary,
+:where(.dark, .dark *) .text-primary svg {
+  color: #818cf8;
+}
+
+:where(.dark, .dark *) svg.text-primary:hover,
+:where(.dark, .dark *) .text-primary:hover svg {
+  color: #a5b4fc;
 }

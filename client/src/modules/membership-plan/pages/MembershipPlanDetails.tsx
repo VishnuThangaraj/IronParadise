@@ -16,28 +16,26 @@ import {
   LuTrash2,
 } from "react-icons/lu";
 
-import Button from "@/shared/components/ui/buttons/Button";
 import Chip from "@/shared/components/ui/chip/Chip";
-import Container from "@/shared/components/ui/containers/Container";
-import PageHeader from "@/shared/components/ui/page/PageHeader";
-import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
+import Button from "@/shared/components/ui/buttons/Button";
 import { useNavigation } from "@/shared/hooks/useNavigation";
-import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
-import useMembershipPlan from "../hooks/use-membership-plan";
-import useMembershipPlanDelete from "../hooks/use-membership-plan.delete";
+import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
+import PageHeader from "@/shared/components/ui/page/PageHeader";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
-import { fetchMembershipPlanById } from "../redux/membership-plan.thunks";
+import Container from "@/shared/components/ui/containers/Container";
+import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
+
+import useMembershipPlan from "@/modules/membership-plan/hooks/use-membership-plan";
+import useMembershipPlanDelete from "@/modules/membership-plan/hooks/use-membership-plan.delete";
+import { fetchMembershipPlanById } from "@/modules/membership-plan/redux/membership-plan.thunks";
 
 const MembershipPlanDetails = () => {
-  const { planId } = useParams<{ planId: string }>();
-  const dispatch = useDispatch<AppDispatch>();
   const { navigate } = useNavigation();
-  const {
-    loading,
-    formatDate,
-    handleNavigateToEdit,
-    currentMembershipPlan,
-  } = useMembershipPlan();
+  const dispatch = useDispatch<AppDispatch>();
+  const { planId } = useParams<{ planId: string }>();
+
+  const { loading, formatDate, handleNavigateToEdit, currentMembershipPlan } =
+    useMembershipPlan();
   const {
     isDeleting,
     handleDeletePlan,
@@ -87,8 +85,6 @@ const MembershipPlanDetails = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-
-
           {currentMembershipPlan && (
             <>
               <Tooltip title="Edit this plan">
