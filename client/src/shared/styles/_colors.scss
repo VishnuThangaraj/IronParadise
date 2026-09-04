@@ -1,6 +1,7 @@
 $primary-background: #f4f4f5;
 
-.text-primary {
+.text-primary,
+.primary-text {
   background-image: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
   -webkit-background-clip: text;
   background-clip: text;
@@ -9,7 +10,8 @@ $primary-background: #f4f4f5;
   display: inline-block;
 }
 
-.text-primary:hover {
+.text-primary:hover,
+.primary-text:hover {
   background-image: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
   -webkit-background-clip: text;
   background-clip: text;
@@ -17,7 +19,9 @@ $primary-background: #f4f4f5;
 
 /* SVG icons support when text-primary is applied to or wraps an SVG */
 svg.text-primary,
-.text-primary svg {
+.text-primary svg,
+svg.primary-text,
+.primary-text svg {
   background-image: none;
   -webkit-text-fill-color: initial;
   background-clip: border-box;
@@ -30,16 +34,33 @@ svg.text-primary,
 }
 
 svg.text-primary:hover,
-.text-primary:hover svg {
+.text-primary:hover svg,
+svg.primary-text:hover,
+.primary-text:hover svg {
   color: #6366f1;
 }
 
 :where(.dark, .dark *) svg.text-primary,
-:where(.dark, .dark *) .text-primary svg {
+:where(.dark, .dark *) .text-primary svg,
+:where(.dark, .dark *) svg.primary-text,
+:where(.dark, .dark *) .primary-text svg {
   color: #818cf8;
 }
 
 :where(.dark, .dark *) svg.text-primary:hover,
-:where(.dark, .dark *) .text-primary:hover svg {
+:where(.dark, .dark *) .text-primary:hover svg,
+:where(.dark, .dark *) svg.primary-text:hover,
+:where(.dark, .dark *) .primary-text:hover svg {
   color: #a5b4fc;
 }
+
+/* Background gradient utility */
+.bg-primary {
+  background-image: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+  color: #ffffff;
+}
+
+.bg-primary:hover {
+  background-image: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
+}
+

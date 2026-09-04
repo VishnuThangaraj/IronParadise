@@ -11,7 +11,7 @@ const DaySelector = ({ activeDay, onSelectDay }: DaySelectorProps) => {
   return (
     <Container
       variant="secondary"
-      className="p-3! shadow-xs flex flex-wrap gap-1.5"
+      className="p-2! shadow-xs flex flex-wrap gap-1.5"
     >
       {weekDays.map((day) => {
         const isActive = activeDay === day;

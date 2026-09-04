@@ -32,6 +32,7 @@ import { fetchDietPlanById } from "@/modules/diet-plan/redux/diet-plan.thunks";
 import Skeleton from "@/shared/components/ui/feedback/Skeleton";
 import DaySelector from "@/shared/components/ui/date/DaySelector";
 import type { WeekDay } from "@/shared/components/ui/date/constants/week-days";
+import { meals } from "../constants/diet-plan.meals";
 
 const DietPlanDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -112,7 +113,7 @@ const DietPlanDetails = () => {
         </div>
       </div>
       {/* Main Content Area */}
-      <div className="flex justify-between gap-5 w-full">
+      <div className="flex justify-between gap-6 w-full">
         <div className="w-4/12">
           <Container className="flex flex-col p-6!">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-50">
@@ -155,13 +156,90 @@ const DietPlanDetails = () => {
                 </Skeleton>
               </div>
             </div>
+            {/* Active Day Nutrition Summary Card */}
           </Container>
+          {/* <DayTotals activeDay={activeDay} totals={activeTotals} /> */}
+          <div>f</div>
         </div>
-        <div className="w-8/12">
+        <div className="flex flex-col w-8/12 gap-6">
           <DaySelector
             activeDay={activeDay as WeekDay}
             onSelectDay={setActiveDay}
           />
+          <div className="flex flex-col gap-6">
+            <div className="ms-3 flex gap-2.5 items-center">
+              <LuCalendar className="w-4 h-4 text-primary" />
+              <div className="uppercase text-sm font-semibold tracking-wider">
+                Scheduled Meals {`(${activeDay})`}
+              </div>
+            </div>
+
+            {/* Meals */}
+            <div className="grid grid-cols-2 gap-6 w-full">
+              {meals.map((meal) => {
+                const items = currentDietPlan?.[activeDay]?.[meal] || [];
+
+                return (
+                  <Container
+                    key={`dpl-meal-${meal}`}
+                    className="flex-col p-5! gap-2"
+                  >
+                    <div className="flex gap-2.5 items-center">
+                      <span className="w-2 h-2 rounded-full bg-primary" />
+                      <div className="uppercase font-semibold text-sm">
+                        {meal}
+                      </div>
+                    </div>
+
+                    {/* Meal Items */}
+                    <div className="flex-1 space-y-3 min-h-20">
+                      {items.length === 0 ? (
+                        <div className="h-full min-h-20 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-[10px] font-medium p-4 text-center">
+                          No items scheduled for this meal.
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          {items.map((item, index) => {
+                            return (
+                              <div
+                                key={`dpl-item-${index}`}
+                                className="flex bg-slate-200/60 border border-slate-300/80 rounded-xl p-3 flex-col items-start justify-between gap-2.5 hover:bg-slate-200 transition-all duration-200"
+                              >
+                                <div className="text-[11px] font-semibold">
+                                  {item.name}
+                                </div>
+                                {/* metrics */}
+                                <div className="flex flex-col gap-1.5 text-[10px] font-bold">
+                                  {item.quantity && (
+                                    <div>
+                                      <span className="bg-slate-300/60 px-1.5 py-0.5 rounded-md">
+                                        Qty: {item.quantity}
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div className="flex gap-1.5 ps-0.5 tracking-wide">
+                                    <span className="text-orange-600">
+                                      {item.calories} kcal
+                                    </span>
+                                    <span>•</span>
+                                    <span>P: {item.protein}g</span>
+                                    <span>•</span>
+                                    <span>C: {item.carbs}g</span>
+                                    <span>•</span>
+                                    <span>F: {item.fat}g</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </Container>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
       {/* Plan Deletion Confirmation Modal */}
