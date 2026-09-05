@@ -27,6 +27,18 @@ const DietPlanDetails = lazy(
   () => import("@/modules/diet-plan/pages/DietPlanDetails"),
 );
 
+// Workout Plan
+const WorkoutPlanList = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanList"),
+);
+const WorkoutPlanForm = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanForm"),
+);
+
+const WorkoutPlanDetails = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanDetails"),
+);
+
 // Membership Plan
 const MembershipPlanList = lazy(
   () => import("@/modules/membership-plan/pages/MembershipPlanList"),
@@ -86,6 +98,18 @@ const App = () => {
                 <Route
                   path="/plan/diet/:planId"
                   element={<DietPlanDetails />}
+                />
+
+                {/* Workout Plan */}
+                <Route path="/plan/workout" element={<WorkoutPlanList />} />
+                <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
+                <Route
+                  path="/plan/workout/edit/:planId"
+                  element={<WorkoutPlanForm />}
+                />
+                <Route
+                  path="/plan/diet/:planId"
+                  element={<WorkoutPlanDetails />}
                 />
 
                 {/* Membership Plan */}

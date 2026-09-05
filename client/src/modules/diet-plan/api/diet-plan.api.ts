@@ -2,8 +2,8 @@ import api from "@/shared/service/api";
 import {
   DietPlanFormData,
   DietPlanResponse,
-  SingleDietPlanResponse,
   UpdateDietPlanRequest,
+  SingleDietPlanResponse,
 } from "../types/diet-plan.types";
 
 // get all diet plans
