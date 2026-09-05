@@ -2,20 +2,7 @@ import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/app/store";
-import {
-  LuArrowLeft,
-  LuCalendar,
-  LuCheck,
-  LuClock,
-  LuCrown,
-  LuFileText,
-  LuIndianRupee,
-  LuPencil,
-  LuShieldCheck,
-  LuSparkles,
-  LuTag,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuCalendar, LuPencil, LuTrash2 } from "react-icons/lu";
 
 import { LuUtensils } from "react-icons/lu";
 
@@ -34,6 +21,7 @@ import DaySelector from "@/shared/components/ui/date/DaySelector";
 import type { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 import { meals } from "../constants/diet-plan.meals";
 import DayTotals from "../components/DayTotals";
+import MealCard from "../components/MealCard";
 
 const DietPlanDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -119,42 +107,48 @@ const DietPlanDetails = () => {
       {/* Main Content Area */}
       <div className="flex justify-between gap-6 w-full">
         <div className="flex flex-col w-4/12 gap-6">
-          <Container className="flex flex-col p-6!">
-            <div className="flex items-center gap-2 pb-2 border-b border-slate-50">
-              <LuUtensils className="w-4 h-4 text-primary" />
-              <h2 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <Container variant="secondary" className="flex flex-col p-6!">
+            <div className="flex items-center gap-2 pb-2 border-b border-slate-200/80 dark:border-white/10">
+              <div
+                className={`w-8 h-8 rounded-xl ${getDeterministicGradient(
+                  currentDietPlan?.dietPlanId || currentDietPlan?._id,
+                )} flex items-center justify-center text-white shadow-xs shrink-0`}
+              >
+                <LuUtensils className="w-4 h-4" />
+              </div>
+              <h2 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
                 Plan Information
               </h2>
             </div>
             <div className="space-y-3.5 pt-3">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Diet Plan Name
                 </span>
                 <Skeleton loading={loading}>
-                  <span className="text-sm font-bold text-slate-800 block mt-0.5">
+                  <span className="text-sm font-bold text-slate-800 dark:text-slate-100 block mt-0.5">
                     {currentDietPlan?.planName || "-"}
                   </span>
                 </Skeleton>
               </div>
 
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Goal Target
                 </span>
                 <Skeleton loading={loading}>
-                  <span className="text-xs font-bold text-primary bg-indigo-50/70 border border-indigo-100 px-2 py-0.5 rounded-md inline-block mt-1 uppercase tracking-wider">
+                  <span className="text-xs font-bold bg-primary-light border border-indigo-500/20 px-2 py-0.5 rounded-md inline-block mt-1 uppercase tracking-wider">
                     {currentDietPlan?.goal || "-"}
                   </span>
                 </Skeleton>
               </div>
 
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Description
                 </span>
                 <Skeleton loading={loading}>
-                  <p className="text-xs font-medium text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
+                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300 mt-1 whitespace-pre-wrap leading-relaxed">
                     {currentDietPlan?.description || "No description provided."}
                   </p>
                 </Skeleton>
@@ -172,75 +166,21 @@ const DietPlanDetails = () => {
           <div className="flex flex-col gap-6">
             <div className="ms-3 flex gap-2.5 items-center">
               <LuCalendar className="w-4 h-4 text-primary" />
-              <div className="uppercase text-sm font-semibold tracking-wider">
+              <div className="uppercase text-sm font-semibold tracking-wider text-slate-800 dark:text-slate-100">
                 Scheduled Meals {`(${activeDay})`}
               </div>
             </div>
 
             {/* Meals */}
             <div className="grid grid-cols-2 gap-6 w-full">
-              {meals.map((meal) => {
-                const items = currentDietPlan?.[activeDay]?.[meal] || [];
-
-                return (
-                  <Container
-                    key={`dpl-meal-${meal}`}
-                    className="flex-col p-5! gap-2"
-                  >
-                    <div className="flex gap-2.5 items-center">
-                      <span className="w-2 h-2 rounded-full bg-primary" />
-                      <div className="uppercase font-semibold text-sm">
-                        {meal}
-                      </div>
-                    </div>
-
-                    {/* Meal Items */}
-                    <div className="flex-1 space-y-3 min-h-20">
-                      {items.length === 0 ? (
-                        <div className="h-full min-h-20 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-[10px] font-medium p-4 text-center">
-                          No items scheduled for this meal.
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          {items.map((item, index) => {
-                            return (
-                              <div
-                                key={`dpl-item-${index}`}
-                                className="flex bg-slate-200/60 border border-slate-300/80 rounded-xl p-3 flex-col items-start justify-between gap-2.5 hover:bg-slate-200 transition-all duration-200"
-                              >
-                                <div className="text-[11px] font-semibold">
-                                  {item.name}
-                                </div>
-                                {/* metrics */}
-                                <div className="flex flex-col gap-1.5 text-[10px] font-bold">
-                                  {item.quantity && (
-                                    <div>
-                                      <span className="bg-slate-300/60 px-1.5 py-0.5 rounded-md">
-                                        Qty: {item.quantity}
-                                      </span>
-                                    </div>
-                                  )}
-                                  <div className="flex gap-1.5 ps-0.5 tracking-wide">
-                                    <span className="text-orange-600">
-                                      {item.calories} kcal
-                                    </span>
-                                    <span>•</span>
-                                    <span>P: {item.protein}g</span>
-                                    <span>•</span>
-                                    <span>C: {item.carbs}g</span>
-                                    <span>•</span>
-                                    <span>F: {item.fat}g</span>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </Container>
-                );
-              })}
+              {meals.map((meal) => (
+                <MealCard
+                  key={`dpl-meal-${meal}`}
+                  meal={meal}
+                  items={currentDietPlan?.[activeDay]?.[meal] || []}
+                  readOnly
+                />
+              ))}
             </div>
           </div>
         </div>

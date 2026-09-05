@@ -6,7 +6,6 @@ import {
   LuTarget,
 } from "react-icons/lu";
 
-import Chip from "@/shared/components/ui/chip/Chip";
 import Button from "@/shared/components/ui/buttons/Button";
 import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import Container from "@/shared/components/ui/containers/Container";
@@ -63,7 +62,7 @@ const DietPlanGrid = ({
               </div>
               {/* Description */}
               <div className="text-slate-500 font-medium text-[11px] leading-relaxed line-clamp-3 min-h-8">
-                {row.description || 'No Description Provided :)'}
+                {row.description || "No Description Provided :)"}
               </div>
             </div>
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { Checkbox } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import type { AppDispatch } from "@/app/store";
 import {
   LuArrowLeft,
@@ -12,15 +13,14 @@ import {
   LuTag,
   LuX,
 } from "react-icons/lu";
-import { Checkbox } from "@mui/material";
 
-import Button from "@/shared/components/ui/buttons/Button";
 import Chip from "@/shared/components/ui/chip/Chip";
-import Container from "@/shared/components/ui/containers/Container";
-import FormField from "@/shared/components/ui/forms/FormField";
 import Input from "@/shared/components/ui/forms/Input";
-import PageHeader from "@/shared/components/ui/page/PageHeader";
+import Button from "@/shared/components/ui/buttons/Button";
 import { useNavigation } from "@/shared/hooks/useNavigation";
+import FormField from "@/shared/components/ui/forms/FormField";
+import PageHeader from "@/shared/components/ui/page/PageHeader";
+import Container from "@/shared/components/ui/containers/Container";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 
 import membershipPlanFields, {

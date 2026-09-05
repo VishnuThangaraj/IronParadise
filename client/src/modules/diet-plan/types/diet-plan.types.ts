@@ -1,6 +1,6 @@
 export interface MealItem {
   name: string;
-  quantity: number;
+  quantity: string | number;
   calories: number;
   protein: number;
   carbs: number;
@@ -46,8 +46,10 @@ export interface DietPlan {
 
 export type DietPlanFormData = Omit<
   DietPlan,
-  "_id" | "createdAt" | "updatedAt" | "__v"
->;
+  "_id" | "dietPlanId" | "createdAt" | "updatedAt" | "__v"
+> & {
+  dietPlanId?: string;
+};
 
 export type UpdateDietPlanRequest = Partial<DietPlanFormData>;
 

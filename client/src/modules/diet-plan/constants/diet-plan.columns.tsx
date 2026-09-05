@@ -24,7 +24,7 @@ export const getDietPlanColumns = (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <div
           className={`w-8 h-8 rounded-xl ${getDeterministicGradient(
-            params.row?._id || params.row?.dietPlanId || params.value,
+             params.row?.dietPlanId || params.row?._id || params.value,
           )} flex items-center justify-center text-white shadow-xs shrink-0`}
         >
           <LuUtensils className="w-4 h-4" />

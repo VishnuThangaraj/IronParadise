@@ -56,7 +56,7 @@ router.delete(
   "/:dietPlanId/permanent",
   authenticate,
   authorize("admin", "trainer"),
-  DietPlanController.deleteDietPlanPermanently
+  DietPlanController.deleteDietPlanPermanently,
 );
 
 export default router;

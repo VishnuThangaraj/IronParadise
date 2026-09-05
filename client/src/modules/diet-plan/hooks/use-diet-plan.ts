@@ -3,14 +3,14 @@ import React, {
   useEffect,
   useMemo,
   useState,
-  // type FormEvent,
-  // type KeyboardEvent,
+  type FormEvent,
 } from "react";
 import type { AppDispatch } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigation } from "@/shared/hooks/useNavigation";
-// import { useToast } from "@/shared/components/ui/toast";
+import { useToast } from "@/shared/components/ui/toast";
+import { getErrorMessage } from "@/shared/utils/error-handler";
 
 import { formatDate } from "@/shared/utils/formatDate";
 
@@ -24,17 +24,51 @@ import {
   selectDietPlanLoading,
   selectDietPlans,
 } from "../redux/diet-plan.selector";
-import { fetchDietPlanById, fetchDietPlans } from "../redux/diet-plan.thunks";
-import weekDays, {
-  WeekDay,
-} from "@/shared/components/ui/date/constants/week-days";
+import {
+  createDietPlan,
+  fetchDietPlanById,
+  fetchDietPlans,
+  updateDietPlan,
+} from "../redux/diet-plan.thunks";
+import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 import { meals } from "../constants/diet-plan.meals";
-import { DayDiet, MealItem, MacroTotals } from "../types/diet-plan.types";
+import { MealItem, MacroTotals, MealType, DayDiet } from "../types/diet-plan.types";
 
-const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
+/**
+ * Pure functional utility to calculate macro totals from a DayDiet
+ */
+export const calculateMacroTotals = (dayData?: DayDiet): MacroTotals => {
+  let calories = 0;
+  let protein = 0;
+  let carbs = 0;
+  let fat = 0;
+
+  if (!dayData) {
+    return { calories, protein, carbs, fat };
+  }
+
+  meals.forEach((meal) => {
+    const items = dayData[meal] || [];
+    items.forEach((item: MealItem) => {
+      calories += Number(item.calories) || 0;
+      protein += Number(item.protein) || 0;
+      carbs += Number(item.carbs) || 0;
+      fat += Number(item.fat) || 0;
+    });
+  });
+
+  return {
+    calories: Math.round(calories),
+    protein: Math.round(protein * 10) / 10,
+    carbs: Math.round(carbs * 10) / 10,
+    fat: Math.round(fat * 10) / 10,
+  };
+};
+
+const useDietPlan = (initialData?: DietPlanFormState) => {
   const { navigate } = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  // const { addToast } = useToast();
+  const { addToast } = useToast();
 
   const [viewMode, setViewMode] = useState("list");
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,8 +82,10 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
   const [activeDay, setActiveDay] = useState<WeekDay>("monday");
 
   // Form State
-  const [formData, setFormData] = useState<DietPlanFormState>(initialData);
-  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<DietPlanFormState>(
+    initialData ?? initialDietPlanState,
+  );
 
   useEffect(() => {
     dispatch(fetchDietPlans());
@@ -122,29 +158,146 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
   };
 
   // macro totals of active day
-  const getActiveDayTotals = useCallback((): MacroTotals => {
-    const dayData = currentDietPlan?.[activeDay];
-    let calories = 0;
-    let protein = 0;
-    let carbs = 0;
-    let fat = 0;
+  const getActiveDayTotals = useCallback(
+    (targetDayData?: DayDiet): MacroTotals => {
+      if (targetDayData) {
+        return calculateMacroTotals(targetDayData);
+      }
 
-    if (!dayData) {
-      return { calories, protein, carbs, fat };
+      // In form mode (initialData explicitly provided), calculate from formData
+      // In view mode, calculate from currentDietPlan
+      const dayData =
+        initialData !== undefined
+          ? formData?.[activeDay]
+          : currentDietPlan?.[activeDay] ?? formData?.[activeDay];
+
+      return calculateMacroTotals(dayData);
+    },
+    [activeDay, formData, currentDietPlan, initialData],
+  );
+
+  // handle form submission (Create or Update)
+  const handleSubmitPlan = async (
+    e: FormEvent<HTMLFormElement>,
+    isEditMode: boolean,
+    planId?: string,
+  ) => {
+    e.preventDefault();
+
+    if (!formData.planName.trim()) {
+      addToast({
+        type: "error",
+        message: "Plan name is required.",
+      });
+      return;
     }
 
-    meals.forEach((meal) => {
-      const items = dayData[meal] || [];
-      items.forEach((item: MealItem) => {
-        calories += Number(item.calories) || 0;
-        protein += Number(item.protein) || 0;
-        carbs += Number(item.carbs) || 0;
-        fat += Number(item.fat) || 0;
+    if (!formData.goal.trim()) {
+      addToast({
+        type: "error",
+        message: "Goal is required.",
       });
-    });
+      return;
+    }
 
-    return { calories, protein, carbs, fat };
-  }, [activeDay, currentDietPlan]);
+    setIsSubmitting(true);
+
+    try {
+      if (isEditMode && planId) {
+        await dispatch(
+          updateDietPlan({
+            dietPlanId: planId,
+            planData: {
+              planName: formData.planName.trim(),
+              goal: formData.goal.trim(),
+              description: formData.description.trim(),
+              monday: formData.monday,
+              tuesday: formData.tuesday,
+              wednesday: formData.wednesday,
+              thursday: formData.thursday,
+              friday: formData.friday,
+              saturday: formData.saturday,
+              sunday: formData.sunday,
+              isActive: formData.isActive,
+            },
+          }),
+        ).unwrap();
+
+        addToast({
+          type: "success",
+          message: "Diet plan updated successfully.",
+        });
+        navigate(`/plan/diet/${planId.toLowerCase()}`);
+      } else {
+        await dispatch(
+          createDietPlan({
+            planName: formData.planName.trim(),
+            goal: formData.goal.trim(),
+            description: formData.description.trim(),
+            monday: formData.monday,
+            tuesday: formData.tuesday,
+            wednesday: formData.wednesday,
+            thursday: formData.thursday,
+            friday: formData.friday,
+            saturday: formData.saturday,
+            sunday: formData.sunday,
+            isActive: formData.isActive,
+          }),
+        ).unwrap();
+
+        addToast({
+          type: "success",
+          message: "Diet plan created successfully.",
+        });
+        navigate("/plan/diet");
+      }
+    } catch (err: unknown) {
+      addToast({
+        type: "error",
+        message: getErrorMessage(err, "Failed to save diet plan."),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // remove meal item from form state immutably
+  const removeMealItem = useCallback(
+    (meal: MealType, index: number) => {
+      setFormData((prev) => {
+        const currentDay = prev[activeDay];
+        const currentMealItems = currentDay?.[meal] || [];
+
+        return {
+          ...prev,
+          [activeDay]: {
+            ...currentDay,
+            [meal]: currentMealItems.filter((_, i) => i !== index),
+          },
+        };
+      });
+    },
+    [activeDay],
+  );
+
+  // add meal item to form state immutably
+  const addMealItem = useCallback(
+    (meal: MealType, item: MealItem) => {
+      setFormData((prev) => {
+        const currentDay = prev[activeDay];
+        const currentMealItems = currentDay?.[meal] || [];
+
+        return {
+          ...prev,
+          [activeDay]: {
+            ...currentDay,
+            [meal]: [...currentMealItems, item],
+          },
+        };
+      });
+    },
+    [activeDay],
+  );
 
   return {
     error,
@@ -156,20 +309,25 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
     statusFilter,
     setStatusFilter,
     filteredRows,
-    formData,
-    setFormData,
     activeDay,
-    formatDate,
-    handleInputChange,
     setActiveDay,
-    currentDietPlan,
-    // isSubmitting,
-    getActiveDayTotals,
+    formatDate,
+    handleActiveStatusFilter,
     handleNavigateToAdd,
+    handleNavigateToEdit,
     handleNavigateToView,
     fetchDietPlanWithPlanId,
-    handleActiveStatusFilter,
-    handleNavigateToEdit,
+    currentDietPlan,
+    getActiveDayTotals,
+
+    // Form-specific state and actions
+    formData,
+    setFormData,
+    handleInputChange,
+    isSubmitting,
+    removeMealItem,
+    addMealItem,
+    handleSubmitPlan,
   };
 };
 
