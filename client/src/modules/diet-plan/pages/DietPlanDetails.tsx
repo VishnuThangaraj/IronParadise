@@ -33,6 +33,7 @@ import Skeleton from "@/shared/components/ui/feedback/Skeleton";
 import DaySelector from "@/shared/components/ui/date/DaySelector";
 import type { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 import { meals } from "../constants/diet-plan.meals";
+import DayTotals from "../components/DayTotals";
 
 const DietPlanDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,6 +45,7 @@ const DietPlanDetails = () => {
     setActiveDay,
     currentDietPlan,
     handleNavigateToEdit,
+    getActiveDayTotals,
   } = useDietPlan();
   const {
     isDeleting,
@@ -52,6 +54,8 @@ const DietPlanDetails = () => {
     handleDeletePlanClick,
     setOpenDeletePlanModal,
   } = useDietPlanDelete();
+
+  const activeTotals = getActiveDayTotals();
 
   const fetchedPlanIdRef = useRef<string | null>(null);
 
@@ -114,7 +118,7 @@ const DietPlanDetails = () => {
       </div>
       {/* Main Content Area */}
       <div className="flex justify-between gap-6 w-full">
-        <div className="w-4/12">
+        <div className="flex flex-col w-4/12 gap-6">
           <Container className="flex flex-col p-6!">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-50">
               <LuUtensils className="w-4 h-4 text-primary" />
@@ -156,10 +160,9 @@ const DietPlanDetails = () => {
                 </Skeleton>
               </div>
             </div>
-            {/* Active Day Nutrition Summary Card */}
           </Container>
-          {/* <DayTotals activeDay={activeDay} totals={activeTotals} /> */}
-          <div>f</div>
+          {/* Active Day Nutrition Summary Card */}
+          <DayTotals activeDay={activeDay} totals={activeTotals} />
         </div>
         <div className="flex flex-col w-8/12 gap-6">
           <DaySelector

@@ -64,3 +64,24 @@ svg.primary-text:hover,
   background-image: linear-gradient(to right, #6366f1, #8b5cf6, #c084fc);
 }
 
+.bg-primary-light,
+.primary-light-bg {
+  background-image: linear-gradient(to right, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.1));
+  color: #4f46e5;
+}
+
+.bg-primary-light:hover,
+.primary-light-bg:hover {
+  background-image: linear-gradient(to right, rgba(79, 70, 229, 0.18), rgba(124, 58, 237, 0.18), rgba(168, 85, 247, 0.18));
+}
+
+:where(.dark, .dark *) .bg-primary-light,
+:where(.dark, .dark *) .primary-light-bg {
+  background-image: linear-gradient(to right, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2), rgba(192, 132, 252, 0.2));
+  color: #a5b4fc;
+}
+
+:where(.dark, .dark *) .bg-primary-light:hover,
+:where(.dark, .dark *) .primary-light-bg:hover {
+  background-image: linear-gradient(to right, rgba(99, 102, 241, 0.28), rgba(139, 92, 246, 0.28), rgba(192, 132, 252, 0.28));
+}

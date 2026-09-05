@@ -14,6 +14,15 @@ export interface DayDiet {
   snacks: MealItem[];
 }
 
+export type MealType = keyof DayDiet;
+
+export interface MacroTotals {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
 export interface DietPlan {
   _id: string;
   dietPlanId: string;

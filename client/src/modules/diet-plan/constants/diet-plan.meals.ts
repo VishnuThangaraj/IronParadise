@@ -1,5 +1,12 @@
-export const meals = ["breakfast", "lunch", "dinner", "snacks"] as const;
+import type { MealType } from "../types/diet-plan.types";
 
-export type Meals = (typeof meals)[number];
+export const meals: readonly MealType[] = [
+  "breakfast",
+  "lunch",
+  "dinner",
+  "snacks",
+] as const;
+
+export type Meals = MealType;
 
 export default meals;

@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -27,6 +28,8 @@ import { fetchDietPlanById, fetchDietPlans } from "../redux/diet-plan.thunks";
 import weekDays, {
   WeekDay,
 } from "@/shared/components/ui/date/constants/week-days";
+import { meals } from "../constants/diet-plan.meals";
+import { DayDiet, MealItem, MacroTotals } from "../types/diet-plan.types";
 
 const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
   const { navigate } = useNavigation();
@@ -118,6 +121,31 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
     setStatusFilter(activeStatus);
   };
 
+  // macro totals of active day
+  const getActiveDayTotals = useCallback((): MacroTotals => {
+    const dayData = currentDietPlan?.[activeDay];
+    let calories = 0;
+    let protein = 0;
+    let carbs = 0;
+    let fat = 0;
+
+    if (!dayData) {
+      return { calories, protein, carbs, fat };
+    }
+
+    meals.forEach((meal) => {
+      const items = dayData[meal] || [];
+      items.forEach((item: MealItem) => {
+        calories += Number(item.calories) || 0;
+        protein += Number(item.protein) || 0;
+        carbs += Number(item.carbs) || 0;
+        fat += Number(item.fat) || 0;
+      });
+    });
+
+    return { calories, protein, carbs, fat };
+  }, [activeDay, currentDietPlan]);
+
   return {
     error,
     loading,
@@ -136,6 +164,7 @@ const useDietPlan = (initialData: DietPlanFormState = initialDietPlanState) => {
     setActiveDay,
     currentDietPlan,
     // isSubmitting,
+    getActiveDayTotals,
     handleNavigateToAdd,
     handleNavigateToView,
     fetchDietPlanWithPlanId,

@@ -2,7 +2,7 @@ import type { ReactNode, MouseEventHandler } from "react";
 
 interface ContainerProps {
   children?: ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "none";
   className?: string;
   onClick?: MouseEventHandler<HTMLDivElement>;
 }
@@ -19,7 +19,12 @@ const Container = ({
   className = "",
   onClick,
 }: ContainerProps) => {
-  const variantStyles = variant === "primary" ? primaryStyles : secondaryStyles;
+  const variantStyles =
+    variant === "primary"
+      ? primaryStyles
+      : variant === "secondary"
+      ? secondaryStyles
+      : "";
 
   return (
     <div
