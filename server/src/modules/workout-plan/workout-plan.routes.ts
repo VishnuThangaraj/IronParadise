@@ -54,4 +54,12 @@ router.delete(
   WorkoutPlanController.deleteWorkoutPlan,
 );
 
+// delete workout plan (hard delete)
+router.delete(
+  "/:workoutPlanId/permanent",
+  authenticate,
+  authorize("admin", "trainer"),
+  WorkoutPlanController.deleteWorkoutPlanPermanently,
+);
+
 export default router;

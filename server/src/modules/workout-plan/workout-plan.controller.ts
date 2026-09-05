@@ -79,7 +79,7 @@ class WorkoutPlanController {
     }
   }
 
-  // delete workout plan
+  // delete workout plan (soft delete)
   public async deleteWorkoutPlan(
     req: Request,
     res: Response,
@@ -89,6 +89,24 @@ class WorkoutPlanController {
       const { workoutPlanId } = req.params;
       const workoutPlan: HydratedDocument<WorkoutPlan> =
         await WorkoutPlanService.deleteWorkoutPlan(workoutPlanId as string);
+      sendResponse(res, 200, "Workout plan deleted successfully", workoutPlan);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // delete workout plan (hard delete)
+  public async deleteWorkoutPlanPermanently(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { workoutPlanId } = req.params;
+      const workoutPlan: HydratedDocument<WorkoutPlan> =
+        await WorkoutPlanService.deleteWorkoutPlanPermanently(
+          workoutPlanId as string,
+        );
       sendResponse(res, 200, "Workout plan deleted successfully", workoutPlan);
     } catch (error) {
       next(error);

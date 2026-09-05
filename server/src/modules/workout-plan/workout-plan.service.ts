@@ -152,6 +152,24 @@ class WorkoutPlanService {
 
     return plan;
   }
+
+  // delete workout plan (hard delete)
+  public async deleteWorkoutPlanPermanently(
+    planId: string,
+  ): Promise<HydratedDocument<WorkoutPlan>> {
+    const plan = await WorkoutPlanModel.findOneAndDelete({
+      $or: [
+        { workoutPlanId: planId },
+        ...(mongoose.Types.ObjectId.isValid(planId) ? [{ _id: planId }] : []),
+      ],
+    });
+
+    if (!plan) {
+      throw new AppError("Workout plan not found", 404);
+    }
+
+    return plan;
+  }
 }
 
 export default new WorkoutPlanService();
