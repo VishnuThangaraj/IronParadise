@@ -2,9 +2,11 @@ import mongoose from "mongoose";
 import connectDB from "../config/database.js";
 import MembershipPlanModel from "../modules/membership-plan/membership-plan.model.js";
 import DietPlanModel from "../modules/diet-plan/diet-plan.model.js";
+import WorkoutPlanModel from "../modules/workout-plan/workout-plan.model.js";
 import CounterModel from "../shared/models/counter.model.js";
 import { membershipPlans } from "./data/membership-plan.js";
 import { dietPlans } from "./data/diet-plan.js";
+import { workoutPlans } from "./data/workout-plan.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
@@ -75,6 +77,23 @@ async function seedDietPlans(): Promise<void> {
 }
 
 /**
+ * Seeds workout plans and updates the corresponding auto-increment counter.
+ */
+async function seedWorkoutPlans(): Promise<void> {
+  console.log(`[INFO] Seeding Workout Plans (${workoutPlans.length} records)...`);
+
+  await WorkoutPlanModel.deleteMany({});
+  console.log("[INFO] Cleared existing Workout Plans collection.");
+
+  await WorkoutPlanModel.insertMany(workoutPlans);
+  console.log(`[SUCCESS] Inserted ${workoutPlans.length} Workout Plans.`);
+
+  const maxSeq = await syncCounterSequence("workoutPlan", workoutPlans, "workoutPlanId");
+  const nextId = `WPL-${String(maxSeq + 1).padStart(3, "0")}`;
+  console.log(`[INFO] Synchronized counter 'workoutPlan' to sequence ${maxSeq}. Next ID: ${nextId}`);
+}
+
+/**
  * Primary seed runner.
  */
 async function runSeed(): Promise<void> {
@@ -86,6 +105,7 @@ async function runSeed(): Promise<void> {
 
     await seedMembershipPlans();
     await seedDietPlans();
+    await seedWorkoutPlans();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);

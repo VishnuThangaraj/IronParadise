@@ -89,7 +89,7 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
 
                 {/* Diet Plan */}
-                <Route path="/plan/diet" element={<DietPlanList />} />
+                <Route path="/plan/diet/list" element={<DietPlanList />} />
                 <Route path="/plan/diet/add" element={<DietPlanForm />} />
                 <Route
                   path="/plan/diet/edit/:planId"
@@ -101,19 +101,19 @@ const App = () => {
                 />
 
                 {/* Workout Plan */}
-                <Route path="/plan/workout" element={<WorkoutPlanList />} />
+                <Route path="/plan/workout/list" element={<WorkoutPlanList />} />
                 <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
                 <Route
                   path="/plan/workout/edit/:planId"
                   element={<WorkoutPlanForm />}
                 />
                 <Route
-                  path="/plan/diet/:planId"
+                  path="/plan/workout/:planId"
                   element={<WorkoutPlanDetails />}
                 />
 
                 {/* Membership Plan */}
-                <Route path="/membership" element={<MembershipPlanList />} />
+                <Route path="/membership/list" element={<MembershipPlanList />} />
                 <Route
                   path="/membership/add"
                   element={<MembershipPlanForm />}

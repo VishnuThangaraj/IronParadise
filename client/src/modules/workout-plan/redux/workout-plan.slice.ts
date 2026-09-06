@@ -85,7 +85,6 @@ const workoutPlanSlice = createSlice({
         updateWorkoutPlan.fulfilled,
         (state, action: PayloadAction<SingleWorkoutPlanResponse>) => {
           state.loading = false;
-
           const updatedPlan = action.payload.data;
           state.plans = state.plans.map((plan) =>
             plan._id === updatedPlan._id ||

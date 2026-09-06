@@ -1,20 +1,28 @@
-import { FaHouseChimney, FaUserGroup } from "react-icons/fa6";
-import { TbCalendarUser } from "react-icons/tb";
-import { LuCalendarCheck, LuFolderHeart, LuCrown } from "react-icons/lu";
-import { CiMoneyCheck1 } from "react-icons/ci";
-import { PiChatsBold } from "react-icons/pi";
-import { FaDumbbell } from "react-icons/fa";
+import {
+  LuLayoutDashboard,
+  LuCalendarCheck2,
+  LuCalendar,
+  LuMessageSquareQuote,
+  LuDumbbell,
+  LuUsers,
+  LuFlame,
+  LuCrown,
+  LuCreditCard,
+  LuMail,
+} from "react-icons/lu";
 import type { ElementType } from "react";
 
 export interface SidebarChildItemType {
   name: string;
   location: string;
+  badge?: string;
 }
 
 export interface SidebarItemType {
   name: string;
   location: string;
   icon?: ElementType | string;
+  badge?: string;
   children?: SidebarChildItemType[];
 }
 
@@ -22,34 +30,34 @@ export const GeneralSidebarItems: SidebarItemType[] = [
   {
     name: "Dashboard",
     location: "/dashboard",
-    icon: FaHouseChimney,
+    icon: LuLayoutDashboard,
   },
   {
     name: "Attendance",
     location: "/attendance",
-    icon: TbCalendarUser,
+    icon: LuCalendarCheck2,
   },
   {
     name: "Events",
     location: "/events",
-    icon: LuCalendarCheck,
+    icon: LuCalendar,
   },
 ];
 
 export const AdminSidebarItems: SidebarItemType[] = [
   {
-    name: "Enquires",
+    name: "Enquiries",
     location: "/enquiry/list",
-    icon: PiChatsBold,
+    icon: LuMessageSquareQuote,
   },
   {
     name: "Trainers",
-    icon: FaDumbbell,
+    icon: LuDumbbell,
     location: "/trainer",
     children: [
       {
         name: "Trainers List",
-        location: "/trainer",
+        location: "/trainer/list",
       },
       {
         name: "Trainers Payroll",
@@ -63,12 +71,12 @@ export const AdminSidebarItems: SidebarItemType[] = [
   },
   {
     name: "Members",
-    icon: FaUserGroup,
+    icon: LuUsers,
     location: "/member",
     children: [
       {
         name: "Members List",
-        location: "/member",
+        location: "/member/list",
       },
       {
         name: "Add New Member",
@@ -78,12 +86,12 @@ export const AdminSidebarItems: SidebarItemType[] = [
   },
   {
     name: "Fitness Plans",
-    icon: LuFolderHeart,
+    icon: LuFlame,
     location: "/plan",
     children: [
       {
         name: "Diet Plans List",
-        location: "/plan/diet",
+        location: "/plan/diet/list",
       },
       {
         name: "Add Diet Plans",
@@ -91,7 +99,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
       },
       {
         name: "Workout Plans List",
-        location: "/plan/workout",
+        location: "/plan/workout/list",
       },
       {
         name: "Add Workout Plans",
@@ -106,7 +114,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
     children: [
       {
         name: "Plans List",
-        location: "/membership",
+        location: "/membership/list",
       },
       {
         name: "Add New Plan",
@@ -116,12 +124,12 @@ export const AdminSidebarItems: SidebarItemType[] = [
   },
   {
     name: "Membership Paylist",
-    icon: CiMoneyCheck1,
+    icon: LuCreditCard,
     location: "/payment",
   },
   {
     name: "Messages",
-    icon: "fa-duotone fa-light fa-envelopes",
+    icon: LuMail,
     location: "/message",
   },
 ];
@@ -129,7 +137,7 @@ export const AdminSidebarItems: SidebarItemType[] = [
 export const TrainerSidebarItems: SidebarItemType[] = [
   {
     name: "Messages",
-    icon: "fa-duotone fa-light fa-envelopes",
+    icon: LuMail,
     location: "/message",
   },
 ];
@@ -137,7 +145,7 @@ export const TrainerSidebarItems: SidebarItemType[] = [
 export const MemberSidebarItems: SidebarItemType[] = [
   {
     name: "Messages",
-    icon: "fa-duotone fa-light fa-envelopes",
+    icon: LuMail,
     location: "/message",
   },
 ];
