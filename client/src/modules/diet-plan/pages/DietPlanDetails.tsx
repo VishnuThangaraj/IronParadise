@@ -1,27 +1,26 @@
+import { useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/app/store";
-import { LuCalendar, LuPencil, LuTrash2 } from "react-icons/lu";
 
-import { LuUtensils } from "react-icons/lu";
+import { LuUtensils, LuCalendar, LuPencil, LuTrash2 } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
 import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
+import Skeleton from "@/shared/components/ui/feedback/Skeleton";
+import DaySelector from "@/shared/components/ui/date/DaySelector";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 import Container from "@/shared/components/ui/containers/Container";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
+import type { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 
+import MealCard from "@/modules/diet-plan/components/MealCard";
+import DayTotals from "@/modules/diet-plan/components/DayTotals";
 import useDietPlan from "@/modules/diet-plan/hooks/use-diet-plan";
+import { meals } from "@/modules/diet-plan/constants/diet-plan.meals";
 import useDietPlanDelete from "@/modules/diet-plan/hooks/use-diet-plan.delete";
 import { fetchDietPlanById } from "@/modules/diet-plan/redux/diet-plan.thunks";
-import Skeleton from "@/shared/components/ui/feedback/Skeleton";
-import DaySelector from "@/shared/components/ui/date/DaySelector";
-import type { WeekDay } from "@/shared/components/ui/date/constants/week-days";
-import { meals } from "../constants/diet-plan.meals";
-import DayTotals from "../components/DayTotals";
-import MealCard from "../components/MealCard";
 
 const DietPlanDetails = () => {
   const dispatch = useDispatch<AppDispatch>();

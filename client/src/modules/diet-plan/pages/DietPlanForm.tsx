@@ -1,34 +1,30 @@
-import { useEffect, useRef } from "react";
 import { Checkbox } from "@mui/material";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { AppDispatch } from "@/app/store";
-import {
-  LuArrowLeft,
-  LuCalendar,
-  LuSave,
-  LuUtensils,
-} from "react-icons/lu";
+
+import { LuArrowLeft, LuCalendar, LuSave, LuUtensils } from "react-icons/lu";
 
 import Chip from "@/shared/components/ui/chip/Chip";
 import Input from "@/shared/components/ui/forms/Input";
 import Button from "@/shared/components/ui/buttons/Button";
 import { useNavigation } from "@/shared/hooks/useNavigation";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
+import DaySelector from "@/shared/components/ui/date/DaySelector";
 import Container from "@/shared/components/ui/containers/Container";
+import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 
-import useDietPlan from "../hooks/use-diet-plan";
-import { fetchDietPlanById } from "../redux/diet-plan.thunks";
 import {
   DietPlanFormState,
   initialDietPlanState,
 } from "../state/initial-diet-plan.state";
-import DayTotals from "../components/DayTotals";
-import DaySelector from "@/shared/components/ui/date/DaySelector";
-import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
-import { meals } from "../constants/diet-plan.meals";
-import MealCard from "../components/MealCard";
+import useDietPlan from "../hooks/use-diet-plan";
+import { fetchDietPlanById } from "../redux/diet-plan.thunks";
+import MealCard from "@/modules/diet-plan/components/MealCard";
+import DayTotals from "@/modules/diet-plan/components/DayTotals";
+import { meals } from "@/modules/diet-plan/constants/diet-plan.meals";
 
 interface DietPlanFormInnerProps {
   initialData: DietPlanFormState;

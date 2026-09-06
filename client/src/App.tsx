@@ -27,6 +27,18 @@ const DietPlanDetails = lazy(
   () => import("@/modules/diet-plan/pages/DietPlanDetails"),
 );
 
+// Workout Plan
+const WorkoutPlanList = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanList"),
+);
+const WorkoutPlanForm = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanForm"),
+);
+
+const WorkoutPlanDetails = lazy(
+  () => import("@/modules/workout-plan/pages/WorkoutPlanDetails"),
+);
+
 // Membership Plan
 const MembershipPlanList = lazy(
   () => import("@/modules/membership-plan/pages/MembershipPlanList"),
@@ -77,7 +89,7 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
 
                 {/* Diet Plan */}
-                <Route path="/plan/diet" element={<DietPlanList />} />
+                <Route path="/plan/diet/list" element={<DietPlanList />} />
                 <Route path="/plan/diet/add" element={<DietPlanForm />} />
                 <Route
                   path="/plan/diet/edit/:planId"
@@ -88,8 +100,20 @@ const App = () => {
                   element={<DietPlanDetails />}
                 />
 
+                {/* Workout Plan */}
+                <Route path="/plan/workout/list" element={<WorkoutPlanList />} />
+                <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
+                <Route
+                  path="/plan/workout/edit/:planId"
+                  element={<WorkoutPlanForm />}
+                />
+                <Route
+                  path="/plan/workout/:planId"
+                  element={<WorkoutPlanDetails />}
+                />
+
                 {/* Membership Plan */}
-                <Route path="/membership" element={<MembershipPlanList />} />
+                <Route path="/membership/list" element={<MembershipPlanList />} />
                 <Route
                   path="/membership/add"
                   element={<MembershipPlanForm />}

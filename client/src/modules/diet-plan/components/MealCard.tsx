@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { LuPlus, LuTrash2 } from "react-icons/lu";
+
 import Button from "@/shared/components/ui/buttons/Button";
 import Container from "@/shared/components/ui/containers/Container";
-import { LuPlus, LuTrash2 } from "react-icons/lu";
-import type { MealItem as Meal } from "../types/diet-plan.types";
-import type { Meals } from "../constants/diet-plan.meals";
+
+import type { Meals } from "@/modules/diet-plan/constants/diet-plan.meals";
+import type { MealItem as Meal } from "@/modules/diet-plan/types/diet-plan.types";
 
 interface MealItemProps {
   meal: Meals;

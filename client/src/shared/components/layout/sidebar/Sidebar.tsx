@@ -12,6 +12,8 @@ import {
   type SidebarItemType,
 } from "@/shared/components/layout/sidebar/constants/sidebarFields";
 
+
+
 const Sidebar = () => {
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const user = useSelector(selectUser);
@@ -29,41 +31,60 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`flex flex-col h-screen sticky top-0 bg-linear-to-b from-slate-950 via-slate-900 to-indigo-950 border-r border-slate-800/80 text-slate-300 transition-all duration-300 ease-in-out shrink-0 z-50 ${
-        isCollapsed ? "w-20" : "w-60"
+      className={`flex flex-col h-screen sticky top-0 bg-slate-950/95 backdrop-blur-2xl border-r border-slate-800/80 text-slate-300 transition-[width] duration-300 ease-[cubic-bezier(0.2,0,0,1)] shrink-0 z-50 select-none shadow-2xl shadow-black/50 ${
+        isCollapsed ? "w-[76px]" : "w-[268px]"
       }`}
     >
+      {/* Sidebar Header */}
       <SidebarHeader
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
 
-      <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none py-6 flex flex-col gap-8">
+      {/* Navigation Scroll Area */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar py-5 flex flex-col gap-6">
+        {/* General Section */}
         <div>
           {isCollapsed ? (
-            <div className="h-px bg-slate-800/80 my-2 mx-4" />
+            <div className="h-px bg-linear-to-r from-transparent via-slate-800 to-transparent my-2 mx-3" />
           ) : (
-            <p className="px-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
-              General
-            </p>
+            <div className="px-6 mb-2 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/70 shrink-0" />
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                General
+              </p>
+            </div>
           )}
-          <SidebarItems items={GeneralSidebarItems} isCollapsed={isCollapsed} />
+          <SidebarItems
+            items={GeneralSidebarItems}
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
         </div>
 
+        {/* Role-Specific Applications Section */}
         {roleSpecificItems.length > 0 && (
           <div>
             {isCollapsed ? (
-              <div className="h-px bg-slate-800/80 my-2 mx-4" />
+              <div className="h-px bg-linear-to-r from-transparent via-slate-800 to-transparent my-2 mx-3" />
             ) : (
-              <p className="px-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
-                Applications
-              </p>
+              <div className="px-6 mb-2 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500/70 shrink-0" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  Management
+                </p>
+              </div>
             )}
-            <SidebarItems items={roleSpecificItems} isCollapsed={isCollapsed} />
+            <SidebarItems
+              items={roleSpecificItems}
+              isCollapsed={isCollapsed}
+              setIsCollapsed={setIsCollapsed}
+            />
           </div>
         )}
       </div>
 
+      {/* Sidebar Footer with User Profile */}
       <SidebarFooter isCollapsed={isCollapsed} />
     </aside>
   );
