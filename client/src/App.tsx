@@ -16,6 +16,13 @@ import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 
+// Member
+const MemberList = lazy(() => import("@/modules/member/pages/MemberList"));
+const MemberForm = lazy(() => import("@/modules/member/pages/MemberForm"));
+const MemberDetails = lazy(
+  () => import("@/modules/member/pages/MemberDetails"),
+);
+
 // Diet Plan
 const DietPlanList = lazy(
   () => import("@/modules/diet-plan/pages/DietPlanList"),
@@ -88,6 +95,12 @@ const App = () => {
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
 
+                {/* Member */}
+                <Route path="/member/add" element={<MemberForm />} />
+                <Route path="/member/list" element={<MemberList />} />
+                <Route path="/member/:memberId" element={<MemberDetails />} />
+                <Route path="/member/edit/:memberId" element={<MemberForm />} />
+
                 {/* Diet Plan */}
                 <Route path="/plan/diet/list" element={<DietPlanList />} />
                 <Route path="/plan/diet/add" element={<DietPlanForm />} />
@@ -101,7 +114,10 @@ const App = () => {
                 />
 
                 {/* Workout Plan */}
-                <Route path="/plan/workout/list" element={<WorkoutPlanList />} />
+                <Route
+                  path="/plan/workout/list"
+                  element={<WorkoutPlanList />}
+                />
                 <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
                 <Route
                   path="/plan/workout/edit/:planId"
@@ -113,7 +129,10 @@ const App = () => {
                 />
 
                 {/* Membership Plan */}
-                <Route path="/membership/list" element={<MembershipPlanList />} />
+                <Route
+                  path="/membership/list"
+                  element={<MembershipPlanList />}
+                />
                 <Route
                   path="/membership/add"
                   element={<MembershipPlanForm />}
