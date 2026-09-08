@@ -87,7 +87,7 @@ const WorkoutPlanInner = ({
                   onChange={(e) =>
                     handleInputChange("planName", e.target.value)
                   }
-                  placeholder="e.g. 5-Day Push / Pull / Legs Split"
+check                   placeholder="e.g. 5-Day Push / Pull / Legs Split"
                   required
                 />
               </div>
