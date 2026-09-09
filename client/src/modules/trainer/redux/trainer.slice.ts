@@ -16,14 +16,14 @@ import {
 
 export interface TrainerState {
   trainers: Trainer[];
-  currentPlan: Trainer | null;
+  currentTrainer: Trainer | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TrainerState = {
   trainers: [],
-  currentPlan: null,
+  currentTrainer: null,
   loading: false,
   error: null,
 };
@@ -32,8 +32,8 @@ const trainerSlice = createSlice({
   name: "trainer",
   initialState,
   reducers: {
-    setCurrentPlan: (state, action: PayloadAction<Trainer | null>) => {
-      state.currentPlan = action.payload;
+    setCurrentTrainer: (state, action: PayloadAction<Trainer | null>) => {
+      state.currentTrainer = action.payload;
     },
     clearTrainerError: (state) => {
       state.error = null;
@@ -59,7 +59,7 @@ const trainerSlice = createSlice({
         fetchTrainerById.fulfilled,
         (state, action: PayloadAction<SingleTrainerResponse>) => {
           state.loading = false;
-          state.currentPlan = action.payload.data;
+          state.currentTrainer = action.payload.data;
         },
       )
       .addCase(fetchTrainerById.rejected, (state, action) => {
@@ -86,19 +86,19 @@ const trainerSlice = createSlice({
         (state, action: PayloadAction<SingleTrainerResponse>) => {
           state.loading = false;
 
-          const updatedPlan = action.payload.data;
+          const updatedTrainer = action.payload.data;
           state.trainers = state.trainers.map((trainer) =>
-            trainer._id === updatedPlan._id ||
-            trainer.userId === updatedPlan.userId
-              ? updatedPlan
+            trainer._id === updatedTrainer._id ||
+            trainer.userId === updatedTrainer.userId
+              ? updatedTrainer
               : trainer,
           );
           if (
-            state.currentPlan &&
-            (state.currentPlan._id === updatedPlan._id ||
-              state.currentPlan.userId === updatedPlan.userId)
+            state.currentTrainer &&
+            (state.currentTrainer._id === updatedTrainer._id ||
+              state.currentTrainer.userId === updatedTrainer.userId)
           ) {
-            state.currentPlan = updatedPlan;
+            state.currentTrainer = updatedTrainer;
           }
         },
       )
@@ -112,19 +112,19 @@ const trainerSlice = createSlice({
         deleteTrainer.fulfilled,
         (state, action: PayloadAction<SingleTrainerResponse>) => {
           state.loading = false;
-          const deletedPlan = action.payload.data;
+          const deletedTrainer = action.payload.data;
           state.trainers = state.trainers.map((trainer) =>
-            trainer._id === deletedPlan._id ||
-            trainer.userId === deletedPlan.userId
-              ? deletedPlan
+            trainer._id === deletedTrainer._id ||
+            trainer.userId === deletedTrainer.userId
+              ? deletedTrainer
               : trainer,
           );
           if (
-            state.currentPlan &&
-            (state.currentPlan._id === deletedPlan._id ||
-              state.currentPlan.userId === deletedPlan.userId)
+            state.currentTrainer &&
+            (state.currentTrainer._id === deletedTrainer._id ||
+              state.currentTrainer.userId === deletedTrainer.userId)
           ) {
-            state.currentPlan = deletedPlan;
+            state.currentTrainer = deletedTrainer;
           }
         },
       )
@@ -138,18 +138,18 @@ const trainerSlice = createSlice({
         deleteTrainerPermanently.fulfilled,
         (state, action: PayloadAction<SingleTrainerResponse>) => {
           state.loading = false;
-          const deletedPlan = action.payload.data;
+          const deletedTrainer = action.payload.data;
           state.trainers = state.trainers.filter(
             (trainer) =>
-              trainer._id !== deletedPlan._id &&
-              trainer.userId !== deletedPlan.userId,
+              trainer._id !== deletedTrainer._id &&
+              trainer.userId !== deletedTrainer.userId,
           );
           if (
-            state.currentPlan &&
-            (state.currentPlan._id === deletedPlan._id ||
-              state.currentPlan.userId === deletedPlan.userId)
+            state.currentTrainer &&
+            (state.currentTrainer._id === deletedTrainer._id ||
+              state.currentTrainer.userId === deletedTrainer.userId)
           ) {
-            state.currentPlan = null;
+            state.currentTrainer = null;
           }
         },
       )
@@ -176,5 +176,5 @@ const trainerSlice = createSlice({
   },
 });
 
-export const { setCurrentPlan, clearTrainerError } = trainerSlice.actions;
+export const { setCurrentTrainer, clearTrainerError } = trainerSlice.actions;
 export default trainerSlice.reducer;
