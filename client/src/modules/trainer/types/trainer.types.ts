@@ -20,6 +20,7 @@ export type TrainerFormData = Omit<
 > & {
   userId?: string;
   profileImage?: string;
+  salary: number;
 };
 
 export type UpdateTrainerRequest = Partial<TrainerFormData>;

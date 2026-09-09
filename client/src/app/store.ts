@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/modules/auth/redux/auth.slice";
+import trainerReducer from "@/modules/trainer/redux/trainer.slice";
 import dietPlanReducer from "@/modules/diet-plan/redux/diet-plan.slice";
 import workoutPlanReducer from "@/modules/workout-plan/redux/workout-plan.slice";
 import serverStatusReducer from "@/shared/redux/server-status/serverStatusSlice";
@@ -8,6 +9,7 @@ import membershipPlanReducer from "@/modules/membership-plan/redux/membership-pl
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    trainer: trainerReducer,
     dietPlan: dietPlanReducer,
     workoutPlan: workoutPlanReducer,
     serverStatus: serverStatusReducer,
