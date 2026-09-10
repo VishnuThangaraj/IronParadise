@@ -12,6 +12,7 @@ export interface Trainer extends User {
   qualification: string;
   shiftTime: ShiftTime;
   employmentStatus: "active" | "inactive" | "on_leave" | "terminated";
+  salary: number;
 }
 
 export type TrainerFormData = Omit<

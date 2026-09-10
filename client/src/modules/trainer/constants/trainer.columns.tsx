@@ -77,6 +77,19 @@ export const getTrainerColumns = (
     ),
   },
   {
+    field: "salary",
+    headerName: "Salary",
+    flex: 1,
+    minWidth: 120,
+    renderCell: (params) => (
+      <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
+        <span className="font-semibold text-slate-800 dark:text-slate-200 truncate min-w-0 flex-1">
+          {params.value != null ? `₹${Number(params.value).toLocaleString()}` : "-"}
+        </span>
+      </div>
+    ),
+  },
+  {
     field: "actions",
     headerName: "Actions",
     sortable: false,

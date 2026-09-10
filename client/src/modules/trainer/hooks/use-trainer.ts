@@ -23,7 +23,12 @@ import {
   selectTrainerLoading,
   selectTrainers,
 } from "../redux/trainer.selector";
-import { fetchTrainerById, fetchTrainers } from "../redux/trainer.thunks";
+import {
+  fetchTrainerById,
+  fetchTrainers,
+  createTrainer,
+  updateTrainer,
+} from "../redux/trainer.thunks";
 
 const useTrainer = (initialData?: TrainerFormState) => {
   const { navigate } = useNavigation();
@@ -120,7 +125,27 @@ const useTrainer = (initialData?: TrainerFormState) => {
     e: FormEvent<HTMLFormElement>,
     isEditMode: boolean,
     userId?: string,
-  ) => {};
+  ) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (isEditMode && userId) {
+        await dispatch(
+          updateTrainer({ userId, trainerData: formData }),
+        ).unwrap();
+        addToast("Trainer updated successfully!", "success");
+      } else {
+        await dispatch(createTrainer(formData)).unwrap();
+        addToast("Trainer created successfully!", "success");
+      }
+      navigate("/trainer");
+    } catch (err: unknown) {
+      addToast(getErrorMessage(err, "Failed to save trainer"), "error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return {
     error,
