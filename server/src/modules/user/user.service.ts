@@ -120,6 +120,8 @@ class UserService {
     const user = await UserModel.findOne({
       $or: [
         { userId },
+        { userId: userId.toUpperCase() },
+        { userId: userId.toLowerCase() },
         ...(mongoose.Types.ObjectId.isValid(userId) ? [{ _id: userId }] : []),
       ],
     });
@@ -140,6 +142,8 @@ class UserService {
     const existingUser = await UserModel.findOne({
       $or: [
         { userId },
+        { userId: userId.toUpperCase() },
+        { userId: userId.toLowerCase() },
         ...(mongoose.Types.ObjectId.isValid(userId) ? [{ _id: userId }] : []),
       ],
     }).session(session || null);
@@ -215,6 +219,8 @@ class UserService {
       {
         $or: [
           { userId },
+          { userId: userId.toUpperCase() },
+          { userId: userId.toLowerCase() },
           ...(mongoose.Types.ObjectId.isValid(userId) ? [{ _id: userId }] : []),
         ],
       },
@@ -239,6 +245,8 @@ class UserService {
       {
         $or: [
           { userId },
+          { userId: userId.toUpperCase() },
+          { userId: userId.toLowerCase() },
           ...(mongoose.Types.ObjectId.isValid(userId) ? [{ _id: userId }] : []),
         ],
       },

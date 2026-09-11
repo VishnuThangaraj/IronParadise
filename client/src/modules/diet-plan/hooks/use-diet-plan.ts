@@ -8,31 +8,35 @@ import React, {
 import type { AppDispatch } from "@/app/store";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useNavigation } from "@/shared/hooks/useNavigation";
-import { useToast } from "@/shared/components/ui/toast";
-import { getErrorMessage } from "@/shared/utils/error-handler";
-
 import { formatDate } from "@/shared/utils/formatDate";
+import { useToast } from "@/shared/components/ui/toast";
+import { useNavigation } from "@/shared/hooks/useNavigation";
+import { getErrorMessage } from "@/shared/utils/error-handler";
+import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
 
 import {
   DietPlanFormState,
   initialDietPlanState,
-} from "../state/initial-diet-plan.state";
+} from "@/modules/diet-plan/state/initial-diet-plan.state";
 import {
   selectCurrentDietPlan,
   selectDietPlanError,
   selectDietPlanLoading,
   selectDietPlans,
-} from "../redux/diet-plan.selector";
+} from "@/modules/diet-plan/redux/diet-plan.selector";
 import {
   createDietPlan,
   fetchDietPlanById,
   fetchDietPlans,
   updateDietPlan,
-} from "../redux/diet-plan.thunks";
-import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
-import { meals } from "../constants/diet-plan.meals";
-import { MealItem, MacroTotals, MealType, DayDiet } from "../types/diet-plan.types";
+} from "@/modules/diet-plan/redux/diet-plan.thunks";
+import {
+  MealItem,
+  MacroTotals,
+  MealType,
+  DayDiet,
+} from "@/modules/diet-plan/types/diet-plan.types";
+import { meals } from "@/modules/diet-plan/constants/diet-plan.meals";
 
 /**
  * Pure functional utility to calculate macro totals from a DayDiet
@@ -169,7 +173,7 @@ const useDietPlan = (initialData?: DietPlanFormState) => {
       const dayData =
         initialData !== undefined
           ? formData?.[activeDay]
-          : currentDietPlan?.[activeDay] ?? formData?.[activeDay];
+          : (currentDietPlan?.[activeDay] ?? formData?.[activeDay]);
 
       return calculateMacroTotals(dayData);
     },

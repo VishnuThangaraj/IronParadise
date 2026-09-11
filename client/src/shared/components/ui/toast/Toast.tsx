@@ -52,7 +52,7 @@ export const Toast: React.FC<ToastProps> = ({
     }
   }, [id, duration, onRemove]);
 
-  const { icon, style } = toastConfig[type];
+  const { icon, style } = toastConfig[type] || toastConfig.info;
 
   return (
     <motion.div
