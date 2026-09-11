@@ -17,11 +17,20 @@ export interface Trainer extends User {
 
 export type TrainerFormData = Omit<
   Trainer,
-  "_id" | "userId" | "createdAt" | "updatedAt" | "__v" | "profileImage"
+  | "_id"
+  | "userId"
+  | "createdAt"
+  | "updatedAt"
+  | "__v"
+  | "profileImage"
+  | "isActive"
+  | "joinDate"
 > & {
   userId?: string;
   profileImage?: string;
   salary: number;
+  isActive?: boolean;
+  joinDate?: string;
 };
 
 export type UpdateTrainerRequest = Partial<TrainerFormData>;

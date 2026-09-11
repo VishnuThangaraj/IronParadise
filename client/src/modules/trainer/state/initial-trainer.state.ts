@@ -45,8 +45,8 @@ export const initialTrainerState: TrainerFormState = {
   specialization: [],
   qualification: "",
   shiftTime: {
-    start: "",
-    end: "",
+    start: "09:00",
+    end: "17:00",
   },
   employmentStatus: "active",
 };

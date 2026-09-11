@@ -6,6 +6,11 @@ import {
   employmentStatusEnum,
 } from "./trainer-details/trainer-details.validator.js";
 
+const emptyStringToDate = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.coerce.date().optional(),
+);
+
 export const createTrainerSchema = userSchema.extend({
   role: z.enum(["trainer"]).optional().default("trainer"),
   salary: z
@@ -13,7 +18,7 @@ export const createTrainerSchema = userSchema.extend({
     .min(0, "Salary cannot be negative")
     .optional()
     .default(0),
-  joinDate: z.coerce.date().optional(),
+  joinDate: emptyStringToDate,
   experienceYears: z
     .number()
     .min(0, "Experience years cannot be negative")

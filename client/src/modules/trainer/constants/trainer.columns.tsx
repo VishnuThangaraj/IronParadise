@@ -84,7 +84,22 @@ export const getTrainerColumns = (
     renderCell: (params) => (
       <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
         <span className="font-semibold text-slate-800 dark:text-slate-200 truncate min-w-0 flex-1">
-          {params.value != null ? `₹${Number(params.value).toLocaleString()}` : "-"}
+          {params.value != null
+            ? `₹${Number(params.value).toLocaleString()}`
+            : "-"}
+        </span>
+      </div>
+    ),
+  },
+  {
+    field: "specialization",
+    headerName: "Specialization",
+    flex: 1,
+    minWidth: 120,
+    renderCell: (params) => (
+      <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
+        <span className="text-slate-600 dark:text-slate-400 truncate min-w-0 flex-1">
+          {params.value || "-"}
         </span>
       </div>
     ),

@@ -1,6 +1,7 @@
 import type mongoose from "mongoose";
 
 import UserService from "../user/user.service.js";
+import UserModel from "../user/user.model.js";
 import TrainerDetailsModel from "./trainer-details/trainer-details.model.js";
 import TrainerPaymentModel from "./trainer-payment/trainer-payment.model.js";
 import AppError from "../../shared/errors/AppError.js";
@@ -50,44 +51,95 @@ class TrainerService {
       ...userData
     } = data;
 
+    // Normalize shift times so Mongoose required fields are never empty strings
+    const effectiveShiftTime = {
+      start:
+        shiftTime?.start && shiftTime.start.trim()
+          ? shiftTime.start.trim()
+          : "09:00",
+      end:
+        shiftTime?.end && shiftTime.end.trim()
+          ? shiftTime.end.trim()
+          : "17:00",
+    };
+
     // 1. Create user account with trainer role
-    const user = await UserService.createUser(
-      { ...userData, role: "trainer" },
-      session,
-    );
+    let user;
+    try {
+      user = await UserService.createUser(
+        { ...userData, role: "trainer" },
+        session,
+      );
+    } catch (error: any) {
+      // If 409 conflict, check if this was an orphaned trainer user created during a previous crashed request
+      if (error?.statusCode === 409) {
+        const existingUser = await UserModel.findOne({
+          email: userData.email.toLowerCase().trim(),
+        }).session(session || null);
+
+        if (existingUser && existingUser.role === "trainer") {
+          const hasDetails = await TrainerDetailsModel.findOne({
+            userId: existingUser.userId,
+          }).session(session || null);
+
+          if (!hasDetails) {
+            // Clean up the incomplete orphaned trainer account and retry creation
+            await UserService.hardDeleteUser(existingUser.userId, session);
+            user = await UserService.createUser(
+              { ...userData, role: "trainer" },
+              session,
+            );
+          } else {
+            throw error;
+          }
+        } else {
+          throw error;
+        }
+      } else {
+        throw error;
+      }
+    }
 
     const userId = user.userId;
 
-    // 2. Create TrainerDetails
-    await TrainerDetailsModel.create(
-      [
-        {
-          userId,
-          qualification: qualification || "General",
-          shiftTime: shiftTime || { start: "09:00", end: "17:00" },
-          ...(joinDate ? { joinDate } : {}),
-          ...(experienceYears !== undefined ? { experienceYears } : {}),
-          ...(specialization ? { specialization } : {}),
-          ...(employmentStatus ? { employmentStatus } : {}),
-        },
-      ],
-      session ? { session } : {},
-    );
+    try {
+      // 2. Create TrainerDetails
+      await TrainerDetailsModel.create(
+        [
+          {
+            userId,
+            qualification: qualification || "General",
+            shiftTime: effectiveShiftTime,
+            ...(joinDate ? { joinDate } : {}),
+            ...(experienceYears !== undefined ? { experienceYears } : {}),
+            ...(specialization ? { specialization } : {}),
+            ...(employmentStatus ? { employmentStatus } : {}),
+          },
+        ],
+        session ? { session } : {},
+      );
 
-    // 3. Create TrainerPayment (salary)
-    const trainerSalary = salary !== undefined ? salary : 0;
-    await TrainerPaymentModel.create(
-      [
-        {
-          userId,
-          salary: trainerSalary,
-          amountDue: trainerSalary,
-          amountPaid: 0,
-          paymentStatus: "PENDING",
-        },
-      ],
-      session ? { session } : {},
-    );
+      // 3. Create TrainerPayment (salary)
+      const trainerSalary = salary !== undefined ? salary : 0;
+      await TrainerPaymentModel.create(
+        [
+          {
+            userId,
+            salary: trainerSalary,
+            amountDue: trainerSalary,
+            amountPaid: 0,
+            paymentStatus: "PENDING",
+          },
+        ],
+        session ? { session } : {},
+      );
+    } catch (createErr) {
+      // If creating details or payment failed and there's no active transaction session, rollback the user
+      if (!session) {
+        await UserService.hardDeleteUser(userId);
+      }
+      throw createErr;
+    }
 
     return this.formatTrainerResponse(user);
   }
@@ -167,7 +219,18 @@ class TrainerService {
     // Update or upsert TrainerDetails
     const detailsUpdate: Record<string, any> = {};
     if (qualification !== undefined) detailsUpdate.qualification = qualification;
-    if (shiftTime !== undefined) detailsUpdate.shiftTime = shiftTime;
+    if (shiftTime !== undefined) {
+      detailsUpdate.shiftTime = {
+        start:
+          shiftTime.start && shiftTime.start.trim()
+            ? shiftTime.start.trim()
+            : "09:00",
+        end:
+          shiftTime.end && shiftTime.end.trim()
+            ? shiftTime.end.trim()
+            : "17:00",
+      };
+    }
     if (joinDate !== undefined) detailsUpdate.joinDate = joinDate;
     if (experienceYears !== undefined)
       detailsUpdate.experienceYears = experienceYears;

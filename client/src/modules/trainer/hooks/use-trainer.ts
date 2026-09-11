@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -29,6 +28,7 @@ import {
   createTrainer,
   updateTrainer,
 } from "../redux/trainer.thunks";
+import type { TrainerFormData } from "../types/trainer.types";
 
 const useTrainer = (initialData?: TrainerFormState) => {
   const { navigate } = useNavigation();
@@ -51,8 +51,10 @@ const useTrainer = (initialData?: TrainerFormState) => {
   );
 
   useEffect(() => {
-    dispatch(fetchTrainers());
-  }, [dispatch]);
+    if (!initialData) {
+      dispatch(fetchTrainers());
+    }
+  }, [dispatch, initialData]);
 
   // table filteration
   const filteredRows = useMemo(() => {
@@ -79,7 +81,11 @@ const useTrainer = (initialData?: TrainerFormState) => {
 
   // fetch current trainer with userId
   const fetchTrainerWithUserId = (userId: string) => {
-    if (!currentTrainer || currentTrainer?.userId != userId) {
+    if (
+      !currentTrainer ||
+      (currentTrainer.userId?.toLowerCase() !== userId.toLowerCase() &&
+        currentTrainer._id?.toLowerCase() !== userId.toLowerCase())
+    ) {
       dispatch(fetchTrainerById(userId));
     }
   };
@@ -87,13 +93,13 @@ const useTrainer = (initialData?: TrainerFormState) => {
   // handle edit trainer button click
   const handleNavigateToEdit = (userId: string) => {
     fetchTrainerWithUserId(userId);
-    navigate(`/trainer/edit/${userId.toLocaleLowerCase()}`);
+    navigate(`/trainer/edit/${userId}`);
   };
 
   // handle view trainer button click
   const handleNavigateToView = (userId: string) => {
     fetchTrainerWithUserId(userId);
-    navigate(`/trainer/${userId.toLocaleLowerCase()}`);
+    navigate(`/trainer/${userId}`);
   };
 
   // handle add trainer button click
@@ -104,11 +110,58 @@ const useTrainer = (initialData?: TrainerFormState) => {
   // handle form input change
   const handleInputChange = (
     name: keyof TrainerFormState,
-    value: string | number | boolean,
+    value: string | number | boolean | string[],
   ) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  // handle shift time change
+  const handleShiftTimeChange = (field: "start" | "end", value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      shiftTime: {
+        ...(prev.shiftTime || { start: "09:00", end: "17:00" }),
+        [field]: value,
+      },
+    }));
+  };
+
+  // handle emergency contact change
+  const handleEmergencyContactChange = (
+    field: "fullName" | "phone" | "relation",
+    value: string,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      emergencyContact: {
+        fullName: prev.emergencyContact?.fullName || "",
+        phone: prev.emergencyContact?.phone || "",
+        relation: prev.emergencyContact?.relation || "",
+        [field]: value,
+      },
+    }));
+  };
+
+  // handle specialization add/remove
+  const handleAddSpecialization = (tag: string) => {
+    const cleanTag = tag.trim();
+    if (!cleanTag) return;
+    setFormData((prev) => {
+      if (prev.specialization?.includes(cleanTag)) return prev;
+      return {
+        ...prev,
+        specialization: [...(prev.specialization || []), cleanTag],
+      };
+    });
+  };
+
+  const handleRemoveSpecialization = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      specialization: (prev.specialization || []).filter((_, i) => i !== index),
     }));
   };
 
@@ -129,19 +182,62 @@ const useTrainer = (initialData?: TrainerFormState) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const payload: TrainerFormData = {
+      fullName: formData.fullName,
+      email: formData.email,
+      gender: formData.gender,
+      role: formData.role,
+      permissions: formData.permissions,
+      qualification: formData.qualification?.trim() || "General",
+      specialization:
+        formData.specialization && formData.specialization.length > 0
+          ? formData.specialization
+          : ["General"],
+      shiftTime: {
+        start:
+          (formData.shiftTime?.start && formData.shiftTime.start.trim()) ||
+          "09:00",
+        end:
+          (formData.shiftTime?.end && formData.shiftTime.end.trim()) || "17:00",
+      },
+      salary: Number(formData.salary) || 0,
+      experienceYears: Number(formData.experienceYears) || 0,
+      employmentStatus: formData.employmentStatus || "active",
+      ...(formData.dob ? { dob: formData.dob } : {}),
+      ...(formData.joinDate ? { joinDate: formData.joinDate } : {}),
+      ...(formData.phone ? { phone: formData.phone } : {}),
+      ...(formData.address ? { address: formData.address } : {}),
+      ...(formData.profileImage ? { profileImage: formData.profileImage } : {}),
+      emergencyContact:
+        formData.emergencyContact?.fullName &&
+        formData.emergencyContact?.phone &&
+        formData.emergencyContact?.relation
+          ? formData.emergencyContact
+          : null,
+    };
+
     try {
       if (isEditMode && userId) {
         await dispatch(
-          updateTrainer({ userId, trainerData: formData }),
+          updateTrainer({ userId, trainerData: payload }),
         ).unwrap();
-        addToast("Trainer updated successfully!", "success");
+        addToast({
+          type: "success",
+          message: "Trainer updated successfully!",
+        });
       } else {
-        await dispatch(createTrainer(formData)).unwrap();
-        addToast("Trainer created successfully!", "success");
+        await dispatch(createTrainer(payload)).unwrap();
+        addToast({
+          type: "success",
+          message: "Trainer created successfully!",
+        });
       }
       navigate("/trainer");
     } catch (err: unknown) {
-      addToast(getErrorMessage(err, "Failed to save trainer"), "error");
+      addToast({
+        type: "error",
+        message: getErrorMessage(err, "Failed to save trainer"),
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -168,6 +264,10 @@ const useTrainer = (initialData?: TrainerFormState) => {
     formData,
     setFormData,
     handleInputChange,
+    handleShiftTimeChange,
+    handleEmergencyContactChange,
+    handleAddSpecialization,
+    handleRemoveSpecialization,
     isSubmitting,
     handleSubmitTrainer,
   };
