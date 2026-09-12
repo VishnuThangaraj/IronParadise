@@ -16,6 +16,16 @@ import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 
+// Trainer
+const TrainerList = lazy(() => import("@/modules/trainer/pages/TrainerList"));
+const TrainerForm = lazy(() => import("@/modules/trainer/pages/TrainerForm"));
+const TrainerPayroll = lazy(
+  () => import("@/modules/trainer/pages/TrainerPayroll"),
+);
+const TrainerDetails = lazy(
+  () => import("@/modules/trainer/pages/TrainerDetails"),
+);
+
 // Member
 const MemberList = lazy(() => import("@/modules/member/pages/MemberList"));
 const MemberForm = lazy(() => import("@/modules/member/pages/MemberForm"));
@@ -101,9 +111,16 @@ const App = () => {
                 <Route path="/member/:memberId" element={<MemberDetails />} />
                 <Route path="/member/edit/:memberId" element={<MemberForm />} />
 
+                {/* Trainer */}
+                <Route path="/trainer/add" element={<TrainerForm />} />
+                <Route path="/trainer/list" element={<TrainerList />} />
+                <Route path="/trainer/payroll" element={<TrainerPayroll />} />
+                <Route path="/trainer/:userId" element={<TrainerDetails />} />
+                <Route path="/trainer/edit/:userId" element={<TrainerForm />} />
+
                 {/* Diet Plan */}
-                <Route path="/plan/diet/list" element={<DietPlanList />} />
                 <Route path="/plan/diet/add" element={<DietPlanForm />} />
+                <Route path="/plan/diet/list" element={<DietPlanList />} />
                 <Route
                   path="/plan/diet/edit/:planId"
                   element={<DietPlanForm />}
@@ -114,6 +131,10 @@ const App = () => {
                 />
 
                 {/* Workout Plan */}
+                <Route
+                  path="/plan/workout/list"
+                  element={<WorkoutPlanList />}
+                />
                 <Route
                   path="/plan/workout/list"
                   element={<WorkoutPlanList />}
@@ -129,6 +150,10 @@ const App = () => {
                 />
 
                 {/* Membership Plan */}
+                <Route
+                  path="/membership/list"
+                  element={<MembershipPlanList />}
+                />
                 <Route
                   path="/membership/list"
                   element={<MembershipPlanList />}

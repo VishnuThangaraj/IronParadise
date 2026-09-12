@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const shiftTimeSchema = z.object({
-  start: z.string().trim().min(1, "Shift start time's missing — add one"),
-  end: z.string().trim().min(1, "Shift end time's missing — add one"),
+  start: z.string().trim().optional().default("09:00"),
+  end: z.string().trim().optional().default("17:00"),
 });
 
 export const employmentStatusEnum = z.enum(
@@ -28,7 +28,8 @@ export const trainerDetailsSchema = z.object({
   qualification: z
     .string()
     .trim()
-    .min(1, "Qualification's missing — add one"),
+    .optional()
+    .default("General"),
   shiftTime: shiftTimeSchema,
   employmentStatus: employmentStatusEnum.optional().default("active"),
 });
@@ -45,4 +46,3 @@ export type CreateTrainerDetailsInput = z.infer<
 export type UpdateTrainerDetailsInput = z.infer<
   typeof updateTrainerDetailsSchema
 >;
-

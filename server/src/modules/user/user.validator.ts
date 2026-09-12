@@ -1,13 +1,31 @@
 import { z } from "zod";
 
-export const emergencyContactSchema = z.object({
-  fullName: z
-    .string()
-    .min(1, "Emergency contact name's missing — add one")
-    .max(100, "Emergency contact name's too long — keep it under 100"),
-  phone: z.string().min(1, "Emergency contact phone's missing — add one"),
-  relation: z.string().min(1, "Emergency contact relation's missing — add one"),
-});
+const emptyStringToUndefined = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.string().optional(),
+);
+
+const emptyStringToDate = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.coerce.date().optional(),
+);
+
+export const emergencyContactSchema = z
+  .preprocess(
+    (val: any) => {
+      if (!val || typeof val !== "object") return null;
+      if (!val.fullName || !val.phone || !val.relation) return null;
+      return val;
+    },
+    z
+      .object({
+        fullName: z.string().trim(),
+        phone: z.string().trim(),
+        relation: z.string().trim(),
+      })
+      .nullable()
+      .optional(),
+  );
 
 export const permissionEnum = z.enum([
   "admins",
@@ -23,19 +41,19 @@ export const permissionEnum = z.enum([
 export const userSchema = z.object({
   fullName: z
     .string()
-    .min(5, "Name's too short — make it 5+ characters")
+    .min(2, "Name's too short — make it 2+ characters")
     .max(100, "Name's too long — keep it under 100"),
-  email: z.email("Hmm, check that email again"),
-  dob: z.coerce.date().optional(),
-  profileImage: z.string().optional(),
+  email: z.string().email("Hmm, check that email again"),
+  dob: emptyStringToDate,
+  profileImage: emptyStringToUndefined,
   gender: z.enum(["male", "female", "other"], {
     message: "Pick a gender real quick",
   }),
-  phone: z.string().optional(),
-  address: z.string().optional(),
+  phone: emptyStringToUndefined,
+  address: emptyStringToUndefined,
   permissions: z.array(permissionEnum).optional(),
   role: z.enum(["admin", "trainer", "member"]).optional(),
-  emergencyContact: emergencyContactSchema.optional(),
+  emergencyContact: emergencyContactSchema,
 });
 
 export const userUpdateSchema = userSchema.partial().extend({

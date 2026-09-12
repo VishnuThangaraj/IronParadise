@@ -60,7 +60,6 @@ const DietPlanList = () => {
         title="Diet Plan"
         description="Manage your gym's membership plans."
       >
-        {" "}
         <div className="justify-center align-center">
           <Button
             variant="primary"
