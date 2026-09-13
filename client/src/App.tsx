@@ -135,10 +135,6 @@ const App = () => {
                   path="/plan/workout/list"
                   element={<WorkoutPlanList />}
                 />
-                <Route
-                  path="/plan/workout/list"
-                  element={<WorkoutPlanList />}
-                />
                 <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
                 <Route
                   path="/plan/workout/edit/:planId"
@@ -150,10 +146,6 @@ const App = () => {
                 />
 
                 {/* Membership Plan */}
-                <Route
-                  path="/membership/list"
-                  element={<MembershipPlanList />}
-                />
                 <Route
                   path="/membership/list"
                   element={<MembershipPlanList />}
