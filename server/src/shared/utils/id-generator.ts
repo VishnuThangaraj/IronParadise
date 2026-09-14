@@ -5,10 +5,13 @@ const PREFIX = {
   member: "MBR",
   trainer: "TRN",
   dietPlan: "DPL",
+  assignment: "MAS",
   workoutPlan: "WPL",
   memberReceipt: "MPR",
   membershipPlan: "MPL",
   trainerReceipt: "TPR",
+  memberPayment: "PAY",
+  payment: "PAY",
 } as const;
 
 export type Role = keyof typeof PREFIX;

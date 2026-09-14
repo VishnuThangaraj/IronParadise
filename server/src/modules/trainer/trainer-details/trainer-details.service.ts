@@ -24,7 +24,7 @@ class TrainerDetailsService {
     }).session(session || null);
 
     if (existing) {
-      throw new AppError("Trainer details already exist for this user", 409);
+      throw new AppError("Trainer details already exist for this trainer", 409);
     }
 
     const createOptions = session ? { session } : {};
@@ -38,7 +38,9 @@ class TrainerDetailsService {
           ...(data.experienceYears !== undefined
             ? { experienceYears: data.experienceYears }
             : {}),
-          ...(data.specialization ? { specialization: data.specialization } : {}),
+          ...(data.specialization
+            ? { specialization: data.specialization }
+            : {}),
           ...(data.employmentStatus
             ? { employmentStatus: data.employmentStatus }
             : {}),

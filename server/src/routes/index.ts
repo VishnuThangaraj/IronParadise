@@ -6,12 +6,14 @@ import trainerRoutes from "../modules/trainer/trainer.routes.js";
 import dietPlanRoutes from "../modules/diet-plan/diet-plan.routes.js";
 import workoutPlanRoutes from "../modules/workout-plan/workout-plan.routes.js";
 import membershipPlanRoutes from "../modules/membership-plan/membership-plan.routes.js";
+import memberRoutes from "../modules/member/member.routes.js";
 
 const router: Router = Router();
 
 router.use("/auth", authRoutes);
 router.use("/admin", adminRoutes);
 router.use("/trainer", trainerRoutes);
+router.use("/member", memberRoutes);
 router.use("/diet-plan", dietPlanRoutes);
 router.use("/workout-plan", workoutPlanRoutes);
 router.use("/membership-plan", membershipPlanRoutes);

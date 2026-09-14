@@ -3,10 +3,18 @@ import connectDB from "../config/database.js";
 import MembershipPlanModel from "../modules/membership-plan/membership-plan.model.js";
 import DietPlanModel from "../modules/diet-plan/diet-plan.model.js";
 import WorkoutPlanModel from "../modules/workout-plan/workout-plan.model.js";
+import UserModel from "../modules/user/user.model.js";
+import TrainerDetailsModel from "../modules/trainer/trainer-details/trainer-details.model.js";
+import TrainerPaymentModel from "../modules/trainer/trainer-payment/trainer-payment.model.js";
+import MemberAssignmentModel from "../modules/member/member-assignment/member-assignment.model.js";
+import CredentialModel from "../shared/models/credential.model.js";
 import CounterModel from "../shared/models/counter.model.js";
+import { hashPassword } from "../shared/utils/password.js";
 import { membershipPlans } from "./data/membership-plan.js";
 import { dietPlans } from "./data/diet-plan.js";
 import { workoutPlans } from "./data/workout-plan.js";
+import { trainers } from "./data/trainer.js";
+import { members } from "./data/member.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
@@ -94,6 +102,154 @@ async function seedWorkoutPlans(): Promise<void> {
 }
 
 /**
+ * Seeds trainers (users, details, payments, and credentials) and updates the trainer counter.
+ */
+async function seedTrainers(): Promise<void> {
+  console.log(`[INFO] Seeding Trainers (${trainers.length} records)...`);
+
+  await UserModel.deleteMany({ role: "trainer" });
+  await TrainerDetailsModel.deleteMany({});
+  await TrainerPaymentModel.deleteMany({});
+  await CredentialModel.deleteMany({ userType: "trainer" });
+  console.log("[INFO] Cleared existing Trainer-related collections.");
+
+  const defaultPasswordHash = await hashPassword("Password@123");
+
+  const userDocs = [];
+  const detailDocs = [];
+  const paymentDocs = [];
+  const credentialDocs = [];
+
+  for (const trn of trainers) {
+    userDocs.push({
+      userId: trn.userId,
+      fullName: trn.fullName,
+      email: trn.email.toLowerCase().trim(),
+      phone: trn.phone,
+      gender: trn.gender,
+      dob: trn.dob ? new Date(trn.dob) : undefined,
+      address: trn.address,
+      profileImage: trn.profileImage,
+      emergencyContact: trn.emergencyContact,
+      role: "trainer" as const,
+      permissions: ["trainers", "members", "dietplans", "workoutplans"],
+      isActive: trn.isActive ?? true,
+    });
+
+    detailDocs.push({
+      userId: trn.userId,
+      qualification: trn.qualification,
+      experienceYears: trn.experienceYears ?? 0,
+      specialization: trn.specialization ?? ["General"],
+      shiftTime: trn.shiftTime,
+      joinDate: trn.joinDate ? new Date(trn.joinDate) : new Date(),
+      employmentStatus: (trn.employmentStatus ?? "active") as "active" | "inactive" | "on_leave" | "terminated",
+    });
+
+    paymentDocs.push({
+      userId: trn.userId,
+      salary: trn.salary,
+      amountDue: 0,
+      amountPaid: trn.salary,
+      paymentStatus: "PAID" as const,
+    });
+
+    credentialDocs.push({
+      userId: trn.userId,
+      userType: "trainer" as const,
+      passwordHash: defaultPasswordHash,
+    });
+  }
+
+  await UserModel.insertMany(userDocs);
+  await TrainerDetailsModel.insertMany(detailDocs);
+  await TrainerPaymentModel.insertMany(paymentDocs);
+  await CredentialModel.insertMany(credentialDocs);
+  console.log(`[SUCCESS] Inserted ${trainers.length} Trainers (Users, Details, Payments, Credentials).`);
+
+  const maxSeq = await syncCounterSequence("trainer", trainers, "userId");
+  const nextId = `TRN-${String(maxSeq + 1).padStart(3, "0")}`;
+  console.log(`[INFO] Synchronized counter 'trainer' to sequence ${maxSeq}. Next ID: ${nextId}`);
+}
+
+/**
+ * Seeds members (users, assignments, and credentials) and updates member & assignment counters.
+ */
+async function seedMembers(): Promise<void> {
+  console.log(`[INFO] Seeding Members (${members.length} records)...`);
+
+  await UserModel.deleteMany({ role: "member" });
+  await MemberAssignmentModel.deleteMany({});
+  await CredentialModel.deleteMany({ userType: "member" });
+  console.log("[INFO] Cleared existing Member-related collections.");
+
+  const defaultPasswordHash = await hashPassword("Password@123");
+
+  const userDocs = [];
+  const assignmentDocs = [];
+  const credentialDocs = [];
+
+  for (const mbr of members) {
+    userDocs.push({
+      userId: mbr.userId,
+      fullName: mbr.fullName,
+      email: mbr.email.toLowerCase().trim(),
+      phone: mbr.phone,
+      gender: mbr.gender,
+      dob: mbr.dob ? new Date(mbr.dob) : undefined,
+      address: mbr.address,
+      profileImage: mbr.profileImage,
+      emergencyContact: mbr.emergencyContact,
+      role: "member" as const,
+      permissions: mbr.permissions ?? ["members", "dietplans", "workoutplans"],
+      isActive: mbr.isActive ?? true,
+    });
+
+    if (mbr.assignment) {
+      assignmentDocs.push({
+        assignmentId: mbr.assignment.assignmentId,
+        userId: mbr.userId,
+        membershipPlanId: mbr.assignment.membershipPlanId ?? null,
+        dietPlanId: mbr.assignment.dietPlanId ?? null,
+        workoutPlanId: mbr.assignment.workoutPlanId ?? null,
+        trainerId: mbr.assignment.trainerId ?? null,
+        startDate: mbr.assignment.startDate ? new Date(mbr.assignment.startDate) : new Date(),
+        endDate: mbr.assignment.endDate ? new Date(mbr.assignment.endDate) : new Date(),
+        status: (mbr.assignment.status ?? "ACTIVE") as "ACTIVE" | "EXPIRED" | "CANCELLED",
+      });
+    }
+
+    credentialDocs.push({
+      userId: mbr.userId,
+      userType: "member" as const,
+      passwordHash: defaultPasswordHash,
+    });
+  }
+
+  await UserModel.insertMany(userDocs);
+  if (assignmentDocs.length > 0) {
+    await MemberAssignmentModel.insertMany(assignmentDocs);
+  }
+  await CredentialModel.insertMany(credentialDocs);
+
+  console.log(
+    `[SUCCESS] Inserted ${members.length} Members (${assignmentDocs.length} with assignments, ${
+      members.length - assignmentDocs.length
+    } without initial assignment).`,
+  );
+
+  const maxMemberSeq = await syncCounterSequence("member", members, "userId");
+  const nextMemberId = `MBR-${String(maxMemberSeq + 1).padStart(3, "0")}`;
+  console.log(`[INFO] Synchronized counter 'member' to sequence ${maxMemberSeq}. Next ID: ${nextMemberId}`);
+
+  if (assignmentDocs.length > 0) {
+    const maxAssignmentSeq = await syncCounterSequence("assignment", assignmentDocs, "assignmentId");
+    const nextAssignmentId = `MAS-${String(maxAssignmentSeq + 1).padStart(3, "0")}`;
+    console.log(`[INFO] Synchronized counter 'assignment' to sequence ${maxAssignmentSeq}. Next ID: ${nextAssignmentId}`);
+  }
+}
+
+/**
  * Primary seed runner.
  */
 async function runSeed(): Promise<void> {
@@ -106,6 +262,8 @@ async function runSeed(): Promise<void> {
     await seedMembershipPlans();
     await seedDietPlans();
     await seedWorkoutPlans();
+    await seedTrainers();
+    await seedMembers();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);

@@ -26,6 +26,13 @@ const TrainerDetails = lazy(
   () => import("@/modules/trainer/pages/TrainerDetails"),
 );
 
+// Member
+const MemberList = lazy(() => import("@/modules/member/pages/MemberList"));
+const MemberForm = lazy(() => import("@/modules/member/pages/MemberForm"));
+const MemberDetails = lazy(
+  () => import("@/modules/member/pages/MemberDetails"),
+);
+
 // Diet Plan
 const DietPlanList = lazy(
   () => import("@/modules/diet-plan/pages/DietPlanList"),
@@ -97,6 +104,12 @@ const App = () => {
             <main className="flex-1 p-6 px-10">
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Member */}
+                <Route path="/member/add" element={<MemberForm />} />
+                <Route path="/member/list" element={<MemberList />} />
+                <Route path="/member/:memberId" element={<MemberDetails />} />
+                <Route path="/member/edit/:memberId" element={<MemberForm />} />
 
                 {/* Trainer */}
                 <Route path="/trainer/add" element={<TrainerForm />} />

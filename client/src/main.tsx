@@ -1,24 +1,16 @@
 import { StrictMode } from "react";
-import { Provider } from "react-redux";
 import { createRoot } from "react-dom/client";
 
-import { BrowserRouter as Router } from "react-router-dom";
+import "@/index.css";
+import "@/shared/styles/_global.scss";
 
 import App from "./App.tsx";
-
-import "@/index.css";
-import { store } from "@/app/store";
-import "@/shared/styles/_global.scss";
-import { ToastProvider } from "@/shared/components/ui/toast";
+import { AppProviders } from "@/app/providers";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <ToastProvider>
-        <Router>
-          <App />
-        </Router>
-      </ToastProvider>
-    </Provider>
+    <AppProviders>
+      <App />
+    </AppProviders>
   </StrictMode>,
 );
