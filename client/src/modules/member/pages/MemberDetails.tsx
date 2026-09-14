@@ -1,5 +1,7 @@
 const MemberDetails = () => {
-  return <div>MemberDetails</div>;
-};
+  return (
+    <div>MemberDetails</div>
+  )
+}
 
-export default MemberDetails;
+export default MemberDetails

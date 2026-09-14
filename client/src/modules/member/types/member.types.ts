@@ -47,8 +47,16 @@ export interface SingleMemberResponse {
   data: Member;
 }
 
+export interface MemberQueryParams {
+  search?: string;
+  status?: string;
+  page?: number;
+  limit?: number;
+}
+
 export type {
   MemberAssignment,
   MemberAssignmentStatus,
   MemberAssignmentPayload,
 } from "./member-assignment.types";
+

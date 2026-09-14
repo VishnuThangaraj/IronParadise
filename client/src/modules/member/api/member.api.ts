@@ -1,18 +1,23 @@
 import api from "@/shared/service/api";
 import {
   MemberFormData,
+  MemberQueryParams,
   MemberResponse,
-  UpdateMemberRequest,
   SingleMemberResponse,
+  UpdateMemberRequest,
 } from "../types/member.types";
 
-// get all member
-export const getMembers = async (): Promise<MemberResponse> => {
-  const response = await api.get<MemberResponse>("/api/member");
+// Get all members with optional query params
+export const getMembers = async (
+  params?: MemberQueryParams,
+): Promise<MemberResponse> => {
+  const response = await api.get<MemberResponse>("/api/member", {
+    params,
+  });
   return response.data;
 };
 
-// get member by id
+// Get member by ID
 export const getMemberById = async (
   memberId: string,
 ): Promise<SingleMemberResponse> => {
@@ -22,7 +27,10 @@ export const getMemberById = async (
   return response.data;
 };
 
-// create member
+// Alias for getMemberById
+export const getMember = getMemberById;
+
+// Create member
 export const createMember = async (
   memberData: MemberFormData,
 ): Promise<SingleMemberResponse> => {
@@ -33,7 +41,7 @@ export const createMember = async (
   return response.data;
 };
 
-// update member
+// Update member
 export const updateMember = async (
   memberId: string,
   memberData: UpdateMemberRequest,
@@ -45,7 +53,7 @@ export const updateMember = async (
   return response.data;
 };
 
-// delete member (soft delete)
+// Delete member (soft delete)
 export const deleteMember = async (
   memberId: string,
 ): Promise<SingleMemberResponse> => {
@@ -55,7 +63,7 @@ export const deleteMember = async (
   return response.data;
 };
 
-// delete member (hard delete)
+// Delete member (permanent delete)
 export const deleteMemberPermanently = async (
   memberId: string,
 ): Promise<SingleMemberResponse> => {
