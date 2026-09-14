@@ -21,15 +21,8 @@ export const trainerDetailsSchema = z.object({
     .min(0, "Experience years cannot be negative")
     .optional()
     .default(0),
-  specialization: z
-    .array(z.string().trim())
-    .optional()
-    .default(["General"]),
-  qualification: z
-    .string()
-    .trim()
-    .optional()
-    .default("General"),
+  specialization: z.array(z.string().trim()).optional().default(["General"]),
+  qualification: z.string().trim().optional().default("General"),
   shiftTime: shiftTimeSchema,
   employmentStatus: employmentStatusEnum.optional().default("active"),
 });
