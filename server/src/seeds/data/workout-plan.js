@@ -1,11 +1,3 @@
-/**
- * Workout Plans Seed Data
- * Contains 35 realistic, comprehensive workout plans covering diverse fitness goals,
- * splits, disciplines, and experience levels.
- *
- * Generated adhering to workoutPlanSchema and WorkoutPlan model.
- */
-
 export const workoutPlans = [
   {
     "workoutPlanId": "WPL-001",
