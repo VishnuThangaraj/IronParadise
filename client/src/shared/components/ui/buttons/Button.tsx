@@ -14,6 +14,8 @@ export type ButtonVariant =
   | "yellow"
   | "orange"
   | "red"
+  | "red-dark"
+  | "dark-red"
   | "empty";
 
 export type ButtonSize = "xs" | "sm" | "md" | "lg";
@@ -63,6 +65,9 @@ const orangeStyles =
 const redStyles =
   "font-bold text-red-600 dark:text-red-400 bg-white/50 dark:bg-red-500/10 hover:bg-red-50/70 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/30 backdrop-blur-md shadow-sm";
 
+const redDarkStyles =
+  "font-bold text-white bg-linear-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 shadow-md shadow-rose-600/25 dark:shadow-lg dark:shadow-rose-600/40";
+
 const emptyStyles = "";
 
 const variantStylesMap: Record<ButtonVariant, string> = {
@@ -79,6 +84,8 @@ const variantStylesMap: Record<ButtonVariant, string> = {
   yellow: yellowStyles,
   orange: orangeStyles,
   red: redStyles,
+  "red-dark": redDarkStyles,
+  "dark-red": redDarkStyles,
   empty: emptyStyles,
 };
 

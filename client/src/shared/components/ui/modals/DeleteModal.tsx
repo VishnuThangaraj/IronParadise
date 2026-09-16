@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Modal } from "@mui/material";
 import { LuTrash2 } from "react-icons/lu";
+import Button from "../buttons/Button";
 
 export interface DeleteModalProps {
   open: boolean;
@@ -11,6 +12,10 @@ export interface DeleteModalProps {
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
+  inActiveBtn?: boolean;
+  inActiveText?: string;
+  inActiveConfirm?: () => void;
+  maxWidth?: string;
 }
 
 const DeleteModal = ({
@@ -22,7 +27,13 @@ const DeleteModal = ({
   confirmText = "Yes, Delete",
   cancelText = "Cancel",
   loading = false,
+  inActiveBtn = false,
+  inActiveConfirm,
+  inActiveText,
+  maxWidth,
 }: DeleteModalProps) => {
+  const modalWidth = maxWidth || (inActiveBtn ? "max-w-xl" : "max-w-md");
+
   return (
     <Modal
       open={Boolean(open)}
@@ -36,7 +47,9 @@ const DeleteModal = ({
         },
       }}
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-md bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl shadow-2xl outline-none p-6 text-slate-800 dark:text-slate-100 transition-colors duration-200">
+      <div
+        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] ${modalWidth} bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-3xl shadow-2xl outline-none p-6 text-slate-800 dark:text-slate-100 transition-colors duration-200`}
+      >
         {/* Header  */}
         <div className="flex justify-start items-center gap-3 mb-4">
           <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center border border-rose-100 dark:border-rose-900/60 shadow-xs">
@@ -55,25 +68,36 @@ const DeleteModal = ({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 py-1">
-          <button
+        <div className="flex flex-wrap items-center justify-end gap-3 py-1">
+          <Button
             type="button"
+            variant="secondary"
             onClick={onClose}
             disabled={loading}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-semibold text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {cancelText}
-          </button>
+          </Button>
 
-          <button
+          {inActiveBtn && (
+            <Button
+              type="button"
+              variant="yellow"
+              onClick={inActiveConfirm}
+              disabled={loading}
+            >
+              {inActiveText || "Mark as Inactive"}
+            </Button>
+          )}
+
+          <Button
             type="button"
+            variant="red-dark"
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-linear-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-semibold text-sm shadow-md shadow-rose-600/25 flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <LuTrash2 className="w-4 h-4" />
             <span>{confirmText}</span>
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

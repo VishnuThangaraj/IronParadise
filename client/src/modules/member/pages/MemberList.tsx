@@ -34,17 +34,24 @@ const MemberList = () => {
   const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
 
   // TanStack Query Hooks
-  const { data: memberResponse, isLoading, isError, error } = useMemberFetch({
+  const {
+    data: memberResponse,
+    isLoading,
+    isError,
+    error,
+  } = useMemberFetch({
     search: searchQuery.trim() || undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
   });
 
-  const { mutate: deleteMemberMutate, isPending: isDeleting } = useMemberDelete({
-    onSuccess: () => {
-      setOpenDeleteModal(false);
-      setMemberToDelete(null);
+  const { mutate: deleteMemberMutate, isPending: isDeleting } = useMemberDelete(
+    {
+      onSuccess: () => {
+        setOpenDeleteModal(false);
+        setMemberToDelete(null);
+      },
     },
-  });
+  );
 
   const members = useMemo(
     () => memberResponse?.data ?? [],
@@ -70,7 +77,10 @@ const MemberList = () => {
     });
   }, [members, searchQuery, statusFilter]);
 
-  const handleNavigateToAdd = useCallback(() => navigate("/member/add"), [navigate]);
+  const handleNavigateToAdd = useCallback(
+    () => navigate("/member/add"),
+    [navigate],
+  );
   const handleNavigateToEdit = useCallback(
     (id: string) => navigate(`/member/edit/${id}`),
     [navigate],
@@ -87,7 +97,13 @@ const MemberList = () => {
 
   const handleConfirmDelete = () => {
     if (memberToDelete) {
-      deleteMemberMutate(memberToDelete);
+      deleteMemberMutate({ id: memberToDelete, permanent: true });
+    }
+  };
+
+  const handleInActiveConfirm = () => {
+    if (memberToDelete) {
+      deleteMemberMutate({ id: memberToDelete, permanent: false });
     }
   };
 
@@ -173,6 +189,8 @@ const MemberList = () => {
           setMemberToDelete(null);
         }}
         onConfirm={handleConfirmDelete}
+        inActiveBtn={true}
+        inActiveConfirm={handleInActiveConfirm}
         title="Delete Member"
         content="Are you sure you want to delete this member? This action can be undone by an administrator."
       />
