@@ -13,6 +13,7 @@ import {
   LuLocate,
   LuPin,
   LuLocateFixed,
+  LuCrown,
 } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
@@ -215,24 +216,46 @@ const MemberDetails = () => {
           {/* Assignment */}
           <Container
             variant="secondary"
-            className="flex flex-col justify-between w-8/12! p-5! border border-slate-200/80 dark:border-white/10"
+            className="flex flex-col gap-10 w-8/12! p-5! border border-slate-200/80 dark:border-white/10"
           >
             <div className="flex justify-between ">
               <div className="flex items-center gap-2.5 font-semibold text-slate-900 dark:text-slate-100">
                 <span className="w-1 h-4.5 rounded-full bg-primary shadow-xs shadow-indigo-500/30 shrink-0" />
                 <span>Assigned Plans & Trainer</span>
               </div>
-              <Button type="button" variant="primary" className="py-2! px-4! text-xs font-semibold">
+              <Button
+                type="button"
+                variant="primary"
+                className="py-2! px-4! text-xs font-semibold"
+              >
                 Manage Assignment
               </Button>
             </div>
-            <div></div>
-            <div className="flex justify-end text-xs text-gray-600">Last plan update: Never</div>
+            <div className="flex flex-col gap-5">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="flex gap-2 bg-gray-100 rounded-md p-4">
+                  <div>
+                    <LuCrown />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <div>Membership Plan</div>
+                    <div></div>
+                  </div>
+                </div>
+                <div className="bg-gray-100 rounded-md p-4">3</div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="bg-gray-100 rounded-md p-4">s</div>
+                <div className="bg-gray-100 rounded-md p-4">3</div>
+              </div>
+            </div>
+            <div className="flex justify-end text-xs text-gray-600 dark:text-slate-400 mt-auto">
+              Last plan update: Never
+            </div>
           </Container>
         </div>
-        <Container variant="secondary" className="w-full  !">
-          d
-        </Container>
+        <Container variant="secondary" className="w-full  !"></Container>
       </div>
       {/* Member Deletion Confirmation Modal */}
       <DeleteModal

@@ -7,6 +7,7 @@ import UserModel from "../modules/user/user.model.js";
 import TrainerDetailsModel from "../modules/trainer/trainer-details/trainer-details.model.js";
 import TrainerPaymentModel from "../modules/trainer/trainer-payment/trainer-payment.model.js";
 import MemberAssignmentModel from "../modules/member/member-assignment/member-assignment.model.js";
+import MemberMeasurementModel from "../modules/member/member-measurement/member-measurement.model.js";
 import CredentialModel from "../shared/models/credential.model.js";
 import CounterModel from "../shared/models/counter.model.js";
 import { hashPassword } from "../shared/utils/password.js";
@@ -15,6 +16,8 @@ import { dietPlans } from "./data/diet-plan.js";
 import { workoutPlans } from "./data/workout-plan.js";
 import { trainers } from "./data/trainer.js";
 import { members } from "./data/member.js";
+import { memberAssignments } from "./data/member-assignment.js";
+import { memberMeasurements } from "./data/member-measurement.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
@@ -186,7 +189,6 @@ async function seedMembers(): Promise<void> {
   const defaultPasswordHash = await hashPassword("Password@123");
 
   const userDocs = [];
-  const assignmentDocs = [];
   const credentialDocs = [];
 
   for (const mbr of members) {
@@ -205,26 +207,24 @@ async function seedMembers(): Promise<void> {
       isActive: mbr.isActive ?? true,
     });
 
-    if (mbr.assignment) {
-      assignmentDocs.push({
-        assignmentId: mbr.assignment.assignmentId,
-        userId: mbr.userId,
-        membershipPlanId: mbr.assignment.membershipPlanId ?? null,
-        dietPlanId: mbr.assignment.dietPlanId ?? null,
-        workoutPlanId: mbr.assignment.workoutPlanId ?? null,
-        trainerId: mbr.assignment.trainerId ?? null,
-        startDate: mbr.assignment.startDate ? new Date(mbr.assignment.startDate) : new Date(),
-        endDate: mbr.assignment.endDate ? new Date(mbr.assignment.endDate) : new Date(),
-        status: (mbr.assignment.status ?? "ACTIVE") as "ACTIVE" | "EXPIRED" | "CANCELLED",
-      });
-    }
-
     credentialDocs.push({
       userId: mbr.userId,
       userType: "member" as const,
       passwordHash: defaultPasswordHash,
     });
   }
+
+  const assignmentDocs = memberAssignments.map((asgn) => ({
+    assignmentId: asgn.assignmentId,
+    userId: asgn.userId,
+    membershipPlanId: asgn.membershipPlanId ?? null,
+    dietPlanId: asgn.dietPlanId ?? null,
+    workoutPlanId: asgn.workoutPlanId ?? null,
+    trainerId: asgn.trainerId ?? null,
+    startDate: asgn.startDate ? new Date(asgn.startDate) : new Date(),
+    endDate: asgn.endDate ? new Date(asgn.endDate) : new Date(),
+    status: (asgn.status ?? "ACTIVE") as "ACTIVE" | "EXPIRED" | "CANCELLED",
+  }));
 
   await UserModel.insertMany(userDocs);
   if (assignmentDocs.length > 0) {
@@ -233,9 +233,7 @@ async function seedMembers(): Promise<void> {
   await CredentialModel.insertMany(credentialDocs);
 
   console.log(
-    `[SUCCESS] Inserted ${members.length} Members (${assignmentDocs.length} with assignments, ${
-      members.length - assignmentDocs.length
-    } without initial assignment).`,
+    `[SUCCESS] Inserted ${members.length} Members and ${assignmentDocs.length} Member Assignments.`,
   );
 
   const maxMemberSeq = await syncCounterSequence("member", members, "userId");
@@ -247,6 +245,32 @@ async function seedMembers(): Promise<void> {
     const nextAssignmentId = `MAS-${String(maxAssignmentSeq + 1).padStart(3, "0")}`;
     console.log(`[INFO] Synchronized counter 'assignment' to sequence ${maxAssignmentSeq}. Next ID: ${nextAssignmentId}`);
   }
+}
+
+/**
+ * Seeds member measurements (20 records per member).
+ */
+async function seedMemberMeasurements(): Promise<void> {
+  console.log(`[INFO] Seeding Member Measurements (${memberMeasurements.length} records)...`);
+
+  await MemberMeasurementModel.deleteMany({});
+  console.log("[INFO] Cleared existing Member Measurements collection.");
+
+  const measurementDocs = memberMeasurements.map((m) => ({
+    userId: m.userId,
+    recordedDate: new Date(m.recordedDate),
+    height: m.height,
+    weight: m.weight,
+    bmi: m.bmi,
+    bodyFat: m.bodyFat,
+    muscleMass: m.muscleMass,
+    notes: m.notes,
+  }));
+
+  await MemberMeasurementModel.insertMany(measurementDocs);
+  console.log(
+    `[SUCCESS] Inserted ${measurementDocs.length} Member Measurements (${measurementDocs.length / members.length} per user).`,
+  );
 }
 
 /**
@@ -264,6 +288,7 @@ async function runSeed(): Promise<void> {
     await seedWorkoutPlans();
     await seedTrainers();
     await seedMembers();
+    await seedMemberMeasurements();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);

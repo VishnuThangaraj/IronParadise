@@ -1076,7 +1076,16 @@ export const members = [
       "workoutplans"
     ],
     "isActive": true,
-    "assignment": null
+    "assignment": {
+      "assignmentId": "MAS-034",
+      "membershipPlanId": "MPL-011",
+      "dietPlanId": "DPL-011",
+      "workoutPlanId": "WPL-011",
+      "trainerId": "TRN-033",
+      "startDate": "2024-03-01",
+      "endDate": "2024-09-01",
+      "status": "ACTIVE"
+    }
   },
   {
     "userId": "MBR-035",
@@ -1099,7 +1108,16 @@ export const members = [
       "workoutplans"
     ],
     "isActive": true,
-    "assignment": null
+    "assignment": {
+      "assignmentId": "MAS-035",
+      "membershipPlanId": "MPL-012",
+      "dietPlanId": "DPL-012",
+      "workoutPlanId": "WPL-012",
+      "trainerId": "TRN-034",
+      "startDate": "2024-02-15",
+      "endDate": "2024-08-15",
+      "status": "ACTIVE"
+    }
   },
   {
     "userId": "MBR-036",
@@ -1122,6 +1140,15 @@ export const members = [
       "workoutplans"
     ],
     "isActive": true,
-    "assignment": null
+    "assignment": {
+      "assignmentId": "MAS-036",
+      "membershipPlanId": "MPL-013",
+      "dietPlanId": "DPL-013",
+      "workoutPlanId": "WPL-013",
+      "trainerId": "TRN-035",
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01",
+      "status": "ACTIVE"
+    }
   }
 ];
