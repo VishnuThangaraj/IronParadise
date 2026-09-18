@@ -1,29 +1,23 @@
-import { useDispatch } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { AppDispatch } from "@/app/store";
 
 import {
   LuUtensils,
-  LuCalendar,
   LuPencil,
   LuTrash2,
   LuMail,
   LuPhone,
-  LuLocate,
-  LuPin,
-  LuLocateFixed,
   LuCrown,
+  LuDumbbell,
+  LuUserCheck,
+  LuExternalLink,
 } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
 import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
-import Skeleton from "@/shared/components/ui/feedback/Skeleton";
-import DaySelector from "@/shared/components/ui/date/DaySelector";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 import Container from "@/shared/components/ui/containers/Container";
-import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 import { useMember } from "../hooks/use-member";
 import { useMemberDelete } from "../hooks/use-member.delete";
 import { IoLocationOutline } from "react-icons/io5";
@@ -38,12 +32,7 @@ const MemberDetails = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   // Tanstack query hooks
-  const {
-    data: memberResponse,
-    isLoading,
-    isError,
-    error,
-  } = useMember(memberId || id || "");
+  const { data: memberResponse, isLoading } = useMember(memberId || id || "");
 
   const { mutate: deleteMemberMutate, isPending: isDeleting } = useMemberDelete(
     {
@@ -231,27 +220,229 @@ const MemberDetails = () => {
                 Manage Assignment
               </Button>
             </div>
-            <div className="flex flex-col gap-5">
-              <div className="grid grid-cols-2 gap-4 w-full">
-                <div className="flex gap-2 bg-gray-100 rounded-md p-4">
-                  <div>
-                    <LuCrown />
+            {/* Assignment Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              {/* Membership Plan */}
+              <div
+                onClick={() => {
+                  if (user?.assignment?.membershipPlanId) {
+                    navigate(`/membership/${user.assignment.membershipPlanId}`);
+                  }
+                }}
+                className={`group relative flex items-center justify-between gap-3.5 p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-md transition-all duration-200 ${
+                  user?.assignment?.membershipPlanId
+                    ? "cursor-pointer hover:shadow-md hover:border-amber-500/40 hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-white/8"
+                    : ""
+                }`}
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 transition-transform duration-200 group-hover:scale-105">
+                    <LuCrown className="w-5 h-5" />
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <div>Membership Plan</div>
-                    <div></div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      Membership Plan
+                    </span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-wide truncate mt-0.5">
+                      {user?.assignment?.membershipPlanId || (
+                        <span className="text-slate-400 dark:text-slate-500 text-xs font-normal italic">
+                          Not Assigned
+                        </span>
+                      )}
+                    </span>
                   </div>
                 </div>
-                <div className="bg-gray-100 rounded-md p-4">3</div>
+                {user?.assignment?.membershipPlanId && (
+                  <Tooltip title="View Plan Details">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(
+                          `/membership/${user.assignment?.membershipPlanId}`,
+                        );
+                      }}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-500/10 dark:hover:bg-amber-400/10 transition-colors shrink-0"
+                      aria-label="View Membership Plan Details"
+                    >
+                      <LuExternalLink className="w-4 h-4" />
+                    </button>
+                  </Tooltip>
+                )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4 w-full">
-                <div className="bg-gray-100 rounded-md p-4">s</div>
-                <div className="bg-gray-100 rounded-md p-4">3</div>
+              {/* Assigned Trainer */}
+              <div
+                onClick={() => {
+                  if (user?.assignment?.trainerId) {
+                    navigate(`/trainer/${user.assignment.trainerId}`);
+                  }
+                }}
+                className={`group relative flex items-center justify-between gap-3.5 p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-md transition-all duration-200 ${
+                  user?.assignment?.trainerId
+                    ? "cursor-pointer hover:shadow-md hover:border-purple-500/40 hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-white/8"
+                    : ""
+                }`}
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-purple-500/20 bg-purple-500/10 text-purple-600 dark:text-purple-400 transition-transform duration-200 group-hover:scale-105">
+                    <LuUserCheck className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      Assigned Trainer
+                    </span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-wide truncate mt-0.5">
+                      {user?.assignment?.trainerId || (
+                        <span className="text-slate-400 dark:text-slate-500 text-xs font-normal italic">
+                          Not Assigned
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {user?.assignment?.trainerId && (
+                  <Tooltip title="View Trainer Details">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/trainer/${user.assignment?.trainerId}`);
+                      }}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-500/10 dark:hover:bg-purple-400/10 transition-colors shrink-0"
+                      aria-label="View Trainer Details"
+                    >
+                      <LuExternalLink className="w-4 h-4" />
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
+
+              {/* Diet Plan */}
+              <div
+                onClick={() => {
+                  if (user?.assignment?.dietPlanId) {
+                    navigate(`/plan/diet/${user.assignment.dietPlanId}`);
+                  }
+                }}
+                className={`group relative flex items-center justify-between gap-3.5 p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-md transition-all duration-200 ${
+                  user?.assignment?.dietPlanId
+                    ? "cursor-pointer hover:shadow-md hover:border-emerald-500/40 hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-white/8"
+                    : ""
+                }`}
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 transition-transform duration-200 group-hover:scale-105">
+                    <LuUtensils className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      Diet Plan
+                    </span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-wide truncate mt-0.5">
+                      {user?.assignment?.dietPlanId || (
+                        <span className="text-slate-400 dark:text-slate-500 text-xs font-normal italic">
+                          Not Assigned
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {user?.assignment?.dietPlanId && (
+                  <Tooltip title="View Plan Details">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/plan/diet/${user.assignment?.dietPlanId}`);
+                      }}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 dark:hover:bg-emerald-400/10 transition-colors shrink-0"
+                      aria-label="View Diet Plan Details"
+                    >
+                      <LuExternalLink className="w-4 h-4" />
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
+
+              {/* Workout Plan */}
+              <div
+                onClick={() => {
+                  if (user?.assignment?.workoutPlanId) {
+                    navigate(`/plan/workout/${user.assignment.workoutPlanId}`);
+                  }
+                }}
+                className={`group relative flex items-center justify-between gap-3.5 p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-md transition-all duration-200 ${
+                  user?.assignment?.workoutPlanId
+                    ? "cursor-pointer hover:shadow-md hover:border-indigo-500/40 hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-white/8"
+                    : ""
+                }`}
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 transition-transform duration-200 group-hover:scale-105">
+                    <LuDumbbell className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                      Workout Plan
+                    </span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-wide truncate mt-0.5">
+                      {user?.assignment?.workoutPlanId || (
+                        <span className="text-slate-400 dark:text-slate-500 text-xs font-normal italic">
+                          Not Assigned
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {user?.assignment?.workoutPlanId && (
+                  <Tooltip title="View Plan Details">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(
+                          `/plan/workout/${user.assignment?.workoutPlanId}`,
+                        );
+                      }}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-500/10 dark:hover:bg-indigo-400/10 transition-colors shrink-0"
+                      aria-label="View Workout Plan Details"
+                    >
+                      <LuExternalLink className="w-4 h-4" />
+                    </button>
+                  </Tooltip>
+                )}
               </div>
             </div>
-            <div className="flex justify-end text-xs text-gray-600 dark:text-slate-400 mt-auto">
-              Last plan update: Never
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 mt-auto pt-4 border-t border-slate-200/80 dark:border-white/10">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    user?.assignment?.status === "ACTIVE"
+                      ? "bg-emerald-500"
+                      : user?.assignment?.status === "EXPIRED"
+                        ? "bg-amber-500"
+                        : "bg-rose-500"
+                  }`}
+                />
+                <span>
+                  Status:{" "}
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    {user?.assignment?.status || "ACTIVE"}
+                  </span>
+                </span>
+              </div>
+              <div>
+                Last plan update:{" "}
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  {user?.assignment?.updatedAt
+                    ? new Date(user.assignment.updatedAt).toLocaleDateString()
+                    : user?.assignment?.startDate
+                      ? new Date(user.assignment.startDate).toLocaleDateString()
+                      : "Never"}
+                </span>
+              </div>
             </div>
           </Container>
         </div>
