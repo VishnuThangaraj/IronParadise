@@ -37,7 +37,8 @@ const DeveloperCard = ({ open, onClose }: DeveloperCardProps) => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-105 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-2xl shadow-2xl outline-none overflow-hidden border border-gray-100 dark:border-slate-800">
         {/* Banner */}
         <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 h-24 relative overflow-hidden flex items-start justify-between p-4 px-6">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size[14px_24px] pointer-events-none"></div>
+          <div
+            className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size[14px_24px] pointer-events-none"></div>
           <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest z-10">
             Developer Card
           </span>
