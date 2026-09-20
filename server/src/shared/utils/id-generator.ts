@@ -12,6 +12,7 @@ const PREFIX = {
   trainerReceipt: "TPR",
   memberPayment: "PAY",
   payment: "PAY",
+  event: "EVT",
 } as const;
 
 export type Role = keyof typeof PREFIX;
