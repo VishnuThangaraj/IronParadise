@@ -29,9 +29,73 @@ class EventController {
     next: NextFunction,
   ): Promise<void> {
     try {
+      const { month, year, activeOnly, filterActiveOnly } = req.query;
+      const shouldFilterActive =
+        activeOnly === "true" || filterActiveOnly === "true";
+
+      if (month !== undefined || year !== undefined) {
+        const result = await EventService.getEventsByMonth(
+          month as string | undefined,
+          year as string | undefined,
+          shouldFilterActive,
+        );
+        sendResponse(res, 200, "Events fetched successfully", result);
+        return;
+      }
+
       const events: HydratedDocument<Event>[] =
-        await EventService.getAllEvents();
+        await EventService.getAllEvents(shouldFilterActive);
       sendResponse(res, 200, "Events fetched successfully", events);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // fetch event by month and year (defaults to current month/year if omitted, includes birthdays)
+  public async getEventsByMonth(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const month = req.query.month ?? req.params.month;
+      const year = req.query.year ?? req.params.year;
+      const activeOnly =
+        req.query.activeOnly === "true" || req.query.filterActiveOnly === "true";
+
+      const result = await EventService.getEventsByMonth(
+        month as string | undefined,
+        year as string | undefined,
+        activeOnly,
+      );
+      sendResponse(res, 200, "Events fetched successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // alias for getEventsByMonth
+  public getEventByMonth = this.getEventsByMonth;
+
+  // fetch birthdays by month
+  public async getBirthdaysByMonth(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const month = req.query.month ?? req.params.month;
+      const year = req.query.year ?? req.params.year;
+      const activeOnly =
+        req.query.activeOnly !== "false" &&
+        req.query.filterActiveOnly !== "false";
+
+      const birthdays = await EventService.getBirthdaysByMonth(
+        month as string | undefined,
+        year as string | undefined,
+        activeOnly,
+      );
+      sendResponse(res, 200, "Birthdays fetched successfully", birthdays);
     } catch (error) {
       next(error);
     }

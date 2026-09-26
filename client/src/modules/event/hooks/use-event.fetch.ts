@@ -1,7 +1,16 @@
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
-import { getEvents } from "../api/event.api";
+import {
+  getBirthdaysByMonth,
+  getEvents,
+  getEventsByMonth,
+} from "../api/event.api";
 import { eventKeys } from "../event.keys";
-import { EventQueryParams, EventResponse } from "../types/event.types";
+import {
+  BirthdaysResponse,
+  EventQueryParams,
+  EventResponse,
+  MonthEventsResponse,
+} from "../types/event.types";
 
 export const useEventFetch = (
   params?: EventQueryParams,
@@ -10,6 +19,34 @@ export const useEventFetch = (
   return useQuery({
     queryKey: eventKeys.list(params),
     queryFn: () => getEvents(params),
+    ...options,
+  });
+};
+
+export const useEventsByMonth = (
+  params?: { month?: number; year?: number; activeOnly?: boolean },
+  options?: Omit<
+    UseQueryOptions<MonthEventsResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: [...eventKeys.lists(), "month", params],
+    queryFn: () => getEventsByMonth(params),
+    ...options,
+  });
+};
+
+export const useBirthdaysByMonth = (
+  params?: { month?: number; year?: number; activeOnly?: boolean },
+  options?: Omit<
+    UseQueryOptions<BirthdaysResponse, Error>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: [...eventKeys.lists(), "birthdays", params],
+    queryFn: () => getBirthdaysByMonth(params),
     ...options,
   });
 };

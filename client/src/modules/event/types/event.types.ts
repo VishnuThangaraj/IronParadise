@@ -30,14 +30,53 @@ export interface EventQueryParams {
   status?: string;
   startDate?: string;
   endDate?: string;
+  month?: number;
+  year?: number;
+  activeOnly?: boolean;
   page?: number;
   limit?: number;
+}
+
+export interface BirthdayUser {
+  userId: string;
+  fullName: string;
+  role: "member" | "trainer";
+  dob: string;
+  birthdayDate: string;
+  day: number;
+  age?: number;
+  profileImage?: string;
+  gender?: string;
+  phone?: string;
+  email?: string;
+  title: string;
+}
+
+export interface MonthEventsData {
+  events: Event[];
+  birthdays: BirthdayUser[];
+  month: number;
+  year: number;
+  totalEvents: number;
+  totalBirthdays: number;
+}
+
+export interface MonthEventsResponse {
+  success: boolean;
+  message: string;
+  data: MonthEventsData;
+}
+
+export interface BirthdaysResponse {
+  success: boolean;
+  message: string;
+  data: BirthdayUser[];
 }
 
 export interface EventResponse {
   success: boolean;
   message: string;
-  data: Event[];
+  data: Event[] | MonthEventsData;
 }
 
 export interface SingleEventResponse {

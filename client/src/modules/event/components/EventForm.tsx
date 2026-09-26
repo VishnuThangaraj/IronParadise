@@ -11,8 +11,6 @@ import {
   LuClock,
   LuEye,
   LuText,
-  LuX,
-  LuSparkles,
   LuUsers,
   LuUserCheck,
   LuShieldCheck,
@@ -252,7 +250,6 @@ const EventFormContent = ({
         {/* Event Title */}
         <div className="sm:col-span-12">
           <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-            <LuSparkles size={13} className="text-indigo-500" />
             Event Title *
           </span>
           <Input
@@ -419,7 +416,7 @@ const EventForm = ({
         date: formatToDateInput(rawSource.date),
         time: rawSource.time || "",
         visibility:
-          (rawSource.visibility as "all" | "member" | "trainer") || "all",
+          (rawSource.visibility as EventVisibility) || "all",
         description: rawSource.description || "",
         isActive: rawSource.isActive !== undefined ? rawSource.isActive : true,
       }

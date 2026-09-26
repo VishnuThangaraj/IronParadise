@@ -3,7 +3,8 @@ import { Schema, model, type InferSchemaType } from "mongoose";
 export const EVENT_VISIBILITY = [
   "all",
   "member",
-  "trainer"
+  "trainer",
+  "private",
 ] as const;
 export type EventVisibility = (typeof EVENT_VISIBILITY)[number];
 

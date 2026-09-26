@@ -3,7 +3,7 @@ export interface EventFormState {
   title: string;
   date: string;
   time: string;
-  visibility: "all" | "member" | "trainer";
+  visibility: "all" | "member" | "trainer" | "private";
   description: string;
   isActive?: boolean;
 }

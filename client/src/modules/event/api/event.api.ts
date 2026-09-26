@@ -1,8 +1,10 @@
 import api from "@/shared/service/api";
 import {
+  BirthdaysResponse,
   EventFormData,
   EventQueryParams,
   EventResponse,
+  MonthEventsResponse,
   SingleEventResponse,
   UpdateEventRequest,
 } from "../types/event.types";
@@ -12,6 +14,26 @@ export const getEvents = async (
   params?: EventQueryParams,
 ): Promise<EventResponse> => {
   const response = await api.get<EventResponse>("/api/event", {
+    params,
+  });
+  return response.data;
+};
+
+// Get events by month and year (defaults to current month and year if omitted, includes birthdays)
+export const getEventsByMonth = async (
+  params?: { month?: number; year?: number; activeOnly?: boolean },
+): Promise<MonthEventsResponse> => {
+  const response = await api.get<MonthEventsResponse>("/api/event/month", {
+    params,
+  });
+  return response.data;
+};
+
+// Get member and trainer birthdays by month
+export const getBirthdaysByMonth = async (
+  params?: { month?: number; year?: number; activeOnly?: boolean },
+): Promise<BirthdaysResponse> => {
+  const response = await api.get<BirthdaysResponse>("/api/event/birthdays", {
     params,
   });
   return response.data;
