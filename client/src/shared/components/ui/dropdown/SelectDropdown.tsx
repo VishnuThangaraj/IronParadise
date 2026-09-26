@@ -43,24 +43,28 @@ const SelectDropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const isFullWidth = className.includes("w-full");
+
   return (
     <div
-      className={`relative inline-block text-left ${isOpen ? "z-50" : "z-10"}`}
+      className={`relative ${isFullWidth ? "w-full block" : "inline-block"} text-left ${isOpen ? "z-50" : "z-10"}`}
       ref={dropdownRef}
     >
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200/90 dark:border-slate-700/80 bg-slate-100/90 dark:bg-slate-800/90 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 shadow-xs text-xs font-semibold text-slate-800 dark:text-slate-100 cursor-pointer group ${className}`}
+        className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl border border-slate-200/90 dark:border-slate-700/80 bg-slate-100/90 dark:bg-slate-800/90 backdrop-blur-md hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 shadow-xs text-xs font-semibold text-slate-800 dark:text-slate-100 cursor-pointer group ${className}`}
       >
-        {icon && (
-          <span className="w-4 h-4 shrink-0 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center justify-center">
-            {icon}
+        <div className="flex items-center gap-2 truncate">
+          {icon && (
+            <span className="w-4 h-4 shrink-0 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center justify-center">
+              {icon}
+            </span>
+          )}
+          <span className="truncate">
+            {selectedOption ? selectedOption.label : placeholder}
           </span>
-        )}
-        <span className="truncate">
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
+        </div>
         <LuChevronDown
           className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-400 shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
@@ -75,7 +79,9 @@ const SelectDropdown = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800/90 rounded-2xl shadow-xl p-1.5 z-950 backdrop-blur-xl origin-top-right text-slate-800 dark:text-slate-100 space-y-0.5"
+            className={`absolute ${
+              isFullWidth ? "w-full left-0 min-w-48" : "right-0 w-48"
+            } mt-2 max-h-60 overflow-y-auto bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800/90 rounded-2xl shadow-xl p-1.5 z-950 backdrop-blur-xl origin-top text-slate-800 dark:text-slate-100 space-y-0.5`}
           >
             {options.map((option) => {
               const isSelected = option.value === value;
