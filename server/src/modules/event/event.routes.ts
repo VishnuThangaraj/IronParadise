@@ -26,6 +26,30 @@ router.get(
   EventController.fetchAllEvents,
 );
 
+// Fetch Events by Month and Year (defaults to current month/year if omitted)
+router.get(
+  "/month",
+  authenticate,
+  authorize("admin", "trainer", "member"),
+  EventController.getEventsByMonth,
+);
+
+// Fetch Events by Month and Year with route parameters
+router.get(
+  "/month/:year/:month",
+  authenticate,
+  authorize("admin", "trainer", "member"),
+  EventController.getEventsByMonth,
+);
+
+// Fetch Member & Trainer Birthdays by Month
+router.get(
+  "/birthdays",
+  authenticate,
+  authorize("admin", "trainer", "member"),
+  EventController.getBirthdaysByMonth,
+);
+
 // Fetch Event with Id
 router.get(
   "/:eventId",
