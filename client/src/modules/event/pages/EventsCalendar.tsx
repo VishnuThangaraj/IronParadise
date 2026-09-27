@@ -60,7 +60,7 @@ const EventsCalendar = () => {
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
 
   const [eventData, setEventData] = useState(initialEventState);
-  const [currentEvent, setCurrentEvent] = useState<Record<string, any>>({});
+  const [currentEvent, setCurrentEvent] = useState<Partial<Event>>({});
 
   // Query events & birthdays for the current month
   const { data: monthData } = useEventsByMonth({
@@ -261,7 +261,7 @@ const EventsCalendar = () => {
           <hr className="border-gray-200/80 dark:border-zinc-800 my-1" />
 
           {/* Items List */}
-          <div className="flex flex-col gap-3.5 overflow-y-auto max-h-[580px] pr-1">
+          <div className="flex flex-col gap-3.5 overflow-y-auto max-h-145 pr-1">
             {/* 1. Birthdays on Selected Day */}
             {selectedDateBirthdays.map((b) => (
               <div
@@ -391,7 +391,7 @@ const EventsCalendar = () => {
                     No activities or workshops on this date.
                   </p>
                 </div>
-                
+
               </div>
             )}
           </div>
