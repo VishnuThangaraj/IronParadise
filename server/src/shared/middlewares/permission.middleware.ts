@@ -11,6 +11,7 @@ export type Permission =
   | "memberships"
   | "enquiry"
   | "events"
+  | "message"
   | "admins";
 
 export function checkPermission(...requiredPermissions: Permission[]) {

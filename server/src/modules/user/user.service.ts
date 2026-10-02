@@ -3,7 +3,7 @@ import mongoose, { type HydratedDocument } from "mongoose";
 import UserModel, { type User } from "./user.model.js";
 import CredentialModel from "../../shared/models/credential.model.js";
 
-import type { CreateUserInput, UpdateUserInput } from "./user.validator.js";
+import type { CreateUserInput, UpdateUserInput, UserDetailsSchema } from "./user.validator.js";
 
 import AuthService from "../auth/auth.service.js";
 
@@ -13,7 +13,7 @@ import { generateId } from "../../shared/utils/id-generator.js";
 
 export type CreateUserData = CreateUserInput & {
   userId?: string;
-  password?: string;  
+  password?: string;
   isActive?: boolean;
 };
 
@@ -111,6 +111,13 @@ class UserService {
       return UserModel.find({ role: role as any });
     }
     return UserModel.find();
+  }
+
+  // fetch user details
+  public async getUserDetails(): Promise<HydratedDocument<UserDetailsSchema>[]> {
+    return UserModel.find().select(
+      "__id userId fullName profileImage email role",
+    );
   }
 
   // fetch user by id
