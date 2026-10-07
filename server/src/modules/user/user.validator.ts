@@ -10,22 +10,21 @@ const emptyStringToDate = z.preprocess(
   z.coerce.date().optional(),
 );
 
-export const emergencyContactSchema = z
-  .preprocess(
-    (val: any) => {
-      if (!val || typeof val !== "object") return null;
-      if (!val.fullName || !val.phone || !val.relation) return null;
-      return val;
-    },
-    z
-      .object({
-        fullName: z.string().trim(),
-        phone: z.string().trim(),
-        relation: z.string().trim(),
-      })
-      .nullable()
-      .optional(),
-  );
+export const emergencyContactSchema = z.preprocess(
+  (val: any) => {
+    if (!val || typeof val !== "object") return null;
+    if (!val.fullName || !val.phone || !val.relation) return null;
+    return val;
+  },
+  z
+    .object({
+      fullName: z.string().trim(),
+      phone: z.string().trim(),
+      relation: z.string().trim(),
+    })
+    .nullable()
+    .optional(),
+);
 
 export const permissionEnum = z.enum([
   "admins",
@@ -62,6 +61,20 @@ export const userUpdateSchema = userSchema.partial().extend({
     .optional(),
 });
 
+export const userRoleEnum = z.enum(["admin", "trainer", "member"]);
+export type UserRole = z.infer<typeof userRoleEnum>;
+
+export const userDetailsSchema = z.object({
+  _id: z.string().optional(),
+  __id: z.string().optional(),
+  userId: z.string(),
+  fullName: z.string(),
+  profileImage: z.string().optional(),
+  email: z.string(),
+  role: userRoleEnum,
+});
+
+export type UserDetailsSchema = z.infer<typeof userDetailsSchema>;
 export type CreateUserInput = z.infer<typeof userSchema>;
 export type UpdateUserInput = z.infer<typeof userUpdateSchema>;
 export type EmergencyContactInput = z.infer<typeof emergencyContactSchema>;

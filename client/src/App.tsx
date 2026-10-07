@@ -18,6 +18,7 @@ const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const EventsCalendar = lazy(
   () => import("@/modules/event/pages/EventsCalendar"),
 );
+const Messages = lazy(() => import("@/modules/messages/pages/Messages"));
 
 // Trainer
 const TrainerList = lazy(() => import("@/modules/trainer/pages/TrainerList"));
@@ -108,6 +109,7 @@ const App = () => {
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/events" element={<EventsCalendar />} />
+                <Route path="/message" element={<Messages />} />
 
                 {/* Member */}
                 <Route path="/member/add" element={<MemberForm />} />
