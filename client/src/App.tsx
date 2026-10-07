@@ -14,6 +14,7 @@ import Navbar from "@/shared/components/layout/navbar/Navbar";
 import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
+const Contact = lazy(() => import("@/modules/enquiry/pages/Contact"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const EventsCalendar = lazy(
   () => import("@/modules/event/pages/EventsCalendar"),
@@ -92,6 +93,7 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/authenticate" element={<AuthPage />} />
+          <Route path="/contact-us" element={<Contact />} />
           <Route path="*" element={<Navigate to="/authenticate" replace />} />
         </Routes>
       </Suspense>
