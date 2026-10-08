@@ -5,9 +5,17 @@ const emptyStringToUndefined = z.preprocess(
   z.string().optional(),
 );
 
-export const enquiryRoleEnum = z.enum(
-  ["trainer", "member", "visitor", "other"],
-  { message: "Role looks off — pick trainer, member, visitor, or other" },
+export const enquiryRoleEnum = z.preprocess(
+  (val) => {
+    if (typeof val === "string") {
+      const trimmed = val.trim().toLowerCase();
+      return trimmed === "" ? "visitor" : trimmed;
+    }
+    return val ?? "visitor";
+  },
+  z.enum(["trainer", "member", "visitor", "other"], {
+    message: "Role looks off — pick trainer, member, visitor, or other",
+  }),
 );
 
 export const enquiryReplySchema = z.object({

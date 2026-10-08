@@ -8,6 +8,10 @@ import type {
 import AppError from "../../shared/errors/AppError.js";
 import { generateId } from "../../shared/utils/id-generator.js";
 import EnquiryModel, { type Enquiry } from "./enquiry.model.js";
+import {
+  sendEnquiryReceivedEmail,
+  sendEnquiryReplyEmail,
+} from "../../shared/utils/mail.js";
 
 export interface GetAllEnquiriesFilter {
   replied?: boolean;
@@ -35,6 +39,22 @@ class EnquiryService {
 
     if (!enquiry) {
       throw new AppError("Failed to submit enquiry — please try again", 500);
+    }
+
+    // Send confirmation email to user if email is provided
+    if (enquiry.email) {
+      sendEnquiryReceivedEmail({
+        to: enquiry.email,
+        fullName: enquiry.fullName,
+        enquiryId: enquiry.enquiryId,
+        subject: enquiry.subject,
+        message: enquiry.message,
+      }).catch((err) => {
+        console.error(
+          `[MailService] Failed to send enquiry receipt to ${enquiry.email}:`,
+          err,
+        );
+      });
     }
 
     return enquiry;
@@ -91,7 +111,7 @@ class EnquiryService {
     return enquiry;
   }
 
-  // Reply to enquiry
+  // Reply to enquiry and send email to user
   public async replyToEnquiry(
     id: string,
     replyData: ReplyEnquiryInput,
@@ -106,6 +126,24 @@ class EnquiryService {
     };
 
     await enquiry.save();
+
+    // Send reply email to recipient if email is provided
+    if (enquiry.email) {
+      await sendEnquiryReplyEmail({
+        to: enquiry.email,
+        fullName: enquiry.fullName,
+        enquiryId: enquiry.enquiryId,
+        replySubject: replyData.subject.trim(),
+        replyMessage: replyData.message.trim(),
+        originalSubject: enquiry.subject,
+        originalMessage: enquiry.message,
+      }).catch((err) => {
+        console.error(
+          `[MailService] Failed to send enquiry reply email to ${enquiry.email}:`,
+          err,
+        );
+      });
+    }
 
     return enquiry;
   }
