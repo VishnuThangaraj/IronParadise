@@ -9,6 +9,7 @@ import TrainerPaymentModel from "../modules/trainer/trainer-payment/trainer-paym
 import MemberAssignmentModel from "../modules/member/member-assignment/member-assignment.model.js";
 import MemberMeasurementModel from "../modules/member/member-measurement/member-measurement.model.js";
 import EventModal from "../modules/event/event.modal.js";
+import EnquiryModel from "../modules/enquiry/enquiry.model.js";
 import CredentialModel from "../shared/models/credential.model.js";
 import CounterModel from "../shared/models/counter.model.js";
 import { hashPassword } from "../shared/utils/password.js";
@@ -20,6 +21,7 @@ import { members } from "./data/member.js";
 import { memberAssignments } from "./data/member-assignment.js";
 import { memberMeasurements } from "./data/member-measurement.js";
 import { events } from "./data/event.js";
+import { enquiries } from "./data/enquiry.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
@@ -305,6 +307,47 @@ async function seedEvents(): Promise<void> {
 }
 
 /**
+ * Seeds enquiries and updates the corresponding auto-increment counter.
+ */
+async function seedEnquiries(): Promise<void> {
+  console.log(`[INFO] Seeding Enquiries (${enquiries.length} records)...`);
+
+  await EnquiryModel.deleteMany({});
+  console.log("[INFO] Cleared existing Enquiries collection.");
+
+  const enquiryDocs = enquiries.map((enq) => ({
+    enquiryId: enq.enquiryId,
+    fullName: enq.fullName,
+    email: enq.email.toLowerCase().trim(),
+    phone: enq.phone ?? "",
+    role: enq.role ?? "visitor",
+    subject: enq.subject,
+    message: enq.message,
+    replied: enq.replied ?? false,
+    replyMessage: enq.replyMessage
+      ? {
+          subject: enq.replyMessage.subject,
+          message: enq.replyMessage.message,
+          repliedAt: enq.replyMessage.repliedAt
+            ? new Date(enq.replyMessage.repliedAt)
+            : undefined,
+        }
+      : undefined,
+    createdAt: enq.createdAt ? new Date(enq.createdAt) : new Date(),
+    updatedAt: enq.updatedAt ? new Date(enq.updatedAt) : new Date(),
+  }));
+
+  await EnquiryModel.insertMany(enquiryDocs);
+  console.log(`[SUCCESS] Inserted ${enquiries.length} Enquiries.`);
+
+  const maxSeq = await syncCounterSequence("enquiry", enquiries, "enquiryId");
+  const nextId = `ENQ-${String(maxSeq + 1).padStart(3, "0")}`;
+  console.log(
+    `[INFO] Synchronized counter 'enquiry' to sequence ${maxSeq}. Next ID: ${nextId}`,
+  );
+}
+
+/**
  * Primary seed runner.
  */
 async function runSeed(): Promise<void> {
@@ -321,6 +364,7 @@ async function runSeed(): Promise<void> {
     await seedMembers();
     await seedMemberMeasurements();
     await seedEvents();
+    await seedEnquiries();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);

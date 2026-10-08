@@ -1,5 +1,9 @@
 import api from "@/shared/service/api";
-import type { EnquiryForm, EnquiryResponse } from "../types/enquiry.types";
+import type {
+  EnquiryForm,
+  EnquiryResponse,
+  EnquiriesListResponse,
+} from "../types/enquiry.types";
 
 export const createEnquiry = async (
   formData: EnquiryForm,
@@ -10,8 +14,8 @@ export const createEnquiry = async (
 
 export const fetchAllEnquiries = async (
   params?: { replied?: boolean; role?: string; search?: string },
-): Promise<{ status: string; statusCode: number; message: string; data: EnquiryResponse["data"][] }> => {
-  const response = await api.get("/api/enquiry", { params });
+): Promise<EnquiriesListResponse> => {
+  const response = await api.get<EnquiriesListResponse>("/api/enquiry", { params });
   return response.data;
 };
 
@@ -26,7 +30,10 @@ export const replyToEnquiry = async (
   id: string,
   replyData: { subject: string; message: string },
 ): Promise<EnquiryResponse> => {
-  const response = await api.post<EnquiryResponse>(`/api/enquiry/${id}/reply`, replyData);
+  const response = await api.post<EnquiryResponse>(
+    `/api/enquiry/${id}/reply`,
+    replyData,
+  );
   return response.data;
 };
 

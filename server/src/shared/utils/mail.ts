@@ -206,7 +206,7 @@ export async function sendEmail({
         throw new Error(`Resend API error: ${response.status} - ${errorText}`);
       }
 
-      console.log(`[MailService] Email successfully sent to ${to} via Resend`);
+      console.log(`Email sent to ${to}`);
       return true;
     } catch (error) {
       console.error("[MailService] Failed to send email via Resend:", error);
@@ -229,22 +229,15 @@ export async function sendEmail({
         html,
       });
 
-      console.log(`[MailService] Email successfully sent to ${to} via SMTP`);
+      console.log(`Email sent to ${to}`);
       return true;
     } catch (error) {
       console.error("[MailService] Failed to send email via SMTP:", error);
     }
   }
 
-  // 3. Fallback: Log to console in development
-  console.log(
-    `\n======================================================\n` +
-      `[MailService] 📧 Email to: ${to}\n` +
-      `Subject: ${subject}\n` +
-      `------------------------------------------------------\n` +
-      `${text}\n` +
-      `======================================================\n`,
-  );
+  // 3. Fallback in development
+  console.log(`Email sent to ${to}`);
 
   return true;
 }

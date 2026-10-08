@@ -9,6 +9,12 @@ export interface EnquiryForm {
   message: string;
 }
 
+export interface EnquiryReplyMessage {
+  subject?: string;
+  message?: string;
+  repliedAt?: string;
+}
+
 export interface EnquiryData {
   _id: string;
   enquiryId: string;
@@ -19,6 +25,7 @@ export interface EnquiryData {
   subject: string;
   message: string;
   replied: boolean;
+  replyMessage?: EnquiryReplyMessage;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,4 +35,11 @@ export interface EnquiryResponse {
   statusCode: number;
   message: string;
   data: EnquiryData;
+}
+
+export interface EnquiriesListResponse {
+  status: string;
+  statusCode: number;
+  message: string;
+  data: EnquiryData[];
 }

@@ -15,6 +15,7 @@ import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
 
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Contact = lazy(() => import("@/modules/enquiry/pages/Contact"));
+const Enquiry = lazy(() => import("@/modules/enquiry/pages/Enquiry"));
 const Dashboard = lazy(() => import("@/modules/dashboard/pages/Dashboard"));
 const EventsCalendar = lazy(
   () => import("@/modules/event/pages/EventsCalendar"),
@@ -109,9 +110,10 @@ const App = () => {
           <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
             <main className="flex-1 p-6 px-10">
               <Routes>
+                <Route path="/enquiry" element={<Enquiry />} />
+                <Route path="/message" element={<Messages />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/events" element={<EventsCalendar />} />
-                <Route path="/message" element={<Messages />} />
 
                 {/* Member */}
                 <Route path="/member/add" element={<MemberForm />} />
