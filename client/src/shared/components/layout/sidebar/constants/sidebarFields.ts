@@ -47,7 +47,7 @@ export const GeneralSidebarItems: SidebarItemType[] = [
 export const AdminSidebarItems: SidebarItemType[] = [
   {
     name: "Enquiries",
-    location: "/enquiry/list",
+    location: "/enquiry",
     icon: LuMessageSquareQuote,
   },
   {
