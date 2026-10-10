@@ -84,6 +84,7 @@ const userSchema = new Schema(
         "workoutplans",
         "message",
         "enquiry",
+        "attendance",
       ],
       default: ["members", "dietplans", "workoutplans"],
     },

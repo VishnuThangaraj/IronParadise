@@ -22,6 +22,12 @@ const EventsCalendar = lazy(
 );
 const Messages = lazy(() => import("@/modules/messages/pages/Messages"));
 
+// Attendance
+const Attendance = lazy(() => import("@/modules/attendance/pages/Attendance"));
+const AttendanceEntry = lazy(
+  () => import("@/modules/attendance/pages/AttendanceEntry"),
+);
+
 // Trainer
 const TrainerList = lazy(() => import("@/modules/trainer/pages/TrainerList"));
 const TrainerForm = lazy(() => import("@/modules/trainer/pages/TrainerForm"));
@@ -95,6 +101,7 @@ const App = () => {
         <Routes>
           <Route path="/authenticate" element={<AuthPage />} />
           <Route path="/contact-us" element={<Contact />} />
+          <Route path="/attendance-kiosk" element={<AttendanceEntry />} />
           <Route path="*" element={<Navigate to="/authenticate" replace />} />
         </Routes>
       </Suspense>
@@ -114,6 +121,7 @@ const App = () => {
                 <Route path="/message" element={<Messages />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/events" element={<EventsCalendar />} />
+                <Route path="/attendance" element={<Attendance />} />
 
                 {/* Member */}
                 <Route path="/member/add" element={<MemberForm />} />
