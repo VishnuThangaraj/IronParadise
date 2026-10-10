@@ -11,6 +11,7 @@ import {
   FiClock,
 } from "react-icons/fi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 
 import { loginBg } from "@/modules/auth/assets";
 import logoDark from "@/shared/assets/images/logo-dark.webp";
@@ -95,11 +96,16 @@ const AttendanceEntry = () => {
         message: `Welcome, ${selectedUser?.fullName || "User"}! Check-in recorded at ${timeStr}.`,
       });
     },
-    onError: (err: any) => {
-      const message =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Check-in failed. Please try again.";
+    onError: (err: unknown) => {
+      let message = "Check-in failed. Please try again.";
+      if (
+        isAxiosError<{ message?: string }>(err) &&
+        err.response?.data?.message
+      ) {
+        message = err.response.data.message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
       addToast({ type: "error", message });
     },
   });
@@ -135,11 +141,16 @@ const AttendanceEntry = () => {
         message: `Goodbye, ${selectedUser?.fullName || "User"}! Workout completed (${formatDuration(duration)}).`,
       });
     },
-    onError: (err: any) => {
-      const message =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Check-out failed. Please try again.";
+    onError: (err: unknown) => {
+      let message = "Check-out failed. Please try again.";
+      if (
+        isAxiosError<{ message?: string }>(err) &&
+        err.response?.data?.message
+      ) {
+        message = err.response.data.message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
       addToast({ type: "error", message });
     },
   });
@@ -334,7 +345,7 @@ const AttendanceEntry = () => {
                         className="w-13 h-13 rounded-2xl object-cover shrink-0 border border-slate-200 dark:border-slate-700 shadow-md"
                       />
                     ) : (
-                      <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-blue-500/25 shrink-0">
+                      <div className="w-13 h-13 rounded-2xl bg-linear-to from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-blue-500/25 shrink-0">
                         {getInitial(selectedUser.fullName)}
                       </div>
                     )}
