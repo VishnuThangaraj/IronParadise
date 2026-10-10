@@ -11,6 +11,8 @@ export type ButtonVariant =
   | "transparent-pure"
   | "blue"
   | "green"
+  | "green-dark"
+  | "dark-green"
   | "yellow"
   | "orange"
   | "red"
@@ -56,6 +58,9 @@ const blueStyles =
 const greenStyles =
   "font-bold text-emerald-600 dark:text-emerald-400 bg-white/50 dark:bg-emerald-500/10 hover:bg-emerald-50/70 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 backdrop-blur-md shadow-sm";
 
+const greenDarkStyles =
+  "font-bold text-white bg-linear-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-500 shadow-md shadow-emerald-600/25 dark:shadow-lg dark:shadow-emerald-600/40";
+
 const yellowStyles =
   "font-bold text-yellow-600 dark:text-yellow-400 bg-white/50 dark:bg-yellow-500/10 hover:bg-yellow-50/70 dark:hover:bg-yellow-500/20 border border-yellow-200 dark:border-yellow-500/30 backdrop-blur-md shadow-sm";
 
@@ -81,6 +86,8 @@ const variantStylesMap: Record<ButtonVariant, string> = {
   "transparent-pure": transparentPureStyles,
   blue: blueStyles,
   green: greenStyles,
+  "green-dark": greenDarkStyles,
+  "dark-green": greenDarkStyles,
   yellow: yellowStyles,
   orange: orangeStyles,
   red: redStyles,

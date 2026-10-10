@@ -434,6 +434,58 @@ class AttendanceService {
 
     return attendance;
   }
+
+  /**
+   * Search active members and trainers for Kiosk quick punch.
+   */
+  public async searchUsersForKiosk(
+    searchTerm?: string,
+  ): Promise<Array<Record<string, any>>> {
+    if (!searchTerm || !searchTerm.trim()) {
+      return [];
+    }
+
+    const trimmed = searchTerm.trim();
+    const escaped = trimmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "i");
+
+    const users = await UserModel.find({
+      role: { $in: ["member", "trainer"] },
+      isActive: true,
+      $or: [{ fullName: regex }, { userId: regex }, { phone: regex }],
+    })
+      .select("userId fullName role phone profileImage")
+      .limit(25)
+      .lean();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const userIds = users.map((u) => u.userId);
+    const todayAttendances = await AttendanceModel.find({
+      userId: { $in: userIds },
+      date: { $gte: today },
+    })
+      .sort({ checkIn: -1 })
+      .lean();
+
+    const attendanceMap = new Map<string, any>();
+    for (const att of todayAttendances) {
+      if (!attendanceMap.has(att.userId)) {
+        attendanceMap.set(att.userId, att);
+      }
+    }
+
+    return users.map((user) => {
+      const att = attendanceMap.get(user.userId);
+      const isCheckedIn = att ? att.status === "checked_in" && !att.checkOut : false;
+      return {
+        ...user,
+        todayAttendance: att || null,
+        isCheckedIn,
+      };
+    });
+  }
 }
 
 export default new AttendanceService();

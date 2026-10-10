@@ -127,6 +127,21 @@ class AttendanceController {
     }
   }
 
+  // Kiosk search active members & trainers
+  public async searchUsersForKiosk(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const q = (req.query.q || req.query.search || "") as string;
+      const users = await AttendanceService.searchUsersForKiosk(q);
+      sendResponse(res, 200, "Users retrieved successfully", users);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // Update attendance record
   public async updateAttendance(
     req: Request,

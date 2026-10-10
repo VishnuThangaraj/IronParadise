@@ -14,6 +14,17 @@ import { authorize } from "../../shared/middlewares/authorize.middleware.js";
 
 const router: Router = Router();
 
+// Kiosk Search Active Members & Trainers (Public / Kiosk endpoint)
+router.get(
+  "/search-users",
+  AttendanceController.searchUsersForKiosk,
+);
+
+router.get(
+  "/kiosk/search",
+  AttendanceController.searchUsersForKiosk,
+);
+
 // Kiosk / Quick Check-In (Public for Kiosk terminals or Authenticated)
 router.post(
   "/check-in",
