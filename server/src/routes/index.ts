@@ -10,6 +10,7 @@ import dietPlanRoutes from "../modules/diet-plan/diet-plan.routes.js";
 import workoutPlanRoutes from "../modules/workout-plan/workout-plan.routes.js";
 import membershipPlanRoutes from "../modules/membership-plan/membership-plan.routes.js";
 import enquiryRoutes from "../modules/enquiry/enquiry.routes.js";
+import attendanceRoutes from "../modules/attendance/attendance.routes.js";
 
 const router: Router = Router();
 
@@ -23,5 +24,6 @@ router.use("/diet-plan", dietPlanRoutes);
 router.use("/workout-plan", workoutPlanRoutes);
 router.use("/membership-plan", membershipPlanRoutes);
 router.use("/enquiry", enquiryRoutes);
+router.use("/attendance", attendanceRoutes);
 
 export default router;
