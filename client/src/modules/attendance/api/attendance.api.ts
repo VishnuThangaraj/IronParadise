@@ -5,6 +5,10 @@ import type {
   ToggleAttendanceResponse,
   AttendanceActionResponse,
   AttendanceRecord,
+  AttendanceStats,
+  AttendanceStatsResponse,
+  AttendanceQueryParams,
+  AttendanceListResponse,
 } from "../types/attendance.types";
 
 export const searchKioskUsers = async (
@@ -33,7 +37,8 @@ export const checkInUser = async (payload: {
 };
 
 export const checkOutUser = async (payload: {
-  userId: string;
+  userId?: string;
+  attendanceId?: string;
   entryMethod?: string;
   notes?: string;
 }): Promise<AttendanceRecord> => {
@@ -56,3 +61,47 @@ export const toggleAttendance = async (payload: {
   return response.data.data;
 };
 
+export const getDailyAttendanceStats = async (
+  date?: string,
+): Promise<AttendanceStats> => {
+  const response = await api.get<AttendanceStatsResponse>(
+    "/api/attendance/stats",
+    {
+      params: date ? { date } : undefined,
+    },
+  );
+  return response.data.data;
+};
+
+export const getAttendanceStats = getDailyAttendanceStats;
+
+export const fetchAllAttendance = async (
+  params?: AttendanceQueryParams,
+): Promise<AttendanceRecord[]> => {
+  const response = await api.get<AttendanceListResponse>("/api/attendance", {
+    params,
+  });
+  return response.data.data;
+};
+
+export const getAttendanceById = async (
+  id: string,
+): Promise<AttendanceRecord> => {
+  const response = await api.get<AttendanceActionResponse>(
+    `/api/attendance/${id}`,
+  );
+  return response.data.data;
+};
+
+export const getUserAttendance = async (
+  userId: string,
+  limit = 30,
+): Promise<AttendanceRecord[]> => {
+  const response = await api.get<AttendanceListResponse>(
+    `/api/attendance/user/${userId}`,
+    {
+      params: { limit },
+    },
+  );
+  return response.data.data;
+};
