@@ -65,15 +65,34 @@ export interface AttendanceActionResponse {
   data: AttendanceRecord;
 }
 
+export interface AttendanceStats {
+  totalToday: number;
+  activeNow: number;
+  membersToday: number;
+  trainersToday: number;
+  avgDurationMinutes: number;
+  date: string;
+}
+
 export interface AttendanceStatsResponse {
   success: boolean;
   message: string;
-  data: {
-    totalToday: number;
-    activeNow: number;
-    membersToday: number;
-    trainersToday: number;
-    avgDurationMinutes: number;
-    date: string;
-  };
+  data: AttendanceStats;
+}
+
+export interface AttendanceQueryParams {
+  userId?: string;
+  role?: "trainer" | "member";
+  status?: string;
+  date?: string;
+  startDate?: string;
+  endDate?: string;
+  entryMethod?: string;
+  search?: string;
+}
+
+export interface AttendanceListResponse {
+  success: boolean;
+  message: string;
+  data: AttendanceRecord[];
 }
