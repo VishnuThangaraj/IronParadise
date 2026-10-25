@@ -10,6 +10,7 @@ import MemberAssignmentModel from "../modules/member/member-assignment/member-as
 import MemberMeasurementModel from "../modules/member/member-measurement/member-measurement.model.js";
 import EventModal from "../modules/event/event.modal.js";
 import EnquiryModel from "../modules/enquiry/enquiry.model.js";
+import AttendanceModel from "../modules/attendance/attendance.model.js";
 import CredentialModel from "../shared/models/credential.model.js";
 import CounterModel from "../shared/models/counter.model.js";
 import { hashPassword } from "../shared/utils/password.js";
@@ -22,6 +23,7 @@ import { memberAssignments } from "./data/member-assignment.js";
 import { memberMeasurements } from "./data/member-measurement.js";
 import { events } from "./data/event.js";
 import { enquiries } from "./data/enquiry.js";
+import { attendances } from "./data/attendance.js";
 
 /**
  * Synchronizes the sequence counter for a given collection prefix.
@@ -348,6 +350,38 @@ async function seedEnquiries(): Promise<void> {
 }
 
 /**
+ * Seeds attendance records and updates the corresponding auto-increment counter.
+ */
+async function seedAttendance(): Promise<void> {
+  console.log(`[INFO] Seeding Attendance (${attendances.length} records)...`);
+
+  await AttendanceModel.deleteMany({});
+  console.log("[INFO] Cleared existing Attendance collection.");
+
+  const attendanceDocs = attendances.map((att) => ({
+    attendanceId: att.attendanceId,
+    userId: att.userId,
+    role: att.role as "trainer" | "member",
+    date: new Date(att.date),
+    checkIn: new Date(att.checkIn),
+    checkOut: att.checkOut ? new Date(att.checkOut) : null,
+    durationMinutes: att.durationMinutes ?? 0,
+    status: att.status as "present" | "absent" | "checked_in" | "checked_out" | "late" | "half_day",
+    entryMethod: att.entryMethod as "kiosk" | "manual" | "qr" | "rfid" | "biometric",
+    notes: att.notes ?? "",
+  }));
+
+  await AttendanceModel.insertMany(attendanceDocs);
+  console.log(`[SUCCESS] Inserted ${attendanceDocs.length} Attendance records.`);
+
+  const maxSeq = await syncCounterSequence("attendance", attendances, "attendanceId");
+  const nextId = `ATT-${String(maxSeq + 1).padStart(3, "0")}`;
+  console.log(
+    `[INFO] Synchronized counter 'attendance' to sequence ${maxSeq}. Next ID: ${nextId}`,
+  );
+}
+
+/**
  * Primary seed runner.
  */
 async function runSeed(): Promise<void> {
@@ -365,6 +399,7 @@ async function runSeed(): Promise<void> {
     await seedMemberMeasurements();
     await seedEvents();
     await seedEnquiries();
+    await seedAttendance();
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`[SUCCESS] Database seeding completed successfully in ${duration}s.`);

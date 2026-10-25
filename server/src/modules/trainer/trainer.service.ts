@@ -32,6 +32,12 @@ class TrainerService {
       shiftTime: details?.shiftTime ?? { start: "09:00", end: "17:00" },
       employmentStatus: details?.employmentStatus ?? "active",
       salary: payment?.salary ?? 0,
+      amountPaid: payment?.amountPaid ?? 0,
+      amountDue:
+        payment?.amountDue !== undefined
+          ? payment.amountDue
+          : (payment?.salary ?? 0),
+      paymentStatus: payment?.paymentStatus ?? "PENDING",
     };
   }
 
@@ -173,6 +179,12 @@ class TrainerService {
         shiftTime: details?.shiftTime ?? { start: "09:00", end: "17:00" },
         employmentStatus: details?.employmentStatus ?? "active",
         salary: payment?.salary ?? 0,
+        amountPaid: payment?.amountPaid ?? 0,
+        amountDue:
+          payment?.amountDue !== undefined
+            ? payment.amountDue
+            : (payment?.salary ?? 0),
+        paymentStatus: payment?.paymentStatus ?? "PENDING",
       };
     });
   }

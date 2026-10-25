@@ -6,6 +6,7 @@ import {
   createTrainerSchema,
   updateTrainerSchema,
 } from "./trainer.validator.js";
+import { createTrainerPaymentReceiptSchema } from "./trainer-payment-receipt/trainer-payment-receipt.validator.js";
 
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import { authenticate } from "../../shared/middlewares/auth.middleware.js";
@@ -31,6 +32,43 @@ router.get(
   authorize("admin", "trainer"),
   checkPermission("trainers"),
   TrainerController.getAllTrainers,
+);
+
+// record trainer payment / payroll
+router.post(
+  "/payroll/pay",
+  authenticate,
+  authorize("admin"),
+  checkPermission("trainers"),
+  validate(createTrainerPaymentReceiptSchema),
+  TrainerController.recordPayment,
+);
+
+// fetch all payment receipts
+router.get(
+  "/payroll/receipts",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("trainers"),
+  TrainerController.getPaymentReceipts,
+);
+
+// fetch all trainer payments
+router.get(
+  "/payroll/payments",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("trainers"),
+  TrainerController.getAllPayments,
+);
+
+// fetch receipts for a specific trainer
+router.get(
+  "/:id/receipts",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("trainers"),
+  TrainerController.getTrainerReceipts,
 );
 
 // fetch trainer by id

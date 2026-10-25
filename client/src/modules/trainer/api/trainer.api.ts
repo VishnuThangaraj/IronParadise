@@ -1,10 +1,15 @@
 import api from "@/shared/service/api";
-import {
+import type {
   TrainerFormData,
   TrainerResponse,
   UpdateTrainerRequest,
   SingleTrainerResponse,
 } from "../types/trainer.types";
+import type {
+  CreateTrainerPaymentReceiptPayload,
+  SingleTrainerPaymentReceiptResponse,
+  TrainerPaymentReceiptResponse,
+} from "../types/trainer-payment-receipt.types";
 
 // get all trainer
 export const getTrainers = async (): Promise<TrainerResponse> => {
@@ -61,6 +66,40 @@ export const deleteTrainerPermanently = async (
 ): Promise<SingleTrainerResponse> => {
   const response = await api.delete<SingleTrainerResponse>(
     `/api/trainer/${trainerId}/permanent`,
+  );
+  return response.data;
+};
+
+// record trainer payment (salary payout)
+export const recordTrainerPayment = async (
+  payload: CreateTrainerPaymentReceiptPayload,
+): Promise<SingleTrainerPaymentReceiptResponse> => {
+  const response = await api.post<SingleTrainerPaymentReceiptResponse>(
+    "/api/trainer/payroll/pay",
+    payload,
+  );
+  return response.data;
+};
+
+// get all payment receipts (or filtered by userId)
+export const getTrainerPaymentReceipts = async (
+  userId?: string,
+): Promise<TrainerPaymentReceiptResponse> => {
+  const response = await api.get<TrainerPaymentReceiptResponse>(
+    "/api/trainer/payroll/receipts",
+    {
+      params: userId ? { userId } : undefined,
+    },
+  );
+  return response.data;
+};
+
+// get trainer receipts by userId
+export const getTrainerReceiptsByUserId = async (
+  userId: string,
+): Promise<TrainerPaymentReceiptResponse> => {
+  const response = await api.get<TrainerPaymentReceiptResponse>(
+    `/api/trainer/${userId}/receipts`,
   );
   return response.data;
 };

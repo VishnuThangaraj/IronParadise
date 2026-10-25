@@ -13,6 +13,9 @@ export interface Trainer extends User {
   shiftTime: ShiftTime;
   employmentStatus: "active" | "inactive" | "on_leave" | "terminated";
   salary: number;
+  amountPaid?: number;
+  amountDue?: number;
+  paymentStatus?: "PENDING" | "PARTIAL" | "PAID" | "OVERDUE" | string;
 }
 
 export type TrainerFormData = Omit<
