@@ -40,6 +40,9 @@ class TrainerPaymentService {
             ? { amountPaid: data.amountPaid }
             : {}),
           ...(data.paymentStatus ? { paymentStatus: data.paymentStatus } : {}),
+          ...(data.lastAccruedMonth !== undefined
+            ? { lastAccruedMonth: data.lastAccruedMonth }
+            : {}),
         },
       ],
       createOptions,

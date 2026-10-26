@@ -1,5 +1,5 @@
 import type { GridColDef } from "@mui/x-data-grid";
-import { LuIndianRupee, LuCreditCard, LuReceipt } from "react-icons/lu";
+import { LuIndianRupee, LuCreditCard, LuReceipt, LuUserCheck } from "react-icons/lu";
 
 import Chip from "@/shared/components/ui/chip/Chip";
 import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
@@ -16,48 +16,64 @@ export const getTrainerPayrollColumns = (
 ): GridColDef<Trainer>[] => [
   {
     field: "userId",
-    headerName: "Trainer",
-    flex: 1.4,
-    minWidth: 200,
+    headerName: "Trainer ID",
+    flex: 1,
+    minWidth: 170,
     renderCell: (params) => {
       const trainer = params.row;
       const initial = trainer.fullName ? trainer.fullName.charAt(0).toUpperCase() : "T";
 
       return (
-        <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
-          {trainer.profileImage ? (
-            <img
-              src={trainer.profileImage}
-              alt={trainer.fullName}
-              className="w-8 h-8 rounded-xl object-cover shrink-0 border border-slate-200 dark:border-slate-700"
-            />
-          ) : (
+        <div className="flex items-center gap-2.5 h-full w-full min-w-0 overflow-hidden">
+          <div className="w-8 h-8 min-w-[32px] max-w-[32px] h-[32px] min-h-[32px] max-h-[32px] rounded-xl overflow-hidden shrink-0 border border-slate-200/80 dark:border-slate-700/80 shadow-xs relative flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+            {trainer.profileImage ? (
+              <img
+                src={trainer.profileImage}
+                alt={trainer.fullName}
+                width={32}
+                height={32}
+                className="w-full h-full object-cover block"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = "none";
+                }}
+              />
+            ) : null}
             <div
-              className={`w-8 h-8 rounded-xl ${getDeterministicGradient(
+              className={`w-full h-full ${getDeterministicGradient(
                 trainer.userId || trainer._id,
-              )} flex items-center justify-center text-white text-xs font-bold shadow-xs shrink-0`}
+              )} flex items-center justify-center text-white text-xs font-bold ${
+                trainer.profileImage ? "absolute inset-0 -z-10" : ""
+              }`}
             >
-              {initial}
+              {initial || <LuUserCheck className="w-4 h-4" />}
             </div>
-          )}
-
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate">
-              {trainer.fullName}
-            </p>
-            <p className="text-[11px] font-mono text-slate-400 dark:text-slate-500 truncate">
-              {trainer.userId}
-            </p>
           </div>
+
+          <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 flex-1 font-mono text-xs">
+            {params.value}
+          </span>
         </div>
       );
     },
   },
   {
+    field: "fullName",
+    headerName: "Full Name",
+    flex: 1.2,
+    minWidth: 160,
+    renderCell: (params) => (
+      <div className="flex items-center gap-3 h-full w-full min-w-0 overflow-hidden">
+        <span className="font-medium text-slate-700 dark:text-slate-300 truncate min-w-0 flex-1">
+          {params.value}
+        </span>
+      </div>
+    ),
+  },
+  {
     field: "shiftTime",
     headerName: "Shift",
     flex: 0.9,
-    minWidth: 120,
+    minWidth: 125,
     renderCell: (params) => {
       const shift = params.value as { start: string; end: string } | undefined;
       return (

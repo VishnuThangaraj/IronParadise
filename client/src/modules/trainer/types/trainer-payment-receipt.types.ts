@@ -5,6 +5,18 @@ export type PaymentMethods =
   | "CHEQUE"
   | "OTHER";
 
+export interface EnrichedTrainerInfo {
+  userId: string;
+  fullName: string;
+  email?: string;
+  phone?: string;
+  profileImage?: string;
+  gender?: string;
+  specialization?: string[];
+  qualification?: string;
+  employmentStatus?: string;
+}
+
 export interface TrainerPaymentReceipt {
   _id: string;
   userId: string;
@@ -18,6 +30,7 @@ export interface TrainerPaymentReceipt {
   createdAt?: string;
   updatedAt?: string;
   __v?: number;
+  trainer?: EnrichedTrainerInfo | null;
 }
 
 export interface CreateTrainerPaymentReceiptPayload {

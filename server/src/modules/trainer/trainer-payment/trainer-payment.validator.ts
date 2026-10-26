@@ -13,6 +13,7 @@ export const trainerPaymentSchema = z.object({
   amountDue: z.number().min(0).default(0),
   amountPaid: z.number().min(0).default(0),
   paymentStatus: paymentStatusEnum.default("PENDING"),
+  lastAccruedMonth: z.string().optional().nullable(),
 });
 
 export const createTrainerPaymentSchema = trainerPaymentSchema;

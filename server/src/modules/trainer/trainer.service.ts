@@ -38,6 +38,7 @@ class TrainerService {
           ? payment.amountDue
           : (payment?.salary ?? 0),
       paymentStatus: payment?.paymentStatus ?? "PENDING",
+      lastAccruedMonth: payment?.lastAccruedMonth ?? null,
     };
   }
 
@@ -185,6 +186,7 @@ class TrainerService {
             ? payment.amountDue
             : (payment?.salary ?? 0),
         paymentStatus: payment?.paymentStatus ?? "PENDING",
+        lastAccruedMonth: payment?.lastAccruedMonth ?? null,
       };
     });
   }

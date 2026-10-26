@@ -87,21 +87,29 @@ const TrainerPayrollGrid = ({
             {/* Header: Avatar, Name, ID & Status Badge */}
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                {trainer.profileImage ? (
-                  <img
-                    src={trainer.profileImage}
-                    alt={trainer.fullName}
-                    className="w-12 h-12 rounded-2xl object-cover shrink-0 border border-slate-200 dark:border-slate-700 shadow-xs"
-                  />
-                ) : (
+                <div className="w-12 h-12 min-w-[48px] max-w-[48px] h-[48px] min-h-[48px] max-h-[48px] rounded-2xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700 shadow-xs relative flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+                  {trainer.profileImage ? (
+                    <img
+                      src={trainer.profileImage}
+                      alt={trainer.fullName}
+                      width={48}
+                      height={48}
+                      className="w-full h-full object-cover block"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  ) : null}
                   <div
-                    className={`w-12 h-12 rounded-2xl ${getDeterministicGradient(
+                    className={`w-full h-full ${getDeterministicGradient(
                       trainer.userId || trainer._id,
-                    )} flex items-center justify-center text-white text-base font-bold shadow-xs shrink-0`}
+                    )} flex items-center justify-center text-white text-base font-bold ${
+                      trainer.profileImage ? "absolute inset-0 -z-10" : ""
+                    }`}
                   >
                     {initial}
                   </div>
-                )}
+                </div>
 
                 <div className="min-w-0">
                   <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white truncate">

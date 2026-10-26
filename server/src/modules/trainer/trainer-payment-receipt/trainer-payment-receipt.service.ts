@@ -4,6 +4,8 @@ import TrainerPaymentReceiptModel, {
   type TrainerPaymentReceipt,
 } from "./trainer-payment-receipt.model.js";
 import TrainerPaymentModel from "../trainer-payment/trainer-payment.model.js";
+import UserModel from "../../user/user.model.js";
+import TrainerDetailsModel from "../trainer-details/trainer-details.model.js";
 
 import type {
   CreateTrainerPaymentReceiptInput,
@@ -93,18 +95,58 @@ class TrainerPaymentReceiptService {
   // fetch all trainer payment receipts
   public async getAllTrainerPaymentReceipts(
     userId?: string,
-  ): Promise<HydratedDocument<TrainerPaymentReceipt>[]> {
+  ): Promise<any[]> {
     const query = userId ? { userId: userId.trim().toUpperCase() } : {};
-    return await TrainerPaymentReceiptModel.find(query).sort({
-      paymentDate: -1,
-      createdAt: -1,
+    const receipts = await TrainerPaymentReceiptModel.find(query)
+      .sort({
+        paymentDate: -1,
+        createdAt: -1,
+      })
+      .lean();
+
+    if (!receipts.length) {
+      return [];
+    }
+
+    const userIds = [...new Set(receipts.map((r) => r.userId))];
+    const [users, trainerDetails] = await Promise.all([
+      UserModel.find({ userId: { $in: userIds } })
+        .select("userId fullName email phone profileImage gender")
+        .lean(),
+      TrainerDetailsModel.find({ userId: { $in: userIds } })
+        .select("userId specialization qualification employmentStatus")
+        .lean(),
+    ]);
+
+    const userMap = new Map(users.map((u) => [u.userId, u]));
+    const detailsMap = new Map(trainerDetails.map((d) => [d.userId, d]));
+
+    return receipts.map((r) => {
+      const u = userMap.get(r.userId);
+      const d = detailsMap.get(r.userId);
+      return {
+        ...r,
+        trainer: u
+          ? {
+              userId: u.userId,
+              fullName: u.fullName,
+              email: u.email,
+              phone: u.phone,
+              profileImage: u.profileImage,
+              gender: u.gender,
+              specialization: d?.specialization || [],
+              qualification: d?.qualification || "",
+              employmentStatus: d?.employmentStatus || "active",
+            }
+          : null,
+      };
     });
   }
 
   // fetch trainer payment receipt by id or receipt number
   public async getTrainerPaymentReceiptById(
     identifier: string,
-  ): Promise<HydratedDocument<TrainerPaymentReceipt>> {
+  ): Promise<any> {
     const cleanId = identifier.trim().toUpperCase();
 
     const trainerPaymentReceipt = await TrainerPaymentReceiptModel.findOne({
@@ -115,24 +157,44 @@ class TrainerPaymentReceiptService {
           ? [{ _id: identifier }]
           : []),
       ],
-    });
+    }).lean();
 
     if (!trainerPaymentReceipt) {
       throw new AppError("Trainer payment receipt not found", 404);
     }
 
-    return trainerPaymentReceipt;
+    const [u, d] = await Promise.all([
+      UserModel.findOne({ userId: trainerPaymentReceipt.userId })
+        .select("userId fullName email phone profileImage gender")
+        .lean(),
+      TrainerDetailsModel.findOne({ userId: trainerPaymentReceipt.userId })
+        .select("userId specialization qualification employmentStatus")
+        .lean(),
+    ]);
+
+    return {
+      ...trainerPaymentReceipt,
+      trainer: u
+        ? {
+            userId: u.userId,
+            fullName: u.fullName,
+            email: u.email,
+            phone: u.phone,
+            profileImage: u.profileImage,
+            gender: u.gender,
+            specialization: d?.specialization || [],
+            qualification: d?.qualification || "",
+            employmentStatus: d?.employmentStatus || "active",
+          }
+        : null,
+    };
   }
 
   // fetch trainer payment receipts by user id
   public async getTrainerPaymentReceiptsByUserId(
     userId: string,
-  ): Promise<HydratedDocument<TrainerPaymentReceipt>[]> {
-    const userIdClean = userId.trim().toUpperCase();
-    return await TrainerPaymentReceiptModel.find({ userId: userIdClean }).sort({
-      paymentDate: -1,
-      createdAt: -1,
-    });
+  ): Promise<any[]> {
+    return this.getAllTrainerPaymentReceipts(userId);
   }
 
   // update trainer payment receipt

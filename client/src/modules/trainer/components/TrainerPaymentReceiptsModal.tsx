@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Modal } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -7,14 +8,17 @@ import {
   LuCreditCard,
   LuLoader,
   LuCalendar,
+  LuPrinter,
 } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
 import Chip from "@/shared/components/ui/chip/Chip";
+import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import { formatDate } from "@/shared/utils/formatDate";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 
 import { getTrainerReceiptsByUserId } from "../api/trainer.api";
+import TrainerInvoiceModal from "./TrainerInvoiceModal";
 import type { Trainer } from "../types/trainer.types";
 import type { TrainerPaymentReceipt } from "../types/trainer-payment-receipt.types";
 
@@ -32,6 +36,8 @@ const TrainerPaymentReceiptsModal = ({
   onPayAgain,
 }: TrainerPaymentReceiptsModalProps) => {
   const userId = trainer?.userId;
+  const [selectedReceiptForInvoice, setSelectedReceiptForInvoice] =
+    useState<TrainerPaymentReceipt | null>(null);
 
   const {
     data: response,
@@ -50,7 +56,8 @@ const TrainerPaymentReceiptsModal = ({
   const totalPaid = receipts.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
 
   return (
-    <Modal
+    <>
+      <Modal
       open={Boolean(open)}
       onClose={onClose}
       slotProps={{
@@ -93,21 +100,29 @@ const TrainerPaymentReceiptsModal = ({
         {/* Trainer & Total Disbursed Summary Bar */}
         <div className="flex items-center justify-between p-4 px-6 bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 shrink-0 text-xs">
           <div className="flex items-center gap-2.5">
-            {trainer.profileImage ? (
-              <img
-                src={trainer.profileImage}
-                alt={trainer.fullName}
-                className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-700"
-              />
-            ) : (
+            <div className="w-8 h-8 min-w-[32px] max-w-[32px] h-[32px] min-h-[32px] max-h-[32px] rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700 shadow-2xs relative flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+              {trainer.profileImage ? (
+                <img
+                  src={trainer.profileImage}
+                  alt={trainer.fullName}
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover block"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = "none";
+                  }}
+                />
+              ) : null}
               <div
-                className={`w-8 h-8 rounded-lg ${getDeterministicGradient(
+                className={`w-full h-full ${getDeterministicGradient(
                   trainer.userId || trainer._id,
-                )} flex items-center justify-center text-white font-bold text-xs`}
+                )} flex items-center justify-center text-white font-bold text-xs ${
+                  trainer.profileImage ? "absolute inset-0 -z-10" : ""
+                }`}
               >
                 {initial}
               </div>
-            )}
+            </div>
             <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
               {trainer.fullName}
             </span>
@@ -163,15 +178,27 @@ const TrainerPaymentReceiptsModal = ({
                     </span>
                   </div>
 
-                  <div className="text-right">
+                  <div className="text-right flex flex-col items-end gap-1">
                     <span className="font-mono font-bold text-sm sm:text-base text-emerald-600 dark:text-emerald-400 block">
                       ₹{Number(receipt.amount).toLocaleString("en-IN")}
                     </span>
-                    <Chip
-                      variant="active"
-                      size="xs"
-                      label={receipt.paymentMethod}
-                    />
+                    <div className="flex items-center gap-1.5">
+                      <Chip
+                        variant="active"
+                        size="xs"
+                        label={receipt.paymentMethod}
+                      />
+                      <Tooltip title="View & Print Official Invoice">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedReceiptForInvoice(receipt)}
+                          className="p-1 rounded-md text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 transition-colors cursor-pointer shadow-2xs"
+                          aria-label="Print Invoice"
+                        >
+                          <LuPrinter className="w-3.5 h-3.5" />
+                        </button>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
 
@@ -232,6 +259,15 @@ const TrainerPaymentReceiptsModal = ({
         </div>
       </div>
     </Modal>
+
+    {/* Official Invoice Modal */}
+    <TrainerInvoiceModal
+      open={Boolean(selectedReceiptForInvoice)}
+      receipt={selectedReceiptForInvoice}
+      trainer={trainer}
+      onClose={() => setSelectedReceiptForInvoice(null)}
+    />
+  </>
   );
 };
 

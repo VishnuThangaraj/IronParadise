@@ -33,6 +33,12 @@ const trainerPaymentSchema = new Schema(
       enum: ["PENDING", "PARTIAL", "PAID", "OVERDUE"],
       default: "PENDING",
     },
+
+    lastAccruedMonth: {
+      type: String,
+      default: null,
+      trim: true,
+    },
   },
   {
     timestamps: true,
