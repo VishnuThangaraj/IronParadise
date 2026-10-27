@@ -6,6 +6,7 @@ import {
   createMemberSchema,
   updateMemberSchema,
 } from "./member.validator.js";
+import { createMemberPaymentReceiptSchema } from "./member-payment-receipt/member-payment-receipt.validator.js";
 
 import { validate } from "../../shared/middlewares/validate.middleware.js";
 import { authenticate } from "../../shared/middlewares/auth.middleware.js";
@@ -31,6 +32,43 @@ router.get(
   authorize("admin", "trainer"),
   checkPermission("members"),
   MemberController.getAllMembers,
+);
+
+// record member payment (fee collection)
+router.post(
+  "/payment/pay",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("members"),
+  validate(createMemberPaymentReceiptSchema),
+  MemberController.recordPayment,
+);
+
+// fetch all payment receipts
+router.get(
+  "/payment/receipts",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("members"),
+  MemberController.getPaymentReceipts,
+);
+
+// fetch all member payments
+router.get(
+  "/payment",
+  authenticate,
+  authorize("admin", "trainer"),
+  checkPermission("members"),
+  MemberController.getAllPayments,
+);
+
+// fetch receipts for a specific member
+router.get(
+  "/:id/receipts",
+  authenticate,
+  authorize("admin", "trainer", "member"),
+  checkPermission("members"),
+  MemberController.getMemberReceipts,
 );
 
 // fetch member by id

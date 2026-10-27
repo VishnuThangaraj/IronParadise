@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 import MemberService from "./member.service.js";
+import MemberPaymentReceiptService from "./member-payment-receipt/member-payment-receipt.service.js";
 import { sendResponse } from "../../shared/utils/response.js";
 
 class MemberController {
@@ -97,6 +98,80 @@ class MemberController {
         id as string,
       );
       sendResponse(res, 200, "Member permanently deleted", deletedMember);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // record member payment receipt (fee payment)
+  public async recordPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const receipt =
+        await MemberPaymentReceiptService.createMemberPaymentReceipt(req.body);
+      sendResponse(res, 201, "Member payment recorded successfully", receipt);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // fetch all payment receipts (optional ?userId=...)
+  public async getPaymentReceipts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { userId, paymentId } = req.query;
+      const receipts = await MemberService.getAllMemberPaymentReceipts({
+        userId: userId as string | undefined,
+        paymentId: paymentId as string | undefined,
+      });
+      sendResponse(res, 200, "Payment receipts fetched successfully", receipts);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // fetch all member payments (enriched with member & plan details)
+  public async getAllPayments(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { paymentStatus, membershipPlanId, search } = req.query;
+      const payments = await MemberService.getAllMemberPayments({
+        paymentStatus: paymentStatus as string | undefined,
+        membershipPlanId: membershipPlanId as string | undefined,
+        search: search as string | undefined,
+      });
+      sendResponse(res, 200, "Member payments fetched successfully", payments);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // fetch payment receipts for a specific member
+  public async getMemberReceipts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const receipts = await MemberService.getAllMemberPaymentReceipts({
+        userId: id as string,
+      });
+      sendResponse(
+        res,
+        200,
+        "Member payment receipts fetched successfully",
+        receipts,
+      );
     } catch (error) {
       next(error);
     }

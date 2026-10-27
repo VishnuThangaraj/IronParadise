@@ -44,6 +44,9 @@ const MemberForm = lazy(() => import("@/modules/member/pages/MemberForm"));
 const MemberDetails = lazy(
   () => import("@/modules/member/pages/MemberDetails"),
 );
+const MembershipPaylist = lazy(
+  () => import("@/modules/member/pages/MembershipPaylist"),
+);
 
 // Diet Plan
 const DietPlanList = lazy(
@@ -180,6 +183,9 @@ const App = () => {
                   path="/membership/:planId"
                   element={<MembershipPlanDetails />}
                 />
+
+                {/* Membership Paylist */}
+                <Route path="/payment" element={<MembershipPaylist />} />
 
                 <Route
                   path="*"

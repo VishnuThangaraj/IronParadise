@@ -8,6 +8,8 @@ import TrainerDetailsModel from "../modules/trainer/trainer-details/trainer-deta
 import TrainerPaymentModel from "../modules/trainer/trainer-payment/trainer-payment.model.js";
 import MemberAssignmentModel from "../modules/member/member-assignment/member-assignment.model.js";
 import MemberMeasurementModel from "../modules/member/member-measurement/member-measurement.model.js";
+import MemberPaymentModel from "../modules/member/member-payment/member-payment.model.js";
+import MemberPaymentReceiptModel from "../modules/member/member-payment-receipt/member-payment-receipt.model.js";
 import EventModal from "../modules/event/event.modal.js";
 import EnquiryModel from "../modules/enquiry/enquiry.model.js";
 import AttendanceModel from "../modules/attendance/attendance.model.js";
@@ -189,6 +191,8 @@ async function seedMembers(): Promise<void> {
 
   await UserModel.deleteMany({ role: "member" });
   await MemberAssignmentModel.deleteMany({});
+  await MemberPaymentModel.deleteMany({});
+  await MemberPaymentReceiptModel.deleteMany({});
   await CredentialModel.deleteMany({ userType: "member" });
   console.log("[INFO] Cleared existing Member-related collections.");
 
@@ -238,8 +242,102 @@ async function seedMembers(): Promise<void> {
   }
   await CredentialModel.insertMany(credentialDocs);
 
+  // Generate Member Payments & Receipts
+  const planPriceMap = new Map(membershipPlans.map((p) => [p.membershipPlanId, p.price]));
+  const paymentDocs = [];
+  const receiptDocs = [];
+
+  let payIndex = 1;
+  let rcptIndex = 1;
+
+  for (let i = 0; i < assignmentDocs.length; i++) {
+    const asgn = assignmentDocs[i];
+    if (!asgn || !asgn.membershipPlanId) continue;
+    const price = planPriceMap.get(asgn.membershipPlanId) || 2000;
+    const paymentId = `PAY-${String(payIndex).padStart(5, "0")}`;
+    payIndex++;
+
+    let amountPaid = 0;
+    let amountDue = price;
+    let paymentStatus: "PAID" | "PARTIAL" | "PENDING" | "OVERDUE" = "PENDING";
+    let dueDate = asgn.startDate;
+
+    if (i < 10) {
+      // Fully Paid
+      amountPaid = price;
+      amountDue = 0;
+      paymentStatus = "PAID";
+    } else if (i < 18) {
+      // Partially Paid
+      amountPaid = Math.floor(price / 2);
+      amountDue = price - amountPaid;
+      paymentStatus = "PARTIAL";
+    } else if (i < 22) {
+      // Pending
+      amountPaid = 0;
+      amountDue = price;
+      paymentStatus = "PENDING";
+    } else {
+      // Overdue
+      amountPaid = 0;
+      amountDue = price;
+      paymentStatus = "OVERDUE";
+      const pastDue = new Date(asgn.startDate);
+      pastDue.setDate(pastDue.getDate() - 15);
+      dueDate = pastDue;
+    }
+
+    paymentDocs.push({
+      paymentId,
+      userId: asgn.userId,
+      assignmentId: asgn.assignmentId,
+      totalAmount: price,
+      amountPaid,
+      amountDue,
+      dueDate,
+      paymentStatus,
+    });
+
+    // Create receipt if payment was made
+    if (amountPaid > 0) {
+      const receiptNumber = `MPR-${String(rcptIndex).padStart(5, "0")}`;
+      rcptIndex++;
+      const paymentMethods: Array<"UPI" | "BANK_TRANSFER" | "CASH" | "CARD"> = [
+        "UPI",
+        "BANK_TRANSFER",
+        "CASH",
+        "CARD",
+      ];
+      const method = paymentMethods[i % paymentMethods.length];
+
+      receiptDocs.push({
+        receiptNumber,
+        paymentId,
+        userId: asgn.userId,
+        amountPaid,
+        paymentDate: asgn.startDate,
+        paymentMethod: method,
+        referenceNumber:
+          method === "CASH"
+            ? undefined
+            : `${method}-REF-${Math.floor(100000 + Math.random() * 900000)}`,
+        remarks:
+          paymentStatus === "PAID"
+            ? "Full membership fee paid"
+            : "First installment paid",
+      });
+    }
+  }
+
+  if (paymentDocs.length > 0) {
+    await MemberPaymentModel.insertMany(paymentDocs);
+  }
+  if (receiptDocs.length > 0) {
+    await MemberPaymentReceiptModel.insertMany(receiptDocs);
+  }
+
   console.log(
-    `[SUCCESS] Inserted ${members.length} Members and ${assignmentDocs.length} Member Assignments.`,
+    `[SUCCESS] Inserted ${members.length} Members, ${assignmentDocs.length} Assignments, ${paymentDocs.length} Payments, and ${receiptDocs.length} Receipts.`,
   );
 
   const maxMemberSeq = await syncCounterSequence("member", members, "userId");
@@ -250,6 +348,21 @@ async function seedMembers(): Promise<void> {
     const maxAssignmentSeq = await syncCounterSequence("assignment", assignmentDocs, "assignmentId");
     const nextAssignmentId = `MAS-${String(maxAssignmentSeq + 1).padStart(3, "0")}`;
     console.log(`[INFO] Synchronized counter 'assignment' to sequence ${maxAssignmentSeq}. Next ID: ${nextAssignmentId}`);
+  }
+
+  if (paymentDocs.length > 0) {
+    await CounterModel.findByIdAndUpdate(
+      "payment",
+      { sequence: paymentDocs.length },
+      { upsert: true },
+    );
+  }
+  if (receiptDocs.length > 0) {
+    await CounterModel.findByIdAndUpdate(
+      "memberReceipt",
+      { sequence: receiptDocs.length },
+      { upsert: true },
+    );
   }
 }
 

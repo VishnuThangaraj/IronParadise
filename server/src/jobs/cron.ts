@@ -1,6 +1,7 @@
 import cron, { type ScheduledTask } from "node-cron";
 import { processDailyTrainerSalaryAccruals } from "./trainer-salary.job.js";
 import { processNightlyAttendanceCheckouts } from "./attendance-checkout.job.js";
+import { processDailySubscriptionRenewalsAndDues } from "./member-subscription.job.js";
 
 interface CronJobDefinition {
   name: string;
@@ -30,6 +31,20 @@ export function initCronJobs(): void {
         await processDailyTrainerSalaryAccruals();
         console.log(
           `[CRON] [${new Date().toISOString()}] Completed Trainer Salary Due Accrual job.`,
+        );
+      },
+    },
+    {
+      name: "Member Subscription Renewal & Due Accrual",
+      schedule: "0 0 * * *", // Everyday exactly at 12:00 AM
+      timezone: DEFAULT_TIMEZONE,
+      handler: async () => {
+        console.log(
+          `[CRON] [${new Date().toISOString()}] Starting Member Subscription Renewal & Due Accrual job...`,
+        );
+        await processDailySubscriptionRenewalsAndDues();
+        console.log(
+          `[CRON] [${new Date().toISOString()}] Completed Member Subscription Renewal & Due Accrual job.`,
         );
       },
     },

@@ -8,15 +8,9 @@ export const memberPaymentStatusEnum = z.enum(
 );
 
 export const memberPaymentSchema = z.object({
-  paymentId: z
-    .string()
-    .length(7, "Payment ID must be 7 characters long")
-    .trim(),
-  userId: z.string().length(7, "User ID must be 7 characters long").trim(),
-  assignmentId: z
-    .string()
-    .length(7, "Assignment ID must be 7 characters long")
-    .trim(),
+  paymentId: z.string().min(3, "Payment ID must be valid").trim(),
+  userId: z.string().min(3, "User ID must be valid").trim(),
+  assignmentId: z.string().min(3, "Assignment ID must be valid").trim(),
   totalAmount: z.number().min(0, "Total amount cannot be negative"),
   amountPaid: z.number().min(0, "Amount paid cannot be negative").default(0),
   amountDue: z.number().min(0, "Amount due cannot be negative").default(0),
@@ -27,7 +21,7 @@ export const memberPaymentSchema = z.object({
 export const createMemberPaymentSchema = memberPaymentSchema.extend({
   paymentId: z
     .string()
-    .length(7, "Payment ID must be 7 characters long")
+    .min(3, "Payment ID must be valid")
     .trim()
     .optional(),
   amountPaid: z

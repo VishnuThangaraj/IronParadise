@@ -1,5 +1,9 @@
 import { initCronJobs, stopCronJobs, getActiveCronJobs } from "../cron.js";
 import { isTrainerSalaryDueOnDate } from "../trainer-salary.job.js";
+import {
+  isSubscriptionExpiredOnDate,
+  calculateSubscriptionEndDate,
+} from "../member-subscription.job.js";
 
 async function runTestSuite() {
   console.log("=================================================");
@@ -29,12 +33,16 @@ async function runTestSuite() {
     "Cron registers 'Trainer Salary Due Accrual' (12:00 AM)",
   );
   assert(
+    activeJobs.includes("Member Subscription Renewal & Due Accrual"),
+    "Cron registers 'Member Subscription Renewal & Due Accrual' (12:00 AM)",
+  );
+  assert(
     activeJobs.includes("Attendance Nightly Auto Check-Out"),
     "Cron registers 'Attendance Nightly Auto Check-Out' (10:30 PM)",
   );
   assert(
-    activeJobs.length === 2,
-    "Exactly 2 background cron jobs active simultaneously",
+    activeJobs.length === 3,
+    "Exactly 3 background cron jobs active simultaneously",
   );
 
   stopCronJobs();
@@ -144,6 +152,59 @@ async function runTestSuite() {
   assert(
     combinedEmpty === systemTag,
     "Note tagging on empty notes sets cleanly without extra separators",
+  );
+
+  // --- Suite 4: Member Subscription Renewal & Due Date Matching ---
+  console.log("\n--- Suite 4: Member Subscription Renewal & Due Date Matching ---");
+
+  // 1. Subscription Expired when endDate is in the past
+  const pastExpired = isSubscriptionExpiredOnDate(
+    "2026-10-20",
+    new Date("2026-10-27"),
+  );
+  assert(
+    pastExpired === true,
+    "Subscription expires when endDate is strictly prior to targetDate (2026-10-20 < 2026-10-27)",
+  );
+
+  // 2. Subscription Expired when endDate is today
+  const todayExpired = isSubscriptionExpiredOnDate(
+    "2026-10-27",
+    new Date("2026-10-27"),
+  );
+  assert(
+    todayExpired === true,
+    "Subscription matures and expires on exact matching targetDate (2026-10-27 == 2026-10-27)",
+  );
+
+  // 3. Subscription Active when endDate is in the future
+  const futureActive = isSubscriptionExpiredOnDate(
+    "2026-11-15",
+    new Date("2026-10-27"),
+  );
+  assert(
+    futureActive === false,
+    "Subscription remains active when endDate is in the future (2026-11-15 > 2026-10-27)",
+  );
+
+  // 4. Calculate Subscription Renewal End Date
+  const startDate = new Date(2026, 0, 15); // Jan 15, 2026
+  const end1Month = calculateSubscriptionEndDate(startDate, 1);
+  assert(
+    end1Month.getFullYear() === 2026 && end1Month.getMonth() === 1 && end1Month.getDate() === 15,
+    "1 Month plan renewal advances endDate by exactly 1 month (Jan 15 -> Feb 15)",
+  );
+
+  const end3Month = calculateSubscriptionEndDate(startDate, 3);
+  assert(
+    end3Month.getFullYear() === 2026 && end3Month.getMonth() === 3 && end3Month.getDate() === 15,
+    "3 Month plan renewal advances endDate by exactly 3 months (Jan 15 -> Apr 15)",
+  );
+
+  const end12Month = calculateSubscriptionEndDate(startDate, 12);
+  assert(
+    end12Month.getFullYear() === 2027 && end12Month.getMonth() === 0 && end12Month.getDate() === 15,
+    "12 Month annual plan renewal advances endDate by exactly 12 months (Jan 15, 2026 -> Jan 15, 2027)",
   );
 
   console.log("\n=================================================");

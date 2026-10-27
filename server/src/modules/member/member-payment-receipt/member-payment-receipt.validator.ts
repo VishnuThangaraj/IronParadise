@@ -8,9 +8,9 @@ export const memberPaymentMethodEnum = z.enum(
 );
 
 export const memberPaymentReceiptSchema = z.object({
-  receiptNumber: z.string().trim(),
-  paymentId: z.string().trim(),
-  userId: z.string().length(7, "User ID must be 7 characters long").trim(),
+  receiptNumber: z.string().min(3, "Receipt number must be valid").trim(),
+  paymentId: z.string().min(3, "Payment ID must be valid").trim(),
+  userId: z.string().min(3, "User ID must be valid").trim(),
   amountPaid: z.number().positive("Amount paid must be greater than 0"),
   paymentDate: z.coerce.date().optional(),
   paymentMethod: memberPaymentMethodEnum,
