@@ -7,53 +7,26 @@ const emptyStringToDate = z.preprocess(
   z.coerce.date().optional(),
 );
 
+const emptyStringToId = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.string().min(3, "Identifier must be at least 3 characters long").trim().optional(),
+);
+
 export const memberAssignmentPayloadSchema = z.object({
-  membershipPlanId: z
-    .string()
-    .length(7, "Membership Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  dietPlanId: z
-    .string()
-    .length(7, "Diet Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  workoutPlanId: z
-    .string()
-    .length(7, "Workout Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  trainerId: z
-    .string()
-    .length(7, "Trainer ID must be 7 characters long")
-    .trim()
-    .optional(),
+  membershipPlanId: emptyStringToId,
+  dietPlanId: emptyStringToId,
+  workoutPlanId: emptyStringToId,
+  trainerId: emptyStringToId,
   startDate: emptyStringToDate,
   endDate: emptyStringToDate,
 });
 
 export const createMemberSchema = userSchema.extend({
   role: z.enum(["member"]).optional().default("member"),
-  membershipPlanId: z
-    .string()
-    .length(7, "Membership Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  dietPlanId: z
-    .string()
-    .length(7, "Diet Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  workoutPlanId: z
-    .string()
-    .length(7, "Workout Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  trainerId: z
-    .string()
-    .length(7, "Trainer ID must be 7 characters long")
-    .trim()
-    .optional(),
+  membershipPlanId: emptyStringToId,
+  dietPlanId: emptyStringToId,
+  workoutPlanId: emptyStringToId,
+  trainerId: emptyStringToId,
   startDate: emptyStringToDate,
   endDate: emptyStringToDate,
   assignment: memberAssignmentPayloadSchema.optional(),

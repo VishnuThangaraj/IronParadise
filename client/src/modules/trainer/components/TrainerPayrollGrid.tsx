@@ -182,7 +182,7 @@ const TrainerPayrollGrid = ({
               </div>
 
               {trainer.specialization && trainer.specialization.length > 0 && (
-                <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300 truncate max-w-[140px]">
+                <span className="text-[11px] font-medium text-slate-600 dark:text-slate-300 truncate max-w-35">
                   {trainer.specialization[0]}
                 </span>
               )}

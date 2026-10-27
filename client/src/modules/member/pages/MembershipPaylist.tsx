@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LuFilter, LuCrown, LuRefreshCw } from "react-icons/lu";
+import { LuFilter, LuCrown } from "react-icons/lu";
 
 import PageHeader from "@/shared/components/ui/page/PageHeader";
 import Container from "@/shared/components/ui/containers/Container";
@@ -110,72 +110,54 @@ const MembershipPaylist = () => {
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 sm:gap-4">
+              {/* View Mode Toggle (Table / Grid) */}
+              <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
+
               {/* Payment Status Filter */}
-              <div className="w-full sm:w-44">
-                <SelectDropdown
-                  value={paymentStatusFilter}
-                  onChange={setPaymentStatusFilter}
-                  options={paymentStatusFilterOptions}
-                  icon={<LuFilter className="w-4 h-4" />}
-                  placeholder="Payment Status"
-                />
-              </div>
-
-              {/* Plan Filter */}
-              <div className="w-full sm:w-48">
-                <SelectDropdown
-                  value={planFilter}
-                  onChange={setPlanFilter}
-                  options={planOptions}
-                  icon={<LuCrown className="w-4 h-4" />}
-                  placeholder="Plan Filter"
-                />
-              </div>
-
-              {/* View Mode Toggle (Grid vs List/Table) */}
-              <ViewModeToggle
-                viewMode={viewMode}
-                setViewMode={setViewMode}
+              <SelectDropdown
+                options={paymentStatusFilterOptions}
+                value={paymentStatusFilter}
+                onChange={setPaymentStatusFilter}
+                icon={<LuFilter className="w-4 h-4" />}
               />
 
-              {/* Manual Refresh */}
-              <button
-                type="button"
-                onClick={() => refetch()}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
-                aria-label="Refresh payments"
-                title="Refresh payments"
-              >
-                <LuRefreshCw
-                  className={`w-4 h-4 ${loading ? "animate-spin text-indigo-600" : ""}`}
-                />
-              </button>
+              {/* Plan Filter */}
+              <SelectDropdown
+                options={planOptions}
+                value={planFilter}
+                onChange={setPlanFilter}
+                icon={<LuCrown className="w-4 h-4" />}
+              />
             </div>
           </Container>
 
           {/* 5. Main Content: Grid or DataTable */}
-          {viewMode === "grid" ? (
-            <MembershipPaylistGrid
-              payments={filteredPayments}
-              loading={loading}
-              onPay={handleOpenPayModal}
-              onViewReceipts={handleOpenReceiptsModal}
-            />
-          ) : (
-            <Container
-              variant="secondary"
-              className="w-full! max-w-full! mx-0! p-0! rounded-3xl! overflow-hidden shadow-xs border border-slate-200/80 dark:border-slate-800"
-            >
-              <DataTable<any>
-                rows={filteredPayments}
-                columns={columns}
+          <div className="relative z-0 w-full">
+            {viewMode === "grid" ? (
+              <MembershipPaylistGrid
+                payments={filteredPayments}
                 loading={loading}
-                getRowId={(row) => row.paymentId || row._id}
-                disableRowSelectionOnClick
+                onPay={handleOpenPayModal}
+                onViewReceipts={handleOpenReceiptsModal}
               />
-            </Container>
-          )}
+            ) : (
+              <Container
+                variant="secondary"
+                className="w-full! max-w-full! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+              >
+                <DataTable<any>
+                  rows={filteredPayments}
+                  columns={columns}
+                  loading={loading}
+                  getRowId={(row) => row.paymentId || row._id}
+                  className="border-none! rounded-none! shadow-none! bg-transparent!"
+                  height={560}
+                  disableRowSelectionOnClick
+                />
+              </Container>
+            )}
+          </div>
 
           {/* 6. Pay Dues Modal */}
           <PayMemberModal

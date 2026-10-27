@@ -5,6 +5,7 @@ import {
   LuReceipt,
   LuUser,
   LuCalendar,
+  LuCrown,
 } from "react-icons/lu";
 
 import Chip from "@/shared/components/ui/chip/Chip";
@@ -24,8 +25,27 @@ export const getMemberPaylistColumns = (
   {
     field: "userId",
     headerName: "Member ID",
-    flex: 1,
-    minWidth: 170,
+    flex: 0.9,
+    minWidth: 135,
+    renderCell: (params) => {
+      const payment = params.row;
+      return (
+        <div className="flex flex-col justify-center h-full min-w-0">
+          <span className="font-mono font-bold text-xs text-slate-900 dark:text-slate-100 tracking-wide truncate leading-tight">
+            {params.value || payment.userId}
+          </span>
+          <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500 truncate leading-tight mt-0.5">
+            {payment.paymentId}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    field: "fullName",
+    headerName: "Member Name",
+    flex: 1.4,
+    minWidth: 190,
     renderCell: (params) => {
       const payment = params.row;
       const initial = payment.fullName
@@ -58,33 +78,14 @@ export const getMemberPaylistColumns = (
             </div>
           </div>
 
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="font-semibold text-slate-800 dark:text-slate-100 truncate min-w-0 font-mono text-xs">
-              {params.value}
+          <div className="flex flex-col justify-center min-w-0 flex-1 overflow-hidden">
+            <span className="font-semibold text-slate-800 dark:text-slate-100 truncate text-xs sm:text-sm leading-tight">
+              {payment.fullName}
             </span>
-            <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">
-              {payment.paymentId}
+            <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate leading-tight mt-0.5">
+              {payment.email || payment.phoneNumber || "No contact"}
             </span>
           </div>
-        </div>
-      );
-    },
-  },
-  {
-    field: "fullName",
-    headerName: "Member Name",
-    flex: 1.2,
-    minWidth: 160,
-    renderCell: (params) => {
-      const payment = params.row;
-      return (
-        <div className="flex flex-col justify-center h-full min-w-0 overflow-hidden">
-          <span className="font-semibold text-slate-700 dark:text-slate-200 truncate min-w-0 text-xs sm:text-sm">
-            {payment.fullName}
-          </span>
-          <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate min-w-0">
-            {payment.email || payment.phoneNumber || "No contact"}
-          </span>
         </div>
       );
     },
@@ -93,22 +94,32 @@ export const getMemberPaylistColumns = (
     field: "membershipPlan",
     headerName: "Enrolled Plan",
     flex: 1.2,
-    minWidth: 155,
+    minWidth: 165,
     renderCell: (params) => {
       const plan = params.row.membershipPlan;
       return (
-        <div className="flex items-center h-full min-w-0">
+        <div className="flex items-center gap-2.5 h-full min-w-0">
+          <div className="w-7 h-7 min-w-[28px] max-w-[28px] h-[28px] rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-100 dark:border-indigo-900/40 shadow-2xs">
+            <LuCrown className="w-3.5 h-3.5" />
+          </div>
           {plan ? (
-            <div className="flex flex-col min-w-0">
-              <span className="font-medium text-slate-800 dark:text-slate-200 text-xs truncate">
+            <div className="flex flex-col justify-center min-w-0 flex-1">
+              <span className="font-semibold text-slate-800 dark:text-slate-100 text-xs truncate leading-tight">
                 {plan.planName}
               </span>
-              <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono">
+              <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono leading-tight mt-0.5">
                 {plan.durationMonths} {plan.durationMonths === 1 ? "Month" : "Months"}
               </span>
             </div>
           ) : (
-            <span className="text-xs text-slate-400 italic">No plan</span>
+            <div className="flex flex-col justify-center min-w-0 flex-1">
+              <span className="text-xs text-slate-400 dark:text-slate-500 italic leading-tight">
+                No Plan
+              </span>
+              <span className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight mt-0.5">
+                -
+              </span>
+            </div>
           )}
         </div>
       );
@@ -117,22 +128,33 @@ export const getMemberPaylistColumns = (
   {
     field: "assignment",
     headerName: "Plan Validity",
-    flex: 1.2,
-    minWidth: 165,
+    flex: 1.1,
+    minWidth: 155,
     renderCell: (params) => {
       const asgn = params.row.assignment;
-      if (!asgn) return <span className="text-xs text-slate-400 italic">-</span>;
+      if (!asgn || !asgn.endDate) {
+        return (
+          <div className="flex items-center gap-2 h-full text-xs font-mono">
+            <div className="w-7 h-7 min-w-[28px] max-w-[28px] h-[28px] rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0 border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
+              <LuCalendar className="w-3.5 h-3.5 text-slate-400" />
+            </div>
+            <span className="text-xs text-slate-400 italic">No Validity</span>
+          </div>
+        );
+      }
 
       const isExpired = asgn.status === "EXPIRED";
       return (
-        <div className="flex items-center gap-1.5 text-xs font-mono h-full">
-          <LuCalendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <div className="flex flex-col min-w-0">
-            <span className="text-slate-700 dark:text-slate-300">
+        <div className="flex items-center gap-2 h-full text-xs font-mono">
+          <div className="w-7 h-7 min-w-[28px] max-w-[28px] h-[28px] rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center shrink-0 border border-slate-200/70 dark:border-slate-700/70 shadow-2xs">
+            <LuCalendar className="w-3.5 h-3.5 text-slate-400" />
+          </div>
+          <div className="flex flex-col justify-center min-w-0 flex-1">
+            <span className="text-slate-700 dark:text-slate-300 font-medium leading-tight">
               {formatDate(asgn.endDate)}
             </span>
             <span
-              className={`text-[10px] font-semibold ${
+              className={`text-[10px] font-semibold leading-tight mt-0.5 ${
                 isExpired ? "text-rose-500" : "text-emerald-500"
               }`}
             >
@@ -146,8 +168,8 @@ export const getMemberPaylistColumns = (
   {
     field: "totalAmount",
     headerName: "Total Fee",
-    flex: 0.9,
-    minWidth: 105,
+    flex: 0.8,
+    minWidth: 95,
     renderCell: (params) => {
       const total = Number(params.value) || 0;
       return (
@@ -161,8 +183,8 @@ export const getMemberPaylistColumns = (
   {
     field: "amountPaid",
     headerName: "Paid",
-    flex: 0.9,
-    minWidth: 105,
+    flex: 0.8,
+    minWidth: 95,
     renderCell: (params) => {
       const paid = Number(params.value) || 0;
       return (
@@ -175,8 +197,8 @@ export const getMemberPaylistColumns = (
   {
     field: "amountDue",
     headerName: "Due",
-    flex: 0.9,
-    minWidth: 105,
+    flex: 0.8,
+    minWidth: 95,
     renderCell: (params) => {
       const due = Number(params.value) || 0;
       return (
@@ -197,8 +219,8 @@ export const getMemberPaylistColumns = (
   {
     field: "paymentStatus",
     headerName: "Status",
-    flex: 1,
-    minWidth: 120,
+    flex: 0.85,
+    minWidth: 110,
     renderCell: (params) => {
       const status = String(params.value || "PENDING").toUpperCase();
       switch (status) {
@@ -219,7 +241,7 @@ export const getMemberPaylistColumns = (
     headerName: "Actions",
     sortable: false,
     filterable: false,
-    width: 140,
+    width: 130,
     renderCell: (params) => {
       const payment = params.row;
       const isPaid = (payment.paymentStatus || "").toUpperCase() === "PAID";

@@ -5,29 +5,18 @@ export const memberAssignmentStatusEnum = z.enum(
   { message: "Status looks off — pick active,expired or cancelled" },
 );
 
-export const memberAssignmentSchema = z.object({
-  assignmentId: z
-    .string()
-    .length(7, "Assignment ID must be 7 characters long")
-    .trim(),
-  userId: z.string().length(7, "User ID must be 7 characters long").trim(),
-  membershipPlanId: z
-    .string()
-    .length(7, "Membership Plan ID must be 7 characters long")
-    .trim(),
-  dietPlanId: z
-    .string()
-    .length(7, "Diet Plan ID must be 7 characters long")
-    .trim(),
-  workoutPlanId: z
-    .string()
-    .length(7, "Workout Plan ID must be 7 characters long")
-    .trim(),
+const emptyStringToId = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.string().min(3, "Identifier must be at least 3 characters long").trim().optional(),
+);
 
-  trainerId: z
-    .string()
-    .length(7, "Trainer ID must be 7 characters long")
-    .trim(),
+export const memberAssignmentSchema = z.object({
+  assignmentId: z.string().min(3, "Assignment ID must be at least 3 characters long").trim(),
+  userId: z.string().min(3, "User ID must be at least 3 characters long").trim(),
+  membershipPlanId: emptyStringToId,
+  dietPlanId: emptyStringToId,
+  workoutPlanId: emptyStringToId,
+  trainerId: emptyStringToId,
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
   status: memberAssignmentStatusEnum.optional().default("ACTIVE"),
@@ -36,29 +25,13 @@ export const memberAssignmentSchema = z.object({
 export const createMemberAssignmentSchema = memberAssignmentSchema.extend({
   assignmentId: z
     .string()
-    .length(7, "Assignment ID must be 7 characters long")
+    .min(3, "Assignment ID must be at least 3 characters long")
     .trim()
     .optional(),
-  membershipPlanId: z
-    .string()
-    .length(7, "Membership Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  dietPlanId: z
-    .string()
-    .length(7, "Diet Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  workoutPlanId: z
-    .string()
-    .length(7, "Workout Plan ID must be 7 characters long")
-    .trim()
-    .optional(),
-  trainerId: z
-    .string()
-    .length(7, "Trainer ID must be 7 characters long")
-    .trim()
-    .optional(),
+  membershipPlanId: emptyStringToId,
+  dietPlanId: emptyStringToId,
+  workoutPlanId: emptyStringToId,
+  trainerId: emptyStringToId,
   endDate: z.coerce.date({ message: "End date is required" }),
 });
 export const updateMemberAssignmentSchema = memberAssignmentSchema.partial();
