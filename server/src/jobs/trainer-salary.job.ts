@@ -29,6 +29,7 @@ export interface DailyAccrualSummary {
 export function isTrainerSalaryDueOnDate(
   joinDateInput: Date | string,
   targetDateInput: Date = new Date(),
+  allowCatchup: boolean = false,
 ): boolean {
   const joinDate = new Date(joinDateInput);
   if (isNaN(joinDate.getTime())) return false;
@@ -69,6 +70,11 @@ export function isTrainerSalaryDueOnDate(
     return true;
   }
 
+  // In catch-up mode, if the target day is after the join day in this cycle month
+  if (allowCatchup && targetDay >= joinDay) {
+    return true;
+  }
+
   return false;
 }
 
@@ -78,6 +84,7 @@ export function isTrainerSalaryDueOnDate(
  */
 export async function processDailyTrainerSalaryAccruals(
   targetDateInput: Date = new Date(),
+  allowCatchup: boolean = true,
 ): Promise<DailyAccrualSummary> {
   const targetDate = new Date(targetDateInput);
   const cycleMonth = `${targetDate.getFullYear()}-${String(
@@ -117,7 +124,11 @@ export async function processDailyTrainerSalaryAccruals(
 
   // 3. Evaluate eligibility and accrue salary
   for (const details of activeTrainerDetails) {
-    const isDue = isTrainerSalaryDueOnDate(details.joinDate, targetDate);
+    const isDue = isTrainerSalaryDueOnDate(
+      details.joinDate,
+      targetDate,
+      allowCatchup,
+    );
     if (!isDue) {
       continue;
     }

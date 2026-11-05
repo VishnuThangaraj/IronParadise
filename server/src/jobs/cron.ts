@@ -2,77 +2,93 @@ import cron, { type ScheduledTask } from "node-cron";
 import { processDailyTrainerSalaryAccruals } from "./trainer-salary.job.js";
 import { processNightlyAttendanceCheckouts } from "./attendance-checkout.job.js";
 import { processDailySubscriptionRenewalsAndDues } from "./member-subscription.job.js";
-
-interface CronJobDefinition {
-  name: string;
-  schedule: string;
-  handler: () => Promise<void>;
-  timezone?: string;
-}
+import { executeCronJob, type CronJobDefinition } from "./cron-runner.js";
+import {
+  runMissedCronJobsOnStartup,
+  type StartupRecoverySummary,
+} from "./cron-recovery.js";
 
 const activeTasks: Map<string, ScheduledTask> = new Map();
 const DEFAULT_TIMEZONE = "Asia/Kolkata";
 
+export const REGISTERED_CRON_JOBS: CronJobDefinition[] = [
+  {
+    name: "Trainer Salary Due Accrual",
+    schedule: "0 0 * * *", // Everyday exactly at 12:00 AM
+    timezone: DEFAULT_TIMEZONE,
+    handler: async (targetDate?: Date) => {
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Starting Trainer Salary Due Accrual job...`,
+      );
+      const summary = await processDailyTrainerSalaryAccruals(targetDate);
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Completed Trainer Salary Due Accrual job.`,
+      );
+      return summary as unknown as Record<string, unknown>;
+    },
+  },
+  {
+    name: "Member Subscription Renewal & Due Accrual",
+    schedule: "0 0 * * *", // Everyday exactly at 12:00 AM
+    timezone: DEFAULT_TIMEZONE,
+    handler: async (targetDate?: Date) => {
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Starting Member Subscription Renewal & Due Accrual job...`,
+      );
+      const summary =
+        await processDailySubscriptionRenewalsAndDues(targetDate);
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Completed Member Subscription Renewal & Due Accrual job.`,
+      );
+      return summary as unknown as Record<string, unknown>;
+    },
+  },
+  {
+    name: "Attendance Nightly Auto Check-Out",
+    schedule: "30 22 * * *", // Everyday exactly at 10:30 PM
+    timezone: DEFAULT_TIMEZONE,
+    handler: async (executionDate?: Date) => {
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Starting Attendance Nightly Auto Check-Out job...`,
+      );
+      const summary = await processNightlyAttendanceCheckouts(executionDate);
+      console.log(
+        `[CRON] [${new Date().toISOString()}] Completed Attendance Nightly Auto Check-Out job.`,
+      );
+      return summary as unknown as Record<string, unknown>;
+    },
+  },
+];
+
 /**
- * Initializes and schedules all background cron jobs.
+ * Checks for missed scheduled runs during server downtime and executes them.
+ */
+export async function runMissedCronJobs(
+  now?: Date,
+): Promise<StartupRecoverySummary> {
+  return await runMissedCronJobsOnStartup({
+    jobs: REGISTERED_CRON_JOBS,
+    now: now || new Date(),
+    catchUpUninitialized: true,
+  });
+}
+
+/**
+ * Initializes and schedules all background cron jobs with persistent tracking.
  */
 export function initCronJobs(): void {
   stopCronJobs();
 
-  const jobs: CronJobDefinition[] = [
-    {
-      name: "Trainer Salary Due Accrual",
-      schedule: "0 0 * * *", // Everyday exactly at 12:00 AM
-      timezone: DEFAULT_TIMEZONE,
-      handler: async () => {
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Starting Trainer Salary Due Accrual job...`,
-        );
-        await processDailyTrainerSalaryAccruals();
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Completed Trainer Salary Due Accrual job.`,
-        );
-      },
-    },
-    {
-      name: "Member Subscription Renewal & Due Accrual",
-      schedule: "0 0 * * *", // Everyday exactly at 12:00 AM
-      timezone: DEFAULT_TIMEZONE,
-      handler: async () => {
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Starting Member Subscription Renewal & Due Accrual job...`,
-        );
-        await processDailySubscriptionRenewalsAndDues();
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Completed Member Subscription Renewal & Due Accrual job.`,
-        );
-      },
-    },
-    {
-      name: "Attendance Nightly Auto Check-Out",
-      schedule: "30 22 * * *", // Everyday exactly at 10:30 PM
-      timezone: DEFAULT_TIMEZONE,
-      handler: async () => {
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Starting Attendance Nightly Auto Check-Out job...`,
-        );
-        await processNightlyAttendanceCheckouts();
-        console.log(
-          `[CRON] [${new Date().toISOString()}] Completed Attendance Nightly Auto Check-Out job.`,
-        );
-      },
-    },
-  ];
-
-  for (const job of jobs) {
+  for (const job of REGISTERED_CRON_JOBS) {
     try {
       const task = cron.schedule(
         job.schedule,
         async () => {
           try {
-            await job.handler();
+            await executeCronJob(job, "SCHEDULE");
           } catch (error: unknown) {
-            const msg = error instanceof Error ? error.message : String(error);
+            const msg =
+              error instanceof Error ? error.message : String(error);
             console.error(`[CRON ERROR] Job '${job.name}' failed: ${msg}`);
           }
         },
@@ -93,7 +109,9 @@ export function initCronJobs(): void {
     }
   }
 
-  console.log(`[CRON] Successfully initialized ${activeTasks.size} cron jobs.`);
+  console.log(
+    `[CRON] Successfully initialized ${activeTasks.size} cron jobs.`,
+  );
 }
 
 /**
@@ -116,4 +134,11 @@ export function stopCronJobs(): void {
  */
 export function getActiveCronJobs(): string[] {
   return Array.from(activeTasks.keys());
+}
+
+/**
+ * Helper to get list of registered cron job definitions.
+ */
+export function getRegisteredCronJobs(): CronJobDefinition[] {
+  return REGISTERED_CRON_JOBS;
 }
