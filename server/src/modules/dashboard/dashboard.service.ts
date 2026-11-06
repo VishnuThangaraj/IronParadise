@@ -1,14 +1,20 @@
 import UserModel from "../user/user.model.js";
 import AttendanceModel from "../attendance/attendance.model.js";
 import MemberPaymentModel from "../member/member-payment/member-payment.model.js";
+import MemberPaymentReceiptModel from "../member/member-payment-receipt/member-payment-receipt.model.js";
 import MemberAssignmentModel from "../member/member-assignment/member-assignment.model.js";
 import MembershipPlanModel from "../membership-plan/membership-plan.model.js";
 import WorkoutPlanModel from "../workout-plan/workout-plan.model.js";
 import DietPlanModel from "../diet-plan/diet-plan.model.js";
+import TrainerDetailsModel from "../trainer/trainer-details/trainer-details.model.js";
+import TrainerPaymentModel from "../trainer/trainer-payment/trainer-payment.model.js";
 import EventModal from "../event/event.modal.js";
 import EnquiryModel from "../enquiry/enquiry.model.js";
+import AppError from "../../shared/errors/AppError.js";
 import type {
   DashboardOverviewResponse,
+  TrainerDashboardResponse,
+  MemberDashboardResponse,
   AttendanceTrendPoint,
   PeakHourPoint,
   PaymentStatusCount,
@@ -496,6 +502,551 @@ class DashboardService {
       upcomingEvents,
       birthdaysThisMonth,
       recentEnquiries,
+    };
+  }
+
+  // Trainer Customized Dashboard Overview
+  public async getTrainerOverview(
+    trainerId: string,
+  ): Promise<TrainerDashboardResponse> {
+    const normalizedTrainerId = trainerId.trim().toUpperCase();
+
+    const [user, details, payment] = await Promise.all([
+      UserModel.findOne({ userId: normalizedTrainerId }),
+      TrainerDetailsModel.findOne({ userId: normalizedTrainerId }),
+      TrainerPaymentModel.findOne({ userId: normalizedTrainerId }),
+    ]);
+
+    if (!user) {
+      throw new AppError("Trainer profile not found", 404);
+    }
+
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+    const endOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999,
+    );
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+
+    const [trainerTodayAttendance, trainerMonthlyAttendanceCount] =
+      await Promise.all([
+        AttendanceModel.findOne({
+          userId: normalizedTrainerId,
+          date: { $gte: startOfToday, $lte: endOfToday },
+        }),
+        AttendanceModel.countDocuments({
+          userId: normalizedTrainerId,
+          date: { $gte: startOfMonth },
+          status: { $in: ["present", "checked_in", "checked_out"] },
+        }),
+      ]);
+
+    const assignments = await MemberAssignmentModel.find({
+      trainerId: normalizedTrainerId,
+    }).sort({ createdAt: -1 });
+
+    const latestAssignmentByMember = new Map<string, any>();
+    for (const asgn of assignments) {
+      if (!latestAssignmentByMember.has(asgn.userId)) {
+        latestAssignmentByMember.set(asgn.userId, asgn);
+      }
+    }
+
+    const assignedUserIds = Array.from(latestAssignmentByMember.keys());
+    const totalAssignedMembers = assignedUserIds.length;
+
+    const activeAssignments = Array.from(
+      latestAssignmentByMember.values(),
+    ).filter((a) => a.status === "ACTIVE");
+    const activeAssignedMembers = activeAssignments.length;
+
+    const memberUsers = await UserModel.find({
+      userId: { $in: assignedUserIds },
+    });
+    const userMap = new Map(memberUsers.map((u) => [u.userId, u]));
+
+    const planIds = new Set<string>();
+    const workoutPlanIds = new Set<string>();
+    const dietPlanIds = new Set<string>();
+
+    for (const asgn of latestAssignmentByMember.values()) {
+      if (asgn.membershipPlanId) planIds.add(asgn.membershipPlanId);
+      if (asgn.workoutPlanId) workoutPlanIds.add(asgn.workoutPlanId);
+      if (asgn.dietPlanId) dietPlanIds.add(asgn.dietPlanId);
+    }
+
+    const [membershipPlans, workoutPlans, dietPlans] = await Promise.all([
+      MembershipPlanModel.find({
+        membershipPlanId: { $in: Array.from(planIds) },
+      }),
+      WorkoutPlanModel.find({
+        workoutPlanId: { $in: Array.from(workoutPlanIds) },
+      }),
+      DietPlanModel.find({ dietPlanId: { $in: Array.from(dietPlanIds) } }),
+    ]);
+
+    const membershipPlanMap = new Map(
+      membershipPlans.map((p) => [p.membershipPlanId, p]),
+    );
+    const workoutPlanMap = new Map(
+      workoutPlans.map((p) => [p.workoutPlanId, p]),
+    );
+    const dietPlanMap = new Map(dietPlans.map((p) => [p.dietPlanId, p]));
+
+    const todayAttendanceDocs = await AttendanceModel.find({
+      userId: { $in: assignedUserIds },
+      date: { $gte: startOfToday, $lte: endOfToday },
+    }).sort({ checkIn: -1 });
+
+    const todayAttendanceMap = new Map(
+      todayAttendanceDocs.map((att) => [att.userId, att]),
+    );
+
+    let todayAssignedPresent = 0;
+    let currentlyCheckedIn = 0;
+
+    for (const att of todayAttendanceDocs) {
+      todayAssignedPresent++;
+      if (att.status === "checked_in" || !att.checkOut) {
+        currentlyCheckedIn++;
+      }
+    }
+
+    const attendanceRate =
+      activeAssignedMembers > 0
+        ? Math.min(
+            100,
+            Math.round((todayAssignedPresent / activeAssignedMembers) * 100),
+          )
+        : 0;
+
+    let activeWorkoutPlans = 0;
+    let activeDietPlans = 0;
+    for (const asgn of activeAssignments) {
+      if (asgn.workoutPlanId) activeWorkoutPlans++;
+      if (asgn.dietPlanId) activeDietPlans++;
+    }
+
+    const assignedMembers = assignedUserIds.map((uid) => {
+      const u = userMap.get(uid);
+      const asgn = latestAssignmentByMember.get(uid);
+      const mPlan = asgn?.membershipPlanId
+        ? membershipPlanMap.get(asgn.membershipPlanId)
+        : null;
+      const wPlan = asgn?.workoutPlanId
+        ? workoutPlanMap.get(asgn.workoutPlanId)
+        : null;
+      const dPlan = asgn?.dietPlanId
+        ? dietPlanMap.get(asgn.dietPlanId)
+        : null;
+      const todayAtt = todayAttendanceMap.get(uid);
+
+      return {
+        userId: uid,
+        fullName: u?.fullName || uid,
+        email: u?.email || "",
+        phone: u?.phone || "",
+        gender: u?.gender || "other",
+        profileImage: u?.profileImage || "",
+        assignmentId: asgn?.assignmentId,
+        status: asgn?.status || "INACTIVE",
+        startDate: asgn?.startDate
+          ? new Date(asgn.startDate).toISOString()
+          : undefined,
+        endDate: asgn?.endDate
+          ? new Date(asgn.endDate).toISOString()
+          : undefined,
+        membershipPlan: mPlan
+          ? {
+              planId: mPlan.membershipPlanId,
+              name: mPlan.planName,
+              planName: mPlan.planName,
+            }
+          : null,
+        workoutPlan: wPlan
+          ? {
+              planId: wPlan.workoutPlanId,
+              name: wPlan.planName,
+              planName: wPlan.planName,
+            }
+          : null,
+        dietPlan: dPlan
+          ? {
+              planId: dPlan.dietPlanId,
+              name: dPlan.planName,
+              planName: dPlan.planName,
+            }
+          : null,
+        todayAttendance: todayAtt
+          ? {
+              status: todayAtt.status,
+              checkIn: new Date(todayAtt.checkIn).toISOString(),
+              checkOut: todayAtt.checkOut
+                ? new Date(todayAtt.checkOut).toISOString()
+                : null,
+              durationMinutes: todayAtt.durationMinutes || 0,
+            }
+          : null,
+      };
+    });
+
+    const todayAttendanceFeed = todayAttendanceDocs.map((att) => {
+      const u = userMap.get(att.userId);
+      return {
+        attendanceId: att.attendanceId,
+        userId: att.userId,
+        fullName: u?.fullName || att.userId,
+        profileImage: u?.profileImage || "",
+        role: "member" as const,
+        checkIn: new Date(att.checkIn).toISOString(),
+        checkOut: att.checkOut ? new Date(att.checkOut).toISOString() : null,
+        status: att.status,
+        entryMethod: att.entryMethod,
+      };
+    });
+
+    const upcomingEventsDocs = await EventModal.find({
+      date: { $gte: startOfToday },
+    })
+      .sort({ date: 1 })
+      .limit(5);
+
+    const upcomingEvents = upcomingEventsDocs.map((evt) => ({
+      eventId: evt.eventId,
+      title: evt.name,
+      description: evt.description,
+      date: new Date(evt.date).toISOString().split("T")[0],
+      time: evt.time,
+      visibility: evt.visibility,
+    }));
+
+    return {
+      trainerProfile: {
+        userId: user.userId,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone || "",
+        profileImage: user.profileImage || "",
+        specialization: details?.specialization || ["General Fitness"],
+        experienceYears: details?.experienceYears || 0,
+        qualification: details?.qualification || "Certified Fitness Trainer",
+        shiftTime: details?.shiftTime || { start: "06:00", end: "14:00" },
+        employmentStatus: details?.employmentStatus || "active",
+      },
+      kpis: {
+        totalAssignedMembers,
+        activeAssignedMembers,
+        todayAssignedPresent,
+        currentlyCheckedIn,
+        attendanceRate,
+        activeWorkoutPlans,
+        activeDietPlans,
+      },
+      todayAttendanceFeed,
+      assignedMembers,
+      personalStats: {
+        personalAttendanceThisMonth: trainerMonthlyAttendanceCount,
+        todayCheckedIn: !!trainerTodayAttendance,
+        todayCheckInTime: trainerTodayAttendance?.checkIn
+          ? new Date(trainerTodayAttendance.checkIn).toISOString()
+          : null,
+        salary: payment?.salary || 0,
+        paymentStatus: payment?.paymentStatus || "PENDING",
+      },
+      upcomingEvents,
+    };
+  }
+
+  // Member Customized Dashboard Overview
+  public async getMemberOverview(
+    memberId: string,
+  ): Promise<MemberDashboardResponse> {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+
+    const user = await UserModel.findOne({ userId: normalizedMemberId });
+    if (!user) {
+      throw new AppError("Member profile not found", 404);
+    }
+
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+    const endOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999,
+    );
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+
+    // Latest or active member assignment
+    const assignment = await MemberAssignmentModel.findOne({
+      userId: normalizedMemberId,
+    }).sort({ createdAt: -1 });
+
+    let activeMembership = null;
+    let assignedTrainer = null;
+    let assignedWorkoutPlan = null;
+    let assignedDietPlan = null;
+
+    if (assignment) {
+      const [mPlan, trnUser, trnDetails, wPlan, dPlan] = await Promise.all([
+        assignment.membershipPlanId
+          ? MembershipPlanModel.findOne({
+              membershipPlanId: assignment.membershipPlanId,
+            })
+          : null,
+        assignment.trainerId
+          ? UserModel.findOne({ userId: assignment.trainerId })
+          : null,
+        assignment.trainerId
+          ? TrainerDetailsModel.findOne({ userId: assignment.trainerId })
+          : null,
+        assignment.workoutPlanId
+          ? WorkoutPlanModel.findOne({
+              workoutPlanId: assignment.workoutPlanId,
+            })
+          : null,
+        assignment.dietPlanId
+          ? DietPlanModel.findOne({ dietPlanId: assignment.dietPlanId })
+          : null,
+      ]);
+
+      const endMs = assignment.endDate
+        ? new Date(assignment.endDate).getTime()
+        : 0;
+      const daysRemaining = Math.max(
+        0,
+        Math.ceil((endMs - now.getTime()) / (1000 * 60 * 60 * 24)),
+      );
+
+      if (mPlan) {
+        activeMembership = {
+          planId: mPlan.membershipPlanId,
+          name: mPlan.planName,
+          planName: mPlan.planName,
+          price: mPlan.price,
+          durationMonths: mPlan.durationMonths,
+          startDate: assignment.startDate
+            ? new Date(assignment.startDate).toISOString()
+            : new Date().toISOString(),
+          endDate: assignment.endDate
+            ? new Date(assignment.endDate).toISOString()
+            : new Date().toISOString(),
+          status: assignment.status as "ACTIVE" | "EXPIRED" | "CANCELLED",
+          daysRemaining,
+        };
+      }
+
+      if (trnUser) {
+        assignedTrainer = {
+          userId: trnUser.userId,
+          fullName: trnUser.fullName,
+          profileImage: trnUser.profileImage || "",
+          phone: trnUser.phone || "",
+          email: trnUser.email,
+          qualification: trnDetails?.qualification || "Certified Fitness Trainer",
+          experienceYears: trnDetails?.experienceYears || 0,
+          specialization: trnDetails?.specialization || ["General Fitness"],
+          shiftTime: trnDetails?.shiftTime || {
+            start: "06:00",
+            end: "14:00",
+          },
+        };
+      }
+
+      if (wPlan) {
+        assignedWorkoutPlan = {
+          planId: wPlan.workoutPlanId,
+          name: wPlan.planName,
+          planName: wPlan.planName,
+          fitnessGoal: wPlan.goal,
+          difficulty: "Intermediate",
+          durationWeeks: 4,
+        };
+      }
+
+      if (dPlan) {
+        assignedDietPlan = {
+          planId: dPlan.dietPlanId,
+          name: dPlan.planName,
+          planName: dPlan.planName,
+          goal: dPlan.goal,
+          caloriesPerDay: 2200,
+        };
+      }
+    }
+
+    // Attendance stats
+    const [todayAttendance, monthlyAttendances, allRecentAttendances] =
+      await Promise.all([
+        AttendanceModel.findOne({
+          userId: normalizedMemberId,
+          date: { $gte: startOfToday, $lte: endOfToday },
+        }),
+        AttendanceModel.find({
+          userId: normalizedMemberId,
+          date: { $gte: startOfMonth },
+        }),
+        AttendanceModel.find({
+          userId: normalizedMemberId,
+        })
+          .sort({ date: -1, checkIn: -1 })
+          .limit(30),
+      ]);
+
+    const totalVisitsThisMonth = monthlyAttendances.length;
+
+    let totalDuration = 0;
+    let completedSessions = 0;
+    for (const att of monthlyAttendances) {
+      if (att.durationMinutes && att.durationMinutes > 0) {
+        totalDuration += att.durationMinutes;
+        completedSessions++;
+      }
+    }
+    const averageSessionMinutes =
+      completedSessions > 0 ? Math.round(totalDuration / completedSessions) : 0;
+
+    let todayGymStatus: "CHECKED_IN" | "COMPLETED" | "NOT_VISITED" =
+      "NOT_VISITED";
+    let todayCheckInTime: string | null = null;
+
+    if (todayAttendance) {
+      todayCheckInTime = new Date(todayAttendance.checkIn).toISOString();
+      if (todayAttendance.checkOut || todayAttendance.status === "checked_out") {
+        todayGymStatus = "COMPLETED";
+      } else {
+        todayGymStatus = "CHECKED_IN";
+      }
+    }
+
+    // Attendance Streak Calculation
+    const uniqueDates = Array.from(
+      new Set(
+        allRecentAttendances.map(
+          (a) => new Date(a.date).toISOString().split("T")[0],
+        ),
+      ),
+    ).sort((a, b) => (a < b ? 1 : -1));
+
+    let attendanceStreak = 0;
+    const todayStr = now.toISOString().split("T")[0];
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+    let checkDate = uniqueDates.includes(todayStr)
+      ? todayStr
+      : uniqueDates.includes(yesterdayStr)
+        ? yesterdayStr
+        : null;
+
+    if (checkDate) {
+      let cur = new Date(checkDate);
+      while (true) {
+        const curStr = cur.toISOString().split("T")[0];
+        if (uniqueDates.includes(curStr)) {
+          attendanceStreak++;
+          cur.setDate(cur.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+    }
+
+    const recentAttendance = allRecentAttendances.map((rec) => ({
+      attendanceId: rec.attendanceId,
+      date: new Date(rec.date).toISOString().split("T")[0],
+      checkIn: new Date(rec.checkIn).toISOString(),
+      checkOut: rec.checkOut ? new Date(rec.checkOut).toISOString() : null,
+      durationMinutes: rec.durationMinutes || 0,
+      status: rec.status,
+    }));
+
+    // Payment Summary
+    const [paymentRecord, lastReceipt] = await Promise.all([
+      MemberPaymentModel.findOne({ userId: normalizedMemberId }).sort({
+        createdAt: -1,
+      }),
+      MemberPaymentReceiptModel.findOne({ userId: normalizedMemberId }).sort({
+        paymentDate: -1,
+      }),
+    ]);
+
+    const paymentSummary = paymentRecord
+      ? {
+          amountDue: paymentRecord.amountDue || 0,
+          paymentStatus: paymentRecord.paymentStatus || "PENDING",
+          lastPaymentDate: lastReceipt?.paymentDate
+            ? new Date(lastReceipt.paymentDate).toISOString()
+            : null,
+        }
+      : null;
+
+    const upcomingEventsDocs = await EventModal.find({
+      date: { $gte: startOfToday },
+    })
+      .sort({ date: 1 })
+      .limit(5);
+
+    const upcomingEvents = upcomingEventsDocs.map((evt) => ({
+      eventId: evt.eventId,
+      title: evt.name,
+      description: evt.description,
+      date: new Date(evt.date).toISOString().split("T")[0],
+      time: evt.time,
+      visibility: evt.visibility,
+    }));
+
+    return {
+      memberProfile: {
+        userId: user.userId,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone || "",
+        profileImage: user.profileImage || "",
+        gender: user.gender,
+      },
+      kpis: {
+        totalVisitsThisMonth,
+        attendanceStreak,
+        averageSessionMinutes,
+        todayGymStatus,
+        todayCheckInTime,
+        daysRemainingInPlan: activeMembership?.daysRemaining ?? 0,
+      },
+      activeMembership,
+      assignedTrainer,
+      assignedWorkoutPlan,
+      assignedDietPlan,
+      recentAttendance,
+      paymentSummary,
+      upcomingEvents,
     };
   }
 }

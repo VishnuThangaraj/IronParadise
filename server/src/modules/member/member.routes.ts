@@ -62,6 +62,42 @@ router.get(
   MemberController.getAllPayments,
 );
 
+// Member self-service endpoints (must be placed before parameterized /:id routes)
+router.get(
+  "/my/details",
+  authenticate,
+  authorize("member"),
+  MemberController.getMyDetails,
+);
+
+router.get(
+  "/my/attendance",
+  authenticate,
+  authorize("member"),
+  MemberController.getMyAttendance,
+);
+
+router.get(
+  "/my/trainer",
+  authenticate,
+  authorize("member"),
+  MemberController.getMyTrainer,
+);
+
+router.get(
+  "/my/plans",
+  authenticate,
+  authorize("member"),
+  MemberController.getMyPlans,
+);
+
+router.get(
+  "/my/payments",
+  authenticate,
+  authorize("member"),
+  MemberController.getMyPayments,
+);
+
 // fetch receipts for a specific member
 router.get(
   "/:id/receipts",

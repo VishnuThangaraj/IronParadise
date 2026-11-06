@@ -29,6 +29,18 @@ const Sidebar = () => {
     roleSpecificItems = MemberSidebarItems;
   }
 
+  const sectionLabel =
+    role === "admin"
+      ? "Management"
+      : role === "trainer"
+        ? "Trainer Workspace"
+        : "My Fitness";
+
+  const generalItems = GeneralSidebarItems.filter((item) => {
+    if (role === "member" && item.name === "Attendance") return false;
+    return true;
+  });
+
   return (
     <aside
       className={`flex flex-col h-screen sticky top-0 bg-slate-950/95 backdrop-blur-2xl border-r border-slate-800/80 text-slate-300 transition-[width] duration-300 ease-[cubic-bezier(0.2,0,0,1)] shrink-0 z-50 select-none shadow-2xl shadow-black/50 ${
@@ -56,7 +68,7 @@ const Sidebar = () => {
             </div>
           )}
           <SidebarItems
-            items={GeneralSidebarItems}
+            items={generalItems}
             isCollapsed={isCollapsed}
             setIsCollapsed={setIsCollapsed}
           />
@@ -71,7 +83,7 @@ const Sidebar = () => {
               <div className="px-6 mb-2 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-500/70 shrink-0" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  Management
+                  {sectionLabel}
                 </p>
               </div>
             )}

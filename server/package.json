@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsx watch src/server.ts",
     "seed": "tsx src/seeds/seed.ts",
-    "test": "tsx src/jobs/__tests__/jobs.test.ts && tsx src/jobs/__tests__/cron-evaluator.test.ts && tsx src/jobs/__tests__/startup-catchup.test.ts && tsx src/jobs/__tests__/e2e-cron-recovery.test.ts && tsx src/jobs/__tests__/member-payments.test.ts && tsx src/jobs/__tests__/trainer-transactions.test.ts && tsx src/jobs/__tests__/member-validation.test.ts"
+    "test": "tsx src/jobs/__tests__/jobs.test.ts && tsx src/jobs/__tests__/cron-evaluator.test.ts && tsx src/jobs/__tests__/startup-catchup.test.ts && tsx src/jobs/__tests__/e2e-cron-recovery.test.ts && tsx src/jobs/__tests__/member-payments.test.ts && tsx src/jobs/__tests__/trainer-transactions.test.ts && tsx src/jobs/__tests__/member-validation.test.ts && tsx src/modules/auth/__tests__/auth-roles.test.ts && tsx src/modules/dashboard/__tests__/role-dashboards-rbac.test.ts && tsx src/modules/auth/__tests__/e2e-multirole.test.ts"
   },
   "keywords": [],
   "author": "",

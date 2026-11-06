@@ -46,15 +46,16 @@ class AuthService {
 
   // Login
   async login(data: LoginInput) {
+    const userId = data.userId.trim().toUpperCase();
     const credential = await CredentialModel.findOne({
-      userId: data.userId,
+      userId,
     });
 
     if (!credential) {
       throw new AppError("Invalid credentials", 401);
     }
 
-    const user = await UserModel.findOne({ userId: data.userId });
+    const user = await UserModel.findOne({ userId });
 
     if (!user) {
       throw new AppError("User not found", 404);

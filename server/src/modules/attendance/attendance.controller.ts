@@ -2,6 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 
 import AttendanceService from "./attendance.service.js";
 import { sendResponse } from "../../shared/utils/response.js";
+import AppError from "../../shared/errors/AppError.js";
+import MemberAssignmentModel from "../member/member-assignment/member-assignment.model.js";
 
 class AttendanceController {
   // Fast Check-In (Kiosk / User punch-in)
@@ -108,7 +110,7 @@ class AttendanceController {
     }
   }
 
-  // Fetch user attendance history
+  // Fetch user attendance history with RBAC data scoping
   public async getAttendanceByUser(
     req: Request,
     res: Response,
@@ -116,12 +118,43 @@ class AttendanceController {
   ): Promise<void> {
     try {
       const { userId } = req.params;
+      const targetUserId = (userId as string).trim().toUpperCase();
+      const currentRole = req.user?.role;
+      const currentUserId = req.user?.userId?.trim()?.toUpperCase();
+
+      if (currentRole === "member") {
+        if (currentUserId !== targetUserId) {
+          throw new AppError(
+            "Access denied: You can only view your own attendance history",
+            403,
+          );
+        }
+      } else if (currentRole === "trainer") {
+        if (currentUserId !== targetUserId) {
+          const isAssigned = await MemberAssignmentModel.exists({
+            trainerId: currentUserId,
+            userId: targetUserId,
+          });
+          if (!isAssigned) {
+            throw new AppError(
+              "Access denied: You can only view attendance for members assigned to you",
+              403,
+            );
+          }
+        }
+      }
+
       const limit = req.query.limit ? Number(req.query.limit) : 30;
       const records = await AttendanceService.getAttendanceByUser(
-        userId as string,
+        targetUserId,
         limit,
       );
-      sendResponse(res, 200, "User attendance history fetched successfully", records);
+      sendResponse(
+        res,
+        200,
+        "User attendance history fetched successfully",
+        records,
+      );
     } catch (error) {
       next(error);
     }

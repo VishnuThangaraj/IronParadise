@@ -12,6 +12,7 @@ import Loader from "@/shared/components/ui/feedback/Loader";
 import Footer from "@/shared/components/layout/footer/Footer";
 import Navbar from "@/shared/components/layout/navbar/Navbar";
 import Sidebar from "@/shared/components/layout/sidebar/Sidebar";
+import RoleRoute from "@/shared/components/layout/RoleRoute";
 
 const AuthPage = lazy(() => import("@/modules/auth/pages/AuthPage"));
 const Contact = lazy(() => import("@/modules/enquiry/pages/Contact"));
@@ -37,6 +38,12 @@ const TrainerPayroll = lazy(
 const TrainerDetails = lazy(
   () => import("@/modules/trainer/pages/TrainerDetails"),
 );
+const TrainerAssignedMembers = lazy(
+  () => import("@/modules/trainer/pages/TrainerAssignedMembers"),
+);
+const TrainerAssignedMembersAttendance = lazy(
+  () => import("@/modules/trainer/pages/TrainerAssignedMembersAttendance"),
+);
 
 // Member
 const MemberList = lazy(() => import("@/modules/member/pages/MemberList"));
@@ -46,6 +53,18 @@ const MemberDetails = lazy(
 );
 const MembershipPaylist = lazy(
   () => import("@/modules/member/pages/MembershipPaylist"),
+);
+const MemberAttendanceView = lazy(
+  () => import("@/modules/member/pages/MemberAttendanceView"),
+);
+const MemberTrainerProfileView = lazy(
+  () => import("@/modules/member/pages/MemberTrainerProfileView"),
+);
+const MemberFitnessPlansView = lazy(
+  () => import("@/modules/member/pages/MemberFitnessPlansView"),
+);
+const MemberMembershipView = lazy(
+  () => import("@/modules/member/pages/MemberMembershipView"),
 );
 
 // Diet Plan
@@ -120,72 +139,267 @@ const App = () => {
           <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
             <main className="flex-1 p-6 px-10">
               <Routes>
-                <Route path="/enquiry" element={<Enquiry />} />
-                <Route path="/message" element={<Messages />} />
+                {/* General / Shared */}
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/events" element={<EventsCalendar />} />
-                <Route path="/attendance" element={<Attendance />} />
+                <Route path="/message" element={<Messages />} />
 
-                {/* Member */}
-                <Route path="/member/add" element={<MemberForm />} />
-                <Route path="/member/list" element={<MemberList />} />
-                <Route path="/member/:memberId" element={<MemberDetails />} />
-                <Route path="/member/edit/:memberId" element={<MemberForm />} />
+                {/* Admin Only */}
+                <Route
+                  path="/enquiry"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <Enquiry />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/payment"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MembershipPaylist />
+                    </RoleRoute>
+                  }
+                />
 
-                {/* Trainer */}
-                <Route path="/trainer/add" element={<TrainerForm />} />
-                <Route path="/trainer/list" element={<TrainerList />} />
-                <Route path="/trainer/payroll" element={<TrainerPayroll />} />
-                <Route path="/trainer/:userId" element={<TrainerDetails />} />
-                <Route path="/trainer/edit/:userId" element={<TrainerForm />} />
+                {/* Member Management */}
+                <Route
+                  path="/member/add"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MemberForm />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/edit/:memberId"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MemberForm />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/list"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <MemberList />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/:memberId"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <MemberDetails />
+                    </RoleRoute>
+                  }
+                />
+
+                {/* Member Role Self-Service Routes */}
+                <Route
+                  path="/member/my-attendance"
+                  element={
+                    <RoleRoute allowedRoles={["member", "admin"]}>
+                      <MemberAttendanceView />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/my-trainer"
+                  element={
+                    <RoleRoute allowedRoles={["member", "admin"]}>
+                      <MemberTrainerProfileView />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/my-plans"
+                  element={
+                    <RoleRoute allowedRoles={["member", "admin"]}>
+                      <MemberFitnessPlansView />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/member/my-membership"
+                  element={
+                    <RoleRoute allowedRoles={["member", "admin"]}>
+                      <MemberMembershipView />
+                    </RoleRoute>
+                  }
+                />
+
+                {/* Trainer Management */}
+                {/* Trainer Role Routes */}
+                <Route
+                  path="/trainer/my-members"
+                  element={
+                    <RoleRoute allowedRoles={["trainer", "admin"]}>
+                      <TrainerAssignedMembers />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/members-attendance"
+                  element={
+                    <RoleRoute allowedRoles={["trainer", "admin"]}>
+                      <TrainerAssignedMembersAttendance />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/add"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <TrainerForm />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/payroll"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <TrainerPayroll />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/edit/:userId"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <TrainerForm />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/list"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <TrainerList />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trainer/:userId"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <TrainerDetails />
+                    </RoleRoute>
+                  }
+                />
+
+                {/* Attendance Management */}
+                <Route
+                  path="/attendance"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <Attendance />
+                    </RoleRoute>
+                  }
+                />
 
                 {/* Diet Plan */}
-                <Route path="/plan/diet/add" element={<DietPlanForm />} />
-                <Route path="/plan/diet/list" element={<DietPlanList />} />
+                <Route
+                  path="/plan/diet/add"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <DietPlanForm />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/plan/diet/list"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <DietPlanList />
+                    </RoleRoute>
+                  }
+                />
                 <Route
                   path="/plan/diet/edit/:planId"
-                  element={<DietPlanForm />}
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <DietPlanForm />
+                    </RoleRoute>
+                  }
                 />
                 <Route
                   path="/plan/diet/:planId"
-                  element={<DietPlanDetails />}
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <DietPlanDetails />
+                    </RoleRoute>
+                  }
                 />
 
                 {/* Workout Plan */}
                 <Route
                   path="/plan/workout/list"
-                  element={<WorkoutPlanList />}
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <WorkoutPlanList />
+                    </RoleRoute>
+                  }
                 />
-                <Route path="/plan/workout/add" element={<WorkoutPlanForm />} />
+                <Route
+                  path="/plan/workout/add"
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <WorkoutPlanForm />
+                    </RoleRoute>
+                  }
+                />
                 <Route
                   path="/plan/workout/edit/:planId"
-                  element={<WorkoutPlanForm />}
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <WorkoutPlanForm />
+                    </RoleRoute>
+                  }
                 />
                 <Route
                   path="/plan/workout/:planId"
-                  element={<WorkoutPlanDetails />}
+                  element={
+                    <RoleRoute allowedRoles={["admin", "trainer"]}>
+                      <WorkoutPlanDetails />
+                    </RoleRoute>
+                  }
                 />
 
                 {/* Membership Plan */}
                 <Route
                   path="/membership/list"
-                  element={<MembershipPlanList />}
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MembershipPlanList />
+                    </RoleRoute>
+                  }
                 />
                 <Route
                   path="/membership/add"
-                  element={<MembershipPlanForm />}
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MembershipPlanForm />
+                    </RoleRoute>
+                  }
                 />
                 <Route
                   path="/membership/edit/:planId"
-                  element={<MembershipPlanForm />}
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MembershipPlanForm />
+                    </RoleRoute>
+                  }
                 />
                 <Route
                   path="/membership/:planId"
-                  element={<MembershipPlanDetails />}
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <MembershipPlanDetails />
+                    </RoleRoute>
+                  }
                 />
-
-                {/* Membership Paylist */}
-                <Route path="/payment" element={<MembershipPaylist />} />
 
                 <Route
                   path="*"

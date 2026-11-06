@@ -5,6 +5,10 @@ import UserModel, { type User } from "../user/user.model.js";
 import MemberAssignmentModel from "./member-assignment/member-assignment.model.js";
 import MemberAssignmentService from "./member-assignment/member-assignment.service.js";
 import MembershipPlanModel from "../membership-plan/membership-plan.model.js";
+import WorkoutPlanModel from "../workout-plan/workout-plan.model.js";
+import DietPlanModel from "../diet-plan/diet-plan.model.js";
+import TrainerDetailsModel from "../trainer/trainer-details/trainer-details.model.js";
+import AttendanceModel from "../attendance/attendance.model.js";
 import MemberMeasurementModel from "./member-measurement/member-measurement.model.js";
 import MemberPaymentModel from "./member-payment/member-payment.model.js";
 import MemberPaymentReceiptModel from "./member-payment-receipt/member-payment-receipt.model.js";
@@ -608,6 +612,195 @@ class MemberService {
         paymentStatus: payment?.paymentStatus ?? null,
       };
     });
+  }
+
+  // Get member comprehensive profile for logged-in member
+  public async getMyDetails(memberId: string) {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+    const user = await UserModel.findOne({ userId: normalizedMemberId });
+    if (!user) {
+      throw new AppError("Member profile not found", 404);
+    }
+
+    const assignment = await MemberAssignmentModel.findOne({
+      userId: normalizedMemberId,
+    }).sort({ createdAt: -1 });
+
+    let membershipPlan = null;
+    let trainer = null;
+    let workoutPlan = null;
+    let dietPlan = null;
+
+    if (assignment) {
+      const [mPlan, trnUser, trnDetails, wPlan, dPlan] = await Promise.all([
+        assignment.membershipPlanId
+          ? MembershipPlanModel.findOne({
+              membershipPlanId: assignment.membershipPlanId,
+            })
+          : null,
+        assignment.trainerId
+          ? UserModel.findOne({ userId: assignment.trainerId })
+          : null,
+        assignment.trainerId
+          ? TrainerDetailsModel.findOne({ userId: assignment.trainerId })
+          : null,
+        assignment.workoutPlanId
+          ? WorkoutPlanModel.findOne({
+              workoutPlanId: assignment.workoutPlanId,
+            })
+          : null,
+        assignment.dietPlanId
+          ? DietPlanModel.findOne({ dietPlanId: assignment.dietPlanId })
+          : null,
+      ]);
+
+      membershipPlan = mPlan ? mPlan.toObject() : null;
+      if (trnUser) {
+        trainer = {
+          ...trnUser.toObject(),
+          ...(trnDetails ? trnDetails.toObject() : {}),
+        };
+      }
+      workoutPlan = wPlan ? wPlan.toObject() : null;
+      dietPlan = dPlan ? dPlan.toObject() : null;
+    }
+
+    const measurements = await MemberMeasurementModel.find({
+      userId: normalizedMemberId,
+    })
+      .sort({ date: -1 })
+      .limit(10);
+
+    return {
+      user: user.toObject(),
+      assignment: assignment ? assignment.toObject() : null,
+      membershipPlan,
+      trainer,
+      workoutPlan,
+      dietPlan,
+      measurements: measurements.map((m) => m.toObject()),
+    };
+  }
+
+  // Get self attendance history for logged-in member
+  public async getMyAttendance(
+    memberId: string,
+    options?: { month?: number; year?: number; limit?: number },
+  ) {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+    const query: any = { userId: normalizedMemberId };
+
+    if (options?.year && options?.month !== undefined) {
+      const start = new Date(options.year, options.month, 1, 0, 0, 0, 0);
+      const end = new Date(options.year, options.month + 1, 0, 23, 59, 59, 999);
+      query.date = { $gte: start, $lte: end };
+    }
+
+    const limit = options?.limit ? Math.min(100, Math.max(1, options.limit)) : 60;
+
+    const records = await AttendanceModel.find(query)
+      .sort({ date: -1, checkIn: -1 })
+      .limit(limit);
+
+    let totalMinutes = 0;
+    let completedCount = 0;
+    for (const rec of records) {
+      if (rec.durationMinutes && rec.durationMinutes > 0) {
+        totalMinutes += rec.durationMinutes;
+        completedCount++;
+      }
+    }
+
+    return {
+      records: records.map((r) => r.toObject()),
+      totalVisits: records.length,
+      totalMinutes,
+      averageMinutes: completedCount > 0 ? Math.round(totalMinutes / completedCount) : 0,
+    };
+  }
+
+  // Get assigned trainer details for logged-in member
+  public async getMyTrainer(memberId: string) {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+    const assignment = await MemberAssignmentModel.findOne({
+      userId: normalizedMemberId,
+      status: "ACTIVE",
+    }).sort({ createdAt: -1 });
+
+    if (!assignment || !assignment.trainerId) {
+      return null;
+    }
+
+    const [trainerUser, trainerDetails] = await Promise.all([
+      UserModel.findOne({ userId: assignment.trainerId }),
+      TrainerDetailsModel.findOne({ userId: assignment.trainerId }),
+    ]);
+
+    if (!trainerUser) {
+      return null;
+    }
+
+    return {
+      userId: trainerUser.userId,
+      fullName: trainerUser.fullName,
+      email: trainerUser.email,
+      phone: trainerUser.phone || "",
+      profileImage: trainerUser.profileImage || "",
+      specialization: trainerDetails?.specialization || ["General Fitness"],
+      experienceYears: trainerDetails?.experienceYears || 0,
+      qualification: trainerDetails?.qualification || "Certified Fitness Trainer",
+      shiftTime: trainerDetails?.shiftTime || { start: "06:00", end: "14:00" },
+      employmentStatus: trainerDetails?.employmentStatus || "active",
+    };
+  }
+
+  // Get assigned workout and diet plans for logged-in member
+  public async getMyPlans(memberId: string) {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+    const assignment = await MemberAssignmentModel.findOne({
+      userId: normalizedMemberId,
+    }).sort({ createdAt: -1 });
+
+    if (!assignment) {
+      return { workoutPlan: null, dietPlan: null };
+    }
+
+    const [workoutPlan, dietPlan] = await Promise.all([
+      assignment.workoutPlanId
+        ? WorkoutPlanModel.findOne({
+            workoutPlanId: assignment.workoutPlanId,
+          })
+        : null,
+      assignment.dietPlanId
+        ? DietPlanModel.findOne({ dietPlanId: assignment.dietPlanId })
+        : null,
+    ]);
+
+    return {
+      workoutPlan: workoutPlan ? workoutPlan.toObject() : null,
+      dietPlan: dietPlan ? dietPlan.toObject() : null,
+      assignmentStatus: assignment.status,
+      startDate: assignment.startDate,
+      endDate: assignment.endDate,
+    };
+  }
+
+  // Get payments and receipts for logged-in member
+  public async getMyPayments(memberId: string) {
+    const normalizedMemberId = memberId.trim().toUpperCase();
+    const [payments, receipts] = await Promise.all([
+      MemberPaymentModel.find({ userId: normalizedMemberId }).sort({
+        createdAt: -1,
+      }),
+      MemberPaymentReceiptModel.find({ userId: normalizedMemberId }).sort({
+        paymentDate: -1,
+      }),
+    ]);
+
+    return {
+      payments: payments.map((p) => p.toObject()),
+      receipts: receipts.map((r) => r.toObject()),
+    };
   }
 }
 

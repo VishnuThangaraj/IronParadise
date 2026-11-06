@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import TrainerService from "./trainer.service.js";
 import TrainerPaymentReceiptService from "./trainer-payment-receipt/trainer-payment-receipt.service.js";
 import TrainerPaymentService from "./trainer-payment/trainer-payment.service.js";
+import AppError from "../../shared/errors/AppError.js";
 import { sendResponse } from "../../shared/utils/response.js";
 
 class TrainerController {
@@ -159,15 +160,125 @@ class TrainerController {
   ): Promise<void> {
     try {
       const { id } = req.params;
+      const targetUserId = (id as string).trim().toUpperCase();
+      const currentRole = req.user?.role;
+      const currentUserId = req.user?.userId?.trim()?.toUpperCase();
+
+      if (currentRole === "trainer" && currentUserId !== targetUserId) {
+        throw new AppError(
+          "Access denied: You can only view your own receipts",
+          403,
+        );
+      }
+
+      if (currentRole === "member") {
+        throw new AppError("Access denied", 403);
+      }
+
       const receipts =
         await TrainerPaymentReceiptService.getTrainerPaymentReceiptsByUserId(
-          id as string,
+          targetUserId,
         );
       sendResponse(
         res,
         200,
         "Trainer payment receipts fetched successfully",
         receipts,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Fetch members assigned to logged-in trainer
+  public async getAssignedMembers(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const trainerId = req.user?.userId;
+      if (!trainerId) {
+        return sendResponse(res, 401, "Authentication required");
+      }
+      const search = req.query.search as string | undefined;
+      const status = req.query.status as string | undefined;
+
+      const result = await TrainerService.getAssignedMembers(trainerId, {
+        search,
+        status,
+      });
+
+      sendResponse(
+        res,
+        200,
+        "Assigned members retrieved successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Fetch attendance records of members assigned to logged-in trainer
+  public async getAssignedMembersAttendance(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const trainerId = req.user?.userId;
+      if (!trainerId) {
+        return sendResponse(res, 401, "Authentication required");
+      }
+      const memberId = req.query.memberId as string | undefined;
+      const startDate = req.query.startDate as string | undefined;
+      const endDate = req.query.endDate as string | undefined;
+      const status = req.query.status as string | undefined;
+      const page = req.query.page ? Number(req.query.page) : undefined;
+      const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
+      const result = await TrainerService.getAssignedMembersAttendance(
+        trainerId,
+        {
+          memberId,
+          startDate,
+          endDate,
+          status,
+          page,
+          limit,
+        },
+      );
+
+      sendResponse(
+        res,
+        200,
+        "Assigned members attendance retrieved successfully",
+        result,
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Fetch logged-in trainer's personal payroll and payment vouchers
+  public async getMyPayroll(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const trainerId = req.user?.userId;
+      if (!trainerId) {
+        return sendResponse(res, 401, "Authentication required");
+      }
+
+      const result = await TrainerService.getMyPayroll(trainerId);
+      sendResponse(
+        res,
+        200,
+        "Trainer payroll data retrieved successfully",
+        result,
       );
     } catch (error) {
       next(error);

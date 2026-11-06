@@ -18,6 +18,13 @@ import {
   DemographicsAndPlansWidget,
   RecentEnquiriesWidget,
 } from "../components/widgets";
+import TrainerDashboard from "../components/trainer/TrainerDashboard";
+import MemberDashboard from "../components/member/MemberDashboard";
+import type {
+  TrainerDashboardData,
+  MemberDashboardData,
+  DashboardOverviewData,
+} from "../types/dashboard.types";
 
 const DashboardSkeleton = () => (
   <div className="flex flex-col gap-6 w-full animate-pulse select-none">
@@ -72,10 +79,12 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-6 w-full pb-10 transition-colors duration-300">
       {/* Top Header via Common PageHeader */}
-      <PageHeader
-        title={greeting}
-        description="Monitor member activity, attendance trends, and daily gym operations across IronParadise."
-      />
+      {currentUser?.role?.toLowerCase() === "admin" && (
+        <PageHeader
+          title={greeting}
+          description="Monitor member activity, attendance trends, and daily gym operations across IronParadise."
+        />
+      )}
 
       {/* Loading Skeleton */}
       {isLoading && <DashboardSkeleton />}
@@ -106,12 +115,28 @@ const Dashboard = () => {
         </Container>
       )}
 
-      {/* Loaded Dashboard Content */}
-      {overview && (
+      {/* Loaded Trainer Dashboard Content */}
+      {overview && currentUser?.role?.toLowerCase() === "trainer" && (
+        <TrainerDashboard
+          overview={overview as unknown as TrainerDashboardData}
+        />
+      )}
+
+      {/* Loaded Member Dashboard Content */}
+      {overview && currentUser?.role?.toLowerCase() === "member" && (
+        <MemberDashboard
+          overview={overview as unknown as MemberDashboardData}
+        />
+      )}
+
+      {/* Loaded Admin Dashboard Content */}
+      {overview && currentUser?.role?.toLowerCase() === "admin" && (
         <div className="flex flex-col gap-6 w-full">
           {/* Section 1: KPI Metrics Grid */}
           <section aria-label="Key Performance Indicators" className="w-full">
-            <DashboardKpiGrid kpis={overview.kpis} />
+            <DashboardKpiGrid
+              kpis={(overview as unknown as DashboardOverviewData).kpis}
+            />
           </section>
 
           {/* Section 2: Primary Visualizations (Attendance Trend & 6-Month Financials) */}
@@ -121,7 +146,12 @@ const Dashboard = () => {
                 variant="secondary"
                 className="w-full! max-w-none! mx-0! p-4! sm:p-5! rounded-2xl! flex-col justify-between"
               >
-                <AttendanceTrendChart data={overview.attendanceTrends} />
+                <AttendanceTrendChart
+                  data={
+                    (overview as unknown as DashboardOverviewData)
+                      .attendanceTrends
+                  }
+                />
               </Container>
 
               <Container
@@ -129,7 +159,10 @@ const Dashboard = () => {
                 className="w-full! max-w-none! mx-0! p-4! sm:p-5! rounded-2xl! flex-col justify-between"
               >
                 <RevenueMetricsChart
-                  financialOverview={overview.financialOverview}
+                  financialOverview={
+                    (overview as unknown as DashboardOverviewData)
+                      .financialOverview
+                  }
                 />
               </Container>
             </div>
@@ -142,14 +175,23 @@ const Dashboard = () => {
                 variant="secondary"
                 className="w-full! max-w-none! mx-0! p-4! sm:p-5! rounded-2xl! flex-col justify-between"
               >
-                <PlanDistributionChart data={overview.planDistribution} />
+                <PlanDistributionChart
+                  data={
+                    (overview as unknown as DashboardOverviewData)
+                      .planDistribution
+                  }
+                />
               </Container>
 
               <Container
                 variant="secondary"
                 className="w-full! max-w-none! mx-0! p-4! sm:p-5! rounded-2xl! flex-col justify-between"
               >
-                <PeakHoursHeatmap data={overview.peakHours} />
+                <PeakHoursHeatmap
+                  data={
+                    (overview as unknown as DashboardOverviewData).peakHours
+                  }
+                />
               </Container>
             </div>
           </section>
@@ -157,20 +199,40 @@ const Dashboard = () => {
           {/* Section 4: Operational Feeds (Check-Ins, Events & Birthdays, Inquiries) */}
           <section aria-label="Operational Feeds" className="w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
-              <RecentCheckInsWidget checkIns={overview.recentCheckIns} />
-              <UpcomingEventsWidget
-                events={overview.upcomingEvents}
-                birthdays={overview.birthdaysThisMonth}
+              <RecentCheckInsWidget
+                checkIns={
+                  (overview as unknown as DashboardOverviewData).recentCheckIns
+                }
               />
-              <RecentEnquiriesWidget enquiries={overview.recentEnquiries} />
+              <UpcomingEventsWidget
+                events={
+                  (overview as unknown as DashboardOverviewData).upcomingEvents
+                }
+                birthdays={
+                  (overview as unknown as DashboardOverviewData)
+                    .birthdaysThisMonth
+                }
+              />
+              <RecentEnquiriesWidget
+                enquiries={
+                  (overview as unknown as DashboardOverviewData).recentEnquiries
+                }
+              />
             </div>
           </section>
 
           {/* Section 5: Demographics & Catalog Blueprints */}
-          <section aria-label="Demographics and Program Blueprint Catalog" className="w-full">
+          <section
+            aria-label="Demographics and Program Blueprint Catalog"
+            className="w-full"
+          >
             <DemographicsAndPlansWidget
-              demographics={overview.demographics}
-              plansOverview={overview.plansOverview}
+              demographics={
+                (overview as unknown as DashboardOverviewData).demographics
+              }
+              plansOverview={
+                (overview as unknown as DashboardOverviewData).plansOverview
+              }
             />
           </section>
 

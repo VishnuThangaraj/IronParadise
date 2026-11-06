@@ -17,4 +17,10 @@ export const memberKeys = {
       : (["member-receipts"] as const),
   receiptsByUser: (userId: string) =>
     ["member-receipts", "user", userId] as const,
+  selfDetails: () => [...memberKeys.all, "self-details"] as const,
+  selfAttendance: (params?: Record<string, any>) =>
+    [...memberKeys.all, "self-attendance", params] as const,
+  selfTrainer: () => [...memberKeys.all, "self-trainer"] as const,
+  selfPlans: () => [...memberKeys.all, "self-plans"] as const,
+  selfPayments: () => [...memberKeys.all, "self-payments"] as const,
 };

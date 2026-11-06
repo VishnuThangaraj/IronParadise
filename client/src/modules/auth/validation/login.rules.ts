@@ -7,7 +7,7 @@ const loginRules: LoginRules = {
   userId: {
     type: "string",
     minLength: 7,
-    maxLength: 7,
+    maxLength: 12,
   },
   password: {
     type: "string",

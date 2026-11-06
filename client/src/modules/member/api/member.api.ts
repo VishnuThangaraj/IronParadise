@@ -5,6 +5,11 @@ import {
   MemberResponse,
   SingleMemberResponse,
   UpdateMemberRequest,
+  MemberSelfDetailsResponse,
+  MemberSelfAttendanceResponse,
+  MemberSelfTrainerResponse,
+  MemberSelfPlansResponse,
+  MemberSelfPaymentsResponse,
 } from "../types/member.types";
 
 // Get all members with optional query params
@@ -72,3 +77,37 @@ export const deleteMemberPermanently = async (
   );
   return response.data;
 };
+
+// --- Logged-in Member Self Services ---
+
+export const getMyDetails = async (): Promise<MemberSelfDetailsResponse> => {
+  const response = await api.get<MemberSelfDetailsResponse>("/api/member/my/details");
+  return response.data;
+};
+
+export const getMyAttendance = async (params?: {
+  month?: number;
+  year?: number;
+  limit?: number;
+}): Promise<MemberSelfAttendanceResponse> => {
+  const response = await api.get<MemberSelfAttendanceResponse>("/api/member/my/attendance", {
+    params,
+  });
+  return response.data;
+};
+
+export const getMyTrainer = async (): Promise<MemberSelfTrainerResponse> => {
+  const response = await api.get<MemberSelfTrainerResponse>("/api/member/my/trainer");
+  return response.data;
+};
+
+export const getMyPlans = async (): Promise<MemberSelfPlansResponse> => {
+  const response = await api.get<MemberSelfPlansResponse>("/api/member/my/plans");
+  return response.data;
+};
+
+export const getMyPayments = async (): Promise<MemberSelfPaymentsResponse> => {
+  const response = await api.get<MemberSelfPaymentsResponse>("/api/member/my/payments");
+  return response.data;
+};
+

@@ -125,3 +125,145 @@ export interface DashboardOverviewResponse {
   birthdaysThisMonth: DashboardBirthday[];
   recentEnquiries: DashboardEnquiry[];
 }
+
+export interface TrainerKPIs {
+  totalAssignedMembers: number;
+  activeAssignedMembers: number;
+  todayAssignedPresent: number;
+  currentlyCheckedIn: number;
+  attendanceRate: number;
+  activeWorkoutPlans: number;
+  activeDietPlans: number;
+}
+
+export interface TrainerProfileSummary {
+  userId: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  profileImage: string;
+  specialization: string[];
+  experienceYears: number;
+  qualification: string;
+  shiftTime: { start: string; end: string };
+  employmentStatus: string;
+}
+
+export interface TrainerAssignedMemberItem {
+  userId: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  gender: string;
+  profileImage: string;
+  assignmentId?: string;
+  status: string;
+  startDate?: string;
+  endDate?: string;
+  membershipPlan?: {
+    planId: string;
+    name: string;
+  } | null;
+  workoutPlan?: {
+    planId: string;
+    name: string;
+  } | null;
+  dietPlan?: {
+    planId: string;
+    name: string;
+  } | null;
+  todayAttendance?: {
+    status: string;
+    checkIn: string;
+    checkOut: string | null;
+    durationMinutes: number;
+  } | null;
+}
+
+export interface TrainerDashboardResponse {
+  trainerProfile: TrainerProfileSummary;
+  kpis: TrainerKPIs;
+  todayAttendanceFeed: DashboardCheckIn[];
+  assignedMembers: TrainerAssignedMemberItem[];
+  personalStats: {
+    personalAttendanceThisMonth: number;
+    todayCheckedIn: boolean;
+    todayCheckInTime: string | null;
+    salary: number;
+    paymentStatus: string;
+  };
+  upcomingEvents: DashboardEvent[];
+}
+
+export interface MemberKPIs {
+  totalVisitsThisMonth: number;
+  attendanceStreak: number;
+  averageSessionMinutes: number;
+  todayGymStatus: "CHECKED_IN" | "COMPLETED" | "NOT_VISITED";
+  todayCheckInTime: string | null;
+  daysRemainingInPlan: number;
+}
+
+export interface MemberTrainerDetails {
+  userId: string;
+  fullName: string;
+  profileImage: string;
+  phone: string;
+  email: string;
+  qualification: string;
+  experienceYears: number;
+  specialization: string[];
+  shiftTime: { start: string; end: string };
+}
+
+export interface MemberActivePlan {
+  planId: string;
+  name: string;
+  price: number;
+  durationMonths: number;
+  startDate: string;
+  endDate: string;
+  status: "ACTIVE" | "EXPIRED" | "CANCELLED";
+  daysRemaining: number;
+}
+
+export interface MemberDashboardResponse {
+  memberProfile: {
+    userId: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    profileImage: string;
+    gender: string;
+  };
+  kpis: MemberKPIs;
+  activeMembership: MemberActivePlan | null;
+  assignedTrainer: MemberTrainerDetails | null;
+  assignedWorkoutPlan: {
+    planId: string;
+    name: string;
+    fitnessGoal: string;
+    difficulty: string;
+    durationWeeks: number;
+  } | null;
+  assignedDietPlan: {
+    planId: string;
+    name: string;
+    goal: string;
+    caloriesPerDay: number;
+  } | null;
+  recentAttendance: {
+    attendanceId: string;
+    date: string;
+    checkIn: string;
+    checkOut: string | null;
+    durationMinutes: number;
+    status: string;
+  }[];
+  paymentSummary: {
+    amountDue: number;
+    paymentStatus: string;
+    lastPaymentDate: string | null;
+  } | null;
+  upcomingEvents: DashboardEvent[];
+}

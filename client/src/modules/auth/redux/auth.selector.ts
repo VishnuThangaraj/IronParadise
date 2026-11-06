@@ -4,6 +4,10 @@ import { createSelector } from "@reduxjs/toolkit";
 export const selectAuth = (state: RootState) => state.auth;
 
 export const selectUser = createSelector(selectAuth, (auth) => auth?.user);
+export const selectUserRole = createSelector(
+  selectUser,
+  (user) => user?.role?.toLowerCase() || "",
+);
 export const selectAuthLoading = createSelector(
   selectAuth,
   (auth) => auth?.loading,

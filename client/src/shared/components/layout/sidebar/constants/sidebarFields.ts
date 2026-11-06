@@ -136,6 +136,31 @@ export const AdminSidebarItems: SidebarItemType[] = [
 
 export const TrainerSidebarItems: SidebarItemType[] = [
   {
+    name: "My Members",
+    icon: LuUsers,
+    location: "/trainer/my-members",
+  },
+  {
+    name: "Member Attendance",
+    icon: LuCalendarCheck2,
+    location: "/trainer/members-attendance",
+  },
+  {
+    name: "Fitness Plans",
+    icon: LuFlame,
+    location: "/plan",
+    children: [
+      {
+        name: "Workout Plans",
+        location: "/plan/workout/list",
+      },
+      {
+        name: "Diet Plans",
+        location: "/plan/diet/list",
+      },
+    ],
+  },
+  {
     name: "Messages",
     icon: LuMail,
     location: "/message",
@@ -143,6 +168,26 @@ export const TrainerSidebarItems: SidebarItemType[] = [
 ];
 
 export const MemberSidebarItems: SidebarItemType[] = [
+  {
+    name: "My Attendance",
+    icon: LuCalendarCheck2,
+    location: "/member/my-attendance",
+  },
+  {
+    name: "My Trainer",
+    icon: LuDumbbell,
+    location: "/member/my-trainer",
+  },
+  {
+    name: "My Fitness Plans",
+    icon: LuFlame,
+    location: "/member/my-plans",
+  },
+  {
+    name: "My Membership",
+    icon: LuCrown,
+    location: "/member/my-membership",
+  },
   {
     name: "Messages",
     icon: LuMail,

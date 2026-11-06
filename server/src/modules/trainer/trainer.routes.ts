@@ -34,6 +34,30 @@ router.get(
   TrainerController.getAllTrainers,
 );
 
+// Fetch members assigned to logged-in trainer
+router.get(
+  "/my/assigned-members",
+  authenticate,
+  authorize("trainer"),
+  TrainerController.getAssignedMembers,
+);
+
+// Fetch attendance of members assigned to logged-in trainer
+router.get(
+  "/my/assigned-members/attendance",
+  authenticate,
+  authorize("trainer"),
+  TrainerController.getAssignedMembersAttendance,
+);
+
+// Fetch logged-in trainer's own payroll & receipts
+router.get(
+  "/my/payroll",
+  authenticate,
+  authorize("trainer"),
+  TrainerController.getMyPayroll,
+);
+
 // record trainer payment / payroll
 router.post(
   "/payroll/pay",
