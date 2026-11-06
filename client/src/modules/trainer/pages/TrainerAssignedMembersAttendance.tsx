@@ -150,7 +150,7 @@ export const TrainerAssignedMembersAttendance = () => {
         flex: 1.1,
         minWidth: 150,
         renderCell: (params) => (
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <div className="flex items-center gap-2 h-full text-xs font-semibold text-slate-700 dark:text-slate-300">
             <LuCalendar className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
             <span>{formatDate(params.row.date || params.row.checkIn)}</span>
           </div>
@@ -165,19 +165,19 @@ export const TrainerAssignedMembersAttendance = () => {
           const row = params.row;
           const initials = row.fullName?.slice(0, 2).toUpperCase() || "MB";
           return (
-            <div className="flex items-center gap-3 py-1">
+            <div className="flex items-center gap-3 h-full min-w-0">
               {row.profileImage ? (
                 <img
                   src={row.profileImage}
                   alt={row.fullName}
-                  className="w-9 h-9 rounded-xl object-cover ring-2 ring-indigo-500/20"
+                  className="w-9 h-9 rounded-xl object-cover ring-2 ring-indigo-500/20 shrink-0"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
                   {initials}
                 </div>
               )}
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col justify-center min-w-0">
                 <span className="font-semibold text-xs text-slate-800 dark:text-white truncate">
                   {row.fullName}
                 </span>
@@ -198,20 +198,22 @@ export const TrainerAssignedMembersAttendance = () => {
           const row = params.row;
           const isAct = row.status === "Checked In" || (row.checkIn && !row.checkOut);
           return (
-            <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
-                isAct
-                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-300/40"
-                  : "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300 border-blue-300/40"
-              }`}
-            >
+            <div className="flex items-center h-full">
               <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  isAct ? "bg-emerald-500 animate-pulse" : "bg-blue-500"
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                  isAct
+                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-300/40"
+                    : "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300 border-blue-300/40"
                 }`}
-              />
-              {row.status}
-            </span>
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isAct ? "bg-emerald-500 animate-pulse" : "bg-blue-500"
+                  }`}
+                />
+                {row.status}
+              </span>
+            </div>
           );
         },
       },
@@ -221,9 +223,11 @@ export const TrainerAssignedMembersAttendance = () => {
         flex: 1,
         minWidth: 120,
         renderCell: (params) => (
-          <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-            {formatTime(params.row.checkIn)}
-          </span>
+          <div className="flex items-center h-full">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              {formatTime(params.row.checkIn)}
+            </span>
+          </div>
         ),
       },
       {
@@ -232,9 +236,11 @@ export const TrainerAssignedMembersAttendance = () => {
         flex: 1,
         minWidth: 120,
         renderCell: (params) => (
-          <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-            {params.row.checkOut ? formatTime(params.row.checkOut) : "Active"}
-          </span>
+          <div className="flex items-center h-full">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+              {params.row.checkOut ? formatTime(params.row.checkOut) : "Active"}
+            </span>
+          </div>
         ),
       },
       {
@@ -243,9 +249,11 @@ export const TrainerAssignedMembersAttendance = () => {
         flex: 1.1,
         minWidth: 140,
         renderCell: (params) => (
-          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-            {formatDuration(params.row.durationMinutes, params.row.checkOut)}
-          </span>
+          <div className="flex items-center h-full">
+            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+              {formatDuration(params.row.durationMinutes, params.row.checkOut)}
+            </span>
+          </div>
         ),
       },
       {
@@ -254,9 +262,11 @@ export const TrainerAssignedMembersAttendance = () => {
         flex: 0.9,
         minWidth: 110,
         renderCell: (params) => (
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-            {params.row.entryMethod || "Manual"}
-          </span>
+          <div className="flex items-center h-full">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              {params.row.entryMethod || "Manual"}
+            </span>
+          </div>
         ),
       },
     ],

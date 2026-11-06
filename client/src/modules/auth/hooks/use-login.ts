@@ -1,6 +1,8 @@
 import { useState, useCallback, type ChangeEvent } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { type AppDispatch } from "@/app/store";
+import { queryClient } from "@/app/queryClient";
 import { loginUser } from "@/modules/auth/redux/auth.thunks";
 import initialLoginState, {
   type InitialLoginState,
@@ -19,6 +21,7 @@ type LoginField = keyof typeof initialLoginState;
 
 const useLogin = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [login, setLogin] = useState<InitialLoginState>(initialLoginState);
   const { addToast } = useToast();
 
@@ -46,9 +49,10 @@ const useLogin = () => {
 
       try {
         await dispatch(loginUser(login)).unwrap();
+        queryClient.clear();
         addToast({ type: "success", message: "Signed in successfully!" });
-
         Cookies.remove(LOGIN_ATTEMPT_COOKIE_KEY);
+        navigate("/dashboard", { replace: true });
       } catch (err) {
         const errorMessage =
           err instanceof Error
@@ -60,7 +64,7 @@ const useLogin = () => {
         setLogin(initialLoginState);
       }
     },
-    [login, dispatch, addToast],
+    [login, dispatch, addToast, navigate],
   );
 
   return { login, setLogin, handleChange, handleSubmit };

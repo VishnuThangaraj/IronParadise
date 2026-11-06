@@ -59,7 +59,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
     return "Good evening";
   };
 
-  const firstName = memberProfile.fullName?.trim()?.split(" ")[0] || "Athlete";
+  const firstName = memberProfile?.fullName?.trim()?.split(" ")[0] || "Athlete";
 
   return (
     <div className="flex flex-col gap-6 w-full animate-fadeIn transition-colors duration-300">

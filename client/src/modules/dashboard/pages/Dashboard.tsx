@@ -76,10 +76,27 @@ const Dashboard = () => {
   const firstName = currentUser?.fullName?.trim()?.split(" ")[0] || "there";
   const greeting = `${getGreeting()}, ${firstName}`;
 
+  const role = currentUser?.role?.toLowerCase();
+
+  const isTrainerData = Boolean(
+    role === "trainer" && overview && "trainerProfile" in (overview as any)
+  );
+  const isMemberData = Boolean(
+    role === "member" && overview && "memberProfile" in (overview as any)
+  );
+  const isAdminData = Boolean(
+    role === "admin" &&
+      overview &&
+      "kpis" in (overview as any) &&
+      "totalMembers" in ((overview as any).kpis || {})
+  );
+
+  const isDataReady = isTrainerData || isMemberData || isAdminData;
+
   return (
     <div className="flex flex-col gap-6 w-full pb-10 transition-colors duration-300">
       {/* Top Header via Common PageHeader */}
-      {currentUser?.role?.toLowerCase() === "admin" && (
+      {role === "admin" && (
         <PageHeader
           title={greeting}
           description="Monitor member activity, attendance trends, and daily gym operations across IronParadise."
@@ -87,7 +104,7 @@ const Dashboard = () => {
       )}
 
       {/* Loading Skeleton */}
-      {isLoading && <DashboardSkeleton />}
+      {(isLoading || (!isError && !isDataReady)) && <DashboardSkeleton />}
 
       {/* Error State */}
       {isError && (
@@ -116,21 +133,21 @@ const Dashboard = () => {
       )}
 
       {/* Loaded Trainer Dashboard Content */}
-      {overview && currentUser?.role?.toLowerCase() === "trainer" && (
+      {isTrainerData && (
         <TrainerDashboard
           overview={overview as unknown as TrainerDashboardData}
         />
       )}
 
       {/* Loaded Member Dashboard Content */}
-      {overview && currentUser?.role?.toLowerCase() === "member" && (
+      {isMemberData && (
         <MemberDashboard
           overview={overview as unknown as MemberDashboardData}
         />
       )}
 
       {/* Loaded Admin Dashboard Content */}
-      {overview && currentUser?.role?.toLowerCase() === "admin" && (
+      {isAdminData && (
         <div className="flex flex-col gap-6 w-full">
           {/* Section 1: KPI Metrics Grid */}
           <section aria-label="Key Performance Indicators" className="w-full">

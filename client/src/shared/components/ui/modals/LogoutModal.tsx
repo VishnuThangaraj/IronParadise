@@ -6,6 +6,7 @@ import { LuLogOut } from "react-icons/lu";
 
 import { logout } from "@/modules/auth/redux/auth.slice";
 import { useToast } from "@/shared/components/ui/toast";
+import { queryClient } from "@/app/queryClient";
 
 export interface LogoutModalProps {
   open: boolean;
@@ -23,6 +24,7 @@ const LogoutModal = ({ open, onClose, onConfirm }: LogoutModalProps) => {
       onConfirm();
     } else {
       dispatch(logout());
+      queryClient.clear();
       addToast({ type: "info", message: "Logged out successfully." });
       navigate("/authenticate");
     }

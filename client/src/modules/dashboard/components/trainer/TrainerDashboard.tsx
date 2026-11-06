@@ -37,7 +37,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
     return "Good evening";
   };
 
-  const firstName = trainerProfile.fullName?.trim()?.split(" ")[0] || "Coach";
+  const firstName = trainerProfile?.fullName?.trim()?.split(" ")[0] || "Coach";
 
   return (
     <div className="flex flex-col gap-6 w-full animate-fadeIn transition-colors duration-300">

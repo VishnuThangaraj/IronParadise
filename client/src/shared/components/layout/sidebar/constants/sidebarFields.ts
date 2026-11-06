@@ -160,11 +160,6 @@ export const TrainerSidebarItems: SidebarItemType[] = [
       },
     ],
   },
-  {
-    name: "Messages",
-    icon: LuMail,
-    location: "/message",
-  },
 ];
 
 export const MemberSidebarItems: SidebarItemType[] = [
@@ -187,10 +182,5 @@ export const MemberSidebarItems: SidebarItemType[] = [
     name: "My Membership",
     icon: LuCrown,
     location: "/member/my-membership",
-  },
-  {
-    name: "Messages",
-    icon: LuMail,
-    location: "/message",
   },
 ];

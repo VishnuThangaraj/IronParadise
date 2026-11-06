@@ -71,9 +71,11 @@ export const MemberMembershipView = () => {
         flex: 1.1,
         minWidth: 150,
         renderCell: (params) => (
-          <span className="font-mono font-semibold text-xs text-indigo-600 dark:text-indigo-400">
-            {params.row.receiptNumber || params.row._id?.slice(-8).toUpperCase()}
-          </span>
+          <div className="h-full flex items-center">
+            <span className="font-mono font-semibold text-xs text-indigo-600 dark:text-indigo-400">
+              {params.row.receiptNumber || params.row._id?.slice(-8).toUpperCase()}
+            </span>
+          </div>
         ),
       },
       {
@@ -82,7 +84,7 @@ export const MemberMembershipView = () => {
         flex: 1.2,
         minWidth: 160,
         renderCell: (params) => (
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+          <div className="h-full flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
             <LuCalendar className="w-3.5 h-3.5 text-slate-400" />
             <span>{formatDate(params.row.paymentDate)}</span>
           </div>
@@ -94,9 +96,11 @@ export const MemberMembershipView = () => {
         flex: 1,
         minWidth: 130,
         renderCell: (params) => (
-          <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400">
-            ₹{params.row.amountPaid?.toLocaleString() || 0}
-          </span>
+          <div className="h-full flex items-center">
+            <span className="font-bold text-xs text-emerald-600 dark:text-emerald-400">
+              ₹{params.row.amountPaid?.toLocaleString() || 0}
+            </span>
+          </div>
         ),
       },
       {
@@ -105,9 +109,11 @@ export const MemberMembershipView = () => {
         flex: 1,
         minWidth: 130,
         renderCell: (params) => (
-          <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            {params.row.paymentMethod || "CASH"}
-          </span>
+          <div className="h-full flex items-center">
+            <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              {params.row.paymentMethod || "CASH"}
+            </span>
+          </div>
         ),
       },
       {
@@ -116,9 +122,11 @@ export const MemberMembershipView = () => {
         flex: 1.3,
         minWidth: 160,
         renderCell: (params) => (
-          <span className="text-xs text-slate-500 truncate">
-            {params.row.transactionReference || params.row.notes || "Official Receipt"}
-          </span>
+          <div className="h-full flex items-center">
+            <span className="text-xs text-slate-500 truncate">
+              {params.row.transactionReference || params.row.notes || "Official Receipt"}
+            </span>
+          </div>
         ),
       },
     ],

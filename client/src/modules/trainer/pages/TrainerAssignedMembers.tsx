@@ -110,19 +110,19 @@ export const TrainerAssignedMembers = () => {
           const row = params.row;
           const initials = row.fullName?.trim()?.slice(0, 2).toUpperCase() || "MB";
           return (
-            <div className="flex items-center gap-3 py-1">
+            <div className="flex items-center gap-3 h-full w-full min-w-0">
               {row.profileImage ? (
                 <img
                   src={row.profileImage}
                   alt={row.fullName}
-                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-indigo-500/20"
+                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-indigo-500/20 shrink-0"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
                   {initials}
                 </div>
               )}
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col justify-center min-w-0">
                 <span className="font-semibold text-sm text-slate-800 dark:text-white truncate">
                   {row.fullName}
                 </span>
@@ -142,9 +142,9 @@ export const TrainerAssignedMembers = () => {
         renderCell: (params) => {
           const row = params.row;
           return (
-            <div className="flex flex-col text-xs text-slate-600 dark:text-slate-300 py-1">
+            <div className="flex flex-col justify-center text-xs text-slate-600 dark:text-slate-300 h-full w-full min-w-0">
               <span className="truncate">{row.email}</span>
-              <span className="text-slate-400 font-mono">{row.phone}</span>
+              <span className="text-slate-400 font-mono text-[11px] mt-0.5">{row.phone}</span>
             </div>
           );
         },
@@ -157,23 +157,23 @@ export const TrainerAssignedMembers = () => {
         renderCell: (params) => {
           const row = params.row;
           return (
-            <div className="flex flex-col gap-1 py-1">
+            <div className="flex flex-col justify-center gap-1 h-full w-full min-w-0">
               {row.membershipPlan ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 truncate">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                   {row.membershipPlan.planName || row.membershipPlan.name}
                 </span>
               ) : (
-                <span className="text-[11px] text-slate-400">No membership plan</span>
+                <span className="text-xs text-slate-400">No membership plan</span>
               )}
-              <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 flex-wrap">
                 {row.workoutPlan && (
-                  <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 truncate max-w-[110px]">
                     🏋️ {row.workoutPlan.planName || row.workoutPlan.name}
                   </span>
                 )}
                 {row.dietPlan && (
-                  <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 truncate max-w-[110px]">
                     🥗 {row.dietPlan.planName || row.dietPlan.name}
                   </span>
                 )}
@@ -191,23 +191,29 @@ export const TrainerAssignedMembers = () => {
           const att = params.row.todayAttendance;
           if (!att) {
             return (
-              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                Not Visited
-              </span>
+              <div className="flex items-center h-full">
+                <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                  Not Visited
+                </span>
+              </div>
             );
           }
           if (att.status === "Checked In" || att.status === "Present") {
             return (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                In Gym ({formatTime(att.checkIn)})
-              </span>
+              <div className="flex items-center h-full">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  In Gym ({formatTime(att.checkIn)})
+                </span>
+              </div>
             );
           }
           return (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30">
-              Completed ({att.durationMinutes || 0}m)
-            </span>
+            <div className="flex items-center h-full">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30">
+                Completed ({att.durationMinutes || 0}m)
+              </span>
+            </div>
           );
         },
       },
@@ -216,19 +222,23 @@ export const TrainerAssignedMembers = () => {
         headerName: "Roster Status",
         flex: 0.9,
         minWidth: 120,
+        headerAlign: "center",
+        align: "center",
         renderCell: (params) => {
           const status = (params.row.assignment?.status || "ACTIVE").toUpperCase();
           const isAct = status === "ACTIVE";
           return (
-            <span
-              className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase border ${
-                isAct
-                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-300/40"
-                  : "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300 border-rose-300/40"
-              }`}
-            >
-              {status}
-            </span>
+            <div className="flex items-center justify-center h-full w-full">
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase border ${
+                  isAct
+                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-300/40"
+                    : "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300 border-rose-300/40"
+                }`}
+              >
+                {status}
+              </span>
+            </div>
           );
         },
       },
@@ -238,15 +248,19 @@ export const TrainerAssignedMembers = () => {
         flex: 1,
         minWidth: 140,
         sortable: false,
+        headerAlign: "center",
+        align: "center",
         renderCell: (params) => {
           return (
-            <button
-              onClick={() => setSelectedMember(params.row)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200/60 dark:border-indigo-500/30 transition-all cursor-pointer"
-            >
-              <LuEye className="w-3.5 h-3.5" />
-              <span>Details</span>
-            </button>
+            <div className="flex items-center justify-center h-full w-full">
+              <button
+                onClick={() => setSelectedMember(params.row)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200/60 dark:border-indigo-500/30 transition-all cursor-pointer"
+              >
+                <LuEye className="w-3.5 h-3.5" />
+                <span>Details</span>
+              </button>
+            </div>
           );
         },
       },
@@ -390,6 +404,7 @@ export const TrainerAssignedMembers = () => {
             columns={columns}
             getRowId={(row) => row._id || row.userId}
             pageSize={10}
+            rowHeight={64}
             height={550}
           />
         </Container>

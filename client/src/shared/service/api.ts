@@ -26,7 +26,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/auth/refresh-token`,
+          `${import.meta.env.VITE_SERVER_URL}/api/auth/refresh-token`,
           { refreshToken },
         );
 

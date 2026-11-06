@@ -142,7 +142,14 @@ const App = () => {
                 {/* General / Shared */}
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/events" element={<EventsCalendar />} />
-                <Route path="/message" element={<Messages />} />
+                <Route
+                  path="/message"
+                  element={
+                    <RoleRoute allowedRoles={["admin"]}>
+                      <Messages />
+                    </RoleRoute>
+                  }
+                />
 
                 {/* Admin Only */}
                 <Route

@@ -4,7 +4,6 @@ import {
   LuClock,
   LuMail,
   LuArrowLeft,
-  LuMessageSquare,
   LuAward,
 } from "react-icons/lu";
 
@@ -203,13 +202,17 @@ export const MemberTrainerProfileView = () => {
 
               <div className="pt-2">
                 <Button
-                  onClick={() => navigate("/message")}
+                  onClick={() => {
+                    if (trainer.email) {
+                      window.location.href = `mailto:${trainer.email}`;
+                    }
+                  }}
                   variant="primary"
                   size="sm"
                   className="w-full! rounded-xl! font-semibold!"
                 >
-                  <LuMessageSquare className="w-4 h-4 mr-1.5" />
-                  Chat with Coach in Messages
+                  <LuMail className="w-4 h-4 mr-1.5" />
+                  Email Your Coach
                 </Button>
               </div>
             </Container>

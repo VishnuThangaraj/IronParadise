@@ -20,6 +20,8 @@ export interface DataTableProps<
   disableRowSelectionOnClick?: boolean;
   getRowId?: (row: T) => GridRowId;
   height?: number | string;
+  rowHeight?: number;
+  columnHeaderHeight?: number;
   className?: string;
 }
 
@@ -60,6 +62,8 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
   disableRowSelectionOnClick = true,
   getRowId,
   height = 460,
+  rowHeight = 56,
+  columnHeaderHeight = 48,
   className = "",
 }: DataTableProps<T>) => {
   const [isDark, setIsDark] = useState(() =>
@@ -118,8 +122,8 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
           columns={columns}
           loading={loading}
           getRowId={getRowId}
-          rowHeight={52}
-          columnHeaderHeight={48}
+          rowHeight={rowHeight}
+          columnHeaderHeight={columnHeaderHeight}
           slots={{
             noRowsOverlay: CustomNoRowsOverlay,
             loadingOverlay: CustomLoadingOverlay,
