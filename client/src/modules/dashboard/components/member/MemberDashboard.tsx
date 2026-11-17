@@ -16,7 +16,7 @@ import {
 } from "react-icons/lu";
 
 import Container from "@/shared/components/ui/containers/Container";
-import KPICard from "@/shared/components/ui/kpi/KPICard";
+import { KPIGrid, KPICard } from "@/shared/components/ui/kpi";
 import type { MemberDashboardData } from "../../types/dashboard.types";
 
 interface MemberDashboardProps {
@@ -66,7 +66,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
       {/* Hero Member Profile Banner */}
       <Container
         variant="secondary"
-        className="w-full! max-w-none! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+        className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
       >
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative shrink-0">
@@ -153,12 +153,12 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
       </Container>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <KPIGrid columns={4}>
         <KPICard
           title="Monthly Visits"
-          value={kpis.totalVisitsThisMonth}
+          value={kpis.totalVisitsThisMonth.toLocaleString()}
           subtitle="Gym check-ins this month"
-          icon={<LuCalendarCheck2 className="w-6 h-6 text-emerald-500" />}
+          icon={LuCalendarCheck2}
           color="emerald"
         />
 
@@ -166,7 +166,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
           title="Workout Streak"
           value={`${kpis.attendanceStreak} Days`}
           subtitle="Consecutive gym days"
-          icon={<LuFlame className="w-6 h-6 text-amber-500" />}
+          icon={LuFlame}
           color="amber"
         />
 
@@ -174,7 +174,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
           title="Avg Session"
           value={`${kpis.averageSessionMinutes} mins`}
           subtitle="Typical workout time"
-          icon={<LuClock className="w-6 h-6 text-indigo-500" />}
+          icon={LuClock}
           color="indigo"
         />
 
@@ -182,17 +182,17 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
           title="Plan Validity"
           value={`${kpis.daysRemainingInPlan} Days`}
           subtitle="Remaining on membership"
-          icon={<LuShieldCheck className="w-6 h-6 text-blue-500" />}
+          icon={LuShieldCheck}
           color="blue"
         />
-      </div>
+      </KPIGrid>
 
       {/* Main Two-Column Row: Assigned Coach & Active Programs */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Assigned Personal Trainer (5 cols) */}
         <Container
           variant="secondary"
-          className="lg:col-span-5 w-full! max-w-none! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
+          className="lg:col-span-5 w-full! max-w-full! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -284,7 +284,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
         {/* Right Column: Active Workout & Diet Strategy (7 cols) */}
         <Container
           variant="secondary"
-          className="lg:col-span-7 w-full! max-w-none! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
+          className="lg:col-span-7 w-full! max-w-full! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -372,7 +372,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
         {/* Recent Attendance Log (7 cols) */}
         <Container
           variant="secondary"
-          className="lg:col-span-7 w-full! max-w-none! mx-0! p-6! rounded-3xl! flex flex-col gap-4 border-slate-200/80 dark:border-slate-800"
+          className="lg:col-span-7 w-full! max-w-full! mx-0! p-6! rounded-3xl! flex flex-col gap-4 border-slate-200/80 dark:border-slate-800"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -440,7 +440,7 @@ export const MemberDashboard = ({ overview }: MemberDashboardProps) => {
         {/* Quick Member Actions & Membership Snapshot (5 cols) */}
         <Container
           variant="secondary"
-          className="lg:col-span-5 w-full! max-w-none! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
+          className="lg:col-span-5 w-full! max-w-full! mx-0! p-6! rounded-3xl! flex flex-col justify-between gap-5 border-slate-200/80 dark:border-slate-800"
         >
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">

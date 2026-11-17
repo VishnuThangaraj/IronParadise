@@ -26,6 +26,7 @@ import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Button from "@/shared/components/ui/buttons/Button";
+import { KPIGrid, KPICard } from "@/shared/components/ui/kpi";
 
 import { useTrainerAssignedMembers } from "../hooks/use-trainer-assigned-members";
 import type { AssignedMemberItem } from "../types/trainer.types";
@@ -287,65 +288,36 @@ export const TrainerAssignedMembers = () => {
       </PageHeader>
 
       {/* KPI Counters Banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-indigo-100 dark:border-indigo-900/30 bg-linear-to-br from-indigo-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Total Assigned
-            </p>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1">
-              {stats.total}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl">
-            <LuUsers />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-emerald-100 dark:border-emerald-900/30 bg-linear-to-br from-emerald-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Active Members
-            </p>
-            <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-              {stats.active}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
-            <LuActivity />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-amber-100 dark:border-amber-900/30 bg-linear-to-br from-amber-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              In Gym Today
-            </p>
-            <h3 className="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">
-              {stats.inGymToday}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl">
-            <LuCalendarCheck2 />
-          </div>
-        </Container>
-      </div>
+      <KPIGrid columns={3}>
+        <KPICard
+          title="Total Assigned"
+          value={stats.total.toLocaleString()}
+          subtitle="Roster capacity"
+          icon={LuUsers}
+          color="indigo"
+        />
+        <KPICard
+          title="Active Members"
+          value={stats.active.toLocaleString()}
+          subtitle="Currently enrolled"
+          icon={LuActivity}
+          color="emerald"
+        />
+        <KPICard
+          title="In Gym Today"
+          value={stats.inGymToday.toLocaleString()}
+          subtitle="Checked in trainees"
+          icon={LuCalendarCheck2}
+          color="amber"
+        />
+      </KPIGrid>
 
       {/* Filter and View Controls Toolbar */}
       <Container
         variant="secondary"
-        className="p-4! rounded-2xl! flex flex-col md:flex-row items-center justify-between gap-4 border-slate-200/80 dark:border-slate-800 shadow-xs"
+        className="w-full! max-w-full! mx-0! flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-3.5! sm:p-3! rounded-2xl! shadow-xs gap-3 relative! z-30! overflow-visible!"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:max-w-xl">
           <SearchBar
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -361,7 +333,7 @@ export const TrainerAssignedMembers = () => {
           />
         </div>
 
-        <div className="flex items-center gap-3 self-end md:self-auto">
+        <div className="flex items-center gap-3 self-end sm:self-auto">
           <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} />
         </div>
       </Container>
@@ -373,7 +345,7 @@ export const TrainerAssignedMembers = () => {
           <span className="text-sm font-semibold text-slate-500">Loading your assigned members...</span>
         </div>
       ) : isError ? (
-        <Container variant="secondary" className="p-8 text-center rounded-2xl border-rose-200">
+        <Container variant="secondary" className="w-full! max-w-full! mx-0! p-8 text-center rounded-2xl border-rose-200">
           <p className="text-sm font-semibold text-rose-600">
             {error instanceof Error ? error.message : "Failed to load assigned members."}
           </p>
@@ -384,7 +356,7 @@ export const TrainerAssignedMembers = () => {
       ) : filteredMembers.length === 0 ? (
         <Container
           variant="secondary"
-          className="p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
+          className="w-full! max-w-full! mx-0! p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
         >
           <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-2xl">
             <LuUsers />
@@ -398,16 +370,22 @@ export const TrainerAssignedMembers = () => {
         </Container>
       ) : viewMode === "list" ? (
         /* Table View */
-        <Container variant="secondary" className="p-0! rounded-3xl! overflow-hidden shadow-sm">
-          <DataTable
-            rows={filteredMembers}
-            columns={columns}
-            getRowId={(row) => row._id || row.userId}
-            pageSize={10}
-            rowHeight={64}
-            height={550}
-          />
-        </Container>
+        <div className="relative z-0 w-full">
+          <Container
+            variant="secondary"
+            className="w-full! max-w-full! mx-0! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+          >
+            <DataTable
+              rows={filteredMembers}
+              columns={columns}
+              getRowId={(row) => row._id || row.userId}
+              pageSize={10}
+              rowHeight={64}
+              height={550}
+              className="border-none! rounded-none! shadow-none! bg-transparent!"
+            />
+          </Container>
+        </div>
       ) : (
         /* Cards Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">

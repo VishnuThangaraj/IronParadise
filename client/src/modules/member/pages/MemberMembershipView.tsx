@@ -14,6 +14,7 @@ import PageHeader from "@/shared/components/ui/page/PageHeader";
 import Container from "@/shared/components/ui/containers/Container";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Button from "@/shared/components/ui/buttons/Button";
+import { KPIGrid, KPICard } from "@/shared/components/ui/kpi";
 
 import { useMemberSelfDetails } from "../hooks/use-member-self-details";
 import { useMemberSelfPayments } from "../hooks/use-member-self-payments";
@@ -154,7 +155,7 @@ export const MemberMembershipView = () => {
       {/* Active Membership Banner Card */}
       <Container
         variant="secondary"
-        className="p-6! sm:p-8! rounded-3xl! border-indigo-200/60 dark:border-indigo-900/40 bg-linear-to-br from-indigo-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+        className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/60 dark:border-indigo-900/40 bg-linear-to-br from-indigo-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
       >
         <div className="flex items-start gap-4">
           <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl shadow-md shrink-0">
@@ -194,61 +195,32 @@ export const MemberMembershipView = () => {
       </Container>
 
       {/* Financial Status KPI Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-emerald-100 dark:border-emerald-900/30 bg-linear-to-br from-emerald-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Total Amount Paid
-            </p>
-            <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-              ₹{summary.totalPaid.toLocaleString()}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
-            <LuDollarSign />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-amber-100 dark:border-amber-900/30 bg-linear-to-br from-amber-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Outstanding Balance
-            </p>
-            <h3 className="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">
-              ₹{summary.totalDue.toLocaleString()}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl">
-            <LuCreditCard />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-blue-100 dark:border-blue-900/30 bg-linear-to-br from-blue-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Payment Status
-            </p>
-            <h3 className="text-2xl font-black text-blue-600 dark:text-blue-400 mt-1 uppercase">
-              {summary.status}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl">
-            <LuReceipt />
-          </div>
-        </Container>
-      </div>
+      <KPIGrid columns={3}>
+        <KPICard
+          title="Total Amount Paid"
+          value={`₹${summary.totalPaid.toLocaleString()}`}
+          subtitle="Recorded payments"
+          icon={LuDollarSign}
+          color="emerald"
+        />
+        <KPICard
+          title="Outstanding Balance"
+          value={`₹${summary.totalDue.toLocaleString()}`}
+          subtitle="Remaining dues"
+          icon={LuCreditCard}
+          color="amber"
+        />
+        <KPICard
+          title="Payment Status"
+          value={summary.status}
+          subtitle="Account standing"
+          icon={LuReceipt}
+          color="blue"
+        />
+      </KPIGrid>
 
       {/* Receipts Table */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <h4 className="font-bold text-base text-slate-800 dark:text-white flex items-center gap-2">
           <LuReceipt className="w-5 h-5 text-indigo-500" />
           Payment Receipts & Invoices
@@ -262,7 +234,7 @@ export const MemberMembershipView = () => {
         ) : receipts.length === 0 ? (
           <Container
             variant="secondary"
-            className="p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
+            className="w-full! max-w-full! mx-0! p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
           >
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-2xl">
               <LuReceipt />
@@ -275,15 +247,21 @@ export const MemberMembershipView = () => {
             </p>
           </Container>
         ) : (
-          <Container variant="secondary" className="p-0! rounded-3xl! overflow-hidden shadow-sm">
-            <DataTable
-              rows={receipts}
-              columns={columns}
-              getRowId={(row) => row._id || row.receiptNumber}
-              pageSize={10}
-              height={450}
-            />
-          </Container>
+          <div className="relative z-0 w-full">
+            <Container
+              variant="secondary"
+              className="w-full! max-w-full! mx-0! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+            >
+              <DataTable
+                rows={receipts}
+                columns={columns}
+                getRowId={(row) => row._id || row.receiptNumber}
+                pageSize={10}
+                height={450}
+                className="border-none! rounded-none! shadow-none! bg-transparent!"
+              />
+            </Container>
+          </div>
         )}
       </div>
     </div>

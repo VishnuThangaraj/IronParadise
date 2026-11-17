@@ -144,7 +144,7 @@ const MembershipPaylist = () => {
             ) : (
               <Container
                 variant="secondary"
-                className="w-full! max-w-full! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+                className="w-full! max-w-full! mx-0! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
               >
                 <DataTable<any>
                   rows={filteredPayments}

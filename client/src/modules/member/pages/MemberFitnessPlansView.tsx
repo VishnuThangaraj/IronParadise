@@ -52,7 +52,7 @@ export const MemberFitnessPlansView = () => {
       {plansData?.startDate && plansData?.endDate && (
         <Container
           variant="secondary"
-          className="p-4! rounded-2xl! bg-indigo-50/40 dark:bg-indigo-950/20 border-indigo-200/50 dark:border-indigo-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          className="w-full! max-w-full! mx-0! p-4! rounded-2xl! bg-indigo-50/40 dark:bg-indigo-950/20 border-indigo-200/50 dark:border-indigo-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
         >
           <div className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300">
             <LuCalendar className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -100,7 +100,7 @@ export const MemberFitnessPlansView = () => {
           <span className="text-sm font-semibold text-slate-500">Loading your plans...</span>
         </div>
       ) : isError ? (
-        <Container variant="secondary" className="p-8 text-center rounded-2xl border-rose-200">
+        <Container variant="secondary" className="w-full! max-w-full! mx-0! p-8 text-center rounded-2xl border-rose-200">
           <p className="text-sm font-semibold text-rose-600">
             {error instanceof Error ? error.message : "Failed to load fitness plans."}
           </p>
@@ -111,10 +111,10 @@ export const MemberFitnessPlansView = () => {
       ) : activeTab === "workout" ? (
         /* Workout Plan Tab */
         workoutPlan ? (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 w-full">
             <Container
               variant="secondary"
-              className="p-6! sm:p-8! rounded-3xl! border-indigo-200/60 dark:border-indigo-900/40 bg-linear-to-br from-indigo-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+              className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/60 dark:border-indigo-900/40 bg-linear-to-br from-indigo-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
             >
               <div>
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
@@ -143,17 +143,17 @@ export const MemberFitnessPlansView = () => {
 
             {/* Routines / Daily Splits */}
             {workoutPlan.routines && workoutPlan.routines.length > 0 ? (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 w-full">
                 <h4 className="font-bold text-base text-slate-800 dark:text-white flex items-center gap-2">
                   <LuLayers className="w-5 h-5 text-indigo-500" />
                   Weekly Training Split
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                   {workoutPlan.routines.map((routine: any, idx: number) => (
                     <Container
                       key={idx}
                       variant="secondary"
-                      className="p-5! rounded-2xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-3"
+                      className="w-full! max-w-full! mx-0! p-5! rounded-2xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-3"
                     >
                       <div className="flex items-center justify-between">
                         <h5 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -187,7 +187,7 @@ export const MemberFitnessPlansView = () => {
         ) : (
           <Container
             variant="secondary"
-            className="p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
+            className="w-full! max-w-full! mx-0! p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
           >
             <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-2xl">
               <LuDumbbell />
@@ -203,10 +203,10 @@ export const MemberFitnessPlansView = () => {
       ) : (
         /* Diet Plan Tab */
         dietPlan ? (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 w-full">
             <Container
               variant="secondary"
-              className="p-6! sm:p-8! rounded-3xl! border-emerald-200/60 dark:border-emerald-900/40 bg-linear-to-br from-emerald-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+              className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-emerald-200/60 dark:border-emerald-900/40 bg-linear-to-br from-emerald-50/20 to-transparent flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
             >
               <div>
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
@@ -233,17 +233,17 @@ export const MemberFitnessPlansView = () => {
 
             {/* Meals Schedule */}
             {dietPlan.meals && dietPlan.meals.length > 0 ? (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 w-full">
                 <h4 className="font-bold text-base text-slate-800 dark:text-white flex items-center gap-2">
                   <LuSalad className="w-5 h-5 text-emerald-500" />
                   Daily Meal Guidance
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                   {dietPlan.meals.map((meal: any, idx: number) => (
                     <Container
                       key={idx}
                       variant="secondary"
-                      className="p-5! rounded-2xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-2"
+                      className="w-full! max-w-full! mx-0! p-5! rounded-2xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-2"
                     >
                       <div className="flex items-center justify-between">
                         <h5 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -267,7 +267,7 @@ export const MemberFitnessPlansView = () => {
         ) : (
           <Container
             variant="secondary"
-            className="p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
+            className="w-full! max-w-full! mx-0! p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-3"
           >
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 flex items-center justify-center text-2xl">
               <LuSalad />

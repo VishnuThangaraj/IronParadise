@@ -16,6 +16,7 @@ import SearchBar from "@/shared/components/ui/search/SearchBar";
 import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Button from "@/shared/components/ui/buttons/Button";
+import { KPIGrid, KPICard } from "@/shared/components/ui/kpi";
 
 import { useAssignedMembersAttendance } from "../hooks/use-assigned-members-attendance";
 import { useTrainerAssignedMembers } from "../hooks/use-trainer-assigned-members";
@@ -319,63 +320,34 @@ export const TrainerAssignedMembersAttendance = () => {
       </PageHeader>
 
       {/* Overview Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-indigo-100 dark:border-indigo-900/30 bg-linear-to-br from-indigo-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Total Sessions Logged
-            </p>
-            <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1">
-              {metrics.totalSessions}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl">
-            <LuCalendarCheck2 />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-emerald-100 dark:border-emerald-900/30 bg-linear-to-br from-emerald-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Currently In Gym
-            </p>
-            <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-              {metrics.activeInGym}
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
-            <LuActivity />
-          </div>
-        </Container>
-
-        <Container
-          variant="secondary"
-          className="p-5! rounded-2xl! border-blue-100 dark:border-blue-900/30 bg-linear-to-br from-blue-500/5 to-transparent flex items-center justify-between"
-        >
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Avg Session Length
-            </p>
-            <h3 className="text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">
-              {metrics.avgMinutes} mins
-            </h3>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl">
-            <LuClock />
-          </div>
-        </Container>
-      </div>
+      <KPIGrid columns={3}>
+        <KPICard
+          title="Total Sessions Logged"
+          value={metrics.totalSessions.toLocaleString()}
+          subtitle="All training visits"
+          icon={LuCalendarCheck2}
+          color="indigo"
+        />
+        <KPICard
+          title="Currently In Gym"
+          value={metrics.activeInGym.toLocaleString()}
+          subtitle="Active on floor"
+          icon={LuActivity}
+          color="emerald"
+        />
+        <KPICard
+          title="Avg Session Length"
+          value={`${metrics.avgMinutes} mins`}
+          subtitle="Typical workout time"
+          icon={LuClock}
+          color="blue"
+        />
+      </KPIGrid>
 
       {/* Filter Toolbar */}
       <Container
         variant="secondary"
-        className="p-4! rounded-2xl! flex flex-col lg:flex-row items-center justify-between gap-4 border-slate-200/80 dark:border-slate-800 shadow-xs"
+        className="w-full! max-w-full! mx-0! flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 sm:gap-4 p-3.5! sm:p-3! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
       >
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           {/* Member Dropdown */}
@@ -395,8 +367,8 @@ export const TrainerAssignedMembersAttendance = () => {
           />
 
           {/* Date Picker Input */}
-          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs">
-            <LuCalendar className="w-3.5 h-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 h-10 text-xs">
+            <LuCalendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <input
               type="date"
               value={selectedDate}
@@ -406,7 +378,7 @@ export const TrainerAssignedMembersAttendance = () => {
             {selectedDate && (
               <button
                 onClick={() => setSelectedDate("")}
-                className="text-[10px] text-slate-400 hover:text-slate-600 ml-1 cursor-pointer"
+                className="text-[10px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-1 cursor-pointer"
               >
                 Clear
               </button>
@@ -415,7 +387,7 @@ export const TrainerAssignedMembersAttendance = () => {
 
           <button
             onClick={handleTodayClick}
-            className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200/60 dark:border-indigo-500/30 transition-colors cursor-pointer"
+            className="h-10 px-3.5 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200/60 dark:border-indigo-500/30 transition-colors cursor-pointer"
           >
             Today
           </button>
@@ -440,7 +412,7 @@ export const TrainerAssignedMembersAttendance = () => {
           <span className="text-sm font-semibold text-slate-500">Loading attendance records...</span>
         </div>
       ) : isError ? (
-        <Container variant="secondary" className="p-8 text-center rounded-2xl border-rose-200">
+        <Container variant="secondary" className="w-full! max-w-full! mx-0! p-8 text-center rounded-2xl border-rose-200">
           <p className="text-sm font-semibold text-rose-600">
             {error instanceof Error ? error.message : "Failed to load attendance records."}
           </p>
@@ -449,15 +421,21 @@ export const TrainerAssignedMembersAttendance = () => {
           </Button>
         </Container>
       ) : (
-        <Container variant="secondary" className="p-0! rounded-3xl! overflow-hidden shadow-sm">
-          <DataTable
-            rows={filteredRecords}
-            columns={columns}
-            getRowId={(row) => row._id || row.attendanceId}
-            pageSize={10}
-            height={550}
-          />
-        </Container>
+        <div className="relative z-0 w-full">
+          <Container
+            variant="secondary"
+            className="w-full! max-w-full! mx-0! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+          >
+            <DataTable
+              rows={filteredRecords}
+              columns={columns}
+              getRowId={(row) => row._id || row.attendanceId}
+              pageSize={10}
+              height={550}
+              className="border-none! rounded-none! shadow-none! bg-transparent!"
+            />
+          </Container>
+        </div>
       )}
     </div>
   );

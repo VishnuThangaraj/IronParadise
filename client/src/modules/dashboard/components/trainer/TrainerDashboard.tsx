@@ -44,7 +44,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
       {/* Hero Trainer Profile Banner */}
       <Container
         variant="secondary"
-        className="w-full! max-w-none! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+        className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
       >
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative shrink-0">
@@ -184,7 +184,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
         {/* Live Assigned Members Check-In Feed */}
         <Container
           variant="secondary"
-          className="w-full! max-w-none! mx-0! p-5! rounded-2xl! flex flex-col justify-between"
+          className="w-full! max-w-full! mx-0! p-5! rounded-2xl! flex flex-col justify-between"
         >
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
             <div className="flex items-center gap-2.5">
@@ -269,7 +269,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
         {/* Assigned Trainees Directory Snapshot */}
         <Container
           variant="secondary"
-          className="w-full! max-w-none! mx-0! p-5! rounded-2xl! flex flex-col justify-between"
+          className="w-full! max-w-full! mx-0! p-5! rounded-2xl! flex flex-col justify-between"
         >
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
             <div className="flex items-center gap-2.5">
@@ -360,7 +360,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
         {/* Quick Actions Card */}
         <Container
           variant="secondary"
-          className="w-full! max-w-none! mx-0! p-5! rounded-2xl! flex flex-col justify-between lg:col-span-1"
+          className="w-full! max-w-full! mx-0! p-5! rounded-2xl! flex flex-col justify-between lg:col-span-1"
         >
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
@@ -421,7 +421,7 @@ export const TrainerDashboard = ({ overview }: TrainerDashboardProps) => {
         {/* Upcoming Gym Events */}
         <Container
           variant="secondary"
-          className="w-full! max-w-none! mx-0! p-5! rounded-2xl! flex flex-col justify-between lg:col-span-2"
+          className="w-full! max-w-full! mx-0! p-5! rounded-2xl! flex flex-col justify-between lg:col-span-2"
         >
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
             <div className="flex items-center gap-2.5">

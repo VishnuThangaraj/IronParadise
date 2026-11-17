@@ -58,50 +58,44 @@ const MemberDetails = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Top Header & Actions Bar */}{" "}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <PageHeader
-            title="Member Profile Dashboard"
-            description="view member details"
-          />
-        </div>
+    <div className="flex flex-col gap-6 w-full">
+      {/* Top Header & Actions Bar */}
+      <PageHeader
+        title="Member Profile Dashboard"
+        description="View member personal details, active subscriptions, and assigned coaching programs."
+      >
         <div className="flex items-center gap-3">
-          {/* {currentDietPlan && ( */}
-          <>
-            <Tooltip title="Edit this member">
-              <Button
-                variant="blue"
-                size="sm"
-                onClick={() => navigate(`/member/edit/${memberId}`)}
-                disabled={isLoading}
-                aria-label="Edit Member"
-              >
-                <LuPencil size={15} /> Edit
-              </Button>
-            </Tooltip>
-            <Tooltip title="Delete this member">
-              <Button
-                variant="red"
-                size="sm"
-                onClick={() => setOpenDeleteModal(true)}
-                disabled={isLoading}
-                aria-label="Delete Member"
-              >
-                <LuTrash2 size={15} />
-              </Button>
-            </Tooltip>
-          </>
+          <Tooltip title="Edit this member">
+            <Button
+              variant="blue"
+              size="sm"
+              onClick={() => navigate(`/member/edit/${memberId || id}`)}
+              disabled={isLoading}
+              aria-label="Edit Member"
+            >
+              <LuPencil size={15} /> Edit
+            </Button>
+          </Tooltip>
+          <Tooltip title="Delete this member">
+            <Button
+              variant="red"
+              size="sm"
+              onClick={() => setOpenDeleteModal(true)}
+              disabled={isLoading}
+              aria-label="Delete Member"
+            >
+              <LuTrash2 size={15} />
+            </Button>
+          </Tooltip>
         </div>
-      </div>
-      <div className="flex flex-col gap-6 w-full">
-        <div className="flex justify-baseline gap-5 w-full">
-          {/* Member Profile */}
-          <Container
-            variant="secondary"
-            className="flex flex-col w-4/12! p-0! overflow-hidden border border-slate-200/80 dark:border-white/10"
-          >
+      </PageHeader>
+
+      <div className="flex flex-col lg:flex-row gap-6 w-full items-start">
+        {/* Member Profile */}
+        <Container
+          variant="secondary"
+          className="w-full lg:w-4/12! max-w-none! mx-0! flex flex-col p-0! overflow-hidden rounded-2xl! shadow-xs border border-slate-200/80 dark:border-white/10"
+        >
             {/* Banner */}
             <div className="bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 h-20 relative overflow-hidden flex items-start justify-between p-5 px-6">
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size[14px_24px] pointer-events-none" />
@@ -205,7 +199,7 @@ const MemberDetails = () => {
           {/* Assignment */}
           <Container
             variant="secondary"
-            className="flex flex-col gap-10 w-8/12! p-5! border border-slate-200/80 dark:border-white/10"
+            className="w-full lg:w-8/12! max-w-none! mx-0! flex flex-col gap-8 p-6! rounded-2xl! shadow-xs border border-slate-200/80 dark:border-white/10"
           >
             <div className="flex justify-between ">
               <div className="flex items-center gap-2.5 font-semibold text-slate-900 dark:text-slate-100">
@@ -446,8 +440,6 @@ const MemberDetails = () => {
             </div>
           </Container>
         </div>
-        <Container variant="secondary" className="w-full  !"></Container>
-      </div>
       {/* Member Deletion Confirmation Modal */}
       <DeleteModal
         open={openDeleteModal}

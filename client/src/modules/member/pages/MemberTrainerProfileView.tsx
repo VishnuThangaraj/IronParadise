@@ -43,7 +43,7 @@ export const MemberTrainerProfileView = () => {
           <span className="text-sm font-semibold text-slate-500">Loading coach profile...</span>
         </div>
       ) : isError ? (
-        <Container variant="secondary" className="p-8 text-center rounded-2xl border-rose-200">
+        <Container variant="secondary" className="w-full! max-w-full! mx-0! p-8 text-center rounded-2xl border-rose-200">
           <p className="text-sm font-semibold text-rose-600">
             {error instanceof Error ? error.message : "Failed to load trainer profile."}
           </p>
@@ -55,7 +55,7 @@ export const MemberTrainerProfileView = () => {
         /* Empty State: No Personal Trainer Assigned */
         <Container
           variant="secondary"
-          className="p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4"
+          className="w-full! max-w-full! mx-0! p-12 text-center rounded-3xl border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4"
         >
           <div className="w-16 h-16 rounded-3xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-3xl shadow-sm">
             <LuUsers />
@@ -80,11 +80,11 @@ export const MemberTrainerProfileView = () => {
         </Container>
       ) : (
         /* Detailed Trainer Profile */
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 w-full">
           {/* Hero Profile Card */}
           <Container
             variant="secondary"
-            className="w-full! max-w-none! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+            className="w-full! max-w-full! mx-0! p-6! sm:p-8! rounded-3xl! border-indigo-200/50! dark:border-indigo-900/30! bg-linear-to-br from-white via-indigo-50/20 to-slate-50 dark:from-slate-900 dark:via-indigo-950/20 dark:to-slate-900/80 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
           >
             <div className="flex items-center gap-5 sm:gap-6">
               <div className="relative shrink-0">
@@ -139,11 +139,11 @@ export const MemberTrainerProfileView = () => {
           </Container>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             {/* Specializations & Expertise */}
             <Container
               variant="secondary"
-              className="p-6! rounded-3xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-4"
+              className="w-full! max-w-full! mx-0! p-6! rounded-3xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-4"
             >
               <div className="flex items-center gap-2">
                 <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
@@ -173,7 +173,7 @@ export const MemberTrainerProfileView = () => {
             {/* Contact Channels Card */}
             <Container
               variant="secondary"
-              className="p-6! rounded-3xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-4"
+              className="w-full! max-w-full! mx-0! p-6! rounded-3xl! border-slate-200/80 dark:border-slate-800 flex flex-col gap-4"
             >
               <div className="flex items-center gap-2">
                 <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">

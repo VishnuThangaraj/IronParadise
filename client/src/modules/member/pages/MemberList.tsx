@@ -168,7 +168,7 @@ const MemberList = () => {
       <div className="relative z-0">
         <Container
           variant="secondary"
-          className="w-full! max-w-full! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
+          className="w-full! max-w-full! mx-0! p-0! overflow-hidden rounded-2xl! flex-col shadow-xs"
         >
           <DataTable
             loading={isLoading}

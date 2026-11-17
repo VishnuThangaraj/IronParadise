@@ -141,7 +141,7 @@ const TrainerFormInner = ({
     >
       <Container
         variant="secondary"
-        className="rounded-3xl! p-6 sm:p-8 md:p-10 flex flex-col gap-8 shadow-xl relative overflow-hidden"
+        className="w-full! rounded-3xl! p-6 sm:p-8 md:p-10 flex flex-col gap-8 shadow-xl relative overflow-hidden"
       >
         {/* Top Header Live Trainer Summary Banner */}
         <div className="p-5 rounded-2xl bg-linear-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/5 dark:from-indigo-950/30 dark:via-purple-950/20 dark:to-slate-900/40 border border-indigo-200/60 dark:border-indigo-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -211,7 +211,7 @@ const TrainerFormInner = ({
         <div className="flex flex-col gap-3">
           <Container
             variant="secondary"
-            className="p-1.5! shadow-xs flex flex-wrap sm:flex-nowrap gap-1.5 rounded-2xl!"
+            className="w-full! max-w-full! mx-0! p-1.5! shadow-xs flex flex-wrap sm:flex-nowrap gap-1.5 rounded-2xl!"
           >
             {tabs.map((tab) => {
               const Icon = tab.icon;
