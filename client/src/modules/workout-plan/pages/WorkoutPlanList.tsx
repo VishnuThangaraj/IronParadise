@@ -12,6 +12,7 @@ import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 
 import useWorkoutPlan from "@/modules/workout-plan/hooks/use-workout-plan";
+import WorkoutPlanKPI from "@/modules/workout-plan/components/WorkoutPlanKPI";
 import WorkoutPlanGrid from "@/modules/workout-plan/components/WorkoutPlanGrid";
 import useWorkoutPlanDelete from "@/modules/workout-plan/hooks/use-workout-plan.delete";
 import { getWorkoutPlanColumns } from "@/modules/workout-plan/constants/workout-plan.columns";
@@ -58,9 +59,8 @@ const WorkoutPlanList = () => {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Workout Plan"
-        description="Manage your gym's membership plans."
+        description="Manage your gym's workout routines and training plans."
       >
-        {" "}
         <div className="justify-center align-center">
           <Button
             variant="primary"
@@ -74,6 +74,8 @@ const WorkoutPlanList = () => {
           </Button>
         </div>
       </PageHeader>
+      {/* KPI */}
+      <WorkoutPlanKPI />
       <Container
         variant="secondary"
         className="w-full! max-w-full! mx-0! flex justify-between items-center p-3.5! sm:p-3! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"

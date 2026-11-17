@@ -12,6 +12,7 @@ import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 
 import useDietPlan from "@/modules/diet-plan/hooks/use-diet-plan";
+import DietPlanKPI from "@/modules/diet-plan/components/DietPlanKPI";
 import DietPlanGrid from "@/modules/diet-plan/components/DietPlanGrid";
 import useDietPlanDelete from "@/modules/diet-plan/hooks/use-diet-plan.delete";
 import { getDietPlanColumns } from "@/modules/diet-plan/constants/diet-plan.columns";
@@ -58,7 +59,7 @@ const DietPlanList = () => {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Diet Plan"
-        description="Manage your gym's membership plans."
+        description="Manage your gym's diet and nutrition plans."
       >
         <div className="justify-center align-center">
           <Button
@@ -73,6 +74,8 @@ const DietPlanList = () => {
           </Button>
         </div>
       </PageHeader>
+      {/* KPI */}
+      <DietPlanKPI />
       <Container
         variant="secondary"
         className="w-full! max-w-full! mx-0! flex justify-between items-center p-3.5! sm:p-3! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
