@@ -13,7 +13,7 @@ const workoutExerciseSchema = new Schema(
 
 const dayWorkoutSchema = new Schema(
   {
-    focus: { type: String, required: true },
+    focus: { type: String, default: "Rest & Recovery", trim: true },
     exercises: { type: [workoutExerciseSchema], default: [] },
   },
   { _id: false },

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/app/store";
@@ -14,6 +14,8 @@ import {
   LuUsers,
   LuCalendarCheck2,
   LuExternalLink,
+  LuCamera,
+  LuLoader,
 } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
 
@@ -22,9 +24,11 @@ import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 import Container from "@/shared/components/ui/containers/Container";
+import { useToast } from "@/shared/components/ui/toast";
+import { uploadProfileImageApi } from "@/shared/api/upload.api";
 import { getInitials } from "@/shared/hooks/getInitials";
 
-import { fetchTrainerById } from "../redux/trainer.thunks";
+import { fetchTrainerById, updateTrainer } from "../redux/trainer.thunks";
 import {
   selectCurrentTrainer,
   selectTrainerLoading,
@@ -48,6 +52,99 @@ const TrainerDetails = () => {
     handleDeleteTrainer,
     setOpenDeleteTrainerModal,
   } = useTrainerDelete();
+
+  const { addToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const trainerUserId = id || trainer?.userId;
+    if (!file || !trainerUserId) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      addToast({
+        type: "error",
+        message: "Please select a valid image (JPG, PNG, or WebP)",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      addToast({
+        type: "error",
+        message: "Image size must be 5MB or less",
+      });
+      return;
+    }
+
+    try {
+      setIsUploadingPhoto(true);
+      const res = await uploadProfileImageApi(file);
+      if (res?.data?.url) {
+        await dispatch(
+          updateTrainer({
+            userId: trainerUserId,
+            trainerData: { profileImage: res.data.url },
+          }),
+        ).unwrap();
+
+        addToast({
+          type: "success",
+          message: "Profile photo updated successfully!",
+        });
+      }
+    } catch (err: unknown) {
+      const axiosError = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      addToast({
+        type: "error",
+        message:
+          axiosError?.response?.data?.message ||
+          axiosError?.message ||
+          "Failed to upload profile photo",
+      });
+    } finally {
+      setIsUploadingPhoto(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemovePhoto = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const trainerUserId = id || trainer?.userId;
+    if (!trainerUserId || isUploadingPhoto) return;
+
+    try {
+      await dispatch(
+        updateTrainer({
+          userId: trainerUserId,
+          trainerData: { profileImage: "" },
+        }),
+      ).unwrap();
+
+      addToast({
+        type: "info",
+        message: "Profile photo removed",
+      });
+    } catch (err: unknown) {
+      const axiosError = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      addToast({
+        type: "error",
+        message:
+          axiosError?.response?.data?.message ||
+          axiosError?.message ||
+          "Failed to remove profile photo",
+      });
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -132,17 +229,77 @@ const TrainerDetails = () => {
 
             {/* Avatar Header */}
             <div className="relative px-6 -mt-10 flex items-end justify-between">
-              <div className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-900 bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md overflow-hidden select-none shrink-0 z-10">
-                {trainer?.profileImage ? (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={trainer.profileImage}
-                    alt={trainer?.fullName || "Trainer"}
-                  />
-                ) : (
-                  <span className="text-white font-extrabold text-2xl tracking-wider">
-                    {trainer?.fullName ? getInitials(trainer.fullName) : "TR"}
-                  </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handlePhotoSelect}
+                className="hidden"
+                disabled={isUploadingPhoto || loading}
+              />
+              <div className="relative group/avatar">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-900 bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md overflow-hidden select-none shrink-0 z-10 cursor-pointer relative"
+                  title="Click to change photo"
+                >
+                  {trainer?.profileImage ? (
+                    <img
+                      className="w-full h-full object-cover"
+                      src={trainer.profileImage}
+                      alt={trainer?.fullName || "Trainer"}
+                    />
+                  ) : (
+                    <span className="text-white font-extrabold text-2xl tracking-wider">
+                      {trainer?.fullName ? getInitials(trainer.fullName) : "TR"}
+                    </span>
+                  )}
+
+                  {/* Hover Camera Overlay */}
+                  {!isUploadingPhoto && !loading && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center text-white backdrop-blur-xs">
+                      <LuCamera size={20} className="drop-shadow-md" />
+                    </div>
+                  )}
+
+                  {/* Loading Spinner Overlay */}
+                  {isUploadingPhoto && (
+                    <div className="absolute inset-0 bg-slate-950/70 flex items-center justify-center z-20">
+                      <LuLoader size={22} className="animate-spin text-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Floating Edit Button Badge */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingPhoto || loading}
+                  className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-lg border-2 border-white dark:border-slate-900 z-20 cursor-pointer transition-transform hover:scale-110"
+                  title="Change photo"
+                >
+                  <LuCamera size={13} />
+                </button>
+
+                {/* Remove button if image exists */}
+                {trainer?.profileImage && (
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    disabled={isUploadingPhoto || loading}
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-md border-2 border-white dark:border-slate-900 z-20 cursor-pointer opacity-0 group-hover/avatar:opacity-100 transition-opacity"
+                    title="Remove photo"
+                  >
+                    <LuTrash2 size={10} />
+                  </button>
                 )}
               </div>
             </div>

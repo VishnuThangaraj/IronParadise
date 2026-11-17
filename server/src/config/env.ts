@@ -29,6 +29,17 @@ const env = {
     process.env.JWT_REFRESH_SECRET ?? process.env.JWT_SECRET + "_refresh",
 
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? "7d",
+
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME ?? "",
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY ?? "",
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ?? "",
+  CLOUDINARY_URL: process.env.CLOUDINARY_URL ?? "",
+  isCloudinaryConfigured: Boolean(
+    (process.env.CLOUDINARY_CLOUD_NAME &&
+      process.env.CLOUDINARY_API_KEY &&
+      process.env.CLOUDINARY_API_SECRET) ||
+      process.env.CLOUDINARY_URL,
+  ),
 };
 
 export default env;

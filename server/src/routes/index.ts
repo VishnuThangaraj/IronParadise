@@ -12,6 +12,7 @@ import membershipPlanRoutes from "../modules/membership-plan/membership-plan.rou
 import enquiryRoutes from "../modules/enquiry/enquiry.routes.js";
 import attendanceRoutes from "../modules/attendance/attendance.routes.js";
 import dashboardRoutes from "../modules/dashboard/dashboard.routes.js";
+import uploadRoutes from "../modules/upload/upload.routes.js";
 
 const router: Router = Router();
 
@@ -27,5 +28,6 @@ router.use("/membership-plan", membershipPlanRoutes);
 router.use("/enquiry", enquiryRoutes);
 router.use("/attendance", attendanceRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/upload", uploadRoutes);
 
 export default router;

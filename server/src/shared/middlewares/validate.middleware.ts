@@ -7,9 +7,16 @@ export function validate(schema: ZodSchema) {
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
+      const flattened = result.error.flatten();
+      const firstError =
+        flattened.formErrors[0] ||
+        Object.values(flattened.fieldErrors).flat()[0] ||
+        "Validation failed";
+
       return res.status(400).json({
         success: false,
-        errors: result.error.flatten(),
+        message: firstError,
+        errors: flattened,
       });
     }
 

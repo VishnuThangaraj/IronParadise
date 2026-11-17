@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+const emptyStringToUndefined = z.preprocess(
+  (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),
+  z.string().trim().optional(),
+);
+
 export const mealItemSchema = z.object({
   name: z.string().trim().min(1, "Meal name's missing — add one"),
   quantity: z.string().trim().nullable().optional(),
@@ -39,11 +44,7 @@ export const dietPlanSchema = z.object({
     .trim()
     .min(1, "Plan goal's missing — add one")
     .max(100, "Plan goal's too long — shorten it a bit"),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Description cannot be empty")
-    .optional(),
+  description: emptyStringToUndefined,
   monday: dayDietSchema.optional(),
   tuesday: dayDietSchema.optional(),
   wednesday: dayDietSchema.optional(),

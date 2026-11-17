@@ -253,7 +253,7 @@ const useDietPlan = (initialData?: DietPlanFormState) => {
           type: "success",
           message: "Diet plan created successfully.",
         });
-        navigate("/plan/diet");
+        navigate("/plan/diet/list");
       }
     } catch (err: unknown) {
       addToast({

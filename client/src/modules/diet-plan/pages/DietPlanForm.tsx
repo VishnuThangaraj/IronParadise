@@ -201,7 +201,7 @@ const DietPlanInner = ({
           onClick={() => {
             if (isEditMode && planId)
               navigate(`/plan/diet/${planId.toLowerCase()}`);
-            else navigate("/plan/diet");
+            else navigate("/plan/diet/list");
           }}
           disabled={isSubmitting}
         >
@@ -291,7 +291,7 @@ const DietPlanForm = () => {
           size="sm"
           onClick={() => {
             if (isEditMode) navigate(-1);
-            else navigate("/plan/diet");
+            else navigate("/plan/diet/list");
           }}
           aria-label="Back"
         >

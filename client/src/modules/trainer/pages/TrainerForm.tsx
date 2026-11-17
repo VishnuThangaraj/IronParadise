@@ -13,7 +13,6 @@ import {
   LuChevronRight,
   LuClock,
   LuContact,
-  LuImage,
   LuMail,
   LuMapPin,
   LuPhone,
@@ -38,6 +37,7 @@ import SelectDropdown, {
 import { useNavigation } from "@/shared/hooks/useNavigation";
 import { getDeterministicGradient } from "@/shared/utils/gradient-colors";
 import type { UserGender } from "@/shared/types/User.types";
+import ProfilePhotoUploader from "@/shared/components/ui/upload/ProfilePhotoUploader";
 
 import useTrainer from "../hooks/use-trainer";
 import {
@@ -341,19 +341,13 @@ const TrainerFormInner = ({
                   />
                 </div>
 
-                <div>
-                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                    <LuImage size={13} className="text-indigo-500" />
-                    Profile Image URL
-                  </span>
-                  <Input
-                    name="profileImage"
-                    type="text"
+                <div className="sm:col-span-2">
+                  <ProfilePhotoUploader
                     value={formData.profileImage}
-                    onChange={(e) =>
-                      handleInputChange("profileImage", e.target.value)
-                    }
-                    placeholder="https://example.com/avatar.jpg"
+                    onChange={(url) => handleInputChange("profileImage", url)}
+                    name={formData.fullName}
+                    label="Profile Photo (Cloudinary)"
+                    description="Upload or update a photo for this trainer. The photo will be securely uploaded and optimized on Cloudinary."
                   />
                 </div>
               </div>

@@ -44,6 +44,7 @@ const WorkoutPlanInner = ({
     isSubmitting,
     handleSubmitPlan,
     handleInputChange,
+    handleDayFocusChange,
     addExercise,
     removeExercise,
   } = useWorkoutPlan(initialData);
@@ -174,11 +175,27 @@ const WorkoutPlanInner = ({
             activeDay={activeDay as WeekDay}
             onSelectDay={setActiveDay}
           />
-          <div className="flex flex-col gap-6">
-            <div className="ms-3 flex gap-2.5 items-center">
-              <LuCalendar className="w-4 h-4 text-primary" />
-              <div className="uppercase text-sm font-semibold tracking-wider text-slate-800 dark:text-slate-100">
-                Scheduled Exercises {`(${activeDay})`}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+              <div className="flex gap-2.5 items-center">
+                <LuCalendar className="w-4 h-4 text-primary" />
+                <div className="uppercase text-sm font-semibold tracking-wider text-slate-800 dark:text-slate-100">
+                  Scheduled Exercises {`(${activeDay})`}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 sm:max-w-xs w-full">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">
+                  Day Focus:
+                </span>
+                <input
+                  type="text"
+                  value={currentDayWorkout?.focus || ""}
+                  onChange={(e) =>
+                    handleDayFocusChange(activeDay as WeekDay, e.target.value)
+                  }
+                  placeholder="e.g. Chest & Triceps (optional)"
+                  className="block w-full rounded-xl border border-slate-200 dark:border-white/15 px-3 py-1.5 bg-white/70 dark:bg-white/5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-200"
+                />
               </div>
             </div>
             {/* Exercise Card */}
@@ -200,7 +217,7 @@ const WorkoutPlanInner = ({
           onClick={() => {
             if (isEditMode && planId)
               navigate(`/plan/workout/${planId.toLowerCase()}`);
-            else navigate("/plan/workout");
+            else navigate("/plan/workout/list");
           }}
           disabled={isSubmitting}
         >

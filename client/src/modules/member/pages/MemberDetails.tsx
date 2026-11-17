@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -11,6 +11,8 @@ import {
   LuDumbbell,
   LuUserCheck,
   LuExternalLink,
+  LuCamera,
+  LuLoader,
 } from "react-icons/lu";
 
 import Button from "@/shared/components/ui/buttons/Button";
@@ -18,8 +20,11 @@ import Tooltip from "@/shared/components/ui/tooltip/Tooltip";
 import PageHeader from "@/shared/components/ui/page/PageHeader";
 import DeleteModal from "@/shared/components/ui/modals/DeleteModal";
 import Container from "@/shared/components/ui/containers/Container";
+import { useToast } from "@/shared/components/ui/toast";
+import { uploadProfileImageApi } from "@/shared/api/upload.api";
 import { useMember } from "../hooks/use-member";
 import { useMemberDelete } from "../hooks/use-member.delete";
+import { useMemberUpdate } from "../hooks/use-member.update";
 import { IoLocationOutline } from "react-icons/io5";
 import { getInitials } from "@/shared/hooks/getInitials";
 
@@ -43,6 +48,92 @@ const MemberDetails = () => {
   );
 
   const user = memberResponse?.data;
+  const { addToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const { mutate: updateMemberMutate, isPending: isUpdatingMember } =
+    useMemberUpdate();
+
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.userId) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      addToast({
+        type: "error",
+        message: "Please select a valid image (JPG, PNG, or WebP)",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      addToast({
+        type: "error",
+        message: "Image size must be 5MB or less",
+      });
+      return;
+    }
+
+    try {
+      setIsUploadingPhoto(true);
+      const res = await uploadProfileImageApi(file);
+      if (res?.data?.url) {
+        updateMemberMutate(
+          {
+            id: user.userId,
+            data: { profileImage: res.data.url },
+          },
+          {
+            onSuccess: () => {
+              addToast({
+                type: "success",
+                message: "Profile photo updated successfully!",
+              });
+            },
+            onError: () => {
+              addToast({
+                type: "error",
+                message: "Failed to save profile photo to member profile",
+              });
+            },
+          },
+        );
+      }
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      addToast({
+        type: "error",
+        message:
+          axiosError?.response?.data?.message ||
+          "Failed to upload profile photo",
+      });
+    } finally {
+      setIsUploadingPhoto(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemovePhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user?.userId || isUploadingPhoto || isUpdatingMember) return;
+    updateMemberMutate(
+      {
+        id: user.userId,
+        data: { profileImage: "" },
+      },
+      {
+        onSuccess: () => {
+          addToast({
+            type: "info",
+            message: "Profile photo removed",
+          });
+        },
+      },
+    );
+  };
 
   const handleConfirmDelete = () => {
     if (user) {
@@ -115,17 +206,77 @@ const MemberDetails = () => {
 
             {/* Avatar Header */}
             <div className="relative px-6 -mt-10 flex items-end justify-between">
-              <div className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-900 bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md overflow-hidden select-none shrink-0 z-10">
-                {user?.profileImage ? (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={user.profileImage}
-                    alt={user?.fullName || "Member"}
-                  />
-                ) : (
-                  <span className="text-white font-extrabold text-2xl tracking-wider">
-                    {user?.fullName ? getInitials(user.fullName) : "M"}
-                  </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handlePhotoSelect}
+                className="hidden"
+                disabled={isUploadingPhoto || isUpdatingMember}
+              />
+              <div className="relative group/avatar">
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  className="w-20 h-20 rounded-full border-4 border-white dark:border-slate-900 bg-linear-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md overflow-hidden select-none shrink-0 z-10 cursor-pointer relative"
+                  title="Click to change photo"
+                >
+                  {user?.profileImage ? (
+                    <img
+                      className="w-full h-full object-cover"
+                      src={user.profileImage}
+                      alt={user?.fullName || "Member"}
+                    />
+                  ) : (
+                    <span className="text-white font-extrabold text-2xl tracking-wider">
+                      {user?.fullName ? getInitials(user.fullName) : "M"}
+                    </span>
+                  )}
+
+                  {/* Hover Camera Overlay */}
+                  {!isUploadingPhoto && !isUpdatingMember && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center text-white backdrop-blur-xs">
+                      <LuCamera size={20} className="drop-shadow-md" />
+                    </div>
+                  )}
+
+                  {/* Loading Spinner Overlay */}
+                  {(isUploadingPhoto || isUpdatingMember) && (
+                    <div className="absolute inset-0 bg-slate-950/70 flex items-center justify-center z-20">
+                      <LuLoader size={22} className="animate-spin text-white" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Floating Edit Button Badge */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingPhoto || isUpdatingMember}
+                  className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-lg border-2 border-white dark:border-slate-900 z-20 cursor-pointer transition-transform hover:scale-110"
+                  title="Change photo"
+                >
+                  <LuCamera size={13} />
+                </button>
+
+                {/* Remove button if image exists */}
+                {user?.profileImage && (
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    disabled={isUploadingPhoto || isUpdatingMember}
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-md border-2 border-white dark:border-slate-900 z-20 cursor-pointer opacity-0 group-hover/avatar:opacity-100 transition-opacity"
+                    title="Remove photo"
+                  >
+                    <LuTrash2 size={10} />
+                  </button>
                 )}
               </div>
             </div>

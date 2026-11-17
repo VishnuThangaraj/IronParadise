@@ -44,3 +44,34 @@
   }
 }
 
+/* ==========================================================================
+   Table Scrollbar Suppression (Cross-Browser)
+   Hides visible scrollbars across all DataTables while preserving scrollability
+   ========================================================================== */
+.MuiDataGrid-root,
+.MuiDataGrid-main,
+.MuiDataGrid-virtualScroller,
+.MuiDataGrid-virtualScrollerContent,
+.MuiDataGrid-virtualScrollerRenderZone,
+.MuiDataGrid-scrollbar,
+.MuiDataGrid-scrollbar--horizontal,
+.MuiDataGrid-scrollbar--vertical,
+.MuiDataGrid-scrollbarFiller {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.MuiDataGrid-root::-webkit-scrollbar,
+.MuiDataGrid-main::-webkit-scrollbar,
+.MuiDataGrid-virtualScroller::-webkit-scrollbar,
+.MuiDataGrid-virtualScrollerContent::-webkit-scrollbar,
+.MuiDataGrid-scrollbar::-webkit-scrollbar,
+.MuiDataGrid-scrollbar--horizontal::-webkit-scrollbar,
+.MuiDataGrid-scrollbar--vertical::-webkit-scrollbar,
+.MuiDataGrid-scrollbarFiller::-webkit-scrollbar,
+.MuiDataGrid-root *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+

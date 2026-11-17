@@ -115,6 +115,13 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
         sx={{
           height,
           width: "100%",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+            width: 0,
+            height: 0,
+          },
         }}
       >
         <DataGrid
@@ -143,6 +150,75 @@ const DataTable = <T extends GridValidRowModel = GridValidRowModel>({
             fontFamily: "inherit",
             backgroundColor: "transparent",
             color: isDark ? "#f8fafc" : "#1e293b",
+
+            // Completely remove and hide all scrollbars while preserving scrollability
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            "&::-webkit-scrollbar": {
+              display: "none !important",
+              width: "0 !important",
+              height: "0 !important",
+            },
+            "& .MuiDataGrid-main": {
+              scrollbarWidth: "none !important",
+              msOverflowStyle: "none !important",
+              "&::-webkit-scrollbar": {
+                display: "none !important",
+                width: "0 !important",
+                height: "0 !important",
+              },
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              scrollbarWidth: "none !important",
+              msOverflowStyle: "none !important",
+              "&::-webkit-scrollbar": {
+                display: "none !important",
+                width: "0 !important",
+                height: "0 !important",
+              },
+            },
+            "& .MuiDataGrid-virtualScrollerContent": {
+              scrollbarWidth: "none !important",
+              msOverflowStyle: "none !important",
+              "&::-webkit-scrollbar": {
+                display: "none !important",
+                width: "0 !important",
+                height: "0 !important",
+              },
+            },
+            "& .MuiDataGrid-virtualScrollerRenderZone": {
+              scrollbarWidth: "none !important",
+              msOverflowStyle: "none !important",
+            },
+            "& .MuiDataGrid-scrollbar": {
+              display: "none !important",
+              opacity: 0,
+              width: "0 !important",
+              height: "0 !important",
+              pointerEvents: "none !important",
+            },
+            "& .MuiDataGrid-scrollbar--horizontal": {
+              display: "none !important",
+              height: "0 !important",
+            },
+            "& .MuiDataGrid-scrollbar--vertical": {
+              display: "none !important",
+              width: "0 !important",
+            },
+            "& .MuiDataGrid-scrollbarFiller": {
+              display: "none !important",
+              width: "0 !important",
+              height: "0 !important",
+            },
+            "& *": {
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            },
+            "& *::-webkit-scrollbar": {
+              display: "none !important",
+              width: "0 !important",
+              height: "0 !important",
+            },
 
             // Hide column separator lines
             "& .MuiDataGrid-columnSeparator": {

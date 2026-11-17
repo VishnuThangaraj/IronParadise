@@ -25,6 +25,14 @@ import {
   updateWorkoutPlan,
 } from "../redux/workout-plan.thunks";
 import { WeekDay } from "@/shared/components/ui/date/constants/week-days";
+import type { DayWorkout } from "../types/workout-plan.types";
+
+const formatDayWorkout = (day?: DayWorkout): DayWorkout => ({
+  focus:
+    day?.focus?.trim() ||
+    (day?.exercises?.length ? "Workout Session" : "Rest & Recovery"),
+  exercises: day?.exercises || [],
+});
 
 const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
   const { navigate } = useNavigation();
@@ -153,13 +161,13 @@ const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
               planName: formData.planName.trim(),
               goal: formData.goal.trim(),
               description: formData.description.trim(),
-              monday: formData.monday,
-              tuesday: formData.tuesday,
-              wednesday: formData.wednesday,
-              thursday: formData.thursday,
-              friday: formData.friday,
-              saturday: formData.saturday,
-              sunday: formData.sunday,
+              monday: formatDayWorkout(formData.monday),
+              tuesday: formatDayWorkout(formData.tuesday),
+              wednesday: formatDayWorkout(formData.wednesday),
+              thursday: formatDayWorkout(formData.thursday),
+              friday: formatDayWorkout(formData.friday),
+              saturday: formatDayWorkout(formData.saturday),
+              sunday: formatDayWorkout(formData.sunday),
               isActive: formData.isActive,
             },
           }),
@@ -176,13 +184,13 @@ const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
             planName: formData.planName.trim(),
             goal: formData.goal.trim(),
             description: formData.description.trim(),
-            monday: formData.monday,
-            tuesday: formData.tuesday,
-            wednesday: formData.wednesday,
-            thursday: formData.thursday,
-            friday: formData.friday,
-            saturday: formData.saturday,
-            sunday: formData.sunday,
+            monday: formatDayWorkout(formData.monday),
+            tuesday: formatDayWorkout(formData.tuesday),
+            wednesday: formatDayWorkout(formData.wednesday),
+            thursday: formatDayWorkout(formData.thursday),
+            friday: formatDayWorkout(formData.friday),
+            saturday: formatDayWorkout(formData.saturday),
+            sunday: formatDayWorkout(formData.sunday),
             isActive: formData.isActive,
           }),
         ).unwrap();
@@ -191,7 +199,7 @@ const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
           type: "success",
           message: "Workout plan created successfully.",
         });
-        navigate("/plan/workout");
+        navigate("/plan/workout/list");
       }
     } catch (err: unknown) {
       addToast({
@@ -201,6 +209,17 @@ const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // handle day focus change
+  const handleDayFocusChange = (day: WeekDay, focus: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        focus,
+      },
+    }));
   };
 
     // handle add exercise
@@ -258,6 +277,7 @@ const useWorkoutPlan = (initialData?: WorkoutPlanFormState) => {
       setFormData,
       isSubmitting,
       handleInputChange,
+      handleDayFocusChange,
       handleSubmitPlan,
       addExercise,
       removeExercise,
