@@ -188,11 +188,13 @@ export const TrainerAssignedMembers = () => {
         headerName: "Today's Status",
         flex: 1.1,
         minWidth: 160,
+        headerAlign: "center",
+        align: "center",
         renderCell: (params) => {
           const att = params.row.todayAttendance;
           if (!att) {
             return (
-              <div className="flex items-center h-full">
+              <div className="flex items-center justify-center h-full w-full">
                 <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                   Not Visited
                 </span>
@@ -201,7 +203,7 @@ export const TrainerAssignedMembers = () => {
           }
           if (att.status === "Checked In" || att.status === "Present") {
             return (
-              <div className="flex items-center h-full">
+              <div className="flex items-center justify-center h-full w-full">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   In Gym ({formatTime(att.checkIn)})
@@ -210,7 +212,7 @@ export const TrainerAssignedMembers = () => {
             );
           }
           return (
-            <div className="flex items-center h-full">
+            <div className="flex items-center justify-center h-full w-full">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30">
                 Completed ({att.durationMinutes || 0}m)
               </span>

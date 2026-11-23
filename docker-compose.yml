@@ -1,0 +1,76 @@
+services:
+  mongo:
+    image: mongo:8.0
+    container_name: ironparadise_mongo
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - ip_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"try { rs.status().ok } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }).ok }\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ironparadise_network
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: DockerFile
+    container_name: ironparadise_backend
+    restart: unless-stopped
+    ports:
+      - "6969:6969"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=6969
+      - PROJECT_VERSION=v1.0.2
+      - CLIENT_ORIGIN=http://localhost:5151
+      - MONGO_URI=mongodb://mongo:27017/ironparadise?replicaSet=rs0&directConnection=true
+      - JWT_SECRET=16d21c3f1508ddbb17024160e60c9acb4187c339edb9e74c7007d3313e92b439cf2eed6260cbdb4fcac36da01dcdf89fb59f3978419876e2f6a258aff1ab7f56
+      - JWT_EXPIRES_IN=1d
+      - JWT_REFRESH_SECRET=7f8e9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f
+      - JWT_REFRESH_EXPIRES_IN=7d
+      - CLOUDINARY_CLOUD_NAME=
+      - CLOUDINARY_API_KEY=
+      - CLOUDINARY_API_SECRET=
+      - CLOUDINARY_URL=
+    networks:
+      - ironparadise_network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: DockerFile
+    container_name: ironparadise_client
+    restart: unless-stopped
+    ports:
+      - "5151:5151"
+    depends_on:
+      - backend
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+    environment:
+      - VITE_SERVER_URL=http://localhost:6969
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - ironparadise_network
+
+volumes:
+  ip_mongo_data:
+    driver: local
+
+networks:
+  ironparadise_network:
+    driver: bridge

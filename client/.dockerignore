@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+.env
+.env.test
+.env.production
+.git
+.gitignore
+scratch_check.js
+Dockerfile*
+docker-compose*
+logs
