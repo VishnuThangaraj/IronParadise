@@ -9,7 +9,7 @@ const router: Router = Router();
 router.post(
   "/profile-image",
   authenticate,
-  uploadProfileImageMiddleware.single("image"),
+  uploadProfileImageMiddleware,
   UploadController.uploadProfileImage,
 );
 

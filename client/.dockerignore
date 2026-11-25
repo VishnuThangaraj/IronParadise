@@ -7,5 +7,7 @@ npm-debug.log
 .gitignore
 scratch_check.js
 Dockerfile*
+DockerFile*
 docker-compose*
+dist
 logs

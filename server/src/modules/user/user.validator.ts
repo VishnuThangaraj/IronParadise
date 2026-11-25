@@ -5,6 +5,11 @@ const emptyStringToUndefined = z.preprocess(
   z.string().optional(),
 );
 
+export const profileImageUpdateSchema = z.preprocess(
+  (val) => (val === null ? "" : val),
+  z.string().trim().optional(),
+);
+
 const emptyStringToDate = z.preprocess(
   (val) => (val === "" || val === null ? undefined : val),
   z.coerce.date().optional(),
@@ -56,6 +61,7 @@ export const userSchema = z.object({
 });
 
 export const userUpdateSchema = userSchema.partial().extend({
+  profileImage: profileImageUpdateSchema,
   isActive: z
     .boolean({ message: "Status looks off — pick active or inactive" })
     .optional(),

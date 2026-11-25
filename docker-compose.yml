@@ -31,6 +31,9 @@ services:
     volumes:
       - ./server:/server
       - /server/node_modules
+    # Loads Cloudinary credentials (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET) and defaults
+    env_file:
+      - ./server/.env
     environment:
       - NODE_ENV=development
       - PORT=6969
@@ -41,10 +44,18 @@ services:
       - JWT_EXPIRES_IN=1d
       - JWT_REFRESH_SECRET=7f8e9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f
       - JWT_REFRESH_EXPIRES_IN=7d
-      - CLOUDINARY_CLOUD_NAME=
-      - CLOUDINARY_API_KEY=
-      - CLOUDINARY_API_SECRET=
-      - CLOUDINARY_URL=
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:6969/health/cloudinary').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     networks:
       - ironparadise_network
 

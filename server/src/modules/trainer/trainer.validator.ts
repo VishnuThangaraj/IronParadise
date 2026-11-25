@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import { userSchema } from "../user/user.validator.js";
+import {
+  profileImageUpdateSchema,
+  userSchema,
+} from "../user/user.validator.js";
 import {
   shiftTimeSchema,
   employmentStatusEnum,
@@ -35,7 +38,9 @@ export const createTrainerSchema = userSchema.extend({
   employmentStatus: employmentStatusEnum.optional().default("active"),
 });
 
-export const updateTrainerSchema = createTrainerSchema.partial();
+export const updateTrainerSchema = createTrainerSchema.partial().extend({
+  profileImage: profileImageUpdateSchema,
+});
 
 export type CreateTrainerInput = z.infer<typeof createTrainerSchema>;
 export type UpdateTrainerInput = z.infer<typeof updateTrainerSchema>;

@@ -1,78 +1,47 @@
-import cloudinary from "../../config/cloudinary.js";
-import env from "../../config/env.js";
 import AppError from "../../shared/errors/AppError.js";
+import {
+  CLOUDINARY_FOLDERS,
+  deleteFromCloudinary,
+  extractCloudinaryPublicId,
+  uploadBufferToCloudinary,
+} from "../../infrastructure/cloudinary/cloudinary.service.js";
 
 export interface UploadResult {
   url: string;
   publicId: string;
-  isCloudinary: boolean;
+  isCloudinary: true;
 }
 
 class UploadService {
   public async uploadProfileImage(
     file: Express.Multer.File,
   ): Promise<UploadResult> {
-    if (!file || !file.buffer) {
+    if (!file || !file.buffer || file.buffer.length === 0) {
       throw new AppError("No file provided for upload.", 400);
     }
 
-    if (env.isCloudinaryConfigured) {
-      return new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            folder: "ironparadise/profiles",
-            resource_type: "image",
-            transformation: [
-              { width: 500, height: 500, crop: "fill", gravity: "face" },
-              { quality: "auto", fetch_format: "auto" },
-            ],
-          },
-          (error, result) => {
-            if (error || !result) {
-              return reject(
-                new AppError(
-                  `Cloudinary upload failed: ${error?.message || "Unknown error"}`,
-                  500,
-                ),
-              );
-            }
-            resolve({
-              url: result.secure_url,
-              publicId: result.public_id,
-              isCloudinary: true,
-            });
-          },
-        );
+    const result = await uploadBufferToCloudinary(file.buffer, {
+      folder: CLOUDINARY_FOLDERS.PROFILES,
+      resource_type: "image",
+      transformation: [
+        { width: 500, height: 500, crop: "fill", gravity: "face" },
+        { quality: "auto", fetch_format: "auto" },
+      ],
+    });
 
-        uploadStream.end(file.buffer);
-      });
-    }
-
-    // Local / development fallback if Cloudinary credentials are not set
-    const base64Data = file.buffer.toString("base64");
-    const dataUri = `data:${file.mimetype};base64,${base64Data}`;
     return {
-      url: dataUri,
-      publicId: `local_${Date.now()}`,
-      isCloudinary: false,
+      url: result.secure_url,
+      publicId: result.public_id,
+      isCloudinary: true,
     };
   }
 
   public async deleteImage(publicId: string): Promise<boolean> {
-    if (!publicId || publicId.startsWith("local_")) {
-      return true;
-    }
+    return deleteFromCloudinary(publicId, "image");
+  }
 
-    if (env.isCloudinaryConfigured) {
-      try {
-        await cloudinary.uploader.destroy(publicId);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-
-    return true;
+  public extractProfilePublicId(url: string): string | null {
+    return extractCloudinaryPublicId(url, CLOUDINARY_FOLDERS.PROFILES);
   }
 }
 

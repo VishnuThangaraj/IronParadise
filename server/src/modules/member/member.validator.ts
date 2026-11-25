@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import { userSchema } from "../user/user.validator.js";
+import {
+  profileImageUpdateSchema,
+  userSchema,
+} from "../user/user.validator.js";
 
 const emptyStringToDate = z.preprocess(
   (val) => (val === "" || val === null ? undefined : val),
@@ -32,7 +35,9 @@ export const createMemberSchema = userSchema.extend({
   assignment: memberAssignmentPayloadSchema.optional(),
 });
 
-export const updateMemberSchema = createMemberSchema.partial();
+export const updateMemberSchema = createMemberSchema.partial().extend({
+  profileImage: profileImageUpdateSchema,
+});
 
 export type CreateMemberInput = z.infer<typeof createMemberSchema>;
 export type UpdateMemberInput = z.infer<typeof updateMemberSchema>;

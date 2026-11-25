@@ -6,6 +6,7 @@ import CredentialModel from "../../shared/models/credential.model.js";
 import type { CreateUserInput, UpdateUserInput, UserDetailsSchema } from "./user.validator.js";
 
 import AuthService from "../auth/auth.service.js";
+import UploadService from "../upload/upload.service.js";
 
 import AppError from "../../shared/errors/AppError.js";
 import type { Role } from "../../shared/types/roles.js";
@@ -208,6 +209,22 @@ class UserService {
       throw new AppError("Failed to update user", 500);
     }
 
+    if (
+      data.profileImage !== undefined &&
+      existingUser.profileImage &&
+      data.profileImage !== existingUser.profileImage
+    ) {
+      const oldPublicId = UploadService.extractProfilePublicId(
+        existingUser.profileImage,
+      );
+      const newPublicId = data.profileImage
+        ? UploadService.extractProfilePublicId(data.profileImage)
+        : null;
+      if (oldPublicId && oldPublicId !== newPublicId) {
+        await UploadService.deleteImage(oldPublicId);
+      }
+    }
+
     return updatedUser;
   }
 
@@ -268,6 +285,13 @@ class UserService {
       { userId: user.userId },
       deleteOptions,
     );
+
+    if (user.profileImage) {
+      const publicId = UploadService.extractProfilePublicId(user.profileImage);
+      if (publicId) {
+        await UploadService.deleteImage(publicId);
+      }
+    }
 
     return user;
   }
