@@ -455,53 +455,128 @@ class MemberService {
       }
     }
 
-    // 6. Enrich payments
-    let enriched = payments.map((pay: any) => {
+    // 6. Group payments by userId so each member appears only once in the paylist
+    const paymentsByUser = new Map<string, any[]>();
+    for (const pay of payments) {
       const payObj = pay.toObject ? pay.toObject() : pay;
-      const user = userMap.get(payObj.userId);
-      const asgn =
-        assignmentMap.get(payObj.assignmentId) ||
-        userAssignmentMap.get(payObj.userId);
-      const plan = asgn?.membershipPlanId
-        ? planMap.get(asgn.membershipPlanId)
-        : null;
+      const list = paymentsByUser.get(payObj.userId) || [];
+      list.push(payObj);
+      paymentsByUser.set(payObj.userId, list);
+    }
 
-      return {
-        _id: payObj._id,
-        paymentId: payObj.paymentId,
-        userId: payObj.userId,
-        assignmentId: payObj.assignmentId,
-        fullName: user?.fullName || "Member",
-        email: user?.email || "",
-        phoneNumber: user?.phone || "",
-        profileImage: user?.profileImage || "",
-        gender: user?.gender || "prefer_not_to_say",
-        isActive: user ? user.isActive !== false : true,
-        membershipPlan: plan
-          ? {
-              membershipPlanId: plan.membershipPlanId,
-              planName: plan.planName,
-              price: plan.price,
-              durationMonths: plan.durationMonths,
-            }
-          : null,
-        assignment: asgn
-          ? {
-              assignmentId: asgn.assignmentId,
-              startDate: asgn.startDate,
-              endDate: asgn.endDate,
-              status: asgn.status,
-            }
-          : null,
-        totalAmount: payObj.totalAmount,
-        amountPaid: payObj.amountPaid,
-        amountDue: payObj.amountDue,
-        dueDate: payObj.dueDate,
-        paymentStatus: payObj.paymentStatus,
-        createdAt: payObj.createdAt,
-        updatedAt: payObj.updatedAt,
-      };
-    });
+    let enriched = Array.from(paymentsByUser.entries()).map(
+      ([userId, userPayments]) => {
+        const user = userMap.get(userId);
+        const asgn =
+          userAssignmentMap.get(userId) ||
+          assignmentMap.get(userPayments[0].assignmentId);
+        const plan = asgn?.membershipPlanId
+          ? planMap.get(asgn.membershipPlanId)
+          : null;
+
+        // Prefer the payment linked to the active/latest assignment, falling back to newest payment
+        const primaryPayment =
+          (asgn
+            ? userPayments.find((p) => p.assignmentId === asgn.assignmentId)
+            : null) || userPayments[0];
+
+        const totalAmount = userPayments.reduce(
+          (sum, p) => sum + (Number(p.totalAmount) || 0),
+          0,
+        );
+        const amountPaid = userPayments.reduce(
+          (sum, p) => sum + (Number(p.amountPaid) || 0),
+          0,
+        );
+        const amountDue = userPayments.reduce((sum, p) => {
+          const due =
+            p.amountDue !== undefined
+              ? Number(p.amountDue)
+              : Math.max(
+                  0,
+                  (Number(p.totalAmount) || 0) - (Number(p.amountPaid) || 0),
+                );
+          return sum + Math.max(0, due);
+        }, 0);
+
+        const unpaidPayments = userPayments.filter((p) => {
+          const due =
+            p.amountDue !== undefined
+              ? Number(p.amountDue)
+              : Math.max(
+                  0,
+                  (Number(p.totalAmount) || 0) - (Number(p.amountPaid) || 0),
+                );
+          return due > 0;
+        });
+
+        let paymentStatus: "PENDING" | "PARTIAL" | "PAID" | "OVERDUE" =
+          "PENDING";
+        if (amountDue <= 0 && totalAmount > 0) {
+          paymentStatus = "PAID";
+        } else if (amountDue <= 0) {
+          paymentStatus = primaryPayment.paymentStatus || "PENDING";
+        } else if (
+          unpaidPayments.some(
+            (p) => (p.paymentStatus || "").toUpperCase() === "OVERDUE",
+          )
+        ) {
+          paymentStatus = "OVERDUE";
+        } else if (
+          unpaidPayments.some(
+            (p) =>
+              (p.paymentStatus || "").toUpperCase() === "PARTIAL" ||
+              (Number(p.amountPaid) || 0) > 0,
+          )
+        ) {
+          paymentStatus = "PARTIAL";
+        }
+
+        // Use earliest unpaid dueDate if dues remain, otherwise primaryPayment.dueDate
+        const dueDate =
+          unpaidPayments.length > 0
+            ? unpaidPayments.reduce((earliest, p) =>
+                new Date(p.dueDate) < new Date(earliest.dueDate) ? p : earliest,
+              ).dueDate
+            : primaryPayment.dueDate;
+
+        return {
+          _id: primaryPayment._id,
+          paymentId: primaryPayment.paymentId,
+          userId,
+          assignmentId: primaryPayment.assignmentId,
+          fullName: user?.fullName || "Member",
+          email: user?.email || "",
+          phoneNumber: user?.phone || "",
+          profileImage: user?.profileImage || "",
+          gender: user?.gender || "prefer_not_to_say",
+          isActive: user ? user.isActive !== false : true,
+          membershipPlan: plan
+            ? {
+                membershipPlanId: plan.membershipPlanId,
+                planName: plan.planName,
+                price: plan.price,
+                durationMonths: plan.durationMonths,
+              }
+            : null,
+          assignment: asgn
+            ? {
+                assignmentId: asgn.assignmentId,
+                startDate: asgn.startDate,
+                endDate: asgn.endDate,
+                status: asgn.status,
+              }
+            : null,
+          totalAmount,
+          amountPaid,
+          amountDue,
+          dueDate,
+          paymentStatus,
+          createdAt: primaryPayment.createdAt,
+          updatedAt: userPayments[0].updatedAt,
+        };
+      },
+    );
 
     // 7. Apply optional filters
     if (filter?.paymentStatus && filter.paymentStatus !== "all") {

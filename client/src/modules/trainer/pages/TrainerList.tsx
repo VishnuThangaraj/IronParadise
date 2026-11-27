@@ -12,6 +12,8 @@ import SelectDropdown from "@/shared/components/ui/dropdown/SelectDropdown";
 import ViewModeToggle from "@/shared/components/ui/view-mode-toggle/ViewModeToggle";
 
 import useTrainer from "@/modules/trainer/hooks/use-trainer";
+import TrainerKPI from "@/modules/trainer/components/TrainerKPI";
+import TrainerGrid from "@/modules/trainer/components/TrainerGrid";
 import useTrainerDelete from "@/modules/trainer/hooks/use-trainer.delete";
 import { getTrainerColumns } from "@/modules/trainer/constants/trainer.columns";
 
@@ -70,6 +72,8 @@ const TrainerList = () => {
           </Button>
         </div>
       </PageHeader>
+      {/* KPI */}
+      <TrainerKPI />
       <Container
         variant="secondary"
         className="w-full! max-w-full! mx-0! flex justify-between items-center p-3.5! sm:p-3! rounded-2xl! shadow-xs relative! z-30! overflow-visible!"
@@ -98,15 +102,13 @@ const TrainerList = () => {
       {/* Data Table */}
       <div className="relative z-0">
         {viewMode === "grid" ? (
-          <div>
-            {/* <DietPlanGrid
-              loading={loading}
-              rows={filteredRows}
-              deletePlan={handleDeletePlanClick}
-              editPlan={handleNavigateToEdit}
-              viewPlan={handleNavigateToView}
-            /> */}
-          </div>
+          <TrainerGrid
+            loading={loading}
+            rows={filteredRows}
+            onView={handleNavigateToView}
+            onEdit={handleNavigateToEdit}
+            onDelete={handleDeleteTrainerClick}
+          />
         ) : (
           <Container
             variant="secondary"

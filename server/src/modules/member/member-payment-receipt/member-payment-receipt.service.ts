@@ -70,32 +70,82 @@ class MemberPaymentReceiptService {
       );
     }
 
-    // Update parent member payment summary
-    const newAmountPaid = (memberPayment.amountPaid || 0) + data.amountPaid;
-    const newAmountDue = Math.max(
-      0,
-      memberPayment.totalAmount - newAmountPaid,
-    );
+    // Allocate payment across all unpaid MemberPayment records for this user (oldest due first)
+    const userPayments = await MemberPaymentModel.find({
+      userId: memberPayment.userId,
+    })
+      .sort({ dueDate: 1, createdAt: 1 })
+      .session(session || null);
 
-    let newStatus: "PENDING" | "PARTIAL" | "PAID" | "OVERDUE" =
-      memberPayment.paymentStatus;
-    if (newAmountDue <= 0) {
-      newStatus = "PAID";
-    } else if (newAmountPaid > 0) {
-      newStatus = "PARTIAL";
+    let remainingToAllocate = data.amountPaid;
+    let lastUpdatedTargetId: mongoose.Types.ObjectId | null = null;
+    let targetCurrentPaid = 0;
+
+    for (const pay of userPayments) {
+      if (remainingToAllocate <= 0) break;
+
+      const currentPaid = pay.amountPaid || 0;
+      const currentDue =
+        pay.amountDue !== undefined
+          ? pay.amountDue
+          : Math.max(0, pay.totalAmount - currentPaid);
+
+      if (currentDue <= 0) continue;
+
+      const applied = Math.min(remainingToAllocate, currentDue);
+      const newAmountPaid = currentPaid + applied;
+      const newAmountDue = Math.max(0, pay.totalAmount - newAmountPaid);
+
+      let newStatus: "PENDING" | "PARTIAL" | "PAID" | "OVERDUE" =
+        pay.paymentStatus;
+      if (newAmountDue <= 0) {
+        newStatus = "PAID";
+      } else if (newAmountPaid > 0) {
+        newStatus = "PARTIAL";
+      }
+
+      await MemberPaymentModel.findByIdAndUpdate(
+        pay._id,
+        {
+          $set: {
+            amountPaid: newAmountPaid,
+            amountDue: newAmountDue,
+            paymentStatus: newStatus,
+          },
+        },
+        createOptions,
+      );
+
+      remainingToAllocate -= applied;
+      if (pay._id.equals(memberPayment._id)) {
+        lastUpdatedTargetId = pay._id;
+        targetCurrentPaid = newAmountPaid;
+      }
     }
 
-    await MemberPaymentModel.findByIdAndUpdate(
-      memberPayment._id,
-      {
-        $set: {
-          amountPaid: newAmountPaid,
-          amountDue: newAmountDue,
-          paymentStatus: newStatus,
+    // If there is any overpayment beyond all unpaid dues, apply it to the target MemberPayment
+    if (remainingToAllocate > 0) {
+      const basePaid = lastUpdatedTargetId
+        ? targetCurrentPaid
+        : memberPayment.amountPaid || 0;
+      const newAmountPaid = basePaid + remainingToAllocate;
+      const newAmountDue = Math.max(
+        0,
+        memberPayment.totalAmount - newAmountPaid,
+      );
+
+      await MemberPaymentModel.findByIdAndUpdate(
+        memberPayment._id,
+        {
+          $set: {
+            amountPaid: newAmountPaid,
+            amountDue: newAmountDue,
+            paymentStatus: "PAID",
+          },
         },
-      },
-      createOptions,
-    );
+        createOptions,
+      );
+    }
 
     return memberPaymentReceipt;
   }
